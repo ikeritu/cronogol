@@ -277,7 +277,7 @@ function startMatch(){
   });
   pendingSpecial=null; penaltyShootout=null; currentElapsedMs=0; stopwatchBaseMs=0; matchStartTime=Date.now();
   setupScreen.classList.remove("active"); gameScreen.classList.add("active"); closeModal(); sideMenu.classList.add("hidden");
-  timerDisplay.textContent="00:00:00"; lastTwoDisplay.textContent="--"; setEvent("--","Pulsa START para comenzar.","neutral");
+  timerDisplay.textContent="00:00:00"; lastTwoDisplay.textContent="--"; setEvent("--", currentLang === "en" ? "Press START to begin." : "Pulsa START para comenzar.","neutral");
   startMatchClock(); updateUI(); addLog("Comienza el partido."); vibrate([30]); maybeMachineTurn();
 }
 
@@ -415,6 +415,35 @@ function resetToSetup(){ clearInterval(timerInterval); clearInterval(matchClockI
 function showModal(t,txt,html,actions){ modalTitle.textContent=t; modalText.textContent=txt; modalExtra.innerHTML=html||""; modalActions.innerHTML=""; actions.forEach(a=>{ const b=document.createElement("button"); b.textContent=a.text; b.onclick=a.action; modalActions.appendChild(b); }); modalScreen.classList.remove("hidden"); }
 function closeModal(){ modalScreen.classList.add("hidden"); modalExtra.innerHTML=""; }
 function showRulesModal(){
+  if(currentLang === "en"){
+    showModal(
+      "RULES",
+      "The game uses the last two digits of the stopwatch.",
+      `<div class="donation-item">
+        <strong>Classic mode</strong><br>
+        <strong>00</strong> = Goal.<br>
+        <strong>01-02</strong> = Post. Same player repeats.<br>
+        <strong>03-04</strong> = Crossbar. Same player repeats.<br>
+        <strong>45</strong> = Half-time. Stopwatch resets and turn changes.<br>
+        <strong>50</strong> = Yellow card. Turn ends and player skips the next turn.<br>
+        <strong>60</strong> = Red card. Turn ends and player skips two turns.<br>
+        <strong>90</strong> = Full-time.<br>
+        <strong>96-97</strong> = Dangerous free kick. Special throw: <strong>00 to 20</strong> is a goal; <strong>21 to 99</strong> is a miss.<br>
+        <strong>98-99</strong> = Penalty. Special throw: <strong>even = goal</strong>; <strong>odd = miss</strong>.<br>
+        <strong>Any other number</strong> = Miss and turn changes.
+      </div>
+      <div class="donation-item">
+        <strong>Fast mode</strong><br>
+        Any number ending in <strong>0</strong> is a goal: 00, 10, 20, 30, 40, 50, 60, 70, 80 and 90.<br>
+        Any number ending in <strong>9</strong> is a penalty: 09, 19, 29, 39, 49, 59, 69, 79, 89 and 99.<br>
+        Penalty special throw: <strong>even = goal</strong>, <strong>odd = miss</strong>.<br>
+        First player to reach <strong>6 goals with a 2-goal lead</strong> wins. Example: 6-4 wins; 6-5 does not; you need 7-5.
+      </div>`,
+      [{text:"CLOSE",action:closeModal}]
+    );
+    return;
+  }
+
   showModal(
     "REGLAS",
     "Se usan los dos últimos dígitos del cronómetro.",
@@ -468,10 +497,11 @@ function resultText(includeUrl=true){
   const final = gameState.lastFinalText && gameState.lastFinalText.includes("Penaltis:")
     ? gameState.lastFinalText
     : formattedFinalResult();
+  const challenge = currentLang === "en" ? "Do you dare?" : "¿Te atreves?";
   const base = `⚽ CronoGol
 ${final}
 
-¿Te atreves?`;
+${challenge}`;
   return includeUrl ? `${base}
 ${CRONOGOL_CONFIG.siteUrl}` : base;
 }

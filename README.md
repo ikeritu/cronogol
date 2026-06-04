@@ -1,61 +1,52 @@
-# CronoGol v1.7.9 — selector de idioma corregido
+# CronoGol v1.8.0 — logo integrado + reglas EN
 
-## Estado actual
+## Estado
 
-Versión estable basada en la línea v1.7.x, con:
+Versión estable para GitHub Pages.
 
-- Logo fuera del reloj.
-- Selector ES / EN en la parte superior derecha.
-- Traducción de textos principales.
-- Modo clásico y modo rápido.
-- Modo 1 vs 1 y 1 vs Máquina.
-- Feedback mediante Formspree.
-- Resultado compartible.
-- GitHub Pages compatible.
+## Cambios de esta versión
 
-## Corrección v1.7.9
-
-Se corrige el selector de idioma:
-
-- Los botones ES / EN ahora usan estilos propios.
-- Al pulsar EN se aplica el idioma inglés.
-- Al pulsar ES se vuelve al español.
-- El idioma se guarda en `localStorage`.
-- Se actualiza `document.documentElement.lang`.
-- Se limpian posibles restos de la integración anterior.
+- El logo se integra mejor en una placa superior, alineada con la app.
+- Se elimina la sensación de “logo suelto” flotando sobre el fondo.
+- Se genera `logo-cronogol-transparent.png` eliminando el fondo oscuro conectado al borde.
+- Se actualiza `og-cronogol.png`.
+- El modal de `Rules` ahora aparece en inglés cuando está seleccionado `EN`.
+- El modal de `Support` también cambia a inglés.
+- El mensaje inicial de partida cambia según idioma.
+- El texto de compartir usa “Do you dare?” en inglés y “¿Te atreves?” en español.
 
 ## Qué se traduce
 
-- Configuración inicial.
-- Botones de modo y duración.
-- Botón de empezar partido.
-- Links principales.
-- Tarjeta de modo online.
-- Tarjeta de patrocinador.
+- Pantalla principal.
+- Selector de modo y duración.
+- Botones principales.
 - Menú.
-- Etiquetas de estadísticas e historial.
-- Textos básicos de turno.
+- Reglas.
+- Apoyo/donaciones.
+- Tarjetas de modo online y patrocinador.
+- Etiquetas principales durante el partido.
 
 ## Pendiente
 
-La traducción de mensajes dinámicos de jugada puede mejorarse en una versión posterior:
+Quedan por traducir todos los mensajes dinámicos de jugada al 100%:
 
-- Gol.
-- Fallo.
-- Penalti.
-- Falta.
-- Tarjetas.
-- Mensajes finales.
+- Goal / Gol.
+- Miss / Fallo.
+- Yellow card / Amarilla.
+- Red card / Roja.
+- Free kick / Falta.
+- Final messages.
 
-## Publicación en GitHub Pages
+## Publicación
 
-Subir todos los archivos de esta carpeta al repositorio `cronogol`.
+Sube todos los archivos de esta carpeta al repositorio `cronogol` en GitHub.
 
-Configuración recomendada:
+GitHub Pages:
 
-- Branch: `main`
-- Folder: `/root`
+- Source: Deploy from a branch.
+- Branch: main.
+- Folder: /root.
 
-URL esperada:
+URL:
 
 `https://ikeritu.github.io/cronogol/`
