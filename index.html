@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="CronoGol: el juego gratuito del cronómetro Casio. Pulsa START, para el tiempo y marca gol con 00." />
+  <meta property="og:title" content="CronoGol" />
+  <meta property="og:description" content="El fútbol del cronómetro Casio. 00 = Gol." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://cronogol.netlify.app/" />
+  <meta property="og:image" content="https://cronogol.netlify.app/og-cronogol.png" />
+  <link rel="icon" href="favicon.png" type="image/png" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <title>CronoGol v1.7.6</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+
+    <!-- Pantalla inicial limpia -->
+    <section id="setup-screen" class="screen screen-setup active">
+      <div class="device setup-device">
+        <div class="watch-top-labels">
+          <span>MODE</span>
+          <span>CRONOGOL</span>
+          <span>START</span>
+        </div>
+        <header class="app-header cg-header">
+          <img src="logo-cronogol-horizontal.png" alt="CronoGol" class="cg-logo" id="version-tap-target" />
+        </header>
+
+        <section class="lcd hero-lcd">
+          <h1>CronoGol</h1>
+          <p>00 = GOL</p>
+        </section>
+
+        <section class="setup-card">
+          <label>
+            Jugador 1
+            <input id="player1-name" type="text" value="Jugador 1" maxlength="14" />
+          </label>
+
+          <label>
+            Jugador 2 / Máquina
+            <input id="player2-name" type="text" value="Jugador 2" maxlength="14" />
+          </label>
+
+          <div class="segmented-field">
+            <span>Modo</span>
+            <div class="segmented-control" role="group" aria-label="Modo de juego">
+              <button type="button" class="segment-btn active" data-target="game-mode" data-value="local">1 vs 1</button>
+              <button type="button" class="segment-btn" data-target="game-mode" data-value="machine">1 vs Máquina</button>
+            </div>
+            <select id="game-mode" class="native-select-hidden" aria-hidden="true" tabindex="-1">
+              <option value="local">1 vs 1 local</option>
+              <option value="machine">1 vs Máquina</option>
+            </select>
+          </div>
+
+          <label id="machine-level-label" class="machine-level-field">
+            Dificultad
+            <select id="machine-level">
+              <option value="easy">Fácil</option>
+              <option value="normal" selected>Normal</option>
+              <option value="hard">Difícil</option>
+            </select>
+          </label>
+
+          <div class="segmented-field">
+            <span>Duración</span>
+            <div class="segmented-control" role="group" aria-label="Duración">
+              <button type="button" class="segment-btn active" data-target="match-mode" data-value="classic">Clásico</button>
+              <button type="button" class="segment-btn" data-target="match-mode" data-value="five">Rápido</button>
+            </div>
+            <select id="match-mode" class="native-select-hidden" aria-hidden="true" tabindex="-1">
+              <option value="classic">Clásico: hasta 45 y 90</option>
+              <option value="five">Rápido: primero a 6 goles</option>
+            </select>
+          </div>
+
+          <div class="compact-options">
+            <label class="checkbox-row">
+              <input id="force-events" type="checkbox" checked />
+              Forzar descanso/final contra máquina
+            </label>
+
+            <label class="checkbox-row">
+              <input id="sound-enabled" type="checkbox" checked />
+              Sonido
+            </label>
+          </div>
+
+          <button id="start-match-btn" class="main-start-btn">EMPEZAR PARTIDO</button>
+        </section>
+
+        <nav class="setup-links">
+          <button id="rules-btn" type="button">Reglas</button>
+          <button id="share-btn" type="button">Compartir</button>
+          <button id="copy-link-btn" type="button">Copiar enlace</button>
+          <a href="feedback.html">Feedback</a>
+          <button id="support-btn" type="button">Apoya</button>
+        </nav>
+
+        <section class="coming-soon">
+          <span class="tag">En desarrollo</span>
+          <strong>Modo online próximamente</strong>
+          <p>Crea una sala privada y juega en tiempo real con un amigo.</p>
+        </section>
+
+        <section class="sponsor-slot">
+          <strong>Espacio de patrocinador</strong>
+          <p>Visible solo fuera del partido. Nunca interrumpe la jugada.</p>
+        </section>
+
+        <div class="watch-footer-labels">
+          <span>WATER RESIST</span>
+          <span>FOOTBALL CHRONO</span>
+        </div>
+        <footer class="version-footer">CronoGol v1.7.6 · Partidas en este dispositivo: <strong id="local-matches-count">0</strong></footer>
+      </div>
+    </section>
+
+    <!-- Pantalla de partido separada -->
+    <section id="game-screen" class="screen screen-game">
+      <div class="device game-device">
+        <div class="watch-top-labels">
+          <span>MODE</span>
+          <span>FOOTBALL CHRONO</span>
+          <span>START/STOP</span>
+        </div>
+        <header class="game-header">
+          <div>
+            <div class="brand small watch-brand">CRONOGOL</div>
+            <div id="half-label" class="half-pill">1ª PARTE</div>
+          </div>
+          <button id="menu-btn" class="menu-btn" type="button">☰</button>
+        </header>
+
+        <section class="scoreboard">
+          <div id="team-0" class="team-card active">
+            <span class="turn-arrow">▶</span>
+            <span id="p1-label">JUGADOR 1</span>
+            <strong id="p1-score">0</strong>
+            <small id="p1-sanction"></small>
+          </div>
+          <div class="score-dash">-</div>
+          <div id="team-1" class="team-card">
+            <span class="turn-arrow">▶</span>
+            <span id="p2-label">JUGADOR 2</span>
+            <strong id="p2-score">0</strong>
+            <small id="p2-sanction"></small>
+          </div>
+        </section>
+
+        <section class="lcd game-lcd">
+          <div id="timer-display" class="timer">00:00:00</div>
+          <div id="last-two-display" class="last-two">--</div>
+        </section>
+
+        <section id="event-card" class="event-card event-neutral">
+          <span class="event-label">ÚLTIMA TIRADA</span>
+          <strong id="event-title">--</strong>
+          <p id="message-label">Pulsa START para comenzar.</p>
+        </section>
+
+        <section class="turn-panel">
+          <span>TURNO DE</span>
+          <strong id="turn-label">Jugador 1</strong>
+        </section>
+
+        <section class="action-zone">
+          <button id="main-action-btn" class="action-btn action-start">START</button>
+          <button id="reset-btn" class="reset-link hidden" type="button" aria-hidden="true" tabindex="-1">Reiniciar partido</button>
+        </section>
+
+        <section id="special-panel" class="special-panel hidden">
+          <p id="special-label"></p>
+          <button id="special-start-btn" class="action-btn action-special">TIRADA ESPECIAL</button>
+        </section>
+
+        <section id="shootout-panel" class="shootout-panel hidden">
+          <h2>Tanda de penaltis</h2>
+          <div><span id="shootout-p1-name">J1</span> <strong id="shootout-p1">⬜ ⬜ ⬜ ⬜ ⬜</strong></div>
+          <div><span id="shootout-p2-name">J2</span> <strong id="shootout-p2">⬜ ⬜ ⬜ ⬜ ⬜</strong></div>
+        </section>
+
+        <details class="collapsible">
+          <summary>Estadísticas</summary>
+          <div class="stats-grid">
+            <span>Tiradas <strong id="stat-turns">0</strong></span>
+            <span>Goles <strong id="stat-goals">0</strong></span>
+            <span>Postes/Largueros <strong id="stat-woodwork">0</strong></span>
+            <span>Tarjetas <strong id="stat-cards">0</strong></span>
+            <span>Especiales <strong id="stat-specials">0</strong></span>
+            <span>Tiempo <strong id="match-clock-label">00:00</strong></span>
+          </div>
+        </details>
+
+        <details class="collapsible">
+          <summary>Historial del partido</summary>
+          <ol id="game-log" class="broadcast-log"></ol>
+        </details>
+
+        <details id="debug-box" class="collapsible debug-box hidden">
+          <summary>Debug</summary>
+          <div class="debug-controls">
+            <input id="debug-value" type="number" min="0" max="99" placeholder="00-99" />
+            <button id="debug-throw-btn" type="button">FORZAR</button>
+          </div>
+        </details>
+        <div class="watch-footer-labels">
+          <span>WATER RESIST</span>
+          <span>ALARM CHRONO</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="modal-screen" class="modal hidden">
+      <div class="modal-card">
+        <h2 id="modal-title">Título</h2>
+        <p id="modal-text">Texto</p>
+        <div id="modal-extra"></div>
+        <div id="modal-actions" class="modal-actions"></div>
+      </div>
+    </section>
+
+    <section id="side-menu" class="side-menu hidden">
+      <div class="side-menu-card">
+        <button id="close-menu-btn" type="button" class="close-btn">×</button>
+        <h2>Menú</h2>
+        <button id="menu-rules-btn" type="button">Reglas</button>
+        <button id="menu-share-btn" type="button">Compartir</button>
+        <button id="menu-copy-btn" type="button">Copiar enlace</button>
+        <a href="feedback.html">Feedback</a>
+        <button id="menu-support-btn" type="button">Apoya CronoGol</button>
+        <button id="menu-reset-btn" type="button">Reiniciar partido</button>
+      </div>
+    </section>
+  </main>
+<script src="game.js"></script>
+</body>
+</html>

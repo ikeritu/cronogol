@@ -1,0 +1,18 @@
+[build]
+  publish = "."
+[[redirects]]
+  from = "/feedback"
+  to = "/feedback.html"
+  status = 200
+[[redirects]]
+  from = "/apoya"
+  to = "/apoya.html"
+  status = 200
+[[redirects]]
+  from = "/contacto"
+  to = "/contacto.html"
+  status = 200
+[[redirects]]
+  from = "/como-jugar"
+  to = "/como-jugar.html"
+  status = 200

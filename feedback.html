@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Envía feedback directo para mejorar CronoGol." />
+  <link rel="icon" href="favicon.png" type="image/png" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <title>Feedback · CronoGol</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="static-page">
+    <section class="static-card">
+      <img src="logo-cronogol-horizontal.png" alt="CronoGol" class="cg-logo cg-logo-static" />
+
+      <h1>Feedback</h1>
+
+      <p>Ayúdame a mejorar CronoGol. Puedes enviar un fallo, una sugerencia o una idea para el futuro modo online.</p>
+
+      <div class="callout">
+        Este formulario se envía directamente a través de Formspree. No abre tu correo y no depende de Netlify Forms.
+      </div>
+
+      <form id="feedback-form" class="feedback-form">
+        <label>
+          Tipo
+          <select name="tipo" required>
+            <option value="Fallo">Fallo</option>
+            <option value="Sugerencia">Sugerencia</option>
+            <option value="Mejora móvil">Mejora móvil</option>
+            <option value="Idea modo online">Idea modo online</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </label>
+
+        <label>
+          Dispositivo
+          <input name="dispositivo" type="text" placeholder="Ej: Android, iPhone, PC, navegador..." />
+        </label>
+
+        <label>
+          Email opcional
+          <input name="email" type="email" placeholder="Solo si quieres que te pueda responder" />
+        </label>
+
+        <label>
+          Mensaje
+          <textarea name="mensaje" required placeholder="Cuéntame qué ha pasado o qué mejorarías..."></textarea>
+        </label>
+
+        <input type="hidden" name="url" value="https://cronogol.netlify.app/" />
+        <input type="hidden" name="_subject" value="Nuevo feedback de CronoGol" />
+
+        <button class="main-start-btn" type="submit" id="feedback-submit-btn">Enviar feedback</button>
+
+        <div id="feedback-status" class="feedback-status hidden"></div>
+      </form>
+
+      <div class="feedback-actions">
+        <a class="support-link" href="index.html">Volver al juego</a>
+        <a class="support-link" href="apoya.html">Apoya CronoGol</a>
+      </div>
+
+      <nav class="footer-nav">
+        <a href="index.html">Jugar</a>
+        <a href="como-jugar.html">Cómo jugar</a>
+        <a href="apoya.html">Apoya</a>
+        <a href="feedback.html">Feedback</a>
+        <a href="contacto.html">Contacto</a>
+      </nav>
+    </section>
+  </main>
+
+  <script>
+    const FORMSPREE_ENDPOINT = "https://formspree.io/f/xjgdkwev";
+
+    const form = document.getElementById("feedback-form");
+    const statusBox = document.getElementById("feedback-status");
+    const submitBtn = document.getElementById("feedback-submit-btn");
+
+    function showStatus(message, type) {
+      statusBox.textContent = message;
+      statusBox.className = "feedback-status " + type;
+    }
+
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      const formData = new FormData(form);
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Enviando...";
+      showStatus("Enviando feedback...", "");
+
+      try {
+        const response = await fetch(FORMSPREE_ENDPOINT, {
+          method: "POST",
+          body: formData,
+          headers: { "Accept": "application/json" }
+        });
+
+        if (!response.ok) {
+          throw new Error("HTTP " + response.status);
+        }
+
+        form.reset();
+        showStatus("✅ Feedback enviado correctamente. ¡Gracias por ayudar a mejorar CronoGol!", "success");
+      } catch (error) {
+        showStatus("No se ha podido enviar. Revisa la conexión o la configuración del formulario de Formspree.", "error");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Enviar feedback";
+      }
+    });
+  </script>
+</body>
+</html>
