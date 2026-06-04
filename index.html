@@ -11,45 +11,43 @@
   <meta property="og:image" content="https://cronogol.netlify.app/og-cronogol.png" />
   <link rel="icon" href="favicon.png" type="image/png" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-  <title>CronoGol v1.7.6</title>
+  <title>CronoGol v1.7.8</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <main class="app">
+    <div class="top-language-switch" aria-label="Language selector">
+      <button type="button" class="lang-btn active" data-lang="es">ES</button>
+      <button type="button" class="lang-btn" data-lang="en">EN</button>
+    </div>
+    <header class="outside-logo-header">
+        <img src="logo-cronogol-horizontal.png" alt="CronoGol" class="cg-logo" id="version-tap-target" />
+      </header>
 
     <!-- Pantalla inicial limpia -->
     <section id="setup-screen" class="screen screen-setup active">
-      <div class="device setup-device">
-        <div class="watch-top-labels">
-          <span>MODE</span>
-          <span>CRONOGOL</span>
-          <span>START</span>
-        </div>
-        <header class="app-header cg-header">
-          <img src="logo-cronogol-horizontal.png" alt="CronoGol" class="cg-logo" id="version-tap-target" />
-        </header>
-
-        <section class="lcd hero-lcd">
+<div class="device setup-device">
+<section class="lcd hero-lcd">
           <h1>CronoGol</h1>
           <p>00 = GOL</p>
         </section>
 
         <section class="setup-card">
           <label>
-            Jugador 1
+            <span data-i18n="labelPlayer1">Jugador 1</span>
             <input id="player1-name" type="text" value="Jugador 1" maxlength="14" />
           </label>
 
           <label>
-            Jugador 2 / Máquina
+            <span data-i18n="labelPlayer2">Jugador 2 / Máquina</span>
             <input id="player2-name" type="text" value="Jugador 2" maxlength="14" />
           </label>
 
           <div class="segmented-field">
-            <span>Modo</span>
+            <span data-i18n="labelMode">Modo</span>
             <div class="segmented-control" role="group" aria-label="Modo de juego">
-              <button type="button" class="segment-btn active" data-target="game-mode" data-value="local">1 vs 1</button>
-              <button type="button" class="segment-btn" data-target="game-mode" data-value="machine">1 vs Máquina</button>
+              <button type="button" class="segment-btn active" data-target="game-mode" data-value="local" data-i18n="modeLocal">1 vs 1</button>
+              <button type="button" class="segment-btn" data-target="game-mode" data-value="machine" data-i18n="modeMachine">1 vs Máquina</button>
             </div>
             <select id="game-mode" class="native-select-hidden" aria-hidden="true" tabindex="-1">
               <option value="local">1 vs 1 local</option>
@@ -58,7 +56,7 @@
           </div>
 
           <label id="machine-level-label" class="machine-level-field">
-            Dificultad
+            <span data-i18n="labelDifficulty">Dificultad</span>
             <select id="machine-level">
               <option value="easy">Fácil</option>
               <option value="normal" selected>Normal</option>
@@ -67,10 +65,10 @@
           </label>
 
           <div class="segmented-field">
-            <span>Duración</span>
+            <span data-i18n="labelDuration">Duración</span>
             <div class="segmented-control" role="group" aria-label="Duración">
-              <button type="button" class="segment-btn active" data-target="match-mode" data-value="classic">Clásico</button>
-              <button type="button" class="segment-btn" data-target="match-mode" data-value="five">Rápido</button>
+              <button type="button" class="segment-btn active" data-target="match-mode" data-value="classic" data-i18n="durationClassic">Clásico</button>
+              <button type="button" class="segment-btn" data-target="match-mode" data-value="five" data-i18n="durationFast">Rápido</button>
             </div>
             <select id="match-mode" class="native-select-hidden" aria-hidden="true" tabindex="-1">
               <option value="classic">Clásico: hasta 45 y 90</option>
@@ -90,33 +88,33 @@
             </label>
           </div>
 
-          <button id="start-match-btn" class="main-start-btn">EMPEZAR PARTIDO</button>
+          <button id="start-match-btn" class="main-start-btn" data-i18n="startMatch">EMPEZAR PARTIDO</button>
         </section>
 
         <nav class="setup-links">
-          <button id="rules-btn" type="button">Reglas</button>
-          <button id="share-btn" type="button">Compartir</button>
-          <button id="copy-link-btn" type="button">Copiar enlace</button>
-          <a href="feedback.html">Feedback</a>
-          <button id="support-btn" type="button">Apoya</button>
+          <button id="rules-btn" type="button" data-i18n="rules">Reglas</button>
+          <button id="share-btn" type="button" data-i18n="share">Compartir</button>
+          <button id="copy-link-btn" type="button" data-i18n="copyLink">Copiar enlace</button>
+          <a href="feedback.html" data-i18n="feedback">Feedback</a>
+          <button id="support-btn" type="button" data-i18n="supportShort">Apoya</button>
         </nav>
 
         <section class="coming-soon">
-          <span class="tag">En desarrollo</span>
-          <strong>Modo online próximamente</strong>
-          <p>Crea una sala privada y juega en tiempo real con un amigo.</p>
+          <span class="tag" data-i18n="inDevelopment">En desarrollo</span>
+          <strong data-i18n="onlineSoon">Modo online próximamente</strong>
+          <p><span data-i18n="onlineSoonText">Crea una sala privada y juega en tiempo real con un amigo.</span></p>
         </section>
 
         <section class="sponsor-slot">
-          <strong>Espacio de patrocinador</strong>
-          <p>Visible solo fuera del partido. Nunca interrumpe la jugada.</p>
+          <strong data-i18n="sponsorSpace">Espacio de patrocinador</strong>
+          <p><span data-i18n="sponsorText">Visible solo fuera del partido. Nunca interrumpe la jugada.</span></p>
         </section>
 
         <div class="watch-footer-labels">
           <span>WATER RESIST</span>
           <span>FOOTBALL CHRONO</span>
         </div>
-        <footer class="version-footer">CronoGol v1.7.6 · Partidas en este dispositivo: <strong id="local-matches-count">0</strong></footer>
+        <footer class="version-footer">CronoGol v1.7.8 · Partidas en este dispositivo: <strong id="local-matches-count">0</strong></footer>
       </div>
     </section>
 
@@ -158,19 +156,19 @@
         </section>
 
         <section id="event-card" class="event-card event-neutral">
-          <span class="event-label">ÚLTIMA TIRADA</span>
+          <span class="event-label" data-i18n="lastThrow">ÚLTIMA TIRADA</span>
           <strong id="event-title">--</strong>
           <p id="message-label">Pulsa START para comenzar.</p>
         </section>
 
         <section class="turn-panel">
-          <span>TURNO DE</span>
+          <span data-i18n="turnOf">TURNO DE</span>
           <strong id="turn-label">Jugador 1</strong>
         </section>
 
         <section class="action-zone">
           <button id="main-action-btn" class="action-btn action-start">START</button>
-          <button id="reset-btn" class="reset-link hidden" type="button" aria-hidden="true" tabindex="-1">Reiniciar partido</button>
+          <button id="reset-btn" class="reset-link hidden" type="button" aria-hidden="true" tabindex="-1" data-i18n="resetMatch">Reiniciar partido</button>
         </section>
 
         <section id="special-panel" class="special-panel hidden">
@@ -185,19 +183,19 @@
         </section>
 
         <details class="collapsible">
-          <summary>Estadísticas</summary>
+          <summary data-i18n="stats">Estadísticas</summary>
           <div class="stats-grid">
-            <span>Tiradas <strong id="stat-turns">0</strong></span>
-            <span>Goles <strong id="stat-goals">0</strong></span>
-            <span>Postes/Largueros <strong id="stat-woodwork">0</strong></span>
-            <span>Tarjetas <strong id="stat-cards">0</strong></span>
-            <span>Especiales <strong id="stat-specials">0</strong></span>
-            <span>Tiempo <strong id="match-clock-label">00:00</strong></span>
+            <span><span data-i18n="throws">Tiradas</span> <strong id="stat-turns">0</strong></span>
+            <span><span data-i18n="goals">Goles</span> <strong id="stat-goals">0</strong></span>
+            <span><span data-i18n="woodwork">Postes/Largueros</span> <strong id="stat-woodwork">0</strong></span>
+            <span><span data-i18n="cards">Tarjetas</span> <strong id="stat-cards">0</strong></span>
+            <span><span data-i18n="specials">Especiales</span> <strong id="stat-specials">0</strong></span>
+            <span><span data-i18n="time">Tiempo</span> <strong id="match-clock-label">00:00</strong></span>
           </div>
         </details>
 
         <details class="collapsible">
-          <summary>Historial del partido</summary>
+          <summary data-i18n="matchHistory">Historial del partido</summary>
           <ol id="game-log" class="broadcast-log"></ol>
         </details>
 
@@ -227,13 +225,13 @@
     <section id="side-menu" class="side-menu hidden">
       <div class="side-menu-card">
         <button id="close-menu-btn" type="button" class="close-btn">×</button>
-        <h2>Menú</h2>
-        <button id="menu-rules-btn" type="button">Reglas</button>
-        <button id="menu-share-btn" type="button">Compartir</button>
-        <button id="menu-copy-btn" type="button">Copiar enlace</button>
-        <a href="feedback.html">Feedback</a>
-        <button id="menu-support-btn" type="button">Apoya CronoGol</button>
-        <button id="menu-reset-btn" type="button">Reiniciar partido</button>
+        <h2 data-i18n="menu">Menú</h2>
+        <button id="menu-rules-btn" type="button" data-i18n="rules">Reglas</button>
+        <button id="menu-share-btn" type="button" data-i18n="share">Compartir</button>
+        <button id="menu-copy-btn" type="button" data-i18n="copyLink">Copiar enlace</button>
+        <a href="feedback.html" data-i18n="feedback">Feedback</a>
+        <button id="menu-support-btn" type="button" data-i18n="supportFull">Apoya CronoGol</button>
+        <button id="menu-reset-btn" type="button" data-i18n="resetMatch">Reiniciar partido</button>
       </div>
     </section>
   </main>

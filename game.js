@@ -154,6 +154,115 @@ function resetRuntimeState(){
   if(shootoutPanel) shootoutPanel.classList.add("hidden");
 }
 
+
+const I18N = {
+  es: {
+    labelMode:"Modo",
+    labelDuration:"Duración",
+    labelDifficulty:"Dificultad",
+    labelPlayer1:"Jugador 1",
+    labelPlayer2:"Jugador 2 / Máquina",
+    modeLocal:"1 vs 1",
+    modeMachine:"1 vs Máquina",
+    durationClassic:"Clásico",
+    durationFast:"Rápido",
+    startMatch:"EMPEZAR PARTIDO",
+    forceMachine:"Forzar descanso/final contra máquina",
+    sound:"Sonido",
+    rules:"Reglas",
+    share:"Compartir",
+    copyLink:"Copiar enlace",
+    feedback:"Feedback",
+    supportShort:"Apoya",
+    inDevelopment:"En desarrollo",
+    onlineSoon:"Modo online próximamente",
+    onlineSoonText:"Crea una sala privada y juega en tiempo real con un amigo.",
+    sponsorSpace:"Espacio de patrocinador",
+    sponsorText:"Visible solo fuera del partido. Nunca interrumpe la jugada.",
+    lastThrow:"ÚLTIMA TIRADA",
+    turnOf:"TURNO DE",
+    stats:"Estadísticas",
+    matchHistory:"Historial del partido",
+    resetMatch:"Reiniciar partido",
+    throws:"Tiradas",
+    goals:"Goles",
+    woodwork:"Postes/Largueros",
+    cards:"Tarjetas",
+    specials:"Especiales",
+    time:"Tiempo",
+    menu:"Menú",
+    supportFull:"Apoya CronoGol"
+  },
+  en: {
+    labelMode:"Mode",
+    labelDuration:"Duration",
+    labelDifficulty:"Difficulty",
+    labelPlayer1:"Player 1",
+    labelPlayer2:"Player 2 / Machine",
+    modeLocal:"1 vs 1",
+    modeMachine:"1 vs Machine",
+    durationClassic:"Classic",
+    durationFast:"Fast",
+    startMatch:"START MATCH",
+    forceMachine:"Force half/full time vs machine",
+    sound:"Sound",
+    rules:"Rules",
+    share:"Share",
+    copyLink:"Copy link",
+    feedback:"Feedback",
+    supportShort:"Support",
+    inDevelopment:"In development",
+    onlineSoon:"Online mode coming soon",
+    onlineSoonText:"Create a private room and play live with a friend.",
+    sponsorSpace:"Sponsor space",
+    sponsorText:"Visible only outside the match. Never interrupts a play.",
+    lastThrow:"LAST THROW",
+    turnOf:"TURN OF",
+    stats:"Stats",
+    matchHistory:"Match history",
+    resetMatch:"Restart match",
+    throws:"Throws",
+    goals:"Goals",
+    woodwork:"Posts/Crossbars",
+    cards:"Cards",
+    specials:"Specials",
+    time:"Time",
+    menu:"Menu",
+    supportFull:"Support CronoGol"
+  }
+};
+
+let currentLang = "es";
+
+function applyLanguage(lang){
+  currentLang = I18N[lang] ? lang : "es";
+
+  document.querySelectorAll("[data-i18n]").forEach((el)=>{
+    const key = el.dataset.i18n;
+    if(I18N[currentLang][key]) el.textContent = I18N[currentLang][key];
+  });
+
+  document.querySelectorAll(".lang-btn").forEach((btn)=>{
+    btn.classList.toggle("active", btn.dataset.lang === currentLang);
+  });
+
+  try { localStorage.setItem("cronogol_lang", currentLang); } catch(e) {}
+}
+
+function setupLanguageSelector(){
+  document.querySelectorAll(".lang-btn").forEach((btn)=>{
+    btn.addEventListener("click",()=>applyLanguage(btn.dataset.lang));
+  });
+
+  try {
+    const saved = localStorage.getItem("cronogol_lang");
+    applyLanguage(saved || "es");
+  } catch(e) {
+    applyLanguage("es");
+  }
+}
+
+
 function updateSetupVisibility(){
   machineLevelLabel.classList.toggle("is-hidden", gameModeSelect.value !== "machine");
 }
@@ -399,4 +508,4 @@ function playSound(type){ if(!gameState.soundEnabled)return; try{ if(!audioCtx)a
 function vibrate(p){ try{ if(navigator.vibrate)navigator.vibrate(p); }catch(e){} }
 function pad(v){ return String(v).padStart(2,"0"); }
 function randomInt(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
-setupSegmentedControls(); updateSetupVisibility(); loadLocal();
+setupSegmentedControls(); setupLanguageSelector(); updateSetupVisibility(); loadLocal();

@@ -182,3 +182,35 @@ Se sustituye el logo anterior por el nuevo logo horizontal oscuro, que encaja me
 ## Base
 
 Esta versión parte de `v1.7.5`, manteniendo la estabilidad del juego.
+
+
+# CronoGol v1.7.7 — logo reposicionado + selector ES/EN
+
+## Cambios aplicados
+
+- El logo principal sale del interior del reloj y queda por encima de la carcasa.
+- El reloj vuelve a quedar más limpio y centrado en el juego.
+- Se añade selector de idioma pequeño y sutil arriba a la derecha.
+- Selector disponible: ES / EN.
+- El idioma se guarda en `localStorage`.
+- Se traducen textos principales de home, configuración, menú, estadísticas e historial.
+- No se toca la lógica de juego.
+
+## Motivo
+
+El logo dentro del reloj ocupaba demasiado espacio y rompía la jerarquía visual. Ahora funciona como cabecera de marca, mientras el reloj queda como zona jugable.
+
+
+# CronoGol v1.7.8 — logo fuera del reloj
+
+## Problema corregido
+
+El logo seguía apareciendo visualmente dentro de la carcasa del reloj.
+
+## Cambios
+
+- El bloque del logo se mueve como hijo directo de `<main>`, antes de `setup-screen`.
+- Se elimina la etiqueta superior decorativa del setup para que no parezca que el logo está dentro del reloj.
+- Se ajusta el tamaño del logo en desktop y móvil.
+- Se reduce ligeramente el LCD inicial para mejorar jerarquía.
+- No se toca la lógica del juego.
