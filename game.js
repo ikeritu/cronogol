@@ -142,6 +142,75 @@ function applyLanguage(lang){
   try { localStorage.setItem("cronogol_lang", currentLang); } catch(e) {}
 }
 
+
+const MODAL_TEXTS = {
+  es: {
+    rulesTitle: "REGLAS",
+    rulesIntro: "Se usan los dos últimos dígitos del cronómetro.",
+    rulesHtml: `<div class="donation-item">
+      <strong>Modo clásico</strong><br>
+      <strong>00</strong> = Gol.<br>
+      <strong>01-02</strong> = Poste. Repite el mismo jugador.<br>
+      <strong>03-04</strong> = Larguero. Repite el mismo jugador.<br>
+      <strong>45</strong> = Descanso. Se resetea el cronómetro y cambia el turno.<br>
+      <strong>50</strong> = Amarilla. Termina el turno y pierde el siguiente.<br>
+      <strong>60</strong> = Roja. Termina el turno y pierde dos turnos.<br>
+      <strong>90</strong> = Final del partido.<br>
+      <strong>96-97</strong> = Falta peligrosa. Hay una tirada especial: si sale de <strong>00 a 20</strong>, es gol; si sale de <strong>21 a 99</strong>, falla.<br>
+      <strong>98-99</strong> = Penalti. Hay una tirada especial: si sale número <strong>par</strong>, es gol; si sale <strong>impar</strong>, falla.<br>
+      <strong>Otros números</strong> = Fallo y cambia el turno.
+    </div>
+    <div class="donation-item">
+      <strong>Modo rápido</strong><br>
+      Todo número terminado en <strong>0</strong> es gol: 00, 10, 20, 30, 40, 50, 60, 70, 80 y 90.<br>
+      Todo número terminado en <strong>9</strong> es penalti: 09, 19, 29, 39, 49, 59, 69, 79, 89 y 99.<br>
+      En el penalti, se hace una tirada especial: <strong>par = gol</strong>, <strong>impar = fallo</strong>.<br>
+      Gana el primero que llegue a <strong>6 goles con 2 de ventaja</strong>. Ejemplo: 6-4 gana; 6-5 no gana; hay que llegar a 7-5.
+    </div>`,
+    close: "CERRAR",
+    supportTitle: "APOYA CRONOGOL",
+    supportIntro: "CronoGol es gratis y lo seguirá siendo.",
+    bizumButton: "Abrir Bizum",
+    paypalButton: "Abrir PayPal",
+    concept: "Concepto"
+  },
+  en: {
+    rulesTitle: "RULES",
+    rulesIntro: "The game uses the last two digits of the stopwatch.",
+    rulesHtml: `<div class="donation-item">
+      <strong>Classic mode</strong><br>
+      <strong>00</strong> = Goal.<br>
+      <strong>01-02</strong> = Post. Same player repeats.<br>
+      <strong>03-04</strong> = Crossbar. Same player repeats.<br>
+      <strong>45</strong> = Half-time. Stopwatch resets and turn changes.<br>
+      <strong>50</strong> = Yellow card. Turn ends and the player skips the next turn.<br>
+      <strong>60</strong> = Red card. Turn ends and the player skips two turns.<br>
+      <strong>90</strong> = Full-time.<br>
+      <strong>96-97</strong> = Dangerous free kick. Special throw: <strong>00 to 20</strong> is a goal; <strong>21 to 99</strong> is a miss.<br>
+      <strong>98-99</strong> = Penalty. Special throw: <strong>even = goal</strong>; <strong>odd = miss</strong>.<br>
+      <strong>Any other number</strong> = Miss and turn changes.
+    </div>
+    <div class="donation-item">
+      <strong>Fast mode</strong><br>
+      Any number ending in <strong>0</strong> is a goal: 00, 10, 20, 30, 40, 50, 60, 70, 80 and 90.<br>
+      Any number ending in <strong>9</strong> is a penalty: 09, 19, 29, 39, 49, 59, 69, 79, 89 and 99.<br>
+      Penalty special throw: <strong>even = goal</strong>, <strong>odd = miss</strong>.<br>
+      The first player to reach <strong>6 goals with a 2-goal lead</strong> wins. Example: 6-4 wins; 6-5 does not; you need 7-5.
+    </div>`,
+    close: "CLOSE",
+    supportTitle: "SUPPORT CRONOGOL",
+    supportIntro: "CronoGol is free and will remain free.",
+    bizumButton: "Open Bizum",
+    paypalButton: "Open PayPal",
+    concept: "Concept"
+  }
+};
+
+function modalLang(){
+  return MODAL_TEXTS[currentLang] ? currentLang : "es";
+}
+
+
 function setupLanguageSelector(){
   document.querySelectorAll(".lang-btn").forEach((btn)=>{
     btn.addEventListener("click",()=>applyLanguage(btn.dataset.lang));
@@ -533,3 +602,25 @@ function randomInt(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
 setupSegmentedControls();  updateSetupVisibility(); loadLocal();
 
 setupLanguageSelector();
+
+
+// ===== v1.8.1 overrides: modal language fix =====
+function showRulesModal(){
+  const t = MODAL_TEXTS[modalLang()];
+  showModal(
+    t.rulesTitle,
+    t.rulesIntro,
+    t.rulesHtml,
+    [{text:t.close, action:closeModal}]
+  );
+}
+
+function showSupportModal(){
+  const t = MODAL_TEXTS[modalLang()];
+  showModal(
+    t.supportTitle,
+    t.supportIntro,
+    `<div class="donation-data"><div class="donation-item"><strong>Bizum</strong><br>${CRONOGOL_CONFIG.bizumPhone} · ${t.concept}: ${CRONOGOL_CONFIG.bizumConcept}<button class="bizum-direct-btn" onclick="openBizum()">${t.bizumButton}</button></div><div class="donation-item"><strong>PayPal</strong><br><a class="support-link" href="${CRONOGOL_CONFIG.paypalUrl}" target="_blank">${t.paypalButton}</a></div></div>`,
+    [{text:t.close, action:closeModal}]
+  );
+}
