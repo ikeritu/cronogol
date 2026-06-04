@@ -48,7 +48,7 @@ const debugBox = $("debug-box"), debugValueInput = $("debug-value"), debugThrowB
 const modalTitle = $("modal-title"), modalText = $("modal-text"), modalExtra = $("modal-extra"), modalActions = $("modal-actions");
 
 const CRONOGOL_CONFIG = {
-  siteUrl: "https://cronogol.netlify.app/",
+  siteUrl:"https://ikeritu.github.io/cronogol/",
   whatsappText: "Estoy jugando a CronoGol, el juego del cronómetro Casio ⚽⌚\n\nPruébalo aquí:\nhttps://cronogol.netlify.app/",
   paypalUrl: "https://paypal.me/ikeritus",
   bizumPhone: "+34615717190",
@@ -124,6 +124,14 @@ const I18N = {
 
 let currentLang = "es";
 
+
+function updateLanguageLinks(){
+  document.querySelectorAll('a[href^="feedback.html"]').forEach((a)=>{
+    a.href = `feedback.html?lang=${currentLang}`;
+  });
+}
+
+
 function applyLanguage(lang){
   currentLang = I18N[lang] ? lang : "es";
 
@@ -139,6 +147,7 @@ function applyLanguage(lang){
     btn.classList.toggle("active", btn.dataset.lang === currentLang);
   });
 
+  updateLanguageLinks();
   try { localStorage.setItem("cronogol_lang", currentLang); } catch(e) {}
 }
 
@@ -548,18 +557,25 @@ async function openBizum(){
   setTimeout(()=>showToast(`Bizum: ${CRONOGOL_CONFIG.bizumPhone} · Concepto: ${CRONOGOL_CONFIG.bizumConcept}`),1200);
 }
 function whatsappShareUrl(){ return `https://wa.me/?text=${encodeURIComponent(CRONOGOL_CONFIG.whatsappText)}`; }
-async function shareCronoGol(){ try{ if(navigator.share){ await navigator.share({title:"CronoGol",text:"Estoy jugando a CronoGol ⚽⌚",url:CRONOGOL_CONFIG.siteUrl}); return; } }catch(e){} window.open(whatsappShareUrl(),"_blank","noopener"); }
-function formattedFinalResult(){
-  const p1 = gameState.players[0];
-  const p2 = gameState.players[1];
+async function shareCronoGol(){
+  const text = currentLang === "en"
+    ? `I'm playing CronoGol ⚽⌚
+${CRONOGOL_CONFIG.siteUrl}`
+    : `Estoy jugando a CronoGol ⚽⌚
+${CRONOGOL_CONFIG.siteUrl}`;
 
-  let text = `${p1.name} | ${p1.goals} - ${p2.goals} | ${p2.name}`;
+  try{
+    if(navigator.share){
+      await navigator.share({
+        title:"CronoGol",
+        text: currentLang === "en" ? "I'm playing CronoGol ⚽⌚" : "Estoy jugando a CronoGol ⚽⌚",
+        url: CRONOGOL_CONFIG.siteUrl
+      });
+      return;
+    }
+  }catch(e){}
 
-  if(p1.goals > p2.goals) text += `. Gana ${p1.name}.`;
-  else if(p2.goals > p1.goals) text += `. Gana ${p2.name}.`;
-  else text += ". Empate final.";
-
-  return text;
+  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`,"_blank","noopener");
 }
 
 function resultText(includeUrl=true){
@@ -587,32 +603,45 @@ async function shareResult(){
   }catch(e){}
   window.open(`https://wa.me/?text=${encodeURIComponent(resultText(true))}`,"_blank","noopener");
 }
-function copyCronoGolLink(){ copyText(CRONOGOL_CONFIG.siteUrl,"Enlace copiado"); }
-function copyResult(){ copyText(resultText(true),"Resultado copiado"); }
-async function copyText(t,msg){ try{ await navigator.clipboard.writeText(t); showToast(msg); return true; }catch(e){ showToast("No se pudo copiar"); return false; } }
-function showToast(m){ const old=document.querySelector(".toast"); if(old)old.remove(); const d=document.createElement("div"); d.className="toast"; d.textContent=m; document.body.appendChild(d); setTimeout(()=>d.remove(),2300); }
-function forceDebugThrow(){ const n=Number(debugValueInput.value); if(Number.isInteger(n)&&n>=0&&n<=99){ if(gameState.isRunning)stopTimer(); pendingSpecial?evaluateSpecialThrow(n):stopTimerAndEvaluate(n); } }
-function currentPlayer(){ return gameState.players[gameState.currentPlayerIndex]; }
-function scoreText(){ return `${gameState.players[0].name} ${gameState.players[0].goals} - ${gameState.players[1].goals} ${gameState.players[1].name}`; }
-function clockSec(){ return Math.floor((Date.now()-matchStartTime)/1000)+'"'; }
-function playSound(type){ if(!gameState.soundEnabled)return; try{ if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)(); const f={goal:880,yellow:360,red:260,beep:760,stop:420}[type]||440; const o=audioCtx.createOscillator(),g=audioCtx.createGain(); o.type="square"; o.frequency.value=f; g.gain.setValueAtTime(.045,audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.13); o.connect(g); g.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime+.13); }catch(e){} }
-function vibrate(p){ try{ if(navigator.vibrate)navigator.vibrate(p); }catch(e){} }
-function pad(v){ return String(v).padStart(2,"0"); }
-function randomInt(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
-setupSegmentedControls();  updateSetupVisibility(); loadLocal();
+function copyCronoGolLink(){
+  copyText(
+    CRONOGOL_CONFIG.siteUrl,
+    currentLang === "en" ? "Link copied" : "Enlace copiado"
+  );
+}
 
-setupLanguageSelector();
-
-
-// ===== v1.8.1 overrides: modal language fix =====
-function showRulesModal(){
+function showSupportModal(){
   const t = MODAL_TEXTS[modalLang()];
   showModal(
-    t.rulesTitle,
-    t.rulesIntro,
-    t.rulesHtml,
+    t.supportTitle,
+    t.supportIntro,
+    `<div class="donation-data"><div class="donation-item"><strong>Bizum</strong><br>${CRONOGOL_CONFIG.bizumPhone} · ${t.concept}: ${CRONOGOL_CONFIG.bizumConcept}<button class="bizum-direct-btn" onclick="openBizum()">${t.bizumButton}</button></div><div class="donation-item"><strong>PayPal</strong><br><a class="support-link" href="${CRONOGOL_CONFIG.paypalUrl}" target="_blank">${t.paypalButton}</a></div></div>`,
     [{text:t.close, action:closeModal}]
   );
+}
+
+
+// ===== v1.8.2 overrides: share/support language fix =====
+async function shareCronoGol(){
+  const nativeText = currentLang === "en" ? "I'm playing CronoGol ⚽⌚" : "Estoy jugando a CronoGol ⚽⌚";
+  const fullText = `${nativeText}\n${CRONOGOL_CONFIG.siteUrl}`;
+
+  try{
+    if(navigator.share){
+      await navigator.share({
+        title:"CronoGol",
+        text:nativeText,
+        url:CRONOGOL_CONFIG.siteUrl
+      });
+      return;
+    }
+  }catch(e){}
+
+  window.open(`https://wa.me/?text=${encodeURIComponent(fullText)}`,"_blank","noopener");
+}
+
+function copyCronoGolLink(){
+  copyText(CRONOGOL_CONFIG.siteUrl, currentLang === "en" ? "Link copied" : "Enlace copiado");
 }
 
 function showSupportModal(){

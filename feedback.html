@@ -10,16 +10,20 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div class="top-language-switch" aria-label="Language selector">
+    <button type="button" class="lang-btn" data-lang="es" aria-label="Español">ES</button>
+    <button type="button" class="lang-btn" data-lang="en" aria-label="English">EN</button>
+  </div>
   <main class="static-page">
     <section class="static-card">
       <img src="logo-cronogol-horizontal.png" alt="CronoGol" class="cg-logo cg-logo-static" />
 
-      <h1>Feedback</h1>
+      <h1 data-i18n="title">Feedback</h1>
 
-      <p>Ayúdame a mejorar CronoGol. Puedes enviar un fallo, una sugerencia o una idea para el futuro modo online.</p>
+      <p><span data-i18n="intro">Ayúdame a mejorar CronoGol. Puedes enviar un fallo, una sugerencia o una idea para el futuro modo online.</span></p>
 
       <div class="callout">
-        Este formulario se envía directamente a través de Formspree. No abre tu correo y no depende de Netlify Forms.
+        <span data-i18n="formspree">Este formulario se envía directamente a través de Formspree. No abre tu correo y no depende de Netlify Forms.</span>
       </div>
 
       <form id="feedback-form" class="feedback-form">
@@ -90,7 +94,7 @@
       const formData = new FormData(form);
 
       submitBtn.disabled = true;
-      submitBtn.textContent = "Enviando...";
+      submitBtn.textContent = (window.FEEDBACK_TEXT ? window.FEEDBACK_TEXT().sending : "Enviando...");
       showStatus("Enviando feedback...", "");
 
       try {
@@ -105,14 +109,87 @@
         }
 
         form.reset();
-        showStatus("✅ Feedback enviado correctamente. ¡Gracias por ayudar a mejorar CronoGol!", "success");
+        showStatus((window.FEEDBACK_TEXT ? window.FEEDBACK_TEXT().ok : "✅ Feedback enviado correctamente. ¡Gracias por ayudar a mejorar CronoGol!"), "success");
       } catch (error) {
-        showStatus("No se ha podido enviar. Revisa la conexión o la configuración del formulario de Formspree.", "error");
+        showStatus((window.FEEDBACK_TEXT ? window.FEEDBACK_TEXT().error : "No se ha podido enviar. Revisa la conexión o la configuración del formulario de Formspree."), "error");
       } finally {
         submitBtn.disabled = false;
-        submitBtn.textContent = "Enviar feedback";
+        submitBtn.textContent = (window.FEEDBACK_TEXT ? window.FEEDBACK_TEXT().submit : "Enviar feedback");
       }
     });
+  </script>
+
+  <script id="feedback-i18n-script">
+    const FEEDBACK_I18N = {
+      es: {
+        intro:"Ayúdame a mejorar CronoGol. Puedes enviar un fallo, una sugerencia o una idea para el futuro modo online.",
+        formspree:"Este formulario se envía directamente a través de Formspree. No abre tu correo y no depende de Netlify Forms.",
+        type:"Tipo",
+        device:"Dispositivo",
+        email:"Email opcional",
+        message:"Mensaje",
+        submit:"Enviar feedback",
+        sending:"Enviando...",
+        ok:"✅ Feedback enviado correctamente. ¡Gracias por ayudar a mejorar CronoGol!",
+        error:"No se ha podido enviar. Revisa la conexión o la configuración del formulario de Formspree.",
+        back:"Volver al juego",
+        support:"Apoya CronoGol"
+      },
+      en: {
+        intro:"Help me improve CronoGol. You can send a bug, a suggestion, or an idea for the future online mode.",
+        formspree:"This form is sent directly through Formspree. It does not open your email app and does not depend on Netlify Forms.",
+        type:"Type",
+        device:"Device",
+        email:"Optional email",
+        message:"Message",
+        submit:"Send feedback",
+        sending:"Sending...",
+        ok:"✅ Feedback sent successfully. Thanks for helping improve CronoGol!",
+        error:"Could not send it. Check your connection or the Formspree form configuration.",
+        back:"Back to game",
+        support:"Support CronoGol"
+      }
+    };
+
+    let feedbackLang = new URLSearchParams(location.search).get("lang") || localStorage.getItem("cronogol_lang") || "es";
+    if(!FEEDBACK_I18N[feedbackLang]) feedbackLang = "es";
+
+    function applyFeedbackLang(lang){
+      feedbackLang = FEEDBACK_I18N[lang] ? lang : "es";
+      document.documentElement.lang = feedbackLang;
+      localStorage.setItem("cronogol_lang", feedbackLang);
+
+      document.querySelectorAll(".lang-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.lang === feedbackLang));
+
+      const t = FEEDBACK_I18N[feedbackLang];
+      const title = document.querySelector("[data-i18n='title']");
+      if(title) title.textContent = "Feedback";
+      const intro = document.querySelector("[data-i18n='intro']");
+      if(intro) intro.textContent = t.intro;
+      const formspree = document.querySelector("[data-i18n='formspree']");
+      if(formspree) formspree.textContent = t.formspree;
+
+      const labels = document.querySelectorAll(".feedback-form label");
+      if(labels[0]) labels[0].childNodes[0].textContent = t.type + " ";
+      if(labels[1]) labels[1].childNodes[0].textContent = t.device + " ";
+      if(labels[2]) labels[2].childNodes[0].textContent = t.email + " ";
+      if(labels[3]) labels[3].childNodes[0].textContent = t.message + " ";
+
+      const submit = document.getElementById("feedback-submit-btn");
+      if(submit) submit.textContent = t.submit;
+
+      document.querySelectorAll("a[href='index.html']").forEach(a => a.textContent = t.back);
+      document.querySelectorAll("a[href='apoya.html']").forEach(a => a.textContent = t.support);
+    }
+
+    document.querySelectorAll(".lang-btn").forEach(btn => {
+      btn.addEventListener("click", () => applyFeedbackLang(btn.dataset.lang));
+    });
+
+    applyFeedbackLang(feedbackLang);
+
+    window.FEEDBACK_LANG = () => feedbackLang;
+    window.FEEDBACK_TEXT = () => FEEDBACK_I18N[feedbackLang];
   </script>
 </body>
 </html>

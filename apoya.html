@@ -1,2 +1,26 @@
 <!DOCTYPE html><html lang="es"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="icon" href="favicon.png" type="image/png" />
-  <link rel="icon" href="favicon.svg" type="image/svg+xml" /><title>Apoya · CronoGol</title><link rel="stylesheet" href="style.css" /></head><body><main class="static-page"><section class="static-card"><img src="logo-cronogol-horizontal.png" alt="CronoGol" class="cg-logo cg-logo-static" /><h1>Apoya CronoGol</h1><p>CronoGol es gratis y lo seguirá siendo.</p><div class='donation-data'><div class='donation-item'><strong>Bizum</strong><br>+34615717190 · Concepto: CronoGol</div><div class='donation-item'><strong>PayPal</strong><br><a class='support-link' href='https://paypal.me/ikeritus' target='_blank'>Abrir PayPal</a></div></div><nav class="footer-nav"><a href="index.html">Jugar</a><a href="como-jugar.html">Cómo jugar</a><a href="apoya.html">Apoya</a><a href="feedback.html">Feedback</a><a href="contacto.html">Contacto</a></nav></section></main></body></html>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" /><title>Apoya · CronoGol</title><link rel="stylesheet" href="style.css" /></head><body>
+  <div class="top-language-switch" aria-label="Language selector">
+    <button type="button" class="lang-btn" data-lang="es" aria-label="Español">ES</button>
+    <button type="button" class="lang-btn" data-lang="en" aria-label="English">EN</button>
+  </div><main class="static-page"><section class="static-card"><img src="logo-cronogol-horizontal.png" alt="CronoGol" class="cg-logo cg-logo-static" /><h1>Apoya CronoGol</h1><p>CronoGol es gratis y lo seguirá siendo.</p><div class='donation-data'><div class='donation-item'><strong>Bizum</strong><br>+34615717190 · Concepto: CronoGol</div><div class='donation-item'><strong>PayPal</strong><br><a class='support-link' href='https://paypal.me/ikeritus' target='_blank'>Abrir PayPal</a></div></div><nav class="footer-nav"><a href="index.html">Jugar</a><a href="como-jugar.html">Cómo jugar</a><a href="apoya.html">Apoya</a><a href="feedback.html">Feedback</a><a href="contacto.html">Contacto</a></nav></section></main>
+  <script id="apoya-i18n-script">
+    const SUPPORT_PAGE_I18N = {
+      es: {title:"Apoya CronoGol", intro:"CronoGol es gratis y lo seguirá siendo. Si te gusta el proyecto, puedes invitarme a un café.", bizum:"Bizum", paypal:"PayPal", back:"Jugar", how:"Cómo jugar", support:"Apoya", feedback:"Feedback", contact:"Contacto"},
+      en: {title:"Support CronoGol", intro:"CronoGol is free and will remain free. If you like the project, you can buy me a coffee.", bizum:"Bizum", paypal:"PayPal", back:"Play", how:"How to play", support:"Support", feedback:"Feedback", contact:"Contact"}
+    };
+    let lang = new URLSearchParams(location.search).get("lang") || localStorage.getItem("cronogol_lang") || "es";
+    if(!SUPPORT_PAGE_I18N[lang]) lang = "es";
+    function applySupportPageLang(l){
+      lang = SUPPORT_PAGE_I18N[l] ? l : "es";
+      localStorage.setItem("cronogol_lang", lang);
+      document.documentElement.lang = lang;
+      document.querySelectorAll(".lang-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.lang === lang));
+      const t = SUPPORT_PAGE_I18N[lang];
+      const h1 = document.querySelector("h1"); if(h1) h1.textContent = t.title;
+      const firstP = document.querySelector("h1 + p"); if(firstP) firstP.textContent = t.intro;
+    }
+    document.querySelectorAll(".lang-btn").forEach(btn => btn.addEventListener("click",()=>applySupportPageLang(btn.dataset.lang)));
+    applySupportPageLang(lang);
+  </script>
+</body></html>
