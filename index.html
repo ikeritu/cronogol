@@ -11,14 +11,14 @@
   <meta property="og:image" content="https://cronogol.netlify.app/og-cronogol.png" />
   <link rel="icon" href="favicon.png" type="image/png" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-  <title>CronoGol v1.7.8</title>
+  <title>CronoGol v1.7.9</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <main class="app">
     <div class="top-language-switch" aria-label="Language selector">
-      <button type="button" class="lang-btn active" data-lang="es">ES</button>
-      <button type="button" class="lang-btn" data-lang="en">EN</button>
+      <button type="button" class="lang-btn active" data-lang="es" aria-label="Español">ES</button>
+      <button type="button" class="lang-btn" data-lang="en" aria-label="English">EN</button>
     </div>
     <header class="outside-logo-header">
         <img src="logo-cronogol-horizontal.png" alt="CronoGol" class="cg-logo" id="version-tap-target" />
@@ -46,8 +46,8 @@
           <div class="segmented-field">
             <span data-i18n="labelMode">Modo</span>
             <div class="segmented-control" role="group" aria-label="Modo de juego">
-              <button type="button" class="segment-btn active" data-target="game-mode" data-value="local" data-i18n="modeLocal">1 vs 1</button>
-              <button type="button" class="segment-btn" data-target="game-mode" data-value="machine" data-i18n="modeMachine">1 vs Máquina</button>
+              <button type="button" class="segment-btn active" data-target="game-mode" data-value="local" data-i18n="modeLocal"> 1 vs 1</button>
+              <button type="button" class="segment-btn" data-target="game-mode" data-value="machine" data-i18n="modeMachine"> 1 vs Máquina</button>
             </div>
             <select id="game-mode" class="native-select-hidden" aria-hidden="true" tabindex="-1">
               <option value="local">1 vs 1 local</option>
@@ -67,8 +67,8 @@
           <div class="segmented-field">
             <span data-i18n="labelDuration">Duración</span>
             <div class="segmented-control" role="group" aria-label="Duración">
-              <button type="button" class="segment-btn active" data-target="match-mode" data-value="classic" data-i18n="durationClassic">Clásico</button>
-              <button type="button" class="segment-btn" data-target="match-mode" data-value="five" data-i18n="durationFast">Rápido</button>
+              <button type="button" class="segment-btn active" data-target="match-mode" data-value="classic" data-i18n="durationClassic"> Clásico</button>
+              <button type="button" class="segment-btn" data-target="match-mode" data-value="five" data-i18n="durationFast"> Rápido</button>
             </div>
             <select id="match-mode" class="native-select-hidden" aria-hidden="true" tabindex="-1">
               <option value="classic">Clásico: hasta 45 y 90</option>
@@ -79,16 +79,16 @@
           <div class="compact-options">
             <label class="checkbox-row">
               <input id="force-events" type="checkbox" checked />
-              Forzar descanso/final contra máquina
+              <span data-i18n="forceMachine">Forzar descanso/final contra máquina</span>
             </label>
 
             <label class="checkbox-row">
               <input id="sound-enabled" type="checkbox" checked />
-              Sonido
+              <span data-i18n="sound">Sonido</span>
             </label>
           </div>
 
-          <button id="start-match-btn" class="main-start-btn" data-i18n="startMatch">EMPEZAR PARTIDO</button>
+          <button id="start-match-btn" class="main-start-btn" data-i18n="startMatch"> EMPEZAR PARTIDO</button>
         </section>
 
         <nav class="setup-links">
@@ -100,21 +100,21 @@
         </nav>
 
         <section class="coming-soon">
-          <span class="tag" data-i18n="inDevelopment">En desarrollo</span>
+          <span class="tag" data-i18n="inDevelopment"><span data-i18n="inDevelopment">En desarrollo</span></span>
           <strong data-i18n="onlineSoon">Modo online próximamente</strong>
-          <p><span data-i18n="onlineSoonText">Crea una sala privada y juega en tiempo real con un amigo.</span></p>
+          <p><span data-i18n="onlineSoonText"><span data-i18n="onlineSoonText">Crea una sala privada y juega en tiempo real con un amigo.</span></span></p>
         </section>
 
         <section class="sponsor-slot">
           <strong data-i18n="sponsorSpace">Espacio de patrocinador</strong>
-          <p><span data-i18n="sponsorText">Visible solo fuera del partido. Nunca interrumpe la jugada.</span></p>
+          <p><span data-i18n="sponsorText"><span data-i18n="sponsorText">Visible solo fuera del partido. Nunca interrumpe la jugada.</span></span></p>
         </section>
 
         <div class="watch-footer-labels">
           <span>WATER RESIST</span>
           <span>FOOTBALL CHRONO</span>
         </div>
-        <footer class="version-footer">CronoGol v1.7.8 · Partidas en este dispositivo: <strong id="local-matches-count">0</strong></footer>
+        <footer class="version-footer">CronoGol v1.7.9 · Partidas en este dispositivo: <strong id="local-matches-count">0</strong></footer>
       </div>
     </section>
 
@@ -156,7 +156,7 @@
         </section>
 
         <section id="event-card" class="event-card event-neutral">
-          <span class="event-label" data-i18n="lastThrow">ÚLTIMA TIRADA</span>
+          <span class="event-label" data-i18n="lastThrow"><span data-i18n="lastThrow">ÚLTIMA TIRADA</span></span>
           <strong id="event-title">--</strong>
           <p id="message-label">Pulsa START para comenzar.</p>
         </section>
