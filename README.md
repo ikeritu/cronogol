@@ -1,32 +1,37 @@
-# CronoGol v1.9.7 — Secondary Actions CSS-only Final Fix
+# CronoGol v1.9.8 — Game Feel Improvements
 
 ## Objetivo
 
-Corregir definitivamente la distribución visual de los botones secundarios sin modificar funciones del juego.
-
-## Layout final
-
-```text
-[ Reglas ] [ Modos ] [ Historia ]
-[ Compartir ] [ Copiar enlace ] [ Feedback ]
-[              ☕ Apoya CronoGol              ]
-```
+Mejorar la sensación de juego sin modificar las reglas ni la lógica base.
 
 ## Cambios aplicados
 
-- Reordenado el bloque visual `nav.setup-links`.
-- Añadida clase `secondary-actions-final`.
-- Añadidos atributos `data-slot` para fijar posiciones por CSS.
-- Añadido CSS con alta especificidad sobre `#setup-screen nav.setup-links.secondary-actions-final`.
-- Forzadas 3 columnas exactas.
-- `Apoya CronoGol` ocupa toda la tercera fila.
+- Añadida descripción visible de dificultad de máquina.
+- Añadido mensaje emocional al final del partido.
+- Añadido mensaje emocional al resultado compartido.
+- Añadidos estilos para el mensaje emocional.
+- Se mantiene descartada la ayuda opcional para modo clásico largo.
+
+## Mensajes de dificultad
+
+- Fácil: máquina torpe, ideal para aprender.
+- Normal: partida equilibrada.
+- Difícil: más precisión y más peligro en jugadas especiales.
+
+## Ejemplos de mensajes finales
+
+- Partido ajustadísimo.
+- Festival ofensivo.
+- Drama total desde los once metros.
+- Partido de porteros.
+- Victoria contundente.
+- La máquina no perdona.
 
 ## No se ha tocado
 
-- Funciones JavaScript.
-- Lógica del juego.
+- Reglas del modo clásico.
+- Ayuda para modo clásico largo.
 - START/STOP.
-- Reglas.
 - Turnos.
 - Máquina.
 - Modo rápido.
@@ -37,10 +42,9 @@ Corregir definitivamente la distribución visual de los botones secundarios sin 
 
 ## QA recomendado
 
-1. Abrir home.
-2. Confirmar layout exacto:
-   - Reglas / Modos / Historia.
-   - Compartir / Copiar enlace / Feedback.
-   - Apoya CronoGol a ancho completo.
-3. Probar cada botón.
-4. Probar Empezar partido.
+1. Elegir 1 vs Máquina.
+2. Cambiar dificultad y comprobar texto descriptivo.
+3. Terminar una partida.
+4. Confirmar mensaje emocional en el final.
+5. Compartir resultado y comprobar que incluye la frase emocional.
+6. Confirmar que reglas y turnos siguen igual.

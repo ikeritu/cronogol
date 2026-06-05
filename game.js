@@ -62,6 +62,7 @@ const I18N = {
     labelMode:"Modo",
     labelDuration:"Duración",
     labelDifficulty:"Dificultad",
+    machineDifficultyHint:"Normal: partida equilibrada.",
     advancedOptions:"Opciones avanzadas",
     labelPlayer1:"Jugador 1",
     labelPlayer2:"Jugador 2 / Máquina",
@@ -96,6 +97,7 @@ const I18N = {
     labelMode:"Mode",
     labelDuration:"Duration",
     labelDifficulty:"Difficulty",
+    machineDifficultyHint:"Normal: balanced match.",
     advancedOptions:"Advanced options",
     labelPlayer1:"Player 1",
     labelPlayer2:"Player 2 / Machine",
@@ -1238,3 +1240,134 @@ function showSupportModal(){
     [{text:isEn ? "CLOSE" : "CERRAR", action:closeModal}]
   );
 }
+
+
+/* ===== CronoGol v1.9.8: game feel improvements ===== */
+/* No modifica reglas, turnos, START/STOP ni lógica base del partido. */
+
+function machineDifficultyText(){
+  const level = machineLevelSelect ? machineLevelSelect.value : "normal";
+  const isEn = currentLang === "en";
+
+  const texts = {
+    es: {
+      easy: "Fácil: máquina torpe, ideal para aprender.",
+      normal: "Normal: partida equilibrada.",
+      hard: "Difícil: más precisión y más peligro en jugadas especiales."
+    },
+    en: {
+      easy: "Easy: clumsy machine, ideal for learning.",
+      normal: "Normal: balanced match.",
+      hard: "Hard: more precision and more danger in special plays."
+    }
+  };
+
+  return (isEn ? texts.en : texts.es)[level] || (isEn ? texts.en.normal : texts.es.normal);
+}
+
+function updateMachineDifficultyHint(){
+  const hint = document.getElementById("machine-difficulty-hint");
+  if(!hint) return;
+  hint.textContent = machineDifficultyText();
+}
+
+function getFinalEmotion(pens=false){
+  const p1 = gameState.players[0];
+  const p2 = gameState.players[1];
+  const goals1 = p1.goals;
+  const goals2 = p2.goals;
+  const totalGoals = goals1 + goals2;
+  const diff = Math.abs(goals1 - goals2);
+  const isEn = currentLang === "en";
+
+  if(pens){
+    return isEn
+      ? "Total drama from the penalty spot."
+      : "Drama total desde los once metros.";
+  }
+
+  if(totalGoals === 0){
+    return isEn
+      ? "Goalkeepers' match."
+      : "Partido de porteros.";
+  }
+
+  if(diff === 1){
+    return isEn
+      ? "Extremely tight match."
+      : "Partido ajustadísimo.";
+  }
+
+  if(totalGoals >= 7){
+    return isEn
+      ? "Attacking festival."
+      : "Festival ofensivo.";
+  }
+
+  if(diff >= 4){
+    return isEn
+      ? "Commanding victory."
+      : "Victoria contundente.";
+  }
+
+  if(gameState.gameMode === "machine" && goals2 > goals1){
+    return isEn
+      ? "The machine shows no mercy."
+      : "La máquina no perdona.";
+  }
+
+  if(gameState.gameMode === "machine" && goals1 > goals2 && machineLevelSelect && machineLevelSelect.value === "hard"){
+    return isEn
+      ? "Big statement against the hard machine."
+      : "Golpe sobre la mesa contra la máquina difícil.";
+  }
+
+  return isEn
+    ? "Decided by stopwatch precision."
+    : "Decidido por precisión de cronómetro.";
+}
+
+function resultText(includeUrl=true){
+  const final = gameState.lastFinalText || formattedFinalResult();
+  const emotion = getFinalEmotion(Boolean(penaltyShootout));
+  const challenge = currentLang === "en" ? "Do you dare?" : "¿Te atreves?";
+  const base = `⚽ CronoGol\n${final}\n\n${emotion}\n${challenge}`;
+  return includeUrl ? `${base}\n${CRONOGOL_CONFIG.siteUrl}` : base;
+}
+
+function finalHtml(pens=false){
+  const penaltyLine = (pens && penaltyShootout) ? `<br>Penaltis: ${penaltyShootout.goals[0]} - ${penaltyShootout.goals[1]}` : "";
+  const isEn = currentLang === "en";
+  const emotion = getFinalEmotion(pens);
+
+  return `<div class="final-emotion-box">${emotion}</div>
+  <div class="donation-item">
+    <strong>${isEn ? "Match summary" : "Resumen"}</strong><br>
+    ${isEn ? "Throws" : "Tiradas"}: ${gameState.totalTurns}<br>
+    ${isEn ? "Goals" : "Goles"}: ${gameState.stats.goals}<br>
+    ${isEn ? "Posts/Crossbars" : "Postes/Largueros"}: ${gameState.stats.woodwork}<br>
+    ${isEn ? "Cards" : "Tarjetas"}: ${gameState.stats.cards}<br>
+    ${isEn ? "Specials" : "Especiales"}: ${gameState.stats.specials}${penaltyLine}
+  </div>
+  <div class="donation-item final-support-box">
+    <strong>☕ ${isEn ? "CronoGol is free" : "CronoGol es gratis"}</strong><br>
+    ${isEn ? "If this match made you smile, you can buy me a coffee." : "Si esta partida te ha divertido, puedes invitarme a un café."}
+    <button class="bizum-direct-btn" onclick="openBizum()">${isEn ? "Open Bizum" : "Abrir Bizum"}</button>
+    <a class="support-link" href="${CRONOGOL_CONFIG.paypalUrl}" target="_blank" rel="noopener">${isEn ? "Open PayPal" : "Abrir PayPal"}</a>
+  </div>`;
+}
+
+/* Conecta la descripción de dificultad sin alterar el comportamiento de la máquina */
+document.addEventListener("DOMContentLoaded", () => {
+  updateMachineDifficultyHint();
+
+  if(machineLevelSelect){
+    machineLevelSelect.addEventListener("change", updateMachineDifficultyHint);
+  }
+
+  const esBtn = document.querySelector('[data-lang="es"]');
+  const enBtn = document.querySelector('[data-lang="en"]');
+
+  if(esBtn) esBtn.addEventListener("click", () => setTimeout(updateMachineDifficultyHint, 0));
+  if(enBtn) enBtn.addEventListener("click", () => setTimeout(updateMachineDifficultyHint, 0));
+});

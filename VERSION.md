@@ -1,10 +1,10 @@
 # VERSION
 
-Current version: v1.9.7
+Current version: v1.9.8
 
-Release name: Secondary Actions CSS-only Final Fix
+Release name: Game Feel Improvements
 
-Base version: v1.9.6 Secondary Actions NAV Fix
+Base version: v1.9.7 Secondary Actions CSS-only Final Fix
 
 Status: Stable
 
@@ -12,7 +12,8 @@ Official URL:
 
 https://cronogol.es/
 
-Main fix:
+Main changes:
 
-- Final visual layout of secondary action buttons.
-- No JavaScript functions modified.
+- Machine difficulty explanation.
+- Emotional post-match headline.
+- Emotional result sharing.

@@ -1620,3 +1620,36 @@ nav.setup-links.secondary-actions-v196 > .support-wide-btn::after {
     margin-left: 4px;
   }
 }
+
+
+/* ===== CronoGol v1.9.8: game feel improvements ===== */
+
+.field-hint {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.final-emotion-box {
+  border: 2px solid rgba(217,134,25,.85);
+  background: rgba(217,134,25,.12);
+  color: var(--orange);
+  font-weight: 900;
+  text-align: center;
+  padding: 12px;
+  margin-bottom: 12px;
+  letter-spacing: .4px;
+}
+
+@media(max-width:560px){
+  .field-hint {
+    font-size: 11px;
+  }
+
+  .final-emotion-box {
+    font-size: 13px;
+    padding: 10px;
+  }
+}
