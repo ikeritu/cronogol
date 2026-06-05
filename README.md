@@ -1,41 +1,46 @@
-# CronoGol v1.9.2 — Home Simplification
+# CronoGol v1.9.3 — AdSense Readiness
 
 ## Objetivo
 
-Reducir la carga visual de la pantalla inicial para que el usuario pueda empezar una partida más rápido.
+Preparar CronoGol para una futura solicitud de Google AdSense sin activar anuncios todavía.
 
 ## Cambios aplicados
 
-- Se añade bloque plegable `Opciones avanzadas`.
-- Se mueven a opciones avanzadas:
-  - Dificultad de máquina.
-  - Forzar descanso/final contra máquina.
-- Se reduce visualmente `Modo online próximamente`.
-- Se cambia el bloque de apoyo para que sea más discreto.
-- Se compactan enlaces secundarios.
-- Se reduce peso visual del footer de versión.
-- Se mantiene el botón `Empezar partido` como acción principal.
+- `como-jugar.html` ampliada con reglas completas.
+- Nueva página `historia.html`.
+- Nueva página `modos.html`.
+- `contacto.html` revisada.
+- `privacidad.html` revisada.
+- `apoya.html` con metadatos.
+- Añadido `robots.txt`.
+- Añadido `sitemap.xml`.
+- Añadidos estilos para páginas de contenido.
+- Añadidos enlaces internos hacia contenido informativo.
+- Versión actualizada a v1.9.3.
 
-## No se ha tocado
+## Importante
 
-- Lógica del juego.
+No se activan anuncios en esta versión.
+
+No se modifica la lógica del juego:
+
 - START/STOP.
 - Reglas.
 - Turnos.
 - Máquina.
-- Modo rápido.
 - Penalti/falta.
-- Estadísticas.
+- Modo rápido.
 - Historial.
+- Estadísticas.
 - Bizum/PayPal.
 
-## QA recomendado
+## Antes de pedir AdSense
 
-1. Abrir `https://cronogol.es/`.
-2. Confirmar que la pantalla inicial se ve más limpia.
-3. Abrir y cerrar `Opciones avanzadas`.
-4. Probar `1 vs Máquina`.
-5. Probar `Rápido`.
-6. Pulsar `Empezar partido`.
-7. Confirmar que START/STOP funciona.
-8. Confirmar que Apoya/Bizum siguen funcionando.
+Recomendado:
+
+1. Tener HTTPS activo.
+2. Probar todas las páginas estáticas.
+3. Confirmar que `privacidad.html` está visible.
+4. Confirmar que `contacto.html` está visible.
+5. Confirmar que el juego funciona bien en móvil.
+6. Esperar algo de tráfico real.

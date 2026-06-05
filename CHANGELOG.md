@@ -1,22 +1,23 @@
 # CHANGELOG
 
-## v1.9.2 — Home Simplification
+## v1.9.3 — AdSense Readiness
 
 ### Cambios
 
-- Añadido bloque plegable `Opciones avanzadas`.
-- Dificultad de máquina movida a opciones avanzadas.
-- Forzar descanso/final contra máquina movido a opciones avanzadas.
-- Modo online mostrado de forma más compacta.
-- Apoyo voluntario mostrado de forma más discreta.
-- Enlaces secundarios más compactos.
-- Footer de versión más discreto.
+- Ampliada página `como-jugar.html`.
+- Añadida página `historia.html`.
+- Añadida página `modos.html`.
+- Revisadas páginas `contacto.html` y `privacidad.html`.
+- Añadido `robots.txt`.
+- Añadido `sitemap.xml`.
+- Añadidos estilos para páginas de contenido.
+- Añadidos enlaces internos.
 
 ### No se ha tocado
 
 - Lógica del juego.
+- START/STOP.
 - Reglas.
 - Turnos.
 - Máquina.
-- START/STOP.
-- Monetización funcional.
+- Monetización voluntaria.

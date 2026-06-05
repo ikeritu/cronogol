@@ -1158,7 +1158,7 @@ if(document.readyState === "loading"){
 }
 
 
-/* ===== CronoGol v1.9.2: support bugfix + clean share/support functions ===== */
+/* ===== CronoGol v1.9.3: support bugfix + clean share/support functions ===== */
 
 async function openBizum(){
   const isEn = currentLang === "en";

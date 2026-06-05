@@ -1,10 +1,10 @@
 # VERSION
 
-Current version: v1.9.2
+Current version: v1.9.3
 
-Release name: Home Simplification
+Release name: AdSense Readiness
 
-Base version: v1.9.1 Support Bugfix
+Base version: v1.9.2 Home Simplification
 
 Status: Stable
 
@@ -14,5 +14,6 @@ https://cronogol.es/
 
 Main change:
 
-- Simplified home screen.
-- Added advanced options block.
+- Adds content pages, sitemap and robots.txt.
+- Prepares site for a future AdSense review.
+- Ads are not enabled.
