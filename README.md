@@ -1,51 +1,42 @@
-# CronoGol v1.9.0 — Support & Monetization Starter
+# CronoGol v1.9.1 — Support Bugfix
 
 ## Objetivo
 
-Empezar la monetización sin perjudicar la experiencia de juego.
-
-## Estrategia
-
-Fase 1: donaciones voluntarias.
-
-- Bizum.
-- PayPal.
-- Mensaje de apoyo al final de la partida.
-- Página `apoya.html` mejorada.
-- Sin anuncios durante la partida.
-- Sin paywall.
-- Sin modificar la lógica del juego.
+Corregir el primer fallo real detectado en la fase de monetización voluntaria.
 
 ## Cambios aplicados
 
-- Modal `Apoya CronoGol` más claro.
-- Bloque de apoyo al final del partido.
-- Página `apoya.html` rediseñada.
-- Botón directo de Bizum.
-- Enlace PayPal.
-- Política de privacidad actualizada.
-- Estilos de monetización añadidos.
-- Versión actualizada a v1.9.0.
+- Añadida función global `openBizum()` en `game.js`.
+- El botón `Abrir Bizum` del modal del juego ya tiene función real.
+- Reforzadas funciones limpias de:
+  - `showSupportModal()`
+  - `shareCronoGol()`
+  - `copyCronoGolLink()`
+- Cambiado el bloque “Espacio de patrocinador” por un mensaje de apoyo voluntario.
+- Añadida opción de feedback:
+  - `Problema con Bizum / apoyo`
+- Mejorado placeholder del campo dispositivo.
+- Actualizada privacidad.
+- Añadidos estilos menores para apoyo voluntario.
 
-## URL oficial
+## No se ha tocado
 
-https://cronogol.es/
+- Reglas.
+- Turnos.
+- Máquina.
+- Modo rápido.
+- START/STOP.
+- Penalti/falta.
+- Estadísticas.
+- Historial.
 
-## Próxima fase
-
-Preparar la web para AdSense:
-
-- Páginas estáticas con contenido suficiente.
-- Privacidad actualizada.
-- HTTPS activo.
-- Experiencia limpia en móvil.
-- Solicitud de revisión en AdSense.
-
-## QA mínimo
+## QA recomendado
 
 1. Abrir `https://cronogol.es/`.
 2. Pulsar `Apoya`.
-3. Probar que aparece Bizum y PayPal.
-4. Terminar una partida.
-5. Verificar bloque de apoyo en el resumen final.
-6. Verificar que START/STOP sigue funcionando.
+3. Pulsar `Abrir Bizum`.
+4. Confirmar que copia los datos o intenta abrir la app bancaria.
+5. Terminar una partida.
+6. Pulsar `Abrir Bizum` en el resumen final.
+7. Probar `Compartir`.
+8. Probar que START/STOP sigue funcionando.

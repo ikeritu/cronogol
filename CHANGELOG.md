@@ -1,14 +1,16 @@
 # CHANGELOG
 
-## v1.9.0 — Support & Monetization Starter
+## v1.9.1 — Support Bugfix
 
 ### Cambios
 
-- Se mejora el modal de apoyo.
-- Se mejora `apoya.html`.
-- Se añade llamada de apoyo voluntario al final del partido.
-- Se actualiza privacidad para mencionar donaciones voluntarias.
-- Se añaden estilos específicos para monetización no invasiva.
+- Añadida función global `openBizum()` en `game.js`.
+- Corregido posible fallo del botón `Abrir Bizum` dentro del juego.
+- Reforzada la función `showSupportModal()`.
+- Reforzadas las funciones `shareCronoGol()` y `copyCronoGolLink()`.
+- Sustituido el texto de patrocinador por apoyo voluntario.
+- Añadida opción de feedback para problemas con Bizum/apoyo.
+- Mejorado placeholder de dispositivo en feedback.
 
 ### No se ha tocado
 
@@ -16,5 +18,4 @@
 - Reglas.
 - Turnos.
 - Máquina.
-- Penalti/falta.
 - START/STOP.

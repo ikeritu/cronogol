@@ -79,8 +79,8 @@ const I18N = {
     inDevelopment:"En desarrollo",
     onlineSoon:"Modo online próximamente",
     onlineSoonText:"Crea una sala privada y juega en tiempo real con un amigo.",
-    sponsorSpace:"Espacio de patrocinador",
-    sponsorText:"Visible solo fuera del partido. Nunca interrumpe la jugada.",
+    sponsorSpace:"CronoGol es gratis",
+    sponsorText:"Puedes apoyar el proyecto invitándome a un café. Nunca habrá anuncios durante una tirada.",
     lastThrow:"ÚLTIMA TIRADA",
     turnOf:"TURNO DE",
     stats:"Estadísticas",
@@ -110,8 +110,8 @@ const I18N = {
     inDevelopment:"In development",
     onlineSoon:"Online mode coming soon",
     onlineSoonText:"Create a private room and play live with a friend.",
-    sponsorSpace:"Sponsor space",
-    sponsorText:"Visible only outside the match. Never interrupts play.",
+    sponsorSpace:"CronoGol is free",
+    sponsorText:"You can support the project by buying me a coffee. No ads during a throw.",
     lastThrow:"LAST THROW",
     turnOf:"TURN OF",
     stats:"Stats",
@@ -1153,4 +1153,82 @@ if(document.readyState === "loading"){
   document.addEventListener("DOMContentLoaded", bootCronoGol);
 } else {
   bootCronoGol();
+}
+
+
+/* ===== CronoGol v1.9.1: support bugfix + clean share/support functions ===== */
+
+async function openBizum(){
+  const isEn = currentLang === "en";
+  const conceptLabel = isEn ? "Concept" : "Concepto";
+  const copiedMsg = isEn ? "Bizum details copied" : "Datos de Bizum copiados";
+  const fallbackMsg = isEn
+    ? "If your bank app does not open, use the copied details."
+    : "Si tu banco no se abre, usa los datos copiados.";
+
+  const text = `Bizum: ${CRONOGOL_CONFIG.bizumPhone} · ${conceptLabel}: ${CRONOGOL_CONFIG.bizumConcept}`;
+
+  try {
+    await copyText(text, copiedMsg);
+  } catch(e) {
+    showToast(text);
+  }
+
+  window.location.href = `bizum://send?phone=${encodeURIComponent(CRONOGOL_CONFIG.bizumPhone)}&concept=${encodeURIComponent(CRONOGOL_CONFIG.bizumConcept)}`;
+
+  setTimeout(() => {
+    showToast(fallbackMsg);
+  }, 1200);
+}
+
+async function shareCronoGol(){
+  const nativeText = currentLang === "en"
+    ? "I'm playing CronoGol ⚽⌚"
+    : "Estoy jugando a CronoGol ⚽⌚";
+
+  const fullText = `${nativeText}\n${CRONOGOL_CONFIG.siteUrl}`;
+
+  try{
+    if(navigator.share){
+      await navigator.share({
+        title:"CronoGol",
+        text:nativeText,
+        url:CRONOGOL_CONFIG.siteUrl
+      });
+      return;
+    }
+  }catch(e){}
+
+  window.open(`https://wa.me/?text=${encodeURIComponent(fullText)}`,"_blank","noopener");
+}
+
+function copyCronoGolLink(){
+  copyText(CRONOGOL_CONFIG.siteUrl, currentLang === "en" ? "Link copied" : "Enlace copiado");
+}
+
+function showSupportModal(){
+  const isEn = currentLang === "en";
+  showModal(
+    isEn ? "SUPPORT CRONOGOL" : "APOYA CRONOGOL",
+    isEn
+      ? "CronoGol is free and will remain free. If you enjoy it, you can buy me a coffee."
+      : "CronoGol es gratis y lo seguirá siendo. Si te divierte, puedes invitarme a un café.",
+    `<div class="support-modal">
+      <div class="support-highlight">☕ ${isEn ? "Voluntary support" : "Apoyo voluntario"}</div>
+      <div class="donation-data">
+        <div class="donation-item">
+          <strong>Bizum</strong><br>
+          ${CRONOGOL_CONFIG.bizumPhone}<br>
+          <small>${isEn ? "Concept" : "Concepto"}: ${CRONOGOL_CONFIG.bizumConcept}</small>
+          <button class="bizum-direct-btn" onclick="openBizum()">${isEn ? "Open Bizum" : "Abrir Bizum"}</button>
+        </div>
+        <div class="donation-item">
+          <strong>PayPal</strong><br>
+          <a class="support-link" href="${CRONOGOL_CONFIG.paypalUrl}" target="_blank" rel="noopener">${isEn ? "Open PayPal" : "Abrir PayPal"}</a>
+        </div>
+      </div>
+      <p class="support-note">${isEn ? "No ads during the match. No paywalls." : "Sin anuncios durante la partida. Sin pagos obligatorios."}</p>
+    </div>`,
+    [{text:isEn ? "CLOSE" : "CERRAR", action:closeModal}]
+  );
 }
