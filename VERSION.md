@@ -1,18 +1,19 @@
 # VERSION
 
-Current version: v1.8.8
+Current version: v1.8.9
 
-Release name: Stable Clean Release
+Release name: Custom Domain Share Fix
 
-Base version: v1.8.7 QA Fix
+Base version: v1.8.8 Stable Clean Release
 
 Status: Stable
 
-Primary URL:
+Official URL:
 
-https://ikeritu.github.io/cronogol/
+https://cronogol.es/
 
-Notes:
+Main change:
 
-- This version intentionally does not change gameplay logic.
-- Use this as the safe baseline for future versions.
+- Share button now uses the official domain.
+- Final result sharing now uses the official domain.
+- CNAME file added for GitHub Pages.

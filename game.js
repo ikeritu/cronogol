@@ -48,8 +48,8 @@ const debugBox = $("debug-box"), debugValueInput = $("debug-value"), debugThrowB
 const modalTitle = $("modal-title"), modalText = $("modal-text"), modalExtra = $("modal-extra"), modalActions = $("modal-actions");
 
 const CRONOGOL_CONFIG = {
-  siteUrl:"https://ikeritu.github.io/cronogol/",
-  whatsappText: "Estoy jugando a CronoGol, el juego del cronómetro Casio ⚽⌚\n\nPruébalo aquí:\nhttps://ikeritu.github.io/cronogol/",
+  siteUrl:"https://cronogol.es/",
+  whatsappText: "Estoy jugando a CronoGol, el juego del cronómetro Casio ⚽⌚\n\nPruébalo aquí:\nhttps://cronogol.es/",
   paypalUrl: "https://paypal.me/ikeritus",
   bizumPhone: "+34615717190",
   bizumConcept: "CronoGol",
@@ -626,30 +626,29 @@ async function openBizum(){
 }
 function whatsappShareUrl(){ return `https://wa.me/?text=${encodeURIComponent(CRONOGOL_CONFIG.whatsappText)}`; }
 async function shareCronoGol(){
-  const text = currentLang === "en"
-    ? `I'm playing CronoGol ⚽⌚
-${CRONOGOL_CONFIG.siteUrl}`
-    : `Estoy jugando a CronoGol ⚽⌚
+  const nativeText = currentLang === "en"
+    ? "I'm playing CronoGol ⚽⌚"
+    : "Estoy jugando a CronoGol ⚽⌚";
+
+  const fullText = `${nativeText}
 ${CRONOGOL_CONFIG.siteUrl}`;
 
   try{
     if(navigator.share){
       await navigator.share({
         title:"CronoGol",
-        text: currentLang === "en" ? "I'm playing CronoGol ⚽⌚" : "Estoy jugando a CronoGol ⚽⌚",
-        url: CRONOGOL_CONFIG.siteUrl
+        text:nativeText,
+        url:CRONOGOL_CONFIG.siteUrl
       });
       return;
     }
   }catch(e){}
 
-  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`,"_blank","noopener");
+  window.open(`https://wa.me/?text=${encodeURIComponent(fullText)}`,"_blank","noopener");
 }
 
 function resultText(includeUrl=true){
-  const final = gameState.lastFinalText && gameState.lastFinalText.includes("Penaltis:")
-    ? gameState.lastFinalText
-    : formattedFinalResult();
+  const final = gameState.lastFinalText || formattedFinalResult();
   const challenge = currentLang === "en" ? "Do you dare?" : "¿Te atreves?";
   const base = `⚽ CronoGol
 ${final}
@@ -672,10 +671,7 @@ async function shareResult(){
   window.open(`https://wa.me/?text=${encodeURIComponent(resultText(true))}`,"_blank","noopener");
 }
 function copyCronoGolLink(){
-  copyText(
-    CRONOGOL_CONFIG.siteUrl,
-    currentLang === "en" ? "Link copied" : "Enlace copiado"
-  );
+  copyText(CRONOGOL_CONFIG.siteUrl, currentLang === "en" ? "Link copied" : "Enlace copiado");
 }
 
 function showSupportModal(){

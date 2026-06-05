@@ -1,5 +1,30 @@
 # CHANGELOG
 
+## v1.8.9 — Custom Domain Share Fix
+
+### Cambios
+
+- URL oficial cambiada a `https://cronogol.es/`.
+- Corregido botón `Compartir`.
+- Corregido `Copiar enlace`.
+- Corregido texto de resultado final compartido.
+- Añadido archivo `CNAME`.
+- Actualizado README.
+- Actualizado VERSION.
+- Añadido manifest de release.
+
+### No se ha tocado
+
+- Lógica del juego.
+- Reglas.
+- Turnos.
+- Máquina.
+- Estadísticas.
+- Historial.
+- Pantallas principales.
+
+
+
 ## v1.8.8 — Stable Clean Release
 
 Fecha: 2026-06-05
