@@ -148,7 +148,7 @@ function applyLanguage(lang){
   });
 
   updateLanguageLinks();
-  if(typeof refreshLiveLanguage === "function") refreshLiveLanguage();
+  if(typeof cgPatchDynamicTranslations === "function") cgPatchDynamicTranslations();
   try { localStorage.setItem("cronogol_lang", currentLang); } catch(e) {}
 }
 
@@ -231,87 +231,6 @@ function setupLanguageSelector(){
   } catch(e) {
     applyLanguage("es");
   }
-}
-
-
-
-// ===== v1.8.4: safe complete ES/EN dynamic text helpers =====
-const GAME_TEXTS = {
-  es: {
-    goal: "⚽ GOOOL", goalTitle: "GOOOL", miss: "FALLO", post: "POSTE", crossbar: "LARGUERO",
-    halfTime: "DESCANSO", fullTime: "FINAL", fullTimeTitle: "FINAL DEL PARTIDO",
-    yellow: "AMARILLA", red: "ROJA", penalty: "PENALTI", freeKick: "FALTA",
-    specialThrow: "TIRADA ESPECIAL", specialStop: "STOP ESPECIAL", pressStart: "Pulsa START para comenzar.",
-    start: "START", stop: "STOP", close: "CERRAR", rematch: "REVANCHA",
-    shareResult: "COMPARTIR RESULTADO", copyResult: "COPIAR RESULTADO", newMatch: "NUEVA PARTIDA",
-    finalDraw: "Empate final.", wins: "Gana", penalties: "Penaltis", summary: "Resumen",
-    matchGoals: "Goles partido", woodwork: "Postes/Largueros", cards: "Tarjetas", specials: "Especiales",
-    throws: "Tiradas", free: "☕ CronoGol es gratis", openBizum: "Abrir Bizum", paypal: "PayPal",
-    confirmResetTitle: "REINICIAR", confirmResetText: "¿Seguro que quieres reiniciar el partido?",
-    cancel: "CANCELAR", reset: "REINICIAR", linkCopied: "Enlace copiado", resultCopied: "Resultado copiado",
-    bizumCopied: "Datos de Bizum copiados. Abriendo tu app bancaria...", playerGot: "sacó",
-    noEvents: "Sin jugadas todavía.", turnSkipped: "Turno saltado por tarjeta",
-    freeKickGoal: "Gol de falta", freeKickMissed: "Falta fallada", penaltyMissed: "Penalti fallado"
-  },
-  en: {
-    goal: "⚽ GOAL", goalTitle: "GOAL", miss: "MISS", post: "POST", crossbar: "CROSSBAR",
-    halfTime: "HALF-TIME", fullTime: "FULL-TIME", fullTimeTitle: "FULL-TIME",
-    yellow: "YELLOW CARD", red: "RED CARD", penalty: "PENALTY", freeKick: "FREE KICK",
-    specialThrow: "SPECIAL THROW", specialStop: "SPECIAL STOP", pressStart: "Press START to begin.",
-    start: "START", stop: "STOP", close: "CLOSE", rematch: "REMATCH",
-    shareResult: "SHARE RESULT", copyResult: "COPY RESULT", newMatch: "NEW MATCH",
-    finalDraw: "Final draw.", wins: "wins", penalties: "Penalties", summary: "Summary",
-    matchGoals: "Match goals", woodwork: "Posts/Crossbars", cards: "Cards", specials: "Specials",
-    throws: "Throws", free: "☕ CronoGol is free", openBizum: "Open Bizum", paypal: "PayPal",
-    confirmResetTitle: "RESTART", confirmResetText: "Are you sure you want to restart the match?",
-    cancel: "CANCEL", reset: "RESTART", linkCopied: "Link copied", resultCopied: "Result copied",
-    bizumCopied: "Bizum details copied. Opening your banking app...", playerGot: "got",
-    noEvents: "No events yet.", turnSkipped: "Turn skipped due to card",
-    freeKickGoal: "Free kick goal", freeKickMissed: "Free kick missed", penaltyMissed: "Penalty missed"
-  }
-};
-
-function GT(key){
-  const lang = (typeof currentLang !== "undefined" && GAME_TEXTS[currentLang]) ? currentLang : "es";
-  return GAME_TEXTS[lang][key] || GAME_TEXTS.es[key] || key;
-}
-
-function displayName(name){
-  if(currentLang === "en"){
-    if(name === "Jugador 1") return "Player 1";
-    if(name === "Jugador 2") return "Player 2";
-    if(name === "Máquina") return "Machine";
-  }
-  return name;
-}
-
-function localizedMessage(msg){
-  let text = String(msg || "");
-  const map = [
-    ["Jugador 1", displayName("Jugador 1")], ["Jugador 2", displayName("Jugador 2")], ["Máquina", displayName("Máquina")],
-    ["GOOOL", GT("goalTitle")], ["FALLO", GT("miss")], ["POSTE", GT("post")], ["LARGUERO", GT("crossbar")],
-    ["DESCANSO", GT("halfTime")], ["FINAL", GT("fullTime")], ["AMARILLA", GT("yellow")], ["ROJA", GT("red")],
-    ["PENALTI", GT("penalty")], ["FALTA", GT("freeKick")], ["sacó", GT("playerGot")],
-    ["Gol de falta", GT("freeKickGoal")], ["Falta fallada", GT("freeKickMissed")],
-    ["Penalti fallado", GT("penaltyMissed")], ["Turno saltado por tarjeta", GT("turnSkipped")]
-  ];
-  map.forEach(([a,b]) => { text = text.split(a).join(b); });
-  return text;
-}
-
-function localizedTitle(title){
-  const raw = String(title || "").toUpperCase();
-  if(raw.includes("GOOOL") || raw.includes("GOL") || raw.includes("GOAL")) return GT("goalTitle");
-  if(raw.includes("FALLO") || raw.includes("MISS")) return GT("miss");
-  if(raw.includes("POSTE") || raw.includes("POST")) return GT("post");
-  if(raw.includes("LARGUERO") || raw.includes("CROSSBAR")) return GT("crossbar");
-  if(raw.includes("DESCANSO") || raw.includes("HALF")) return GT("halfTime");
-  if(raw.includes("FINAL") || raw.includes("FULL")) return GT("fullTime");
-  if(raw.includes("AMARILLA") || raw.includes("YELLOW")) return GT("yellow");
-  if(raw.includes("ROJA") || raw.includes("RED")) return GT("red");
-  if(raw.includes("PENALTI") || raw.includes("PENALTY")) return GT("penalty");
-  if(raw.includes("FALTA") || raw.includes("FREE")) return GT("freeKick");
-  return title;
 }
 
 
@@ -400,13 +319,13 @@ function resetRuntimeState(){
 
   if(mainActionBtn){
     mainActionBtn.disabled = false;
-    mainActionBtn.textContent = GT("start");
+    mainActionBtn.textContent = "START";
     mainActionBtn.classList.remove("stop");
   }
 
   if(specialStartBtn){
     specialStartBtn.disabled = false;
-    specialStartBtn.textContent = GT("specialThrow");
+    specialStartBtn.textContent = "TIRADA ESPECIAL";
   }
 
   if(specialPanel) specialPanel.classList.add("hidden");
@@ -437,13 +356,13 @@ function startMatch(){
   });
   pendingSpecial=null; penaltyShootout=null; currentElapsedMs=0; stopwatchBaseMs=0; matchStartTime=Date.now();
   setupScreen.classList.remove("active"); gameScreen.classList.add("active"); closeModal(); sideMenu.classList.add("hidden");
-  timerDisplay.textContent="00:00:00"; lastTwoDisplay.textContent="--"; setEvent("--", GT("pressStart"),"neutral");
+  timerDisplay.textContent="00:00:00"; lastTwoDisplay.textContent="--"; setEvent("--", currentLang === "en" ? "Press START to begin." : "Pulsa START para comenzar.","neutral");
   startMatchClock(); updateUI(); addLog("Comienza el partido."); vibrate([30]); maybeMachineTurn();
 }
 
 function handleMainAction(){ if(gameState.matchEnded||pendingSpecial) return; gameState.isRunning ? stopTimerAndEvaluate() : startTimer(); }
 function startTimer(){
-  gameState.isRunning=true; timerStartTime=performance.now(); mainActionBtn.textContent=GT("stop"); mainActionBtn.classList.add("stop"); playSound("beep"); vibrate([20]);
+  gameState.isRunning=true; timerStartTime=performance.now(); mainActionBtn.textContent="STOP"; mainActionBtn.classList.add("stop"); playSound("beep"); vibrate([20]);
   timerInterval=setInterval(()=>{ currentElapsedMs=stopwatchBaseMs+(performance.now()-timerStartTime); updateTimerDisplay(currentElapsedMs); },16);
 }
 function stopTimerAndEvaluate(forcedValue=null){
@@ -452,7 +371,7 @@ function stopTimerAndEvaluate(forcedValue=null){
   gameState.totalTurns++; if(gameState.half===1) gameState.firstHalfTurns++; else gameState.secondHalfTurns++;
   applyNormalResult(value,evaluateThrow(value));
 }
-function stopTimer(){ gameState.isRunning=false; clearInterval(timerInterval); timerInterval=null; stopwatchBaseMs=currentElapsedMs; mainActionBtn.textContent=GT("start"); mainActionBtn.classList.remove("stop"); playSound("stop"); }
+function stopTimer(){ gameState.isRunning=false; clearInterval(timerInterval); timerInterval=null; stopwatchBaseMs=currentElapsedMs; mainActionBtn.textContent="START"; mainActionBtn.classList.remove("stop"); playSound("stop"); }
 function getLastTwoDigits(ms){ return Math.floor(ms/10)%100; }
 function updateTimerDisplay(ms){ const h=Math.floor(ms/10),m=Math.floor(h/6000),s=Math.floor((h%6000)/100),c=h%100; timerDisplay.textContent=`${pad(m)}:${pad(s)}:${pad(c)}`; lastTwoDisplay.textContent=pad(c); }
 
@@ -468,24 +387,28 @@ function hasFastModeWinner() {
 }
 
 function evaluateFastThrow(v) {
-  if (v % 10 === 0) return {type:"goal",msg:GT("goal"),cls:"goal"};
-  if (v % 10 === 9) return {type:"penalty",msg:GT("penalty"),cls:"special",special:"penalty"};
-  return {type:"miss",msg:GT("miss"),cls:"neutral"};
+  // Modo rápido:
+  // - Todo número terminado en 0 es gol: 00, 10, 20... 90.
+  // - Todo número terminado en 9 es penalti: 09, 19, 29...
+  // - Gana el primero en llegar a 6 goles con 2 de ventaja.
+  if (v % 10 === 0) return {type:"goal",msg:"⚽ GOOOL",cls:"goal"};
+  if (v % 10 === 9) return {type:"penalty",msg:"PENALTI",cls:"special",special:"penalty"};
+  return {type:"miss",msg:"FALLO",cls:"neutral"};
 }
 
 
 function evaluateThrow(v){
   if(isFastMode()) return evaluateFastThrow(v);
-  if(v===0) return {type:"goal",msg:GT("goal"),cls:"goal"};
-  if(v===1||v===2) return {type:"woodwork",msg:GT("post"),cls:"special",repeat:true};
-  if(v===3||v===4) return {type:"woodwork",msg:GT("crossbar"),cls:"special",repeat:true};
-  if(v===45) return {type:"half",msg:GT("halfTime"),cls:"special"};
-  if(v===50) return {type:"yellow",msg:GT("yellow"),cls:"yellow"};
-  if(v===60) return {type:"red",msg:GT("red"),cls:"red"};
-  if(v===90) return {type:"full",msg:GT("fullTime"),cls:"special"};
-  if(v===96||v===97) return {type:"free_kick",msg:GT("freeKick"),cls:"special",special:"free_kick"};
-  if(v===98||v===99) return {type:"penalty",msg:GT("penalty"),cls:"special",special:"penalty"};
-  return {type:"miss",msg:GT("miss"),cls:"neutral"};
+  if(v===0) return {type:"goal",msg:"⚽ GOOOL",cls:"goal"};
+  if(v===1||v===2) return {type:"post",msg:"POSTE",cls:"special",repeat:true};
+  if(v===3||v===4) return {type:"crossbar",msg:"LARGUERO",cls:"special",repeat:true};
+  if(v===45) return {type:"half_time",msg:"DESCANSO",cls:"special"};
+  if(v===50) return {type:"yellow",msg:"🟨 AMARILLA",cls:"yellow"};
+  if(v===60) return {type:"red",msg:"🟥 ROJA",cls:"red"};
+  if(v===90) return {type:"full_time",msg:"FINAL",cls:"special"};
+  if(v===96||v===97) return {type:"free_kick",msg:"FALTA PELIGROSA",cls:"special",special:"free_kick"};
+  if(v===98||v===99) return {type:"penalty",msg:"PENALTI",cls:"special",special:"penalty"};
+  return {type:"miss",msg:"FALLO",cls:"neutral"};
 }
 function applyNormalResult(v,r){
   const p=currentPlayer(); setEvent(r.msg,`${p.name} sacó ${pad(v)} → ${r.msg}`,r.cls); addLog(`${clockSec()}  ${p.name} — ${pad(v)} — ${r.msg}`); playSound(r.type);
@@ -499,13 +422,13 @@ function applyNormalResult(v,r){
   else { gameState.stats.misses++; switchTurn(); }
   updateUI(); if(!gameState.matchEnded&&!pendingSpecial&&!penaltyShootout) maybeMachineTurn();
 }
-function handleSpecialButton(){ if(!pendingSpecial) return; if(gameState.gameMode==="machine" && gameState.currentPlayerIndex===1) return; if(!gameState.isRunning){ startTimer(); specialStartBtn.textContent=GT("specialStop"); } else { stopTimer(); evaluateSpecialThrow(getLastTwoDigits(currentElapsedMs)); } }
+function handleSpecialButton(){ if(!pendingSpecial) return; if(gameState.gameMode==="machine" && gameState.currentPlayerIndex===1) return; if(!gameState.isRunning){ startTimer(); specialStartBtn.textContent="STOP ESPECIAL"; } else { stopTimer(); evaluateSpecialThrow(getLastTwoDigits(currentElapsedMs)); } }
 function evaluateSpecialThrow(v){
   const p=currentPlayer(); let goal=false,msg="";
   if(pendingSpecial==="free_kick"){ goal=v>=0&&v<=20; msg=goal?"GOL DE FALTA":"FALTA FALLADA"; }
   if(pendingSpecial==="penalty"){ goal=v%2===0; msg=goal?"GOL DE PENALTI":"PENALTI FALLADO"; }
   if(goal){ p.goals++; gameState.stats.goals++; } else gameState.stats.misses++;
-  setEvent(msg,`${pad(v)} → ${msg}`,goal?"goal":"neutral"); addLog(`${clockSec()}  ${p.name} — ${pad(v)} — ${msg}`); pendingSpecial=null; specialPanel.classList.add("hidden"); specialStartBtn.textContent=GT("specialThrow"); mainActionBtn.disabled=false; specialStartBtn.disabled=false; if(isFastMode() && goal && hasFastModeWinner()){ endMatch(); } else { switchTurn(); updateUI(); maybeMachineTurn(); }
+  setEvent(msg,`${pad(v)} → ${msg}`,goal?"goal":"neutral"); addLog(`${clockSec()}  ${p.name} — ${pad(v)} — ${msg}`); pendingSpecial=null; specialPanel.classList.add("hidden"); specialStartBtn.textContent="TIRADA ESPECIAL"; mainActionBtn.disabled=false; specialStartBtn.disabled=false; if(isFastMode() && goal && hasFastModeWinner()){ endMatch(); } else { switchTurn(); updateUI(); maybeMachineTurn(); }
 }
 function showHalfTime(){ gameState.half=2; currentElapsedMs=0; stopwatchBaseMs=0; timerDisplay.textContent="00:00:00"; lastTwoDisplay.textContent="--"; switchTurn(); showModal("DESCANSO",scoreText(),"<p>Se resetea el cronómetro y comienza la segunda parte.</p>",[{text:"CONTINUAR",action:()=>{closeModal();maybeMachineTurn();}}]); }
 function endMatch(){ gameState.matchEnded=true; clearInterval(matchClockInterval); if(gameState.isRunning) stopTimer(); if(gameState.players[0].goals===gameState.players[1].goals){ showModal("FINAL",`${scoreText()}. Empate.`,finalHtml(),[{text:"IR A PENALTIS",action:startPenaltyShootout},{text:"TERMINAR EN EMPATE",action:()=>showFinal(false)}]); } else showFinal(false); }
@@ -563,10 +486,68 @@ function startMatchClock(){ clearInterval(matchClockInterval); matchClockInterva
 function updateUI(){ p1Label.textContent=gameState.players[0].name.toUpperCase(); p2Label.textContent=gameState.players[1].name.toUpperCase(); p1Score.textContent=gameState.players[0].goals; p2Score.textContent=gameState.players[1].goals; p1Sanction.textContent=gameState.players[0].skipTurns?`Sanción: ${gameState.players[0].skipTurns}`:""; p2Sanction.textContent=gameState.players[1].skipTurns?`Sanción: ${gameState.players[1].skipTurns}`:""; halfLabel.textContent=isFastMode()?"MODO RÁPIDO":(gameState.half===1?"1ª PARTE":"2ª PARTE"); turnLabel.textContent=currentPlayer().name; team0.classList.toggle("active",gameState.currentPlayerIndex===0); team1.classList.toggle("active",gameState.currentPlayerIndex===1); statTurns.textContent=gameState.totalTurns; statGoals.textContent=gameState.stats.goals; statWoodwork.textContent=gameState.stats.woodwork; statCards.textContent=gameState.stats.cards; statSpecials.textContent=gameState.stats.specials; updateShootoutUI(); renderLog(); }
 function updateShootoutUI(){ if(!penaltyShootout){shootoutPanel.classList.add("hidden");return;} shootoutPanel.classList.remove("hidden"); shootoutP1Name.textContent=gameState.players[0].name; shootoutP2Name.textContent=gameState.players[1].name; shootoutP1.textContent=icons(penaltyShootout.shots[0]); shootoutP2.textContent=icons(penaltyShootout.shots[1]); }
 function icons(shots){ const i=shots.map(s=>s?"✅":"❌"); while(i.length<5)i.push("⬜"); return i.join(" "); }
-function setEvent(title,msg,cls){
-  eventTitle.textContent=localizedTitle(title);
-  messageLabel.textContent=localizedMessage(msg);
-  eventCard.className=`event-card event-${cls}`;
+function setEvent(title,msg,cls){ eventTitle.textContent=title; messageLabel.textContent=msg; eventCard.className=`event-card event-${cls}`; }
+function addLog(t){ gameState.log.unshift(t); if(gameState.log.length>50) gameState.log.pop(); renderLog(); }
+function renderLog(){ gameLog.innerHTML=""; gameState.log.forEach(x=>{ const li=document.createElement("li"); li.textContent=x; gameLog.appendChild(li); }); }
+function confirmReset(){ showModal("Reiniciar partido","¿Seguro que quieres reiniciar?", "", [{text:"SÍ, REINICIAR",action:resetToSetup},{text:"CANCELAR",action:closeModal}]); }
+function resetToSetup(){ clearInterval(timerInterval); clearInterval(matchClockInterval); currentElapsedMs=0; stopwatchBaseMs=0; setupScreen.classList.add("active"); gameScreen.classList.remove("active"); closeModal(); sideMenu.classList.add("hidden"); }
+function showModal(t,txt,html,actions){ modalTitle.textContent=t; modalText.textContent=txt; modalExtra.innerHTML=html||""; modalActions.innerHTML=""; actions.forEach(a=>{ const b=document.createElement("button"); b.textContent=a.text; b.onclick=a.action; modalActions.appendChild(b); }); modalScreen.classList.remove("hidden"); }
+function closeModal(){ modalScreen.classList.add("hidden"); modalExtra.innerHTML=""; }
+function showRulesModal(){
+  if(currentLang === "en"){
+    showModal(
+      "RULES",
+      "The game uses the last two digits of the stopwatch.",
+      `<div class="donation-item">
+        <strong>Classic mode</strong><br>
+        <strong>00</strong> = Goal.<br>
+        <strong>01-02</strong> = Post. Same player repeats.<br>
+        <strong>03-04</strong> = Crossbar. Same player repeats.<br>
+        <strong>45</strong> = Half-time. Stopwatch resets and turn changes.<br>
+        <strong>50</strong> = Yellow card. Turn ends and player skips the next turn.<br>
+        <strong>60</strong> = Red card. Turn ends and player skips two turns.<br>
+        <strong>90</strong> = Full-time.<br>
+        <strong>96-97</strong> = Dangerous free kick. Special throw: <strong>00 to 20</strong> is a goal; <strong>21 to 99</strong> is a miss.<br>
+        <strong>98-99</strong> = Penalty. Special throw: <strong>even = goal</strong>; <strong>odd = miss</strong>.<br>
+        <strong>Any other number</strong> = Miss and turn changes.
+      </div>
+      <div class="donation-item">
+        <strong>Fast mode</strong><br>
+        Any number ending in <strong>0</strong> is a goal: 00, 10, 20, 30, 40, 50, 60, 70, 80 and 90.<br>
+        Any number ending in <strong>9</strong> is a penalty: 09, 19, 29, 39, 49, 59, 69, 79, 89 and 99.<br>
+        Penalty special throw: <strong>even = goal</strong>, <strong>odd = miss</strong>.<br>
+        First player to reach <strong>6 goals with a 2-goal lead</strong> wins. Example: 6-4 wins; 6-5 does not; you need 7-5.
+      </div>`,
+      [{text:"CLOSE",action:closeModal}]
+    );
+    return;
+  }
+
+  showModal(
+    "REGLAS",
+    "Se usan los dos últimos dígitos del cronómetro.",
+    `<div class="donation-item">
+      <strong>Modo clásico</strong><br>
+      <strong>00</strong> = Gol.<br>
+      <strong>01-02</strong> = Poste. Repite el mismo jugador.<br>
+      <strong>03-04</strong> = Larguero. Repite el mismo jugador.<br>
+      <strong>45</strong> = Descanso. Se resetea el cronómetro y cambia el turno.<br>
+      <strong>50</strong> = Amarilla. Termina el turno y pierde el siguiente.<br>
+      <strong>60</strong> = Roja. Termina el turno y pierde dos turnos.<br>
+      <strong>90</strong> = Final del partido.<br>
+      <strong>96-97</strong> = Falta peligrosa. Hay una tirada especial: si sale de <strong>00 a 20</strong>, es gol; si sale de <strong>21 a 99</strong>, falla.<br>
+      <strong>98-99</strong> = Penalti. Hay una tirada especial: si sale número <strong>par</strong>, es gol; si sale <strong>impar</strong>, falla.<br>
+      <strong>Otros números</strong> = Fallo y cambia el turno.
+    </div>
+    <div class="donation-item">
+      <strong>Modo rápido</strong><br>
+      Todo número terminado en <strong>0</strong> es gol: 00, 10, 20, 30, 40, 50, 60, 70, 80 y 90.<br>
+      Todo número terminado en <strong>9</strong> es penalti: 09, 19, 29, 39, 49, 59, 69, 79, 89 y 99.<br>
+      En el penalti, se hace una tirada especial: <strong>par = gol</strong>, <strong>impar = fallo</strong>.<br>
+      Gana el primero que llegue a <strong>6 goles con 2 de ventaja</strong>. Ejemplo: 6-4 gana; 6-5 no gana; hay que llegar a 7-5.
+    </div>`,
+    [{text:"CERRAR",action:closeModal}]
+  );
 }
 function showSupportModal(){ showModal("APOYA CRONOGOL","CronoGol es gratis y lo seguirá siendo.",`<div class="donation-data"><div class="donation-item"><strong>Bizum</strong><br>${CRONOGOL_CONFIG.bizumPhone} · Concepto: ${CRONOGOL_CONFIG.bizumConcept}<button class="bizum-direct-btn" onclick="openBizum()">Abrir Bizum</button></div><div class="donation-item"><strong>PayPal</strong><br><a class="support-link" href="${CRONOGOL_CONFIG.paypalUrl}" target="_blank">Abrir PayPal</a></div></div>`,[{text:"CERRAR",action:closeModal}]); }
 async function copyBizumData(){ return copyText(`${CRONOGOL_CONFIG.bizumPhone} · Concepto: ${CRONOGOL_CONFIG.bizumConcept}`,"Datos de Bizum copiados"); }
@@ -599,7 +580,9 @@ ${CRONOGOL_CONFIG.siteUrl}`;
 }
 
 function resultText(includeUrl=true){
-  const final = gameState.lastFinalText || formattedFinalResult();
+  const final = gameState.lastFinalText && gameState.lastFinalText.includes("Penaltis:")
+    ? gameState.lastFinalText
+    : formattedFinalResult();
   const challenge = currentLang === "en" ? "Do you dare?" : "¿Te atreves?";
   const base = `⚽ CronoGol
 ${final}
@@ -672,10 +655,314 @@ function showSupportModal(){
   );
 }
 
-function refreshLiveLanguage(){
-  if(mainActionBtn && !gameState.isRunning) mainActionBtn.textContent = GT("start");
-  if(specialStartBtn && !gameState.isRunning) specialStartBtn.textContent = GT("specialThrow");
-  if(messageLabel) messageLabel.textContent = localizedMessage(messageLabel.textContent);
-  if(eventTitle) eventTitle.textContent = localizedTitle(eventTitle.textContent);
-  renderLog();
+
+/* ===== v1.8.5 SAFE I18N PATCH — no toca flujo del juego ===== */
+
+const CG_TEXT = {
+  es: {
+    start: "START",
+    stop: "STOP",
+    specialThrow: "TIRADA ESPECIAL",
+    specialStop: "STOP ESPECIAL",
+    goal: "⚽ GOOOL",
+    goalTitle: "GOOOL",
+    miss: "FALLO",
+    post: "POSTE",
+    crossbar: "LARGUERO",
+    halfTime: "DESCANSO",
+    fullTime: "FINAL",
+    fullTimeTitle: "FINAL DEL PARTIDO",
+    yellow: "AMARILLA",
+    red: "ROJA",
+    penalty: "PENALTI",
+    freeKick: "FALTA",
+    noEvents: "Sin jugadas todavía.",
+    playerGot: "sacó",
+    finalDraw: "Empate final.",
+    winsBefore: "Gana",
+    winsAfter: "",
+    penalties: "Penaltis",
+    summary: "Resumen",
+    throws: "Tiradas",
+    matchGoals: "Goles partido",
+    woodwork: "Postes/Largueros",
+    cards: "Tarjetas",
+    specials: "Especiales",
+    free: "☕ CronoGol es gratis",
+    openBizum: "Abrir Bizum",
+    rematch: "REVANCHA",
+    shareResult: "COMPARTIR RESULTADO",
+    copyResult: "COPIAR RESULTADO",
+    newMatch: "NUEVA PARTIDA",
+    confirmResetTitle: "REINICIAR",
+    confirmResetText: "¿Seguro que quieres reiniciar el partido?",
+    cancel: "CANCELAR",
+    reset: "REINICIAR",
+    resultCopied: "Resultado copiado",
+    linkCopied: "Enlace copiado",
+    challenge: "¿Te atreves?",
+    rulesTitle: "REGLAS",
+    rulesIntro: "Se usan los dos últimos dígitos del cronómetro.",
+    close: "CERRAR",
+    supportTitle: "APOYA CRONOGOL",
+    supportIntro: "CronoGol es gratis y lo seguirá siendo.",
+    concept: "Concepto",
+    paypal: "PayPal",
+    rulesHtml: `<div class="donation-item">
+      <strong>Modo clásico</strong><br>
+      <strong>00</strong> = Gol.<br>
+      <strong>01-02</strong> = Poste. Repite el mismo jugador.<br>
+      <strong>03-04</strong> = Larguero. Repite el mismo jugador.<br>
+      <strong>45</strong> = Descanso. Se resetea el cronómetro y cambia el turno.<br>
+      <strong>50</strong> = Amarilla. Termina el turno y pierde el siguiente.<br>
+      <strong>60</strong> = Roja. Termina el turno y pierde dos turnos.<br>
+      <strong>90</strong> = Final del partido.<br>
+      <strong>96-97</strong> = Falta peligrosa. Tirada especial: <strong>00 a 20</strong> gol; <strong>21 a 99</strong> fallo.<br>
+      <strong>98-99</strong> = Penalti. Tirada especial: <strong>par = gol</strong>; <strong>impar = fallo</strong>.<br>
+      <strong>Otros números</strong> = Fallo y cambia el turno.
+    </div>
+    <div class="donation-item">
+      <strong>Modo rápido</strong><br>
+      Todo número terminado en <strong>0</strong> es gol.<br>
+      Todo número terminado en <strong>9</strong> es penalti.<br>
+      En el penalti: <strong>par = gol</strong>, <strong>impar = fallo</strong>.<br>
+      Gana el primero que llegue a <strong>6 goles con 2 de ventaja</strong>.
+    </div>`
+  },
+  en: {
+    start: "START",
+    stop: "STOP",
+    specialThrow: "SPECIAL THROW",
+    specialStop: "SPECIAL STOP",
+    goal: "⚽ GOAL",
+    goalTitle: "GOAL",
+    miss: "MISS",
+    post: "POST",
+    crossbar: "CROSSBAR",
+    halfTime: "HALF-TIME",
+    fullTime: "FULL-TIME",
+    fullTimeTitle: "FULL-TIME",
+    yellow: "YELLOW CARD",
+    red: "RED CARD",
+    penalty: "PENALTY",
+    freeKick: "FREE KICK",
+    noEvents: "No events yet.",
+    playerGot: "got",
+    finalDraw: "Final draw.",
+    winsBefore: "",
+    winsAfter: "wins",
+    penalties: "Penalties",
+    summary: "Summary",
+    throws: "Throws",
+    matchGoals: "Match goals",
+    woodwork: "Posts/Crossbars",
+    cards: "Cards",
+    specials: "Specials",
+    free: "☕ CronoGol is free",
+    openBizum: "Open Bizum",
+    rematch: "REMATCH",
+    shareResult: "SHARE RESULT",
+    copyResult: "COPY RESULT",
+    newMatch: "NEW MATCH",
+    confirmResetTitle: "RESTART",
+    confirmResetText: "Are you sure you want to restart the match?",
+    cancel: "CANCEL",
+    reset: "RESTART",
+    resultCopied: "Result copied",
+    linkCopied: "Link copied",
+    challenge: "Do you dare?",
+    rulesTitle: "RULES",
+    rulesIntro: "The game uses the last two digits of the stopwatch.",
+    close: "CLOSE",
+    supportTitle: "SUPPORT CRONOGOL",
+    supportIntro: "CronoGol is free and will remain free.",
+    concept: "Concept",
+    paypal: "PayPal",
+    rulesHtml: `<div class="donation-item">
+      <strong>Classic mode</strong><br>
+      <strong>00</strong> = Goal.<br>
+      <strong>01-02</strong> = Post. Same player repeats.<br>
+      <strong>03-04</strong> = Crossbar. Same player repeats.<br>
+      <strong>45</strong> = Half-time. Stopwatch resets and turn changes.<br>
+      <strong>50</strong> = Yellow card. Turn ends and the player skips the next turn.<br>
+      <strong>60</strong> = Red card. Turn ends and the player skips two turns.<br>
+      <strong>90</strong> = Full-time.<br>
+      <strong>96-97</strong> = Dangerous free kick. Special throw: <strong>00 to 20</strong> is a goal; <strong>21 to 99</strong> is a miss.<br>
+      <strong>98-99</strong> = Penalty. Special throw: <strong>even = goal</strong>; <strong>odd = miss</strong>.<br>
+      <strong>Any other number</strong> = Miss and turn changes.
+    </div>
+    <div class="donation-item">
+      <strong>Fast mode</strong><br>
+      Any number ending in <strong>0</strong> is a goal.<br>
+      Any number ending in <strong>9</strong> is a penalty.<br>
+      Penalty special throw: <strong>even = goal</strong>, <strong>odd = miss</strong>.<br>
+      The first player to reach <strong>6 goals with a 2-goal lead</strong> wins.
+    </div>`
+  }
+};
+
+function cgLang(){
+  return (typeof currentLang !== "undefined" && currentLang === "en") ? "en" : "es";
 }
+
+function cgT(key){
+  return (CG_TEXT[cgLang()] && CG_TEXT[cgLang()][key]) || CG_TEXT.es[key] || key;
+}
+
+function cgName(name){
+  if(cgLang() === "en"){
+    if(name === "Jugador 1") return "Player 1";
+    if(name === "Jugador 2") return "Player 2";
+    if(name === "Máquina") return "Machine";
+  }
+  return name;
+}
+
+function cgLocalizeText(text){
+  let out = String(text || "");
+  const replacements = [
+    ["Jugador 1", cgName("Jugador 1")],
+    ["Jugador 2", cgName("Jugador 2")],
+    ["Máquina", cgName("Máquina")],
+    ["GOOOL", cgT("goalTitle")],
+    ["FALLO", cgT("miss")],
+    ["POSTE", cgT("post")],
+    ["LARGUERO", cgT("crossbar")],
+    ["DESCANSO", cgT("halfTime")],
+    ["FINAL", cgT("fullTime")],
+    ["AMARILLA", cgT("yellow")],
+    ["ROJA", cgT("red")],
+    ["PENALTI", cgT("penalty")],
+    ["FALTA", cgT("freeKick")],
+    ["sacó", cgT("playerGot")]
+  ];
+  replacements.forEach(([a,b]) => { out = out.split(a).join(b); });
+  return out;
+}
+
+function cgPatchDynamicTranslations(){
+  // Wrap, don't replace core flow.
+  if(typeof evaluateThrow === "function" && !evaluateThrow.__cgPatched){
+    const originalEvaluateThrow = evaluateThrow;
+    evaluateThrow = function(v){
+      const r = originalEvaluateThrow(v);
+      if(cgLang() === "en"){
+        const typeMap = {
+          goal: cgT("goal"),
+          miss: cgT("miss"),
+          woodwork: r && String(r.msg).includes("LARGUERO") ? cgT("crossbar") : cgT("post"),
+          half: cgT("halfTime"),
+          full: cgT("fullTime"),
+          yellow: cgT("yellow"),
+          red: cgT("red"),
+          penalty: cgT("penalty"),
+          free_kick: cgT("freeKick")
+        };
+        if(r && typeMap[r.type]) r.msg = typeMap[r.type];
+        if(r && r.special === "penalty") r.msg = cgT("penalty");
+        if(r && r.special === "free_kick") r.msg = cgT("freeKick");
+      }
+      return r;
+    };
+    evaluateThrow.__cgPatched = true;
+  }
+
+  if(typeof evaluateFastThrow === "function" && !evaluateFastThrow.__cgPatched){
+    const originalEvaluateFastThrow = evaluateFastThrow;
+    evaluateFastThrow = function(v){
+      const r = originalEvaluateFastThrow(v);
+      if(cgLang() === "en" && r){
+        if(r.type === "goal") r.msg = cgT("goal");
+        if(r.type === "miss") r.msg = cgT("miss");
+        if(r.special === "penalty") r.msg = cgT("penalty");
+      }
+      return r;
+    };
+    evaluateFastThrow.__cgPatched = true;
+  }
+
+  if(typeof setEvent === "function" && !setEvent.__cgPatched){
+    const originalSetEvent = setEvent;
+    setEvent = function(title,msg,cls){
+      originalSetEvent(cgLocalizeText(title), cgLocalizeText(msg), cls);
+    };
+    setEvent.__cgPatched = true;
+  }
+
+  if(typeof renderLog === "function" && !renderLog.__cgPatched){
+    const originalRenderLog = renderLog;
+    renderLog = function(){
+      originalRenderLog();
+      document.querySelectorAll("#game-log li").forEach((li)=>{
+        li.textContent = cgLocalizeText(li.textContent);
+      });
+    };
+    renderLog.__cgPatched = true;
+  }
+
+  if(typeof formattedFinalResult === "function" && !formattedFinalResult.__cgPatched){
+    formattedFinalResult = function(){
+      const p1 = gameState.players[0];
+      const p2 = gameState.players[1];
+      const n1 = cgName(p1.name);
+      const n2 = cgName(p2.name);
+      let text = `${n1} | ${p1.goals} - ${p2.goals} | ${n2}`;
+      if(p1.goals > p2.goals){
+        text += cgLang() === "en" ? `. ${n1} ${cgT("winsAfter")}.` : `. ${cgT("winsBefore")} ${n1}.`;
+      } else if(p2.goals > p1.goals){
+        text += cgLang() === "en" ? `. ${n2} ${cgT("winsAfter")}.` : `. ${cgT("winsBefore")} ${n2}.`;
+      } else {
+        text += `. ${cgT("finalDraw")}`;
+      }
+      return text;
+    };
+    formattedFinalResult.__cgPatched = true;
+  }
+
+  if(typeof resultText === "function" && !resultText.__cgPatched){
+    resultText = function(includeUrl=true){
+      const final = gameState.lastFinalText || formattedFinalResult();
+      const base = `⚽ CronoGol\n${cgLocalizeText(final)}\n\n${cgT("challenge")}`;
+      return includeUrl ? `${base}\n${CRONOGOL_CONFIG.siteUrl}` : base;
+    };
+    resultText.__cgPatched = true;
+  }
+
+  if(typeof showRulesModal === "function" && !showRulesModal.__cgPatched){
+    showRulesModal = function(){
+      showModal(cgT("rulesTitle"), cgT("rulesIntro"), cgT("rulesHtml"), [{text:cgT("close"), action:closeModal}]);
+    };
+    showRulesModal.__cgPatched = true;
+  }
+
+  if(typeof showSupportModal === "function" && !showSupportModal.__cgPatched){
+    showSupportModal = function(){
+      showModal(
+        cgT("supportTitle"),
+        cgT("supportIntro"),
+        `<div class="donation-data"><div class="donation-item"><strong>Bizum</strong><br>${CRONOGOL_CONFIG.bizumPhone} · ${cgT("concept")}: ${CRONOGOL_CONFIG.bizumConcept}<button class="bizum-direct-btn" onclick="openBizum()">${cgT("openBizum")}</button></div><div class="donation-item"><strong>PayPal</strong><br><a class="support-link" href="${CRONOGOL_CONFIG.paypalUrl}" target="_blank">${cgT("paypal")}</a></div></div>`,
+        [{text:cgT("close"), action:closeModal}]
+      );
+    };
+    showSupportModal.__cgPatched = true;
+  }
+
+  if(typeof confirmReset === "function" && !confirmReset.__cgPatched){
+    confirmReset = function(){
+      showModal(cgT("confirmResetTitle"), cgT("confirmResetText"), "", [
+        {text:cgT("cancel"), action:closeModal},
+        {text:cgT("reset"), action:resetToSetup}
+      ]);
+    };
+    confirmReset.__cgPatched = true;
+  }
+
+  // Live button refresh only.
+  if(mainActionBtn && !gameState.isRunning) mainActionBtn.textContent = cgT("start");
+  if(specialStartBtn && !gameState.isRunning) specialStartBtn.textContent = cgT("specialThrow");
+}
+
+// Apply after original file has created all functions/listeners.
+// This does not block setupSegmentedControls or startMatch.
+setTimeout(cgPatchDynamicTranslations, 0);
+
