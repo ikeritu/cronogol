@@ -1,36 +1,42 @@
-# CronoGol v1.8.5 — recuperación estable + inglés seguro
+# CronoGol v1.8.6 — Boot Fix
 
-## Problema corregido
+## Diagnóstico
 
-Las versiones v1.8.3 y v1.8.4 rompían los botones principales:
+La app estaba rota porque desde v1.8.2 se perdió la llamada final de inicialización:
 
-- 1 vs Máquina.
-- Rápido.
-- Empezar partido.
+`setupSegmentedControls(); setupLanguageSelector(); updateSetupVisibility(); loadLocal();`
 
-## Causa
+Sin esa llamada:
 
-La traducción completa modificaba funciones centrales del juego y podía romper la inicialización de eventos.
+- `1 vs Máquina` no cambiaba el selector interno.
+- `Rápido` no cambiaba el selector interno.
+- El selector de idioma no terminaba de inicializarse.
+- La app parecía cargada, pero los controles principales no estaban conectados correctamente.
 
-## Solución
+## Corrección
 
-Esta versión vuelve a la base estable v1.8.2 y añade la traducción dinámica como una capa segura posterior:
+Se añade `bootCronoGol()` al final de `game.js`.
 
-- No reescribe `setupSegmentedControls`.
-- No reescribe `startMatch`.
-- No reescribe los listeners principales.
-- No toca el flujo de turnos.
-- Solo envuelve funciones de texto/presentación.
+Este boot:
+
+- Reconecta los botones segmentados.
+- Reconecta `Empezar partido`.
+- Reconecta menú, reglas, support, compartir y copiar.
+- Inicializa idioma.
+- Ejecuta `updateSetupVisibility()`.
+- Ejecuta `loadLocal()`.
+- Aplica la capa i18n sin tocar el flujo principal del juego.
 
 ## Validación
 
-`game.js` pasa `node --check`.
+`game.js` pasa:
+
+`node --check game.js`
 
 ## Pruebas obligatorias
 
 1. ES → 1 vs Máquina → Rápido → Empezar partido.
 2. EN → 1 vs Machine → Fast → START MATCH.
-3. Verificar que la partida empieza.
-4. Verificar que Rules aparece en inglés.
-5. Verificar que Share aparece en inglés.
-6. Verificar eventos principales en inglés.
+3. Verificar que cambia a pantalla de partido.
+4. Verificar que se actualiza historial.
+5. Verificar que se actualizan estadísticas.

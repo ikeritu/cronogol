@@ -964,5 +964,112 @@ function cgPatchDynamicTranslations(){
 
 // Apply after original file has created all functions/listeners.
 // This does not block setupSegmentedControls or startMatch.
-setTimeout(cgPatchDynamicTranslations, 0);
 
+
+
+
+/* ===== v1.8.6 BOOT FIX =====
+   Causa del bloqueo:
+   En v1.8.2+ se perdió la llamada final de inicialización:
+   setupSegmentedControls(); setupLanguageSelector(); updateSetupVisibility(); loadLocal();
+
+   Sin esa llamada:
+   - los botones segmentados 1 vs Máquina / Rápido no reciben listener,
+   - el selector de idioma no termina de inicializar,
+   - la pantalla parece viva pero los controles principales no cambian estado.
+
+   Este boot es defensivo: no reescribe la lógica de juego, solo asegura listeners.
+*/
+function bootCronoGol(){
+  try {
+    // Botones segmentados: usamos onclick para evitar listeners duplicados.
+    document.querySelectorAll(".segment-btn").forEach((btn)=>{
+      btn.onclick = () => {
+        const targetId = btn.dataset.target;
+        const value = btn.dataset.value;
+        const select = document.getElementById(targetId);
+        if(!select) return;
+
+        select.value = value;
+
+        document
+          .querySelectorAll(`.segment-btn[data-target="${targetId}"]`)
+          .forEach((item)=>item.classList.toggle("active", item.dataset.value === value));
+
+        select.dispatchEvent(new Event("change"));
+      };
+    });
+
+    // Botones principales: reasignación segura.
+    if(startMatchBtn) startMatchBtn.onclick = startMatch;
+    if(mainActionBtn) mainActionBtn.onclick = handleMainAction;
+    if(specialStartBtn) specialStartBtn.onclick = handleSpecialButton;
+    if(debugThrowBtn) debugThrowBtn.onclick = forceDebugThrow;
+
+    if(resetBtn) resetBtn.onclick = confirmReset;
+    if(menuResetBtn) menuResetBtn.onclick = () => { sideMenu.classList.add("hidden"); confirmReset(); };
+
+    if(gameModeSelect){
+      gameModeSelect.onchange = () => {
+        if(gameModeSelect.value==="machine" && player2Input.value==="Jugador 2") player2Input.value="Máquina";
+        if(gameModeSelect.value==="local" && player2Input.value==="Máquina") player2Input.value="Jugador 2";
+        updateSetupVisibility();
+      };
+    }
+
+    if(rulesBtn) rulesBtn.onclick = showRulesModal;
+    if(menuRulesBtn) menuRulesBtn.onclick = () => { sideMenu.classList.add("hidden"); showRulesModal(); };
+
+    if(supportBtn) supportBtn.onclick = showSupportModal;
+    if(menuSupportBtn) menuSupportBtn.onclick = () => { sideMenu.classList.add("hidden"); showSupportModal(); };
+
+    if(shareBtn) shareBtn.onclick = shareCronoGol;
+    if(menuShareBtn) menuShareBtn.onclick = () => { sideMenu.classList.add("hidden"); shareCronoGol(); };
+
+    if(copyLinkBtn) copyLinkBtn.onclick = copyCronoGolLink;
+    if(menuCopyBtn) menuCopyBtn.onclick = () => { sideMenu.classList.add("hidden"); copyCronoGolLink(); };
+
+    if(menuBtn) menuBtn.onclick = () => sideMenu.classList.remove("hidden");
+    if(closeMenuBtn) closeMenuBtn.onclick = () => sideMenu.classList.add("hidden");
+
+    const versionTarget = document.getElementById("version-tap-target");
+    if(versionTarget){
+      versionTarget.onclick = () => {
+        versionTaps++;
+        if(versionTaps >= 5){
+          debugBox.classList.remove("hidden");
+          showToast("Debug activado");
+        }
+      };
+    }
+
+    // Idioma
+    document.querySelectorAll(".lang-btn").forEach((btn)=>{
+      btn.onclick = () => applyLanguage(btn.dataset.lang);
+    });
+
+    try {
+      applyLanguage(localStorage.getItem("cronogol_lang") || "es");
+    } catch(e) {
+      applyLanguage("es");
+    }
+
+    updateSetupVisibility();
+    loadLocal();
+
+    if(typeof cgPatchDynamicTranslations === "function") {
+      cgPatchDynamicTranslations();
+    }
+
+    console.info("CronoGol boot OK v1.8.6");
+  } catch(error) {
+    console.error("CronoGol boot failed", error);
+    alert("CronoGol no ha podido inicializarse. Revisa la consola del navegador.");
+  }
+}
+
+if(document.readyState === "loading"){
+  document.addEventListener("DOMContentLoaded", bootCronoGol);
+} else {
+  bootCronoGol();
+}
