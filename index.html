@@ -11,7 +11,7 @@
   <meta property="og:image" content="https://cronogol.es/og-cronogol.png" />
   <link rel="icon" href="favicon.png" type="image/png" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-  <title>CronoGol v1.9.5</title>
+  <title>CronoGol v1.9.6</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -91,14 +91,16 @@
           <button id="start-match-btn" class="main-start-btn" data-i18n="startMatch"> EMPEZAR PARTIDO</button>
         </section>
 
-        <nav class="setup-links">
+        <nav class="setup-links secondary-actions-v196" aria-label="Acciones secundarias">
           <button id="rules-btn" type="button" data-i18n="rules">Reglas</button>
-          <a href="modos.html">Modos</a>
+          <a href="modos.html" data-i18n="modes">Modos</a>
+          <a href="historia.html" data-i18n="history">Historia</a>
+
           <button id="share-btn" type="button" data-i18n="share">Compartir</button>
           <button id="copy-link-btn" type="button" data-i18n="copyLink">Copiar enlace</button>
           <a href="feedback.html?lang=es" data-i18n="feedback">Feedback</a>
-          <a href="historia.html">Historia</a>
-          <button id="support-btn" type="button" data-i18n="supportShort">☕ Apoya</button>
+
+          <button id="support-btn" class="support-wide-btn" type="button" data-i18n="supportFull">☕ Apoya CronoGol</button>
         </nav>
 
         <section class="coming-soon coming-soon-compact">
@@ -114,7 +116,7 @@
           <span>WATER RESIST</span>
           <span>FOOTBALL CHRONO</span>
         </div>
-        <footer class="version-footer">CronoGol v1.9.5 · Partidas en este dispositivo: <strong id="local-matches-count">0</strong></footer>
+        <footer class="version-footer">CronoGol v1.9.6 · Partidas en este dispositivo: <strong id="local-matches-count">0</strong></footer>
       </div>
     </section>
 

@@ -1,13 +1,13 @@
 # CHANGELOG
 
-## v1.9.5 — Secondary Actions Final Layout Fix
+## v1.9.6 — Secondary Actions NAV Fix
 
 ### Cambios
 
-- Corregido layout de botones secundarios.
-- Forzada rejilla de 3 columnas.
-- `Apoya CronoGol` ocupa toda la fila inferior.
-- Añadida clase específica `secondary-actions-v195` para evitar colisiones con CSS previo.
+- Corregido el selector usado para sustituir el bloque de acciones secundarias.
+- El bloque real era `nav.setup-links`, no `div.setup-links`.
+- Añadida clase `secondary-actions-v196`.
+- `Apoya CronoGol` queda a ancho completo.
 
 ### No se ha tocado
 
