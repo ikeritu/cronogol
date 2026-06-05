@@ -49,7 +49,7 @@ const modalTitle = $("modal-title"), modalText = $("modal-text"), modalExtra = $
 
 const CRONOGOL_CONFIG = {
   siteUrl:"https://ikeritu.github.io/cronogol/",
-  whatsappText: "Estoy jugando a CronoGol, el juego del cronómetro Casio ⚽⌚\n\nPruébalo aquí:\nhttps://cronogol.netlify.app/",
+  whatsappText: "Estoy jugando a CronoGol, el juego del cronómetro Casio ⚽⌚\n\nPruébalo aquí:\nhttps://ikeritu.github.io/cronogol/",
   paypalUrl: "https://paypal.me/ikeritus",
   bizumPhone: "+34615717190",
   bizumConcept: "CronoGol",
