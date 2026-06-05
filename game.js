@@ -62,6 +62,7 @@ const I18N = {
     labelMode:"Modo",
     labelDuration:"Duración",
     labelDifficulty:"Dificultad",
+    advancedOptions:"Opciones avanzadas",
     labelPlayer1:"Jugador 1",
     labelPlayer2:"Jugador 2 / Máquina",
     modeLocal:"1 vs 1",
@@ -78,9 +79,9 @@ const I18N = {
     supportShort:"Apoya",
     inDevelopment:"En desarrollo",
     onlineSoon:"Modo online próximamente",
-    onlineSoonText:"Crea una sala privada y juega en tiempo real con un amigo.",
+    onlineSoonText:"Salas privadas para jugar con amigos.",
     sponsorSpace:"CronoGol es gratis",
-    sponsorText:"Puedes apoyar el proyecto invitándome a un café. Nunca habrá anuncios durante una tirada.",
+    sponsorText:"Puedes apoyar el proyecto invitándome a un café.",
     lastThrow:"ÚLTIMA TIRADA",
     turnOf:"TURNO DE",
     stats:"Estadísticas",
@@ -93,6 +94,7 @@ const I18N = {
     labelMode:"Mode",
     labelDuration:"Duration",
     labelDifficulty:"Difficulty",
+    advancedOptions:"Advanced options",
     labelPlayer1:"Player 1",
     labelPlayer2:"Player 2 / Machine",
     modeLocal:"1 vs 1",
@@ -109,9 +111,9 @@ const I18N = {
     supportShort:"Support",
     inDevelopment:"In development",
     onlineSoon:"Online mode coming soon",
-    onlineSoonText:"Create a private room and play live with a friend.",
+    onlineSoonText:"Private rooms to play with friends.",
     sponsorSpace:"CronoGol is free",
-    sponsorText:"You can support the project by buying me a coffee. No ads during a throw.",
+    sponsorText:"You can support the project by buying me a coffee.",
     lastThrow:"LAST THROW",
     turnOf:"TURN OF",
     stats:"Stats",
@@ -1156,7 +1158,7 @@ if(document.readyState === "loading"){
 }
 
 
-/* ===== CronoGol v1.9.1: support bugfix + clean share/support functions ===== */
+/* ===== CronoGol v1.9.2: support bugfix + clean share/support functions ===== */
 
 async function openBizum(){
   const isEn = currentLang === "en";

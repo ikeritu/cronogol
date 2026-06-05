@@ -1,16 +1,16 @@
 # CHANGELOG
 
-## v1.9.1 — Support Bugfix
+## v1.9.2 — Home Simplification
 
 ### Cambios
 
-- Añadida función global `openBizum()` en `game.js`.
-- Corregido posible fallo del botón `Abrir Bizum` dentro del juego.
-- Reforzada la función `showSupportModal()`.
-- Reforzadas las funciones `shareCronoGol()` y `copyCronoGolLink()`.
-- Sustituido el texto de patrocinador por apoyo voluntario.
-- Añadida opción de feedback para problemas con Bizum/apoyo.
-- Mejorado placeholder de dispositivo en feedback.
+- Añadido bloque plegable `Opciones avanzadas`.
+- Dificultad de máquina movida a opciones avanzadas.
+- Forzar descanso/final contra máquina movido a opciones avanzadas.
+- Modo online mostrado de forma más compacta.
+- Apoyo voluntario mostrado de forma más discreta.
+- Enlaces secundarios más compactos.
+- Footer de versión más discreto.
 
 ### No se ha tocado
 
@@ -19,3 +19,4 @@
 - Turnos.
 - Máquina.
 - START/STOP.
+- Monetización funcional.

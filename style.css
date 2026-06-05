@@ -1100,3 +1100,129 @@ input,select,textarea{width:100%;background:var(--lcd);border:4px solid #050707;
   border-color: rgba(217,134,25,.75);
   background: rgba(217,134,25,.08);
 }
+
+
+/* ===== CronoGol v1.9.2: home simplification ===== */
+
+.setup-card {
+  gap: 10px;
+}
+
+/* Opciones avanzadas: reduce carga visual inicial sin tocar lógica */
+.advanced-setup {
+  border: 2px solid rgba(49,64,67,.85);
+  background: rgba(0,0,0,.22);
+  padding: 0;
+}
+
+.advanced-setup summary {
+  list-style: none;
+  cursor: pointer;
+  color: var(--orange);
+  font-weight: 900;
+  padding: 12px;
+  text-align: center;
+  border-bottom: 0;
+}
+
+.advanced-setup summary::-webkit-details-marker {
+  display: none;
+}
+
+.advanced-setup summary::after {
+  content: " ↓";
+  color: var(--muted);
+}
+
+.advanced-setup[open] summary {
+  border-bottom: 2px solid var(--line);
+}
+
+.advanced-setup[open] summary::after {
+  content: " ↑";
+}
+
+.advanced-setup > label,
+.advanced-setup > .checkbox-row {
+  margin: 12px;
+}
+
+/* En modo local, el campo dificultad sigue ocultándose por JS */
+.advanced-setup .machine-level-field.is-hidden {
+  display: none;
+}
+
+/* Home menos larga: tarjetas secundarias compactas */
+.coming-soon-compact,
+.support-strip {
+  padding: 9px 10px;
+  margin-top: 10px;
+  font-size: 12px;
+}
+
+.coming-soon-compact .tag {
+  margin-bottom: 4px;
+  font-size: 11px;
+}
+
+.coming-soon-compact p,
+.support-strip p {
+  margin: 0;
+}
+
+.support-strip {
+  border-color: rgba(217,134,25,.60);
+  background: rgba(217,134,25,.07);
+}
+
+.setup-links {
+  grid-template-columns: repeat(auto-fit,minmax(96px,1fr));
+  gap: 7px;
+}
+
+.setup-links button,
+.setup-links a {
+  min-height: 38px;
+  padding: 8px;
+  font-size: 12px;
+}
+
+/* Footer de versión más discreto */
+.version-footer {
+  font-size: 11px;
+  opacity: .72;
+  padding: 8px;
+}
+
+@media(max-width:560px){
+  .hero-lcd {
+    padding: 12px;
+  }
+
+  .hero-lcd h1 {
+    font-size: 26px;
+  }
+
+  .hero-lcd p {
+    font-size: 12px;
+  }
+
+  .setup-card {
+    margin-top: 10px;
+    padding: 12px;
+  }
+
+  label {
+    font-size: 13px;
+  }
+
+  input, select, textarea {
+    padding: 9px;
+    font-size: 15px;
+  }
+
+  .main-start-btn {
+    padding: 15px;
+    font-size: 18px;
+  }
+}

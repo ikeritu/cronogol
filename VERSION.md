@@ -1,10 +1,10 @@
 # VERSION
 
-Current version: v1.9.1
+Current version: v1.9.2
 
-Release name: Support Bugfix
+Release name: Home Simplification
 
-Base version: v1.9.0 Support & Monetization Starter
+Base version: v1.9.1 Support Bugfix
 
 Status: Stable
 
@@ -12,6 +12,7 @@ Official URL:
 
 https://cronogol.es/
 
-Main fix:
+Main change:
 
-- `openBizum()` added to `game.js`.
+- Simplified home screen.
+- Added advanced options block.

@@ -1,42 +1,41 @@
-# CronoGol v1.9.1 — Support Bugfix
+# CronoGol v1.9.2 — Home Simplification
 
 ## Objetivo
 
-Corregir el primer fallo real detectado en la fase de monetización voluntaria.
+Reducir la carga visual de la pantalla inicial para que el usuario pueda empezar una partida más rápido.
 
 ## Cambios aplicados
 
-- Añadida función global `openBizum()` en `game.js`.
-- El botón `Abrir Bizum` del modal del juego ya tiene función real.
-- Reforzadas funciones limpias de:
-  - `showSupportModal()`
-  - `shareCronoGol()`
-  - `copyCronoGolLink()`
-- Cambiado el bloque “Espacio de patrocinador” por un mensaje de apoyo voluntario.
-- Añadida opción de feedback:
-  - `Problema con Bizum / apoyo`
-- Mejorado placeholder del campo dispositivo.
-- Actualizada privacidad.
-- Añadidos estilos menores para apoyo voluntario.
+- Se añade bloque plegable `Opciones avanzadas`.
+- Se mueven a opciones avanzadas:
+  - Dificultad de máquina.
+  - Forzar descanso/final contra máquina.
+- Se reduce visualmente `Modo online próximamente`.
+- Se cambia el bloque de apoyo para que sea más discreto.
+- Se compactan enlaces secundarios.
+- Se reduce peso visual del footer de versión.
+- Se mantiene el botón `Empezar partido` como acción principal.
 
 ## No se ha tocado
 
+- Lógica del juego.
+- START/STOP.
 - Reglas.
 - Turnos.
 - Máquina.
 - Modo rápido.
-- START/STOP.
 - Penalti/falta.
 - Estadísticas.
 - Historial.
+- Bizum/PayPal.
 
 ## QA recomendado
 
 1. Abrir `https://cronogol.es/`.
-2. Pulsar `Apoya`.
-3. Pulsar `Abrir Bizum`.
-4. Confirmar que copia los datos o intenta abrir la app bancaria.
-5. Terminar una partida.
-6. Pulsar `Abrir Bizum` en el resumen final.
-7. Probar `Compartir`.
-8. Probar que START/STOP sigue funcionando.
+2. Confirmar que la pantalla inicial se ve más limpia.
+3. Abrir y cerrar `Opciones avanzadas`.
+4. Probar `1 vs Máquina`.
+5. Probar `Rápido`.
+6. Pulsar `Empezar partido`.
+7. Confirmar que START/STOP funciona.
+8. Confirmar que Apoya/Bizum siguen funcionando.
