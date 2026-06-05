@@ -616,13 +616,31 @@ function showRulesModal(){
     [{text:"CERRAR",action:closeModal}]
   );
 }
-function showSupportModal(){ showModal("APOYA CRONOGOL","CronoGol es gratis y lo seguirá siendo.",`<div class="donation-data"><div class="donation-item"><strong>Bizum</strong><br>${CRONOGOL_CONFIG.bizumPhone} · Concepto: ${CRONOGOL_CONFIG.bizumConcept}<button class="bizum-direct-btn" onclick="openBizum()">Abrir Bizum</button></div><div class="donation-item"><strong>PayPal</strong><br><a class="support-link" href="${CRONOGOL_CONFIG.paypalUrl}" target="_blank">Abrir PayPal</a></div></div>`,[{text:"CERRAR",action:closeModal}]); }
-async function copyBizumData(){ return copyText(`${CRONOGOL_CONFIG.bizumPhone} · Concepto: ${CRONOGOL_CONFIG.bizumConcept}`,"Datos de Bizum copiados"); }
-async function openBizum(){
-  await copyBizumData();
-  showToast("Datos de Bizum copiados. Abriendo tu app bancaria...");
-  window.location.href=`bizum://send?phone=${encodeURIComponent(CRONOGOL_CONFIG.bizumPhone)}&concept=${encodeURIComponent(CRONOGOL_CONFIG.bizumConcept)}`;
-  setTimeout(()=>showToast(`Bizum: ${CRONOGOL_CONFIG.bizumPhone} · Concepto: ${CRONOGOL_CONFIG.bizumConcept}`),1200);
+function showSupportModal(){
+  const isEn = currentLang === "en";
+  showModal(
+    isEn ? "SUPPORT CRONOGOL" : "APOYA CRONOGOL",
+    isEn
+      ? "CronoGol is free and will remain free. If you enjoy it, you can buy me a coffee."
+      : "CronoGol es gratis y lo seguirá siendo. Si te divierte, puedes invitarme a un café.",
+    `<div class="support-modal">
+      <div class="support-highlight">☕ ${isEn ? "Voluntary support" : "Apoyo voluntario"}</div>
+      <div class="donation-data">
+        <div class="donation-item">
+          <strong>Bizum</strong><br>
+          ${CRONOGOL_CONFIG.bizumPhone}<br>
+          <small>${isEn ? "Concept" : "Concepto"}: ${CRONOGOL_CONFIG.bizumConcept}</small>
+          <button class="bizum-direct-btn" onclick="openBizum()">${isEn ? "Open Bizum" : "Abrir Bizum"}</button>
+        </div>
+        <div class="donation-item">
+          <strong>PayPal</strong><br>
+          <a class="support-link" href="${CRONOGOL_CONFIG.paypalUrl}" target="_blank" rel="noopener">${isEn ? "Open PayPal" : "Abrir PayPal"}</a>
+        </div>
+      </div>
+      <p class="support-note">${isEn ? "No ads during the match. No paywalls." : "Sin anuncios durante la partida. Sin pagos obligatorios."}</p>
+    </div>`,
+    [{text:isEn ? "CLOSE" : "CERRAR", action:closeModal}]
+  );
 }
 function whatsappShareUrl(){ return `https://wa.me/?text=${encodeURIComponent(CRONOGOL_CONFIG.whatsappText)}`; }
 async function shareCronoGol(){

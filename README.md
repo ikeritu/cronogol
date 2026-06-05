@@ -1,78 +1,51 @@
-# CronoGol v1.8.9 — Custom Domain Share Fix
+# CronoGol v1.9.0 — Support & Monetization Starter
 
-CronoGol ya tiene dominio propio:
+## Objetivo
 
-```text
+Empezar la monetización sin perjudicar la experiencia de juego.
+
+## Estrategia
+
+Fase 1: donaciones voluntarias.
+
+- Bizum.
+- PayPal.
+- Mensaje de apoyo al final de la partida.
+- Página `apoya.html` mejorada.
+- Sin anuncios durante la partida.
+- Sin paywall.
+- Sin modificar la lógica del juego.
+
+## Cambios aplicados
+
+- Modal `Apoya CronoGol` más claro.
+- Bloque de apoyo al final del partido.
+- Página `apoya.html` rediseñada.
+- Botón directo de Bizum.
+- Enlace PayPal.
+- Política de privacidad actualizada.
+- Estilos de monetización añadidos.
+- Versión actualizada a v1.9.0.
+
+## URL oficial
+
 https://cronogol.es/
-```
 
-## Cambios de esta versión
+## Próxima fase
 
-Esta versión parte de la base estable `v1.8.8`.
+Preparar la web para AdSense:
 
-### Cambios aplicados
-
-- URL oficial actualizada a `https://cronogol.es/`.
-- Botón `Compartir` actualizado.
-- Botón `Copy link / Copiar enlace` actualizado.
-- Resultado final compartido actualizado.
-- Sustituidas las referencias antiguas por el dominio oficial.
-- Añadido archivo `CNAME` con:
-  - `cronogol.es`
-- README actualizado.
-- CHANGELOG actualizado.
-- VERSION actualizado.
-- Manifest de release añadido.
-
-## Texto de compartir
-
-### Español
-
-```text
-Estoy jugando a CronoGol ⚽⌚
-https://cronogol.es/
-```
-
-### Inglés
-
-```text
-I'm playing CronoGol ⚽⌚
-https://cronogol.es/
-```
-
-## Resultado final compartido
-
-El resultado final usa también el dominio oficial:
-
-```text
-⚽ CronoGol
-Jugador 1 | 2 - 1 | Jugador 2. Gana Jugador 1.
-
-¿Te atreves?
-https://cronogol.es/
-```
-
-## Importante
-
-No se modifica la lógica del juego:
-
-- Reglas.
-- Turnos.
-- Máquina.
-- Modo rápido.
-- Penalti/falta.
-- Historial.
-- Estadísticas.
-
-Solo se actualiza dominio, compartir y documentación.
+- Páginas estáticas con contenido suficiente.
+- Privacidad actualizada.
+- HTTPS activo.
+- Experiencia limpia en móvil.
+- Solicitud de revisión en AdSense.
 
 ## QA mínimo
 
-Después de subir:
-
-1. Entrar en `https://cronogol.es/`.
-2. Pulsar `Compartir`.
-3. Confirmar que aparece `https://cronogol.es/`.
+1. Abrir `https://cronogol.es/`.
+2. Pulsar `Apoya`.
+3. Probar que aparece Bizum y PayPal.
 4. Terminar una partida.
-5. Compartir resultado.
-6. Confirmar que el resultado final usa `https://cronogol.es/`.
+5. Verificar bloque de apoyo en el resumen final.
+6. Verificar que START/STOP sigue funcionando.

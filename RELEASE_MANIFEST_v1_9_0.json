@@ -1,0 +1,42 @@
+{
+  "project": "CronoGol",
+  "version": "1.9.0",
+  "release_name": "Support & Monetization Starter",
+  "base_version": "1.8.9 Custom Domain Share Fix",
+  "official_url": "https://cronogol.es/",
+  "logic_changed": false,
+  "monetization_phase": "voluntary_support",
+  "ads_enabled": false,
+  "donations_enabled": true,
+  "payment_methods": [
+    "Bizum",
+    "PayPal"
+  ],
+  "files_expected": [
+    "CHANGELOG.md",
+    "CNAME",
+    "README.md",
+    "RELEASE_MANIFEST_v1_8_9.json",
+    "VERSION.md",
+    "apoya.html",
+    "como-jugar.html",
+    "contacto.html",
+    "favicon.png",
+    "favicon.svg",
+    "feedback.html",
+    "game.js",
+    "gracias.html",
+    "index.html",
+    "logo-cronogol-dark.png",
+    "logo-cronogol-horizontal.png",
+    "logo-cronogol-new.png",
+    "logo-cronogol-transparent.png",
+    "logo-cronogol.png",
+    "og-cronogol.png",
+    "og-cronogol.svg",
+    "privacidad.html",
+    "style.css"
+  ],
+  "node_check": "ok",
+  "node_check_output": ""
+}

@@ -1,19 +1,13 @@
 # VERSION
 
-Current version: v1.8.9
+Current version: v1.9.0
 
-Release name: Custom Domain Share Fix
+Release name: Support & Monetization Starter
 
-Base version: v1.8.8 Stable Clean Release
+Base version: v1.8.9 Custom Domain Share Fix
 
 Status: Stable
 
 Official URL:
 
 https://cronogol.es/
-
-Main change:
-
-- Share button now uses the official domain.
-- Final result sharing now uses the official domain.
-- CNAME file added for GitHub Pages.
