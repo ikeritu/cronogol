@@ -1303,3 +1303,62 @@ input,select,textarea{width:100%;background:var(--lcd);border:4px solid #050707;
     padding: 8px;
   }
 }
+
+
+/* ===== CronoGol v1.9.4: secondary actions reorder ===== */
+
+.secondary-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.secondary-actions button,
+.secondary-actions a {
+  width: 100%;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.secondary-actions .support-wide-btn {
+  grid-column: 1 / -1;
+  min-height: 50px;
+  border-color: rgba(217,134,25,.85);
+  background: rgba(217,134,25,.12);
+  color: var(--orange);
+  font-size: 14px;
+  letter-spacing: .6px;
+}
+
+.secondary-actions .support-wide-btn::after {
+  content: " · Bizum / PayPal";
+  color: var(--muted);
+  font-size: 11px;
+  margin-left: 6px;
+}
+
+@media(max-width:420px){
+  .secondary-actions {
+    gap: 7px;
+  }
+
+  .secondary-actions button,
+  .secondary-actions a {
+    min-height: 40px;
+    font-size: 11px;
+    padding: 7px 5px;
+  }
+
+  .secondary-actions .support-wide-btn {
+    min-height: 48px;
+    font-size: 13px;
+  }
+
+  .secondary-actions .support-wide-btn::after {
+    display: block;
+    margin-left: 4px;
+    font-size: 10px;
+  }
+}

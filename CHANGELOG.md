@@ -1,17 +1,17 @@
 # CHANGELOG
 
-## v1.9.3 — AdSense Readiness
+## v1.9.4 — Secondary Actions Reorder
 
 ### Cambios
 
-- Ampliada página `como-jugar.html`.
-- Añadida página `historia.html`.
-- Añadida página `modos.html`.
-- Revisadas páginas `contacto.html` y `privacidad.html`.
-- Añadido `robots.txt`.
-- Añadido `sitemap.xml`.
-- Añadidos estilos para páginas de contenido.
-- Añadidos enlaces internos.
+- Reordenados botones secundarios de la home.
+- `Apoya CronoGol` ocupa ahora toda la fila inferior.
+- Mejorada jerarquía visual de acciones:
+  - Información.
+  - Compartir/feedback.
+  - Apoyo voluntario.
+- Añadidos estilos CSS específicos.
+- Añadidas claves i18n para `Modos` e `Historia`.
 
 ### No se ha tocado
 
@@ -20,4 +20,4 @@
 - Reglas.
 - Turnos.
 - Máquina.
-- Monetización voluntaria.
+- Monetización funcional.

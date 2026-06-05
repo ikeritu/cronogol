@@ -1,10 +1,10 @@
 # VERSION
 
-Current version: v1.9.3
+Current version: v1.9.4
 
-Release name: AdSense Readiness
+Release name: Secondary Actions Reorder
 
-Base version: v1.9.2 Home Simplification
+Base version: v1.9.3 AdSense Readiness
 
 Status: Stable
 
@@ -14,6 +14,5 @@ https://cronogol.es/
 
 Main change:
 
-- Adds content pages, sitemap and robots.txt.
-- Prepares site for a future AdSense review.
-- Ads are not enabled.
+- Reordered secondary buttons.
+- Support button now spans the full row.

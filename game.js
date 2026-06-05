@@ -73,6 +73,8 @@ const I18N = {
     forceMachine:"Forzar descanso/final contra máquina",
     sound:"Sonido",
     rules:"Reglas",
+    modes:"Modos",
+    history:"Historia",
     share:"Compartir",
     copyLink:"Copiar enlace",
     feedback:"Feedback",
@@ -105,6 +107,8 @@ const I18N = {
     forceMachine:"Force half/full time vs machine",
     sound:"Sound",
     rules:"Rules",
+    modes:"Modes",
+    history:"History",
     share:"Share",
     copyLink:"Copy link",
     feedback:"Feedback",
@@ -1158,7 +1162,7 @@ if(document.readyState === "loading"){
 }
 
 
-/* ===== CronoGol v1.9.3: support bugfix + clean share/support functions ===== */
+/* ===== CronoGol v1.9.4: support bugfix + clean share/support functions ===== */
 
 async function openBizum(){
   const isEn = currentLang === "en";
