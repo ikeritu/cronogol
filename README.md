@@ -1,39 +1,58 @@
-# CronoGol v1.8.2 — Share, Feedback y Support multidioma
+# CronoGol v1.8.3 — English 100%
 
-## Corrección
+## Objetivo
 
-En la versión anterior, al seleccionar `EN`:
+Cuando el usuario selecciona `EN`, toda la experiencia principal del juego debe mostrarse en inglés.
 
-- `Share` seguía compartiendo texto en castellano.
-- El enlace compartido seguía apuntando a Netlify.
-- `Feedback` seguía en castellano.
-- `Support / Apoya` seguía parcialmente en castellano.
+## Cambios v1.8.3
 
-## Cambios v1.8.2
+Traducción completa al inglés de:
 
-- `Share` ahora usa:
-  - ES: `Estoy jugando a CronoGol ⚽⌚`
-  - EN: `I'm playing CronoGol ⚽⌚`
-- El enlace compartido apunta ahora a GitHub Pages:
-  - `https://ikeritu.github.io/cronogol/`
-- `Copy link` muestra toast en ES/EN.
-- Los enlaces a feedback pasan el idioma activo:
-  - `feedback.html?lang=es`
-  - `feedback.html?lang=en`
-- `feedback.html` tiene selector ES/EN y textos principales traducidos.
-- `apoya.html` incorpora selector ES/EN básico.
-- El modal `Support` del juego queda reforzado en ES/EN.
+- Pantalla principal.
+- Configuración.
+- Menú.
+- Reglas.
+- Apoyo / Support.
+- Feedback básico.
+- Share / Copy link.
+- Resultado compartido.
+- Mensajes dinámicos de jugada:
+  - Goal.
+  - Miss.
+  - Post.
+  - Crossbar.
+  - Half-time.
+  - Full-time.
+  - Yellow card.
+  - Red card.
+  - Free kick.
+  - Penalty.
+- Tiradas especiales:
+  - Special throw.
+  - Special stop.
+  - Free kick goal/miss.
+  - Penalty missed.
+- Historial del partido.
+- Resumen final.
+- Tanda de penaltis.
+- Botones finales:
+  - Rematch.
+  - Share result.
+  - Copy result.
+  - New match.
+- Confirmación de reinicio.
 
-## Estado actual
+## URL principal
 
-- Home traducida.
-- Rules traducido.
-- Support modal traducido.
-- Share traducido.
-- Feedback parcialmente traducido.
-- GitHub Pages como URL principal.
+La URL principal de compartir queda configurada como:
+
+`https://ikeritu.github.io/cronogol/`
 
 ## Pendiente opcional
 
-- Traducir páginas estáticas completas: `como-jugar.html`, `contacto.html`, `privacidad.html`.
-- Traducir mensajes dinámicos de jugada.
+- Traducir al 100% las páginas estáticas largas:
+  - `como-jugar.html`
+  - `contacto.html`
+  - `privacidad.html`
+
+La experiencia principal del juego ya queda en inglés al seleccionar `EN`.
