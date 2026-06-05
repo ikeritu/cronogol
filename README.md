@@ -1,10 +1,10 @@
-# CronoGol v1.9.6 — Secondary Actions NAV Fix
+# CronoGol v1.9.7 — Secondary Actions CSS-only Final Fix
 
 ## Objetivo
 
-Corregir definitivamente el layout de botones secundarios. La versión anterior intentaba sustituir un `div`, pero el bloque real era un `nav`.
+Corregir definitivamente la distribución visual de los botones secundarios sin modificar funciones del juego.
 
-## Layout correcto
+## Layout final
 
 ```text
 [ Reglas ] [ Modos ] [ Historia ]
@@ -14,14 +14,16 @@ Corregir definitivamente el layout de botones secundarios. La versión anterior 
 
 ## Cambios aplicados
 
-- Sustituido correctamente el bloque `<nav class="setup-links">`.
-- Añadida clase específica `secondary-actions-v196`.
-- Forzado CSS sobre `nav.setup-links.secondary-actions-v196`.
-- `Apoya CronoGol` ocupa toda la fila inferior.
-- Se mantiene rejilla de 3 columnas en móvil y escritorio.
+- Reordenado el bloque visual `nav.setup-links`.
+- Añadida clase `secondary-actions-final`.
+- Añadidos atributos `data-slot` para fijar posiciones por CSS.
+- Añadido CSS con alta especificidad sobre `#setup-screen nav.setup-links.secondary-actions-final`.
+- Forzadas 3 columnas exactas.
+- `Apoya CronoGol` ocupa toda la tercera fila.
 
 ## No se ha tocado
 
+- Funciones JavaScript.
 - Lógica del juego.
 - START/STOP.
 - Reglas.
@@ -36,7 +38,7 @@ Corregir definitivamente el layout de botones secundarios. La versión anterior 
 ## QA recomendado
 
 1. Abrir home.
-2. Verificar:
+2. Confirmar layout exacto:
    - Reglas / Modos / Historia.
    - Compartir / Copiar enlace / Feedback.
    - Apoya CronoGol a ancho completo.

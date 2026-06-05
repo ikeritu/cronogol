@@ -1,10 +1,10 @@
 # VERSION
 
-Current version: v1.9.6
+Current version: v1.9.7
 
-Release name: Secondary Actions NAV Fix
+Release name: Secondary Actions CSS-only Final Fix
 
-Base version: v1.9.5 Secondary Actions Final Layout Fix
+Base version: v1.9.6 Secondary Actions NAV Fix
 
 Status: Stable
 
@@ -14,4 +14,5 @@ https://cronogol.es/
 
 Main fix:
 
-- Corrected setup-links NAV layout.
+- Final visual layout of secondary action buttons.
+- No JavaScript functions modified.

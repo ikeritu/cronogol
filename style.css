@@ -1508,3 +1508,115 @@ nav.setup-links.secondary-actions-v196 > .support-wide-btn::after {
     margin-left: 4px;
   }
 }
+
+
+/* ===== CronoGol v1.9.7: secondary actions CSS-only final fix ===== */
+
+/*
+  Layout definitivo, sin tocar funciones JS:
+  [ Reglas ] [ Modos ] [ Historia ]
+  [ Compartir ] [ Copiar enlace ] [ Feedback ]
+  [              ☕ Apoya CronoGol              ]
+*/
+
+#setup-screen nav.setup-links.secondary-actions-final {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  grid-auto-flow: row !important;
+  grid-auto-columns: unset !important;
+  gap: 8px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+#setup-screen nav.setup-links.secondary-actions-final > * {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  min-height: 44px !important;
+  padding: 8px 6px !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  text-align: center !important;
+  white-space: normal !important;
+  line-height: 1.15 !important;
+}
+
+/* Posiciones fijas: evita que auto-fit/auto-fill anteriores creen 4 columnas */
+#setup-screen nav.setup-links.secondary-actions-final > [data-slot="rules"] {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+}
+
+#setup-screen nav.setup-links.secondary-actions-final > [data-slot="modes"] {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+}
+
+#setup-screen nav.setup-links.secondary-actions-final > [data-slot="history"] {
+  grid-column: 3 !important;
+  grid-row: 1 !important;
+}
+
+#setup-screen nav.setup-links.secondary-actions-final > [data-slot="share"] {
+  grid-column: 1 !important;
+  grid-row: 2 !important;
+}
+
+#setup-screen nav.setup-links.secondary-actions-final > [data-slot="copy"] {
+  grid-column: 2 !important;
+  grid-row: 2 !important;
+}
+
+#setup-screen nav.setup-links.secondary-actions-final > [data-slot="feedback"] {
+  grid-column: 3 !important;
+  grid-row: 2 !important;
+}
+
+#setup-screen nav.setup-links.secondary-actions-final > [data-slot="support"] {
+  grid-column: 1 / 4 !important;
+  grid-row: 3 !important;
+  min-height: 54px !important;
+  border-color: rgba(217,134,25,.90) !important;
+  background: rgba(217,134,25,.14) !important;
+  color: var(--orange) !important;
+  font-size: 14px !important;
+  letter-spacing: .5px !important;
+}
+
+#setup-screen nav.setup-links.secondary-actions-final > [data-slot="support"]::after {
+  content: " · Bizum / PayPal";
+  color: var(--muted);
+  font-size: 11px;
+  margin-left: 6px;
+}
+
+@media(max-width:420px){
+  #setup-screen nav.setup-links.secondary-actions-final {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+  }
+
+  #setup-screen nav.setup-links.secondary-actions-final > * {
+    min-height: 40px !important;
+    padding: 7px 4px !important;
+    font-size: 10.5px !important;
+  }
+
+  #setup-screen nav.setup-links.secondary-actions-final > [data-slot="support"] {
+    grid-column: 1 / 4 !important;
+    min-height: 48px !important;
+    font-size: 13px !important;
+  }
+
+  #setup-screen nav.setup-links.secondary-actions-final > [data-slot="support"]::after {
+    font-size: 10px;
+    margin-left: 4px;
+  }
+}
