@@ -1,10 +1,10 @@
 # VERSION
 
-Current version: v1.9.4
+Current version: v1.9.5
 
-Release name: Secondary Actions Reorder
+Release name: Secondary Actions Final Layout Fix
 
-Base version: v1.9.3 AdSense Readiness
+Base version: v1.9.4 Secondary Actions Reorder
 
 Status: Stable
 
@@ -12,7 +12,6 @@ Official URL:
 
 https://cronogol.es/
 
-Main change:
+Main fix:
 
-- Reordered secondary buttons.
-- Support button now spans the full row.
+- Final 3-column secondary actions layout.

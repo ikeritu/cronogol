@@ -1,17 +1,13 @@
 # CHANGELOG
 
-## v1.9.4 — Secondary Actions Reorder
+## v1.9.5 — Secondary Actions Final Layout Fix
 
 ### Cambios
 
-- Reordenados botones secundarios de la home.
-- `Apoya CronoGol` ocupa ahora toda la fila inferior.
-- Mejorada jerarquía visual de acciones:
-  - Información.
-  - Compartir/feedback.
-  - Apoyo voluntario.
-- Añadidos estilos CSS específicos.
-- Añadidas claves i18n para `Modos` e `Historia`.
+- Corregido layout de botones secundarios.
+- Forzada rejilla de 3 columnas.
+- `Apoya CronoGol` ocupa toda la fila inferior.
+- Añadida clase específica `secondary-actions-v195` para evitar colisiones con CSS previo.
 
 ### No se ha tocado
 

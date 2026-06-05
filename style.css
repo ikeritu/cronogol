@@ -1362,3 +1362,77 @@ input,select,textarea{width:100%;background:var(--lcd);border:4px solid #050707;
     font-size: 10px;
   }
 }
+
+
+/* ===== CronoGol v1.9.5: secondary actions final layout fix ===== */
+
+/*
+  Layout definitivo solicitado:
+  [ Reglas ] [ Modos ] [ Historia ]
+  [ Compartir ] [ Copiar enlace ] [ Feedback ]
+  [              Apoya CronoGol              ]
+*/
+
+.setup-links.secondary-actions-v195 {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+  align-items: stretch !important;
+}
+
+.setup-links.secondary-actions-v195 > button,
+.setup-links.secondary-actions-v195 > a {
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 44px !important;
+  padding: 8px 6px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  white-space: normal !important;
+  line-height: 1.15 !important;
+  box-sizing: border-box !important;
+}
+
+.setup-links.secondary-actions-v195 > .support-wide-btn {
+  grid-column: 1 / -1 !important;
+  min-height: 52px !important;
+  border-color: rgba(217,134,25,.90) !important;
+  background: rgba(217,134,25,.14) !important;
+  color: var(--orange) !important;
+  font-size: 14px !important;
+  letter-spacing: .5px !important;
+}
+
+.setup-links.secondary-actions-v195 > .support-wide-btn::after {
+  content: " · Bizum / PayPal";
+  color: var(--muted);
+  font-size: 11px;
+  margin-left: 6px;
+}
+
+@media(max-width:420px){
+  .setup-links.secondary-actions-v195 {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+  }
+
+  .setup-links.secondary-actions-v195 > button,
+  .setup-links.secondary-actions-v195 > a {
+    min-height: 40px !important;
+    padding: 7px 4px !important;
+    font-size: 10.5px !important;
+  }
+
+  .setup-links.secondary-actions-v195 > .support-wide-btn {
+    min-height: 48px !important;
+    font-size: 13px !important;
+  }
+
+  .setup-links.secondary-actions-v195 > .support-wide-btn::after {
+    display: inline;
+    font-size: 10px;
+    margin-left: 4px;
+  }
+}

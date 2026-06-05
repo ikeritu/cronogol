@@ -1,10 +1,10 @@
-# CronoGol v1.9.4 — Secondary Actions Reorder
+# CronoGol v1.9.5 — Secondary Actions Final Layout Fix
 
 ## Objetivo
 
-Reorganizar los botones secundarios de la pantalla inicial para mejorar jerarquía visual y dar más presencia al apoyo voluntario.
+Corregir definitivamente la distribución de botones secundarios de la pantalla inicial.
 
-## Nueva estructura
+## Layout correcto
 
 ```text
 [ Reglas ] [ Modos ] [ Historia ]
@@ -14,11 +14,11 @@ Reorganizar los botones secundarios de la pantalla inicial para mejorar jerarqu�
 
 ## Cambios aplicados
 
-- Reordenados botones secundarios.
-- `Apoya CronoGol` ocupa las 3 columnas inferiores.
-- Apoya queda como CTA secundaria clara.
-- Añadidos estilos específicos para la nueva rejilla.
-- Añadidas claves de traducción para `Modos` e `Historia`.
+- Reordenados los botones en el HTML en el orden exacto solicitado.
+- Añadida clase específica `secondary-actions-v195`.
+- Añadido CSS con mayor especificidad para evitar que reglas antiguas pisen el layout.
+- `Apoya CronoGol` ocupa toda la fila inferior.
+- Se mantiene estructura de 3 columnas también en móvil.
 
 ## No se ha tocado
 
@@ -35,11 +35,10 @@ Reorganizar los botones secundarios de la pantalla inicial para mejorar jerarqu�
 
 ## QA recomendado
 
-1. Abrir `https://cronogol.es/`.
-2. Verificar orden:
+1. Abrir la home.
+2. Confirmar:
    - Reglas / Modos / Historia.
    - Compartir / Copiar enlace / Feedback.
-   - Apoya CronoGol a ancho completo.
+   - Apoya a ancho completo.
 3. Probar cada botón secundario.
-4. Probar Apoya → Bizum / PayPal.
-5. Probar Empezar partido.
+4. Probar Empezar partido.
