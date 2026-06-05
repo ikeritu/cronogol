@@ -1,58 +1,28 @@
-# CronoGol v1.8.3 — English 100%
+# CronoGol v1.8.4 — Full English estable
 
-## Objetivo
+## Corrección
 
-Cuando el usuario selecciona `EN`, toda la experiencia principal del juego debe mostrarse en inglés.
+La v1.8.3 podía romper la inicialización de JavaScript. Esta versión vuelve a la base estable v1.8.2 y añade la traducción dinámica al inglés de forma segura.
 
-## Cambios v1.8.3
+## Probado
 
-Traducción completa al inglés de:
+- `game.js` pasa comprobación de sintaxis con `node --check`.
 
-- Pantalla principal.
-- Configuración.
-- Menú.
-- Reglas.
-- Apoyo / Support.
-- Feedback básico.
-- Share / Copy link.
-- Resultado compartido.
-- Mensajes dinámicos de jugada:
-  - Goal.
-  - Miss.
-  - Post.
-  - Crossbar.
-  - Half-time.
-  - Full-time.
-  - Yellow card.
-  - Red card.
-  - Free kick.
-  - Penalty.
-- Tiradas especiales:
-  - Special throw.
-  - Special stop.
-  - Free kick goal/miss.
-  - Penalty missed.
-- Historial del partido.
-- Resumen final.
-- Tanda de penaltis.
-- Botones finales:
-  - Rematch.
-  - Share result.
-  - Copy result.
-  - New match.
-- Confirmación de reinicio.
+## Pruebas obligatorias
 
-## URL principal
+1. Seleccionar EN.
+2. Pulsar `1 vs Machine`.
+3. Pulsar `Fast`.
+4. Pulsar `START MATCH`.
+5. Confirmar que la partida empieza.
+6. Confirmar que eventos, historial y resumen aparecen en inglés.
 
-La URL principal de compartir queda configurada como:
+## Incluye
 
-`https://ikeritu.github.io/cronogol/`
-
-## Pendiente opcional
-
-- Traducir al 100% las páginas estáticas largas:
-  - `como-jugar.html`
-  - `contacto.html`
-  - `privacidad.html`
-
-La experiencia principal del juego ya queda en inglés al seleccionar `EN`.
+- Interfaz principal en EN.
+- Rules en EN.
+- Support en EN.
+- Share en EN.
+- Mensajes dinámicos en EN.
+- Historial en EN.
+- Resumen final en EN.
