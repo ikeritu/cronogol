@@ -246,6 +246,73 @@ const gameState = {
   lastFinalText:""
 };
 
+
+/* ===== v1.8.7 QA FIX: helpers base restaurados =====
+   El juego se rompía antes de arrancar porque varias funciones usadas en
+   asignaciones onclick y en el flujo principal no existían en el bundle.
+*/
+function pad(n){ return String(Number(n)||0).padStart(2,"0"); }
+function randomInt(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+function currentPlayer(){ return gameState.players[gameState.currentPlayerIndex]; }
+function scoreText(){ return `${gameState.players[0].name} ${gameState.players[0].goals} - ${gameState.players[1].goals} ${gameState.players[1].name}`; }
+function clockSec(){
+  try{
+    const sec = Math.max(0, Math.floor((Date.now() - matchStartTime) / 1000));
+    return `${pad(Math.floor(sec/60))}:${pad(sec%60)}`;
+  }catch(e){ return "00:00"; }
+}
+function vibrate(pattern){ try{ if(navigator.vibrate) navigator.vibrate(pattern); }catch(e){} }
+function playSound(type){
+  try{
+    if(!gameState.soundEnabled || !soundEnabledInput.checked) return;
+    if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    const freqMap = {beep:880, stop:420, goal:980, miss:260, yellow:540, red:180, penalty:760, free_kick:720, post:620, crossbar:650};
+    osc.frequency.value = freqMap[type] || 480;
+    gain.gain.value = 0.035;
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(); osc.stop(audioCtx.currentTime + 0.06);
+  }catch(e){}
+}
+async function copyText(text,msg){
+  try{
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      await navigator.clipboard.writeText(text);
+    } else {
+      const ta=document.createElement('textarea');
+      ta.value=text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove();
+    }
+    showToast(msg || "Copiado");
+  }catch(e){ showToast(text); }
+}
+function showToast(message){
+  try{
+    const old=document.querySelector('.toast');
+    if(old) old.remove();
+    const t=document.createElement('div');
+    t.className='toast';
+    t.textContent=message;
+    document.body.appendChild(t);
+    setTimeout(()=>t.remove(),2200);
+  }catch(e){}
+}
+function formattedFinalResult(){
+  const p1=gameState.players[0], p2=gameState.players[1];
+  let text=`${p1.name} | ${p1.goals} - ${p2.goals} | ${p2.name}`;
+  if(p1.goals>p2.goals) text+=`. Gana ${p1.name}.`;
+  else if(p2.goals>p1.goals) text+=`. Gana ${p2.name}.`;
+  else text+='. Empate final.';
+  return text;
+}
+function copyResult(){ copyText(resultText(true), currentLang === "en" ? "Result copied" : "Resultado copiado"); }
+function forceDebugThrow(){
+  const value = Number(debugValueInput.value);
+  if(Number.isNaN(value) || value < 0 || value > 99){ showToast('Valor 00-99'); return; }
+  if(gameState.matchEnded){ showToast('No hay partido activo'); return; }
+  stopTimerAndEvaluate(value);
+}
+
 startMatchBtn.onclick = startMatch;
 mainActionBtn.onclick = handleMainAction;
 if(resetBtn) resetBtn.onclick = confirmReset;

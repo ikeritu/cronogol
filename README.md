@@ -1,42 +1,35 @@
-# CronoGol v1.8.6 — Boot Fix
+# CronoGol v1.8.7 — QA Fix real
 
-## Diagnóstico
+## Causa raíz detectada
 
-La app estaba rota porque desde v1.8.2 se perdió la llamada final de inicialización:
+El script no llegaba a inicializarse porque `game.js` usaba funciones que no existían:
 
-`setupSegmentedControls(); setupLanguageSelector(); updateSetupVisibility(); loadLocal();`
+- `forceDebugThrow`
+- `currentPlayer`
+- `scoreText`
+- `pad`
+- `randomInt`
+- `clockSec`
+- `playSound`
+- `vibrate`
+- `copyText`
+- `showToast`
+- `formattedFinalResult`
+- `copyResult`
 
-Sin esa llamada:
+La primera rotura visible era esta línea:
 
-- `1 vs Máquina` no cambiaba el selector interno.
-- `Rápido` no cambiaba el selector interno.
-- El selector de idioma no terminaba de inicializarse.
-- La app parecía cargada, pero los controles principales no estaban conectados correctamente.
+```js
+debugThrowBtn.onclick = forceDebugThrow;
+```
+
+Como `forceDebugThrow` no existía, JavaScript lanzaba un `ReferenceError` y dejaba de ejecutar el resto del archivo. Por eso ningún click funcionaba.
 
 ## Corrección
 
-Se añade `bootCronoGol()` al final de `game.js`.
-
-Este boot:
-
-- Reconecta los botones segmentados.
-- Reconecta `Empezar partido`.
-- Reconecta menú, reglas, support, compartir y copiar.
-- Inicializa idioma.
-- Ejecuta `updateSetupVisibility()`.
-- Ejecuta `loadLocal()`.
-- Aplica la capa i18n sin tocar el flujo principal del juego.
+Se restauran los helpers base mínimos sin tocar la lógica principal del juego.
 
 ## Validación
 
-`game.js` pasa:
-
-`node --check game.js`
-
-## Pruebas obligatorias
-
-1. ES → 1 vs Máquina → Rápido → Empezar partido.
-2. EN → 1 vs Machine → Fast → START MATCH.
-3. Verificar que cambia a pantalla de partido.
-4. Verificar que se actualiza historial.
-5. Verificar que se actualizan estadísticas.
+- `node --check game.js` correcto.
+- Prueba con navegador headless: click en `1 vs Máquina`, `Rápido` y `Empezar partido` cambia a la pantalla de juego.
