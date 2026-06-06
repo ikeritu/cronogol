@@ -1242,7 +1242,7 @@ function showSupportModal(){
 }
 
 
-/* ===== CronoGol v1.9.10: game feel improvements ===== */
+/* ===== CronoGol v1.10.2: game feel improvements ===== */
 /* No modifica reglas, turnos, START/STOP ni lógica base del partido. */
 
 function machineDifficultyText(){
@@ -1371,3 +1371,97 @@ document.addEventListener("DOMContentLoaded", () => {
   if(esBtn) esBtn.addEventListener("click", () => setTimeout(updateMachineDifficultyHint, 0));
   if(enBtn) enBtn.addEventListener("click", () => setTimeout(updateMachineDifficultyHint, 0));
 });
+
+
+
+/* ===== CronoGol v1.10.2 — Game Event Tracking Layer ===== */
+(function(){
+  const CG_EVENT_VERSION = "1.10.1";
+  function val(id){ const el=document.getElementById(id); return el ? el.value : ""; }
+  function lang(){ try { if (typeof currentLang !== "undefined") return currentLang; return localStorage.getItem("cronogol_lang") || document.documentElement.lang || "es"; } catch(e){ return "es"; } }
+  function localCount(eventName){ try { const key="cronogol_event_counts"; const data=JSON.parse(localStorage.getItem(key)||"{}"); data[eventName]=(data[eventName]||0)+1; localStorage.setItem(key, JSON.stringify(data)); } catch(e){} }
+  window.cgTrackEvent=function(eventName,payload){
+    const data=Object.assign({app:"CronoGol",version:CG_EVENT_VERSION,lang:lang(),game_mode:val("game-mode"),match_mode:val("match-mode"),page:location.pathname||"/",timestamp:new Date().toISOString()}, payload||{});
+    localCount(eventName);
+    try { if (window.zaraz && typeof window.zaraz.track === "function") window.zaraz.track(eventName,data); } catch(e){}
+    try { console.debug("[CronoGol event]", eventName, data); } catch(e){}
+    return data;
+  };
+  function wrap(name,eventName,builder){
+    const original=window[name];
+    if(typeof original!=="function" || original.__cgEventWrapped) return;
+    const wrapped=function(){
+      try { const args=Array.prototype.slice.call(arguments); window.cgTrackEvent(eventName, typeof builder==="function" ? builder(args) : {}); } catch(e){}
+      return original.apply(this, arguments);
+    };
+    wrapped.__cgEventWrapped=true; window[name]=wrapped;
+  }
+  function bind(){
+    wrap("startMatch","start_match",function(){ return {selected_mode:val("game-mode"),selected_match_mode:val("match-mode")}; });
+    wrap("showFinal","finish_match",function(){ try { return {score_p1:gameState&&gameState.players?gameState.players[0].goals:null,score_p2:gameState&&gameState.players?gameState.players[1].goals:null,total_turns:gameState?gameState.totalTurns:null}; } catch(e){ return {}; } });
+    wrap("shareResult","share_result"); wrap("shareCronoGol","share_home"); wrap("copyResult","copy_result"); wrap("copyCronoGolLink","copy_link"); wrap("showRulesModal","rules_open"); wrap("showSupportModal","support_open");
+    document.querySelectorAll('.segment-btn[data-target="game-mode"]').forEach(function(btn){ if(btn.__cgEventBound) return; btn.__cgEventBound=true; btn.addEventListener("click",function(){ if(btn.dataset.value==="machine") window.cgTrackEvent("mode_machine"); if(btn.dataset.value==="local") window.cgTrackEvent("mode_local"); },{passive:true}); });
+    document.querySelectorAll('.segment-btn[data-target="match-mode"]').forEach(function(btn){ if(btn.__cgEventBound) return; btn.__cgEventBound=true; btn.addEventListener("click",function(){ if(btn.dataset.value==="five") window.cgTrackEvent("mode_fast"); if(btn.dataset.value==="classic") window.cgTrackEvent("mode_classic"); },{passive:true}); });
+    document.querySelectorAll('a[href^="feedback.html"]').forEach(function(a){ if(a.__cgEventBound) return; a.__cgEventBound=true; a.addEventListener("click",function(){ window.cgTrackEvent("feedback_open"); },{passive:true}); });
+    if(!window.__cgPageViewTracked){ window.__cgPageViewTracked=true; window.cgTrackEvent("app_loaded"); }
+  }
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",bind); else bind();
+  setTimeout(bind,500);
+})();
+
+
+
+/* ===== CronoGol v1.10.2 — Direct GA4 Event Bridge Patch =====
+   Adds a second safe bridge for custom game events.
+   It does not send page_view, so it does not duplicate GA4 pageviews.
+*/
+(function(){
+  if (window.__cgDirectGa4BridgeInstalled) return;
+  window.__cgDirectGa4BridgeInstalled = true;
+
+  const previousCgTrackEvent = window.cgTrackEvent;
+
+  window.cgTrackEvent = function(eventName, payload){
+    let data = payload || {};
+
+    try {
+      if (typeof previousCgTrackEvent === "function") {
+        data = previousCgTrackEvent(eventName, payload) || data;
+      }
+    } catch(e) {
+      try { console.warn("[CronoGol event previous bridge failed]", e); } catch(_) {}
+    }
+
+    const gaPayload = {
+      event_category: "cronogol_game",
+      app_name: "CronoGol",
+      app_version: "1.10.2",
+      game_mode: data.game_mode || "",
+      match_mode: data.match_mode || "",
+      lang: data.lang || "",
+      page_path: data.page || location.pathname || "/",
+      score_p1: data.score_p1,
+      score_p2: data.score_p2,
+      total_turns: data.total_turns,
+      selected_mode: data.selected_mode,
+      selected_match_mode: data.selected_match_mode
+    };
+
+    try {
+      if (typeof window.gtag === "function") {
+        window.gtag("event", eventName, gaPayload);
+      }
+    } catch(e) {}
+
+    try {
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push(Object.assign({
+        event: eventName,
+        event_category: "cronogol_game"
+      }, data || {}));
+    } catch(e) {}
+
+    try { console.debug("[CronoGol GA4 bridge]", eventName, gaPayload); } catch(e) {}
+    return data;
+  };
+})();

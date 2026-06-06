@@ -1,5 +1,94 @@
 # CHANGELOG
 
+## v1.10.2 — Direct GA4 Event Bridge
+
+### Cambios
+
+- Añadido puente directo a GA4 para eventos personalizados.
+- `cgTrackEvent()` ahora mantiene el comportamiento anterior y además intenta enviar por:
+  - `gtag("event", ...)`
+  - `dataLayer.push(...)`
+- No se duplica `page_view`.
+- Actualizada documentación y privacidad.
+
+### No se ha tocado
+
+- Lógica del juego.
+- Reglas.
+- Turnos.
+- Máquina.
+- Penalti/falta.
+- Estadísticas.
+- Historial.
+- START/STOP.
+- CSS principal.
+
+## v1.10.1 — Game Event Tracking
+
+### Cambios
+
+- Añadida capa segura de tracking de eventos del juego.
+- Eventos preparados para `zaraz.track()` si Cloudflare Zaraz está disponible.
+- Fallback seguro a `localStorage` y `console.debug` si Zaraz no está activo.
+
+### Eventos
+
+- `app_loaded`
+- `start_match`
+- `finish_match`
+- `share_result`
+- `share_home`
+- `copy_result`
+- `copy_link`
+- `rules_open`
+- `support_open`
+- `feedback_open`
+- `mode_machine`
+- `mode_local`
+- `mode_fast`
+- `mode_classic`
+
+### No se ha tocado
+
+- Lógica del juego.
+- Reglas.
+- Turnos.
+- Máquina.
+- Penalti/falta.
+- Estadísticas.
+- Historial.
+- Flujo START/STOP.
+
+
+## v1.10.0 — CSS Refactor
+
+### Cambios
+
+- Limpieza conservadora de `style.css`.
+- Eliminados comentarios históricos acumulados por versiones anteriores.
+- Añadido encabezado técnico único con mapa funcional del CSS.
+- Normalizado espaciado general del CSS.
+- Añadido `CSS_AUDIT_v1_10_0.md`.
+- Actualizada versión visible a `v1.10.0`.
+
+### No se ha tocado
+
+- Lógica del juego.
+- Reglas.
+- Turnos.
+- Máquina.
+- Penalti/falta.
+- Estadísticas.
+- Historial.
+- Listeners principales.
+- Cloudflare Web Analytics.
+- Dominio personalizado.
+
+### Nota
+
+Se ha mantenido el orden de la cascada CSS para evitar regresiones visuales.
+
+
 ## v1.9.10 — Home UI Polish
 
 ### Cambios

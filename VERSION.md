@@ -1,10 +1,10 @@
 # VERSION
 
-Current version: v1.9.10
+Current version: v1.10.2
 
-Release name: Home UI Polish
+Release name: Direct GA4 Event Bridge
 
-Base version: v1.9.9 Analytics sobre v1.9.8
+Base version: v1.10.1 Game Event Tracking
 
 Status: Stable candidate
 
@@ -14,8 +14,8 @@ https://cronogol.es/
 
 Notes:
 
-- This version intentionally does not change gameplay logic.
-- Polishes the setup/home screen visual hierarchy.
-- Keeps Cloudflare Web Analytics.
-- Keeps CNAME and custom domain.
-- Keeps copyright footer and README rights section.
+- Adds direct GA4 event bridge for custom game events.
+- Keeps Zaraz tracking.
+- Keeps dataLayer fallback.
+- Does not duplicate page_view.
+- Gameplay logic unchanged.

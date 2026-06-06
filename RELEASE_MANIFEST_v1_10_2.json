@@ -1,0 +1,21 @@
+{
+  "project": "CronoGol",
+  "version": "1.10.2",
+  "release_name": "Direct GA4 Event Bridge",
+  "base_version": "1.10.1 Game Event Tracking",
+  "logic_changed": false,
+  "game_rules_changed": false,
+  "primary_url": "https://cronogol.es/",
+  "custom_event_bridge": {
+    "zaraz_track_kept": true,
+    "gtag_event": true,
+    "dataLayer_push": true,
+    "page_view_duplication": false
+  },
+  "node_check": {
+    "game.js": {
+      "status": "ok",
+      "output": ""
+    }
+  }
+}
