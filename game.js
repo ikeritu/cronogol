@@ -1242,7 +1242,7 @@ function showSupportModal(){
 }
 
 
-/* ===== CronoGol v1.9.9: game feel improvements ===== */
+/* ===== CronoGol v1.9.10: game feel improvements ===== */
 /* No modifica reglas, turnos, START/STOP ni lógica base del partido. */
 
 function machineDifficultyText(){

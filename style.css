@@ -1665,3 +1665,77 @@ nav.setup-links.secondary-actions-v196 > .support-wide-btn::after {
   line-height: 1.45;
   text-align: center;
 }
+
+
+/* ===== CronoGol v1.9.10: Home UI Polish ===== */
+/* Botón principal de la home: naranja/dorado.
+   START en partido y STOP mantienen sus colores funcionales. */
+#start-match-btn,
+.start-match-btn,
+.main-start-btn,
+button[data-action="start-match"] {
+  background: linear-gradient(180deg, #f2b544 0%, #d88912 58%, #9f5d05 100%) !important;
+  color: #151007 !important;
+  border-color: #ffbd44 !important;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.28) !important;
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,0.24),
+    inset 0 -3px 0 rgba(0,0,0,0.28),
+    0 8px 0 rgba(0,0,0,0.72),
+    0 14px 22px rgba(0,0,0,0.45) !important;
+}
+
+#start-match-btn:hover,
+.start-match-btn:hover,
+.main-start-btn:hover,
+button[data-action="start-match"]:hover {
+  filter: brightness(1.07);
+}
+
+/* LCD inicial: reducir repetición de marca y hacer la instrucción más clara. */
+#setup-screen .hero-lcd,
+#setup-screen .lcd,
+.setup-screen .hero-lcd,
+.setup-screen .lcd {
+  text-align: center;
+}
+
+#setup-screen .hero-lcd .brand,
+#setup-screen .hero-lcd .watch-brand,
+#setup-screen .lcd .brand,
+#setup-screen .lcd .watch-brand {
+  letter-spacing: 0.11em;
+}
+
+/* Bloques secundarios de la home con menos peso visual. */
+.online-card,
+.sponsor-card,
+.free-card,
+.matches-counter,
+.version-footer,
+.site-copyright,
+.copyright-footer {
+  opacity: 0.78;
+}
+
+.online-card,
+.sponsor-card,
+.free-card {
+  transform: scale(0.985);
+  transform-origin: center;
+}
+
+.version-footer {
+  font-size: 11px;
+}
+
+/* Mantener la acción principal más clara que los enlaces secundarios. */
+.setup-links a,
+.setup-links button {
+  opacity: 0.9;
+}
+
+.setup-links a:hover,
+.setup-links button:hover {
+  opacity: 1;
+}

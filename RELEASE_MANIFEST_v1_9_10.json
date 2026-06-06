@@ -1,0 +1,63 @@
+{
+  "project": "CronoGol",
+  "version": "1.9.10",
+  "release_name": "Home UI Polish",
+  "base_version": "1.9.9 Analytics sobre v1.9.8",
+  "status": "stable_candidate",
+  "primary_url": "https://cronogol.es/",
+  "logic_changed": false,
+  "game_rules_changed": false,
+  "analytics_kept": true,
+  "custom_domain": "cronogol.es",
+  "changes": [
+    "Home LCD communicates gameplay instead of repeating brand where possible",
+    "Home start button changed to gold/orange",
+    "Secondary home blocks reduced visual weight",
+    "Duplicate lastThrow data-i18n cleaned if present"
+  ],
+  "node_check": {
+    "game.js": {
+      "status": "ok",
+      "output": ""
+    }
+  },
+  "files_expected": [
+    "CHANGELOG.md",
+    "CNAME",
+    "README.md",
+    "RELEASE_MANIFEST_v1_8_9.json",
+    "RELEASE_MANIFEST_v1_9_0.json",
+    "RELEASE_MANIFEST_v1_9_1.json",
+    "RELEASE_MANIFEST_v1_9_2.json",
+    "RELEASE_MANIFEST_v1_9_3.json",
+    "RELEASE_MANIFEST_v1_9_4.json",
+    "RELEASE_MANIFEST_v1_9_5.json",
+    "RELEASE_MANIFEST_v1_9_6.json",
+    "RELEASE_MANIFEST_v1_9_7.json",
+    "RELEASE_MANIFEST_v1_9_8.json",
+    "RELEASE_MANIFEST_v1_9_9.json",
+    "VERSION.md",
+    "apoya.html",
+    "como-jugar.html",
+    "contacto.html",
+    "favicon.png",
+    "favicon.svg",
+    "feedback.html",
+    "game.js",
+    "gracias.html",
+    "historia.html",
+    "index.html",
+    "logo-cronogol-dark.png",
+    "logo-cronogol-horizontal.png",
+    "logo-cronogol-new.png",
+    "logo-cronogol-transparent.png",
+    "logo-cronogol.png",
+    "modos.html",
+    "og-cronogol.png",
+    "og-cronogol.svg",
+    "privacidad.html",
+    "robots.txt",
+    "sitemap.xml",
+    "style.css"
+  ]
+}

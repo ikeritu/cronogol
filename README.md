@@ -1,4 +1,4 @@
-# CronoGol v1.9.9 — Analytics sobre v1.9.8
+# CronoGol v1.9.10 — Home UI Polish
 
 ## Objetivo
 
@@ -84,5 +84,22 @@ Esta versión parte de `v1.9.8 Game Feel Improvements` y añade únicamente:
 - Footer de derechos de autor.
 - Sección de derechos de autor en README.
 - Actualización documental.
+
+No se modifica la lógica del juego.
+
+
+## v1.9.10 — Home UI Polish
+
+Esta versión parte de `v1.9.9 Analytics sobre v1.9.8` y aplica una mejora visual controlada en la pantalla inicial.
+
+Cambios:
+
+- El LCD inicial deja de repetir visualmente `CronoGol` y pasa a comunicar mejor la mecánica.
+- El botón `EMPEZAR PARTIDO` pasa a naranja/dorado para diferenciarlo del rojo de STOP/peligro.
+- Los bloques secundarios de la home bajan peso visual.
+- Se corrige la duplicación técnica de `data-i18n` en `ÚLTIMA TIRADA` si estaba presente.
+- Se mantiene Cloudflare Web Analytics.
+- Se mantiene dominio `https://cronogol.es/`.
+- Se mantiene footer y sección de derechos de autor.
 
 No se modifica la lógica del juego.

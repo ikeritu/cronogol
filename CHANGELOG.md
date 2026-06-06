@@ -1,5 +1,29 @@
 # CHANGELOG
 
+## v1.9.10 — Home UI Polish
+
+### Cambios
+
+- Mejora visual controlada de la pantalla inicial.
+- LCD inicial orientado a explicar mejor la mecánica del juego.
+- Botón `EMPEZAR PARTIDO` cambiado a estilo naranja/dorado.
+- Bloques secundarios de la home con menos peso visual.
+- Limpieza del `data-i18n` duplicado en `ÚLTIMA TIRADA` si estaba presente.
+
+### No se ha tocado
+
+- Lógica del juego.
+- Reglas.
+- Turnos.
+- Máquina.
+- Penalti/falta.
+- Estadísticas.
+- Historial.
+- Listeners principales.
+- Cloudflare Web Analytics.
+- Dominio personalizado.
+
+
 ## v1.9.9 — Analytics sobre v1.9.8
 
 ### Cambios
