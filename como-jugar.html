@@ -1,28 +1,86 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="icon" href="favicon.png" type="image/png" />
-  <link rel="icon" href="favicon.svg" type="image/svg+xml" /><title>Cómo jugar · CronoGol</title><link rel="stylesheet" href="style.css" /></head><body><main class="static-page"><section class="static-card"><img src="logo-cronogol-horizontal.png" alt="CronoGol" class="cg-logo cg-logo-static" /><h1>Cómo jugar</h1>
-<p>Pulsa START, deja correr el cronómetro y pulsa STOP. Se usan los dos últimos dígitos del cronómetro.</p>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Aprende a jugar a CronoGol: reglas del modo clásico, modo rápido, penaltis, faltas, tarjetas y turnos." />
+  <link rel="canonical" href="https://cronogol.es/como-jugar.html" />
+  <link rel="icon" href="favicon.png" type="image/png" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <title>Cómo jugar a CronoGol</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="static-page">
+    <section class="static-card content-page">
+      <img src="logo-cronogol-horizontal.png" alt="CronoGol" class="cg-logo cg-logo-static" />
 
-<h2>Modo clásico</h2>
-<div class='callout'>
-<strong>00</strong> = Gol.<br>
-<strong>01-02</strong> = Poste. Repite el mismo jugador.<br>
-<strong>03-04</strong> = Larguero. Repite el mismo jugador.<br>
-<strong>45</strong> = Descanso. Se resetea el cronómetro y cambia el turno.<br>
-<strong>50</strong> = Amarilla. Termina el turno y pierde el siguiente.<br>
-<strong>60</strong> = Roja. Termina el turno y pierde dos turnos.<br>
-<strong>90</strong> = Final del partido.<br>
-<strong>96-97</strong> = Falta peligrosa. Hay tirada especial: de <strong>00 a 20</strong> es gol; de <strong>21 a 99</strong> es fallo.<br>
-<strong>98-99</strong> = Penalti. Hay tirada especial: <strong>par = gol</strong>; <strong>impar = fallo</strong>.<br>
-<strong>Otros números</strong> = Fallo y cambia el turno.
-</div>
+      <h1>Cómo jugar a CronoGol</h1>
 
-<h2>Modo rápido</h2>
-<div class='callout'>
-<strong>Todo número terminado en 0 es gol:</strong> 00, 10, 20, 30, 40, 50, 60, 70, 80 y 90.<br>
-<strong>Todo número terminado en 9 es penalti:</strong> 09, 19, 29, 39, 49, 59, 69, 79, 89 y 99.<br>
-En el penalti, se hace una tirada especial: <strong>par = gol</strong>, <strong>impar = fallo</strong>.<br>
-<strong>Victoria:</strong> gana el primero que llegue a 6 goles con 2 de ventaja. Ejemplo: 6-4 gana; si van 5-5, hay que ganar 7-5.
-</div><nav class="footer-nav"><a href="index.html">Jugar</a><a href="como-jugar.html">Cómo jugar</a><a href="apoya.html">Apoya</a><a href="feedback.html">Feedback</a><a href="contacto.html">Contacto</a></nav><p class="site-copyright">© 2026 CronoGol. Juego original creado por Iker Ituarte. Todos los derechos reservados.</p></section></main><!-- Cloudflare Web Analytics -->
+      <p><strong>CronoGol</strong> es un juego de fútbol con cronómetro. El jugador pulsa START, deja correr el tiempo y pulsa STOP. El resultado se decide con los dos últimos dígitos del cronómetro.</p>
+
+      <div class="content-callout">
+        Ejemplo: si paras en <strong>00</strong>, marcas gol. Si paras en <strong>50</strong>, recibes amarilla. Si paras en <strong>98</strong>, hay penalti.
+      </div>
+
+      <h2>Objetivo</h2>
+      <p>Marcar más goles que tu rival antes de que termine el partido. Puedes jugar en modo local contra otra persona o contra la máquina.</p>
+
+      <h2>Modo clásico</h2>
+      <table class="rules-table">
+        <thead>
+          <tr><th>Número</th><th>Resultado</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>00</td><td>Gol.</td></tr>
+          <tr><td>01-02</td><td>Poste. Repite el mismo jugador.</td></tr>
+          <tr><td>03-04</td><td>Larguero. Repite el mismo jugador.</td></tr>
+          <tr><td>45</td><td>Descanso. Se reinicia el cronómetro, cambia la parte y cambia el turno.</td></tr>
+          <tr><td>50</td><td>Tarjeta amarilla. Termina el turno y el jugador pierde el siguiente.</td></tr>
+          <tr><td>60</td><td>Tarjeta roja. Termina el turno y el jugador pierde dos turnos.</td></tr>
+          <tr><td>90</td><td>Final del partido.</td></tr>
+          <tr><td>96-97</td><td>Falta peligrosa. Hay una tirada especial: 00 a 20 es gol; 21 a 99 es fallo.</td></tr>
+          <tr><td>98-99</td><td>Penalti. Hay una tirada especial: número par es gol; número impar es fallo.</td></tr>
+          <tr><td>Otros</td><td>Fallo. Cambia el turno.</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Modo rápido</h2>
+      <p>El modo rápido está pensado para partidas más cortas y con más goles.</p>
+
+      <ul>
+        <li>Todo número terminado en <strong>0</strong> es gol: 00, 10, 20, 30, 40, 50, 60, 70, 80 y 90.</li>
+        <li>Todo número terminado en <strong>9</strong> es penalti: 09, 19, 29, 39, 49, 59, 69, 79, 89 y 99.</li>
+        <li>En un penalti, una tirada par es gol y una impar es fallo.</li>
+        <li>Gana el primero que llegue a <strong>6 goles con 2 de ventaja</strong>.</li>
+      </ul>
+
+      <h2>Desempate por penaltis</h2>
+      <p>Si el partido acaba empatado, CronoGol ofrece una tanda de 5 penaltis por jugador. Si sigue el empate, continúa la muerte súbita.</p>
+
+      <h2>Consejos para jugar</h2>
+      <ul>
+        <li>No mires solo el cronómetro: intenta coger ritmo.</li>
+        <li>El 00 es difícil, pero no imposible.</li>
+        <li>En modo rápido, los números acabados en 0 y 9 cambian completamente la estrategia.</li>
+        <li>En móvil, juega con una mano y pulsa siempre en el centro del botón START/STOP.</li>
+      </ul>
+
+      <nav class="footer-nav">
+        <a href="index.html">Jugar</a>
+        <a href="como-jugar.html" class="active-link">Cómo jugar</a>
+        <a href="modos.html">Modos</a>
+        <a href="historia.html">Historia</a>
+        <a href="apoya.html">Apoya</a>
+        <a href="feedback.html">Feedback</a>
+        <a href="contacto.html">Contacto</a>
+        <a href="privacidad.html">Privacidad</a>
+      </nav>
+    </section>
+  <footer class="site-copyright">© 2026 CronoGol. Juego original creado por Iker Ituarte. Todos los derechos reservados.</footer>
+</main>
+<!-- Cloudflare Web Analytics -->
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7ee638b73aa24300b417a555e67fd1ae"}'></script>
 <!-- End Cloudflare Web Analytics -->
-</body></html>
+</body>
+</html>

@@ -1,15 +1,15 @@
 # CHANGELOG
 
-## v1.9.0 — Analytics Release
+## v1.9.9 — Analytics sobre v1.9.8
 
 ### Cambios
 
-- Añadido Cloudflare Web Analytics a las páginas HTML.
-- Añadido archivo `CNAME` con `cronogol.es`.
-- Actualizada URL oficial a `https://cronogol.es/`.
-- Actualizado footer con texto de autoría.
-- Añadida sección `Derechos de autor` al README.
-- Actualizada página de privacidad para mencionar Cloudflare Web Analytics, GitHub Pages y Formspree.
+- Partiendo de `v1.9.8 Game Feel Improvements`, se añade Cloudflare Web Analytics.
+- Se añade archivo `CNAME` con `cronogol.es`.
+- Se actualiza URL oficial a `https://cronogol.es/`.
+- Se añade texto de autoría en footer.
+- Se añade sección `Derechos de autor` al README.
+- Se actualiza privacidad para mencionar Cloudflare Web Analytics, si existe `privacidad.html`.
 
 ### No se ha tocado
 
@@ -21,45 +21,28 @@
 - Estadísticas.
 - Historial.
 - Listeners principales.
+- Mejoras de sensación de juego de v1.9.8.
 
 
-## v1.8.8 — Stable Clean Release
-
-Fecha: 2026-06-05
+## v1.9.8 — Game Feel Improvements
 
 ### Cambios
 
-- Se declara v1.8.7 como base funcional estable.
-- Se actualiza versión visible a v1.8.8.
-- Se actualizan referencias principales a GitHub Pages.
-- Se limpia README.
-- Se añade `CHANGELOG.md`.
-- Se añade `VERSION.md`.
-- Se añade `RELEASE_MANIFEST_v1_8_8.json`.
-- Se revisa `privacidad.html` para reflejar Formspree y GitHub Pages.
+- Añadida descripción de dificultad de máquina.
+- Añadido mensaje emocional post-partido.
+- Añadido mensaje emocional en el texto compartido.
+- Añadidos estilos para el bloque emocional final.
+
+### Decisión de diseño
+
+- La ayuda opcional para modo clásico largo queda descartada.
+- No se modifican reglas ni ritmo del modo clásico.
 
 ### No se ha tocado
 
-- Lógica del juego.
+- START/STOP.
 - Reglas.
 - Turnos.
 - Máquina.
-- Penalti/falta.
-- Estadísticas.
-- Historial.
-- Listeners principales.
-- Estructura de pantalla de partido.
-
-### Motivo
-
-Cerrar una versión estable antes de continuar con dominio, diseño o nuevas funciones.
-
----
-
-## v1.8.7 — QA Fix
-
-### Cambios principales
-
-- Recuperación funcional del juego.
-- Corrección de helpers faltantes.
-- Restauración de funcionamiento de botones principales.
+- Modo rápido.
+- Monetización funcional.

@@ -1,25 +1,54 @@
-# CronoGol v1.9.0 — Analytics Release
+# CronoGol v1.9.9 — Analytics sobre v1.9.8
 
-CronoGol es un juego web gratuito inspirado en el clásico juego de cronómetro con relojes digitales tipo Casio.
+## Objetivo
 
-## Estado de esta versión
+Mejorar la sensación de juego sin modificar las reglas ni la lógica base.
 
-`v1.9.0` parte de la versión estable confirmada `v1.8.8`.
+## Cambios aplicados
 
-Esta versión añade:
+- Añadida descripción visible de dificultad de máquina.
+- Añadido mensaje emocional al final del partido.
+- Añadido mensaje emocional al resultado compartido.
+- Añadidos estilos para el mensaje emocional.
+- Se mantiene descartada la ayuda opcional para modo clásico largo.
 
-- Cloudflare Web Analytics.
-- URL oficial `https://cronogol.es/`.
-- Archivo `CNAME` para GitHub Pages.
-- Texto de autoría en footer.
-- Sección de derechos de autor en README.
-- Actualización de privacidad para informar del uso de Cloudflare Web Analytics.
+## Mensajes de dificultad
 
-## URL oficial
+- Fácil: máquina torpe, ideal para aprender.
+- Normal: partida equilibrada.
+- Difícil: más precisión y más peligro en jugadas especiales.
 
-```text
-https://cronogol.es/
-```
+## Ejemplos de mensajes finales
+
+- Partido ajustadísimo.
+- Festival ofensivo.
+- Drama total desde los once metros.
+- Partido de porteros.
+- Victoria contundente.
+- La máquina no perdona.
+
+## No se ha tocado
+
+- Reglas del modo clásico.
+- Ayuda para modo clásico largo.
+- START/STOP.
+- Turnos.
+- Máquina.
+- Modo rápido.
+- Penalti/falta.
+- Historial.
+- Estadísticas.
+- Bizum/PayPal.
+
+## QA recomendado
+
+1. Elegir 1 vs Máquina.
+2. Cambiar dificultad y comprobar texto descriptivo.
+3. Terminar una partida.
+4. Confirmar mensaje emocional en el final.
+5. Compartir resultado y comprobar que incluye la frase emocional.
+6. Confirmar que reglas y turnos siguen igual.
+
 
 ## Analítica
 
@@ -33,16 +62,8 @@ Snippet añadido en las páginas HTML:
 <!-- End Cloudflare Web Analytics -->
 ```
 
-## Qué se puede consultar en Cloudflare
+Permite revisar en Cloudflare métricas como visitas, páginas vistas, visitantes aproximados, origen, dispositivo, navegador y rendimiento básico.
 
-- Visitas.
-- Visitantes aproximados.
-- Páginas vistas.
-- País o región aproximada.
-- Navegador.
-- Dispositivo.
-- Referencias de entrada.
-- Rendimiento básico.
 
 ## Derechos de autor
 
@@ -52,20 +73,16 @@ El código, textos, diseño visual, reglas redactadas, logotipo y materiales gr�
 
 No está permitido copiar, redistribuir, publicar, modificar o explotar este proyecto sin autorización previa.
 
-## QA mínimo recomendado
 
-Antes de publicar cambios nuevos, probar:
+## v1.9.9
 
-1. ES → 1 vs Máquina → Rápido → Empezar partido.
-2. ES → 1 vs 1 → Clásico → Empezar partido.
-3. EN → 1 vs Machine → Fast → START MATCH.
-4. START / STOP.
-5. Estadísticas.
-6. Historial.
-7. Penalti.
-8. Falta.
-9. Reglas.
-10. Compartir.
-11. Feedback.
-12. Support / Apoya.
-13. Cloudflare Web Analytics detecta visitas tras unas horas.
+Esta versión parte de `v1.9.8 Game Feel Improvements` y añade únicamente:
+
+- Cloudflare Web Analytics.
+- URL oficial `https://cronogol.es/`.
+- Archivo `CNAME`.
+- Footer de derechos de autor.
+- Sección de derechos de autor en README.
+- Actualización documental.
+
+No se modifica la lógica del juego.

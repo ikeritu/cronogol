@@ -1,29 +1,93 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="icon" href="favicon.png" type="image/png" />
-  <link rel="icon" href="favicon.svg" type="image/svg+xml" /><title>Apoya · CronoGol</title><link rel="stylesheet" href="style.css" /></head><body>
-  <div class="top-language-switch" aria-label="Language selector">
-    <button type="button" class="lang-btn" data-lang="es" aria-label="Español">ES</button>
-    <button type="button" class="lang-btn" data-lang="en" aria-label="English">EN</button>
-  </div><main class="static-page"><section class="static-card"><img src="logo-cronogol-horizontal.png" alt="CronoGol" class="cg-logo cg-logo-static" /><h1>Apoya CronoGol</h1><p>CronoGol es gratis y lo seguirá siendo.</p><div class='donation-data'><div class='donation-item'><strong>Bizum</strong><br>+34615717190 · Concepto: CronoGol</div><div class='donation-item'><strong>PayPal</strong><br><a class='support-link' href='https://paypal.me/ikeritus' target='_blank'>Abrir PayPal</a></div></div><nav class="footer-nav"><a href="index.html">Jugar</a><a href="como-jugar.html">Cómo jugar</a><a href="apoya.html">Apoya</a><a href="feedback.html">Feedback</a><a href="contacto.html">Contacto</a></nav><p class="site-copyright">© 2026 CronoGol. Juego original creado por Iker Ituarte. Todos los derechos reservados.</p></section></main>
-  <script id="apoya-i18n-script">
-    const SUPPORT_PAGE_I18N = {
-      es: {title:"Apoya CronoGol", intro:"CronoGol es gratis y lo seguirá siendo. Si te gusta el proyecto, puedes invitarme a un café.", bizum:"Bizum", paypal:"PayPal", back:"Jugar", how:"Cómo jugar", support:"Apoya", feedback:"Feedback", contact:"Contacto"},
-      en: {title:"Support CronoGol", intro:"CronoGol is free and will remain free. If you like the project, you can buy me a coffee.", bizum:"Bizum", paypal:"PayPal", back:"Play", how:"How to play", support:"Support", feedback:"Feedback", contact:"Contact"}
-    };
-    let lang = new URLSearchParams(location.search).get("lang") || localStorage.getItem("cronogol_lang") || "es";
-    if(!SUPPORT_PAGE_I18N[lang]) lang = "es";
-    function applySupportPageLang(l){
-      lang = SUPPORT_PAGE_I18N[l] ? l : "es";
-      localStorage.setItem("cronogol_lang", lang);
-      document.documentElement.lang = lang;
-      document.querySelectorAll(".lang-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.lang === lang));
-      const t = SUPPORT_PAGE_I18N[lang];
-      const h1 = document.querySelector("h1"); if(h1) h1.textContent = t.title;
-      const firstP = document.querySelector("h1 + p"); if(firstP) firstP.textContent = t.intro;
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="favicon.png" type="image/png" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <meta name="description" content="Apoya CronoGol con una donación voluntaria por Bizum o PayPal." />
+  <link rel="canonical" href="https://cronogol.es/apoya.html" />
+  <title>Apoya CronoGol</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="static-page">
+    <section class="static-card support-page">
+      <img src="logo-cronogol-horizontal.png" alt="CronoGol" class="cg-logo cg-logo-static" />
+
+      <h1>☕ Apoya CronoGol</h1>
+
+      <div class="callout">
+        CronoGol es gratis y quiero que siga siéndolo. Si te ha divertido una partida, puedes invitarme a un café de forma voluntaria.
+      </div>
+
+      <section class="support-grid">
+        <article class="support-card">
+          <h2>Bizum</h2>
+          <p>Número:</p>
+          <strong class="support-big">+34615717190</strong>
+          <p>Concepto recomendado:</p>
+          <strong>CronoGol</strong>
+          <button class="bizum-direct-btn" onclick="openBizumStatic()">Abrir Bizum</button>
+          <button class="support-copy-btn" onclick="copySupportText('Bizum: +34615717190 · Concepto: CronoGol')">Copiar datos</button>
+        </article>
+
+        <article class="support-card">
+          <h2>PayPal</h2>
+          <p>Donación voluntaria vía PayPal.Me:</p>
+          <a class="support-link" href="https://paypal.me/ikeritus" target="_blank" rel="noopener">Abrir PayPal</a>
+        </article>
+      </section>
+
+      <section class="support-principles">
+        <h2>Principios de monetización</h2>
+        <ul>
+          <li>CronoGol seguirá siendo gratis.</li>
+          <li>No habrá pagos obligatorios para jugar.</li>
+          <li>No se mostrarán anuncios durante una tirada.</li>
+          <li>Si más adelante hay patrocinio o anuncios, serán discretos y fuera de la acción principal.</li>
+        </ul>
+      </section>
+
+      <nav class="footer-nav">
+        <a href="index.html">Jugar</a>
+        <a href="como-jugar.html">Cómo jugar</a>
+        <a href="feedback.html">Feedback</a>
+        <a href="contacto.html">Contacto</a>
+        <a href="privacidad.html">Privacidad</a>
+      </nav>
+    </section>
+  <footer class="site-copyright">© 2026 CronoGol. Juego original creado por Iker Ituarte. Todos los derechos reservados.</footer>
+</main>
+
+  <script>
+    function showToast(msg){
+      const old = document.querySelector('.toast');
+      if(old) old.remove();
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = msg;
+      document.body.appendChild(toast);
+      setTimeout(()=>toast.remove(), 2400);
     }
-    document.querySelectorAll(".lang-btn").forEach(btn => btn.addEventListener("click",()=>applySupportPageLang(btn.dataset.lang)));
-    applySupportPageLang(lang);
+
+    async function copySupportText(text){
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast('Datos copiados');
+      } catch(e) {
+        showToast(text);
+      }
+    }
+
+    async function openBizumStatic(){
+      await copySupportText('Bizum: +34615717190 · Concepto: CronoGol');
+      window.location.href = 'bizum://send?phone=+34615717190&concept=CronoGol';
+      setTimeout(()=>showToast('Si tu banco no se abre, usa el número copiado.'), 1200);
+    }
   </script>
 <!-- Cloudflare Web Analytics -->
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7ee638b73aa24300b417a555e67fd1ae"}'></script>
 <!-- End Cloudflare Web Analytics -->
-</body></html>
+</body>
+</html>
