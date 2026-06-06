@@ -1,4 +1,4 @@
-# CronoGol v1.10.3 — Stability Hotfix
+# CronoGol v1.10.4 — Machine Special Lock Fix
 
 ## Objetivo
 
@@ -243,3 +243,33 @@ QA recomendado:
 4. Abrir reglas/apoya/feedback.
 5. Probar eventos en consola y GA4.
 6. Probar en móvil.
+
+
+## v1.10.4 — Machine Special Lock Fix
+
+Esta versión parte de `v1.10.3 Stability Hotfix`.
+
+Motivo:
+
+Se detectó que, cuando la máquina obtenía un penalti o falta peligrosa, el botón principal `START` podía quedar pulsable para el usuario antes de que la máquina lanzase la tirada especial.
+
+Causa:
+
+La tirada normal automática de la máquina reactivaba los botones al terminar, incluso si esa tirada había generado `pendingSpecial`. En ese caso la tirada especial debía quedar controlada por `maybeMachineSpecialTurn()`.
+
+Correcciones:
+
+- `handleMainAction()` ignora clics durante turno de máquina.
+- `maybeMachineTurn()` guarda correctamente sus timeouts.
+- `maybeMachineTurn()` no reactiva botones si la tirada genera penalti/falta.
+- `maybeMachineSpecialTurn()` no reactiva botones si sigue siendo turno de máquina.
+- El panel especial indica que la máquina lanzará automáticamente.
+
+No se ha tocado:
+
+- Reglas del juego.
+- Probabilidad de penalti/falta.
+- Sistema de goles.
+- Estadísticas.
+- Historial.
+- Diseño principal.

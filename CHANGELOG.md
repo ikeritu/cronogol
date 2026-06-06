@@ -1,5 +1,25 @@
 # CHANGELOG
 
+## v1.10.4 — Machine Special Lock Fix
+
+### Cambios
+
+- Corregido bug por el que el usuario podía pulsar `START` cuando la máquina iba a lanzar un penalti o falta.
+- `handleMainAction()` bloquea clics durante turno de máquina.
+- `maybeMachineTurn()` ahora conserva IDs de timeout y no reactiva botones si se genera una tirada especial.
+- `maybeMachineSpecialTurn()` mantiene botones bloqueados mientras la máquina controla la jugada especial.
+- Mensaje añadido: la máquina lanzará automáticamente.
+
+### No se ha tocado
+
+- Reglas del juego.
+- Sistema de turnos base.
+- Penalti/falta como mecánica.
+- Estadísticas.
+- Historial.
+- CSS principal.
+- Diseño visual.
+
 ## v1.10.3 — Stability Hotfix
 
 ### Cambios

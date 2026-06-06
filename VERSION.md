@@ -1,10 +1,10 @@
 # VERSION
 
-Current version: v1.10.3
+Current version: v1.10.4
 
-Release name: Stability Hotfix
+Release name: Machine Special Lock Fix
 
-Base version: v1.10.2 Direct GA4 Event Bridge
+Base version: v1.10.3 Stability Hotfix
 
 Status: Stable candidate
 
@@ -14,8 +14,6 @@ https://cronogol.es/
 
 Notes:
 
-- Defensive machine timeout cleanup.
-- Production debug protection.
-- Stronger direct tracking fallback.
-- Button type safety.
+- Fixes machine special throw UI lock.
+- User cannot press START during machine penalty/free kick.
 - Gameplay rules unchanged.

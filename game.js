@@ -435,7 +435,11 @@ function startMatch(){
   startMatchClock(); updateUI(); addLog("Comienza el partido."); vibrate([30]); maybeMachineTurn();
 }
 
-function handleMainAction(){ if(gameState.matchEnded||pendingSpecial) return; gameState.isRunning ? stopTimerAndEvaluate() : startTimer(); }
+function handleMainAction(){
+  if(gameState.matchEnded || pendingSpecial) return;
+  if(gameState.gameMode==="machine" && gameState.currentPlayerIndex===1) return;
+  gameState.isRunning ? stopTimerAndEvaluate() : startTimer();
+}
 function startTimer(){
   gameState.isRunning=true; timerStartTime=performance.now(); mainActionBtn.textContent="STOP"; mainActionBtn.classList.add("stop"); playSound("beep"); vibrate([20]);
   timerInterval=setInterval(()=>{ currentElapsedMs=stopwatchBaseMs+(performance.now()-timerStartTime); updateTimerDisplay(currentElapsedMs); },16);
@@ -493,7 +497,14 @@ function applyNormalResult(v,r){
   else if(r.type==="yellow"){ p.skipTurns++; gameState.stats.cards++; vibrate([120]); switchTurn(); }
   else if(r.type==="red"){ p.skipTurns+=2; gameState.stats.cards++; vibrate([160,60,160]); switchTurn(); }
   else if(r.type==="full_time"){ endMatch(); }
-  else if(r.special){ gameState.stats.specials++; if(r.special==="free_kick")gameState.stats.freeKicks++; if(r.special==="penalty")gameState.stats.penalties++; pendingSpecial=r.special; specialPanel.classList.remove("hidden"); specialLabel.textContent=r.special==="free_kick"?`${p.name}: 00-20 es gol.`:`${p.name}: par es gol.`; mainActionBtn.disabled=true; vibrate([80,40,80]); maybeMachineSpecialTurn(); }
+  else if(r.special){ gameState.stats.specials++; if(r.special==="free_kick")gameState.stats.freeKicks++; if(r.special==="penalty")gameState.stats.penalties++; pendingSpecial=r.special; specialPanel.classList.remove("hidden"); specialLabel.textContent=r.special==="free_kick"?`${p.name}: 00-20 es gol.`:`${p.name}: par es gol.`;
+    mainActionBtn.disabled=true;
+    specialStartBtn.disabled = (gameState.gameMode==="machine" && gameState.currentPlayerIndex===1);
+    if(gameState.gameMode==="machine" && gameState.currentPlayerIndex===1){
+      messageLabel.textContent += " La máquina lanzará automáticamente.";
+    }
+    vibrate([80,40,80]);
+    maybeMachineSpecialTurn(); }
   else { gameState.stats.misses++; switchTurn(); }
   updateUI(); if(!gameState.matchEnded&&!pendingSpecial&&!penaltyShootout) maybeMachineTurn();
 }
@@ -548,13 +559,66 @@ function maybeMachineSpecialTurn(){
       }
 
       evaluateSpecialThrow(value);
+
+      if(gameState.matchEnded || pendingSpecial){
+        mainActionBtn.disabled = true;
+        specialStartBtn.disabled = true;
+        return;
+      }
+
+      if(gameState.gameMode==="machine" && gameState.currentPlayerIndex===1){
+        mainActionBtn.disabled = true;
+        specialStartBtn.disabled = true;
+        return;
+      }
+
       mainActionBtn.disabled=false;
       specialStartBtn.disabled=false;
     }, getMachineStopDelay());
   }, randomInt(600,1200));
 }
 
-function maybeMachineTurn(){ if(gameState.gameMode!=="machine"||gameState.currentPlayerIndex!==1||gameState.matchEnded||pendingSpecial) return; mainActionBtn.disabled=true; specialStartBtn.disabled=true; setTimeout(()=>{ startTimer(); setTimeout(()=>{ stopTimerAndEvaluate(getMachineForcedValue()); mainActionBtn.disabled=false; specialStartBtn.disabled=false; },getMachineStopDelay()); },randomInt(500,1100)); }
+function maybeMachineTurn(){
+  clearTimeout(machineTurnTimeout);
+  clearTimeout(machineStopTimeout);
+
+  if(gameState.gameMode!=="machine" || gameState.currentPlayerIndex!==1 || gameState.matchEnded || pendingSpecial) return;
+  if(!gameScreen.classList.contains("active")) return;
+
+  mainActionBtn.disabled = true;
+  specialStartBtn.disabled = true;
+
+  machineTurnTimeout = setTimeout(()=>{
+    if(gameState.matchEnded || gameState.gameMode!=="machine" || gameState.currentPlayerIndex!==1 || pendingSpecial || !gameScreen.classList.contains("active")) return;
+
+    startTimer();
+
+    machineStopTimeout = setTimeout(()=>{
+      if(gameState.matchEnded || gameState.gameMode!=="machine" || gameState.currentPlayerIndex!==1 || pendingSpecial || !gameScreen.classList.contains("active")) return;
+
+      stopTimerAndEvaluate(getMachineForcedValue());
+
+      // Importante v1.10.4:
+      // Si la tirada normal de la máquina genera penalti/falta, applyNormalResult()
+      // crea pendingSpecial y maybeMachineSpecialTurn() toma el control.
+      // En ese caso NO debemos reactivar START ni el botón especial para el usuario.
+      if(pendingSpecial || gameState.matchEnded){
+        mainActionBtn.disabled = true;
+        specialStartBtn.disabled = true;
+        return;
+      }
+
+      if(gameState.gameMode==="machine" && gameState.currentPlayerIndex===1){
+        mainActionBtn.disabled = true;
+        specialStartBtn.disabled = true;
+        return;
+      }
+
+      mainActionBtn.disabled = false;
+      specialStartBtn.disabled = false;
+    }, getMachineStopDelay());
+  }, randomInt(500,1100));
+}
 function getMachineStopDelay(){ return gameState.machineLevel==="easy"?randomInt(600,1800):gameState.machineLevel==="hard"?randomInt(900,3200):randomInt(800,2500); }
 function getMachineForcedValue(){ if(isFastMode()) return null; if(gameState.forceEvents){ if(gameState.half===1&&gameState.firstHalfTurns>=gameState.machineForceHalfAt) return 45; if(gameState.half===2&&gameState.secondHalfTurns>=gameState.machineForceEndAt) return 90; } if(gameState.machineLevel==="hard"){ const r=Math.random(); if(r<.025)return 0; if(r<.055)return [96,97,98,99][randomInt(0,3)]; } return null; }
 function startMatchClock(){ clearInterval(matchClockInterval); matchClockInterval=setInterval(()=>{ const sec=Math.floor((Date.now()-matchStartTime)/1000); matchClockLabel.textContent=`${pad(Math.floor(sec/60))}:${pad(sec%60)}`; /* En modo rápido v1.6.1 no hay límite de 5 minutos: gana quien llega a 6 con 2 de ventaja. */ },1000); }
@@ -1242,7 +1306,7 @@ function showSupportModal(){
 }
 
 
-/* ===== CronoGol v1.10.3: game feel improvements ===== */
+/* ===== CronoGol v1.10.4: game feel improvements ===== */
 /* No modifica reglas, turnos, START/STOP ni lógica base del partido. */
 
 function machineDifficultyText(){
@@ -1374,9 +1438,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-/* ===== CronoGol v1.10.3 — Game Event Tracking Layer ===== */
+/* ===== CronoGol v1.10.4 — Game Event Tracking Layer ===== */
 (function(){
-  const CG_EVENT_VERSION = "1.10.3";
+  const CG_EVENT_VERSION = "1.10.4";
   function val(id){ const el=document.getElementById(id); return el ? el.value : ""; }
   function lang(){ try { if (typeof currentLang !== "undefined") return currentLang; return localStorage.getItem("cronogol_lang") || document.documentElement.lang || "es"; } catch(e){ return "es"; } }
   function localCount(eventName){ try { const key="cronogol_event_counts"; const data=JSON.parse(localStorage.getItem(key)||"{}"); data[eventName]=(data[eventName]||0)+1; localStorage.setItem(key, JSON.stringify(data)); } catch(e){} }
@@ -1411,7 +1475,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-/* ===== CronoGol v1.10.3 — Direct GA4 Event Bridge Patch =====
+/* ===== CronoGol v1.10.4 — Direct GA4 Event Bridge Patch =====
    Adds a second safe bridge for custom game events.
    It does not send page_view, so it does not duplicate GA4 pageviews.
 */
@@ -1435,7 +1499,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const gaPayload = {
       event_category: "cronogol_game",
       app_name: "CronoGol",
-      app_version: "1.10.3",
+      app_version: "1.10.4",
       game_mode: data.game_mode || "",
       match_mode: data.match_mode || "",
       lang: data.lang || "",
@@ -1468,7 +1532,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-/* ===== CronoGol v1.10.3 — Stability Hotfix Layer =====
+/* ===== CronoGol v1.10.4 — Stability Hotfix Layer =====
    Objetivo:
    - Evitar timeouts fantasma de la máquina después de reiniciar/volver al setup.
    - Limpiar timers en reset/nueva partida/cambio de pantalla.
