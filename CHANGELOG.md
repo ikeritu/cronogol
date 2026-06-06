@@ -1,5 +1,25 @@
 # CHANGELOG
 
+## v1.10.6 — Machine Fast Penalty + GA4 Fix
+
+### Cambios
+
+- Corregido bloqueo de `START` durante penalti/falta de la máquina también en modo rápido.
+- Añadido bloqueo en fase de captura para impedir que listeners antiguos reciban el click.
+- Añadido bloqueo por teclado.
+- Añadido observador de estado para mantener botones bloqueados durante tiradas especiales de máquina.
+- Reforzado tracking con eventos por click real.
+- Añadido fallback directo a `gtag("event", ...)` si la capa principal falla.
+
+### No se ha tocado
+
+- Reglas del juego.
+- Probabilidad de penalti/falta.
+- Marcador.
+- Estadísticas.
+- Historial.
+- CSS principal.
+
 ## v1.10.5 — Native GA4 Tracking
 
 ### Cambios

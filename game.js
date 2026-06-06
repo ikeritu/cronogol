@@ -438,6 +438,7 @@ function startMatch(){
 function handleMainAction(){
   if(gameState.matchEnded || pendingSpecial) return;
   if(gameState.gameMode==="machine" && gameState.currentPlayerIndex===1) return;
+  if(typeof window !== "undefined" && window.__cgMachineControlsLocked) return;
   gameState.isRunning ? stopTimerAndEvaluate() : startTimer();
 }
 function startTimer(){
@@ -598,7 +599,7 @@ function maybeMachineTurn(){
 
       stopTimerAndEvaluate(getMachineForcedValue());
 
-      // Importante v1.10.5:
+      // Importante v1.10.6:
       // Si la tirada normal de la máquina genera penalti/falta, applyNormalResult()
       // crea pendingSpecial y maybeMachineSpecialTurn() toma el control.
       // En ese caso NO debemos reactivar START ni el botón especial para el usuario.
@@ -1306,7 +1307,7 @@ function showSupportModal(){
 }
 
 
-/* ===== CronoGol v1.10.5: game feel improvements ===== */
+/* ===== CronoGol v1.10.6: game feel improvements ===== */
 /* No modifica reglas, turnos, START/STOP ni lógica base del partido. */
 
 function machineDifficultyText(){
@@ -1438,9 +1439,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-/* ===== CronoGol v1.10.5 — Game Event Tracking Layer ===== */
+/* ===== CronoGol v1.10.6 — Game Event Tracking Layer ===== */
 (function(){
-  const CG_EVENT_VERSION = "1.10.5";
+  const CG_EVENT_VERSION = "1.10.6";
   function val(id){ const el=document.getElementById(id); return el ? el.value : ""; }
   function lang(){ try { if (typeof currentLang !== "undefined") return currentLang; return localStorage.getItem("cronogol_lang") || document.documentElement.lang || "es"; } catch(e){ return "es"; } }
   function localCount(eventName){ try { const key="cronogol_event_counts"; const data=JSON.parse(localStorage.getItem(key)||"{}"); data[eventName]=(data[eventName]||0)+1; localStorage.setItem(key, JSON.stringify(data)); } catch(e){} }
@@ -1475,7 +1476,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-/* ===== CronoGol v1.10.5 — Direct GA4 Event Bridge Patch =====
+/* ===== CronoGol v1.10.6 — Direct GA4 Event Bridge Patch =====
    Adds a second safe bridge for custom game events.
    It does not send page_view, so it does not duplicate GA4 pageviews.
 */
@@ -1499,7 +1500,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const gaPayload = {
       event_category: "cronogol_game",
       app_name: "CronoGol",
-      app_version: "1.10.5",
+      app_version: "1.10.6",
       game_mode: data.game_mode || "",
       match_mode: data.match_mode || "",
       lang: data.lang || "",
@@ -1532,7 +1533,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-/* ===== CronoGol v1.10.5 — Stability Hotfix Layer =====
+/* ===== CronoGol v1.10.6 — Stability Hotfix Layer =====
    Objetivo:
    - Evitar timeouts fantasma de la máquina después de reiniciar/volver al setup.
    - Limpiar timers en reset/nueva partida/cambio de pantalla.
@@ -1758,4 +1759,194 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("beforeunload", function(){
     try { window.cgClearMachineTimeouts(); } catch(e) {}
   });
+})();
+
+
+
+/* ===== CronoGol v1.10.6 — Machine Fast Penalty + GA4 Reliable Events Patch =====
+   Corrige:
+   1) Bloqueo real en fase de penalti/falta de la máquina, también en modo rápido.
+   2) Eventos GA4 desde clicks reales, sin depender solo de wrappers sobre funciones.
+*/
+(function(){
+  if (window.__cgV1106PatchInstalled) return;
+  window.__cgV1106PatchInstalled = true;
+
+  window.__cgMachineControlsLocked = false;
+
+  function getGameMode(){
+    try {
+      const el = document.getElementById("game-mode");
+      return el ? el.value : "";
+    } catch(e) { return ""; }
+  }
+
+  function isMachineTurn(){
+    try {
+      if (typeof gameState !== "undefined" && gameState) {
+        return gameState.gameMode === "machine" && gameState.currentPlayerIndex === 1 && !gameState.matchEnded;
+      }
+    } catch(e) {}
+    return getGameMode() === "machine" && window.__cgMachineControlsLocked === true;
+  }
+
+  function isPendingSpecial(){
+    try {
+      if (typeof pendingSpecial !== "undefined" && pendingSpecial) return true;
+    } catch(e) {}
+    const specialPanel = document.getElementById("special-panel");
+    if (specialPanel && !specialPanel.hidden && specialPanel.offsetParent !== null) return true;
+    return false;
+  }
+
+  function shouldBlockHumanStart(){
+    return isMachineTurn() || window.__cgMachineControlsLocked === true;
+  }
+
+  function setMachineLock(locked){
+    window.__cgMachineControlsLocked = !!locked;
+
+    const mainBtn = document.getElementById("main-action-btn");
+    const specialBtn = document.getElementById("special-start-btn");
+
+    if (mainBtn) {
+      mainBtn.disabled = !!locked;
+      mainBtn.setAttribute("aria-disabled", locked ? "true" : "false");
+      if (locked) mainBtn.classList.add("is-locked");
+      else mainBtn.classList.remove("is-locked");
+    }
+
+    if (specialBtn) {
+      specialBtn.disabled = !!locked;
+      specialBtn.setAttribute("aria-disabled", locked ? "true" : "false");
+      if (locked) specialBtn.classList.add("is-locked");
+      else specialBtn.classList.remove("is-locked");
+    }
+  }
+
+  function syncMachineLock(){
+    const locked = isMachineTurn() && (isPendingSpecial() || window.__cgMachineControlsLocked);
+    if (locked) setMachineLock(true);
+  }
+
+  // Bloqueo en fase captura: aunque algún listener antiguo quede vivo, no llega el click.
+  document.addEventListener("click", function(ev){
+    const target = ev.target && ev.target.closest ? ev.target.closest("#main-action-btn, #special-start-btn") : null;
+    if (!target) return;
+
+    if (shouldBlockHumanStart()) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      ev.stopImmediatePropagation();
+      setMachineLock(true);
+      try {
+        if (typeof showToast === "function") showToast("Es turno de la máquina");
+      } catch(e) {}
+      return false;
+    }
+  }, true);
+
+  // En keydown también, por accesibilidad/teclado.
+  document.addEventListener("keydown", function(ev){
+    if ((ev.key !== "Enter" && ev.key !== " ") || !ev.target) return;
+    const target = ev.target.closest ? ev.target.closest("#main-action-btn, #special-start-btn") : null;
+    if (!target) return;
+
+    if (shouldBlockHumanStart()) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      ev.stopImmediatePropagation();
+      setMachineLock(true);
+      return false;
+    }
+  }, true);
+
+  // Tracking fiable por click real: no sustituye lógica, solo garantiza eventos.
+  function track(eventName, payload){
+    try {
+      if (typeof window.cgTrackEvent === "function") window.cgTrackEvent(eventName, payload || {});
+    } catch(e) {}
+    // Fallback extremo: si cgTrackEvent falla, usar gtag directo.
+    try {
+      if (typeof window.gtag === "function") {
+        window.gtag("event", eventName, Object.assign({
+          event_category: "cronogol_game",
+          app_name: "CronoGol",
+          app_version: "1.10.6"
+        }, payload || {}));
+      }
+    } catch(e) {}
+    try { console.debug("[CronoGol v1.10.6 direct click event]", eventName, payload || {}); } catch(e) {}
+  }
+
+  function bindClick(selector, eventName, payloadBuilder){
+    document.querySelectorAll(selector).forEach(function(el){
+      if (el.__cgV1106Bound) return;
+      el.__cgV1106Bound = true;
+      el.addEventListener("click", function(){
+        const payload = typeof payloadBuilder === "function" ? payloadBuilder(el) : {};
+        track(eventName, payload);
+      }, { passive: true });
+    });
+  }
+
+  function bindEvents(){
+    bindClick("#start-match-btn", "start_match", function(){
+      return {
+        selected_mode: (document.getElementById("game-mode") || {}).value || "",
+        selected_match_mode: (document.getElementById("match-mode") || {}).value || ""
+      };
+    });
+
+    bindClick("#rules-btn, [data-action='rules'], a[href*='como-jugar']", "rules_open");
+    bindClick("#support-btn, [data-action='support'], a[href*='apoya.html']", "support_open");
+    bindClick("#share-btn, [data-action='share']", "share_home");
+    bindClick("#copy-link-btn, [data-action='copy-link']", "copy_link");
+    bindClick("a[href*='feedback.html']", "feedback_open");
+
+    document.querySelectorAll(".segment-btn[data-target='game-mode']").forEach(function(btn){
+      if (btn.__cgV1106ModeBound) return;
+      btn.__cgV1106ModeBound = true;
+      btn.addEventListener("click", function(){
+        if (btn.dataset.value === "machine") track("mode_machine");
+        if (btn.dataset.value === "local") track("mode_local");
+      }, { passive: true });
+    });
+
+    document.querySelectorAll(".segment-btn[data-target='match-mode']").forEach(function(btn){
+      if (btn.__cgV1106MatchBound) return;
+      btn.__cgV1106MatchBound = true;
+      btn.addEventListener("click", function(){
+        if (btn.dataset.value === "five") track("mode_fast");
+        if (btn.dataset.value === "classic") track("mode_classic");
+      }, { passive: true });
+    });
+  }
+
+  // Detectar panel especial de máquina y mantener bloqueo aunque funciones antiguas reactiven botones.
+  const observer = new MutationObserver(function(){
+    try {
+      if (isMachineTurn() && isPendingSpecial()) setMachineLock(true);
+    } catch(e) {}
+  });
+
+  function install(){
+    bindEvents();
+    syncMachineLock();
+
+    const specialPanel = document.getElementById("special-panel");
+    const gameScreen = document.getElementById("game-screen");
+    if (specialPanel) observer.observe(specialPanel, { attributes: true, childList: true, subtree: true });
+    if (gameScreen) observer.observe(gameScreen, { attributes: true, childList: true, subtree: true });
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", install);
+  else install();
+
+  setInterval(function(){
+    try {
+      if (isMachineTurn() && isPendingSpecial()) setMachineLock(true);
+      if (!isMachineTurn() && !isPendingSpecial()) setMachineLock(false);
+    } catch(e) {}
+  }, 120);
 })();

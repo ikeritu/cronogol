@@ -1,4 +1,4 @@
-# CronoGol v1.10.5 — Native GA4 Tracking
+# CronoGol v1.10.6 — Machine Fast Penalty + GA4 Fix
 
 ## Objetivo
 
@@ -311,3 +311,40 @@ Eventos esperados en GA4:
 - `mode_classic`
 
 No se ha tocado la lógica del juego.
+
+
+## v1.10.6 — Machine Fast Penalty + GA4 Fix
+
+Esta versión parte de `v1.10.5 Native GA4 Tracking`.
+
+Motivo:
+
+- En modo rápido, si la máquina generaba un penalti, el usuario todavía podía pulsar `START`.
+- GA4 recibía `page_view`, pero no aparecían claramente eventos personalizados al pulsar `Compartir`, `Reglas` o `Apoya`.
+
+Cambios:
+
+- Bloqueo real en fase de captura de clicks para `START` y botón especial durante turno de máquina.
+- Bloqueo también por teclado (`Enter` / espacio).
+- Observador de estado para mantener bloqueados los controles si hay penalti/falta de máquina.
+- Eventos directos por click real para:
+  - `start_match`
+  - `mode_machine`
+  - `mode_local`
+  - `mode_fast`
+  - `mode_classic`
+  - `rules_open`
+  - `support_open`
+  - `share_home`
+  - `copy_link`
+  - `feedback_open`
+- Fallback directo a `gtag("event", ...)` si `cgTrackEvent()` falla.
+
+No se ha tocado:
+
+- Reglas del juego.
+- Probabilidad de penalti/falta.
+- Marcador.
+- Estadísticas.
+- Historial.
+- CSS principal.
