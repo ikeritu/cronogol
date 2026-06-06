@@ -1,10 +1,10 @@
 # VERSION
 
-Current version: v1.10.2
+Current version: v1.10.3
 
-Release name: Direct GA4 Event Bridge
+Release name: Stability Hotfix
 
-Base version: v1.10.1 Game Event Tracking
+Base version: v1.10.2 Direct GA4 Event Bridge
 
 Status: Stable candidate
 
@@ -14,8 +14,8 @@ https://cronogol.es/
 
 Notes:
 
-- Adds direct GA4 event bridge for custom game events.
-- Keeps Zaraz tracking.
-- Keeps dataLayer fallback.
-- Does not duplicate page_view.
-- Gameplay logic unchanged.
+- Defensive machine timeout cleanup.
+- Production debug protection.
+- Stronger direct tracking fallback.
+- Button type safety.
+- Gameplay rules unchanged.

@@ -1,4 +1,4 @@
-# CronoGol v1.10.2 — Direct GA4 Event Bridge
+# CronoGol v1.10.3 — Stability Hotfix
 
 ## Objetivo
 
@@ -205,3 +205,41 @@ Eventos esperados en GA4:
 - `mode_classic`
 
 No se ha tocado la lógica del juego.
+
+
+## v1.10.3 — Stability Hotfix
+
+Esta versión parte de `v1.10.2 Direct GA4 Event Bridge`.
+
+Objetivo:
+
+Corregir riesgos de estabilidad detectados en auditoría, sin cambiar reglas ni diseño.
+
+Cambios:
+
+- Capa defensiva para controlar timeouts de la máquina.
+- Limpieza de timeouts al volver al setup, reiniciar o iniciar nueva partida.
+- Protección del debug oculto en producción.
+- Refuerzo del tracking directo en botones clave.
+- Añadido `type="button"` a botones HTML sin tipo.
+- Actualización documental.
+
+No se ha tocado:
+
+- Reglas del juego.
+- Sistema de turnos.
+- Marcador.
+- Penalti/falta.
+- Estadísticas.
+- Historial.
+- CSS principal.
+- Diseño visual.
+
+QA recomendado:
+
+1. 1 vs Máquina → esperar turno de máquina → reiniciar.
+2. 1 vs Máquina → volver a setup → iniciar nueva partida.
+3. Rápido → empezar → reiniciar.
+4. Abrir reglas/apoya/feedback.
+5. Probar eventos en consola y GA4.
+6. Probar en móvil.

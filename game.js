@@ -1242,7 +1242,7 @@ function showSupportModal(){
 }
 
 
-/* ===== CronoGol v1.10.2: game feel improvements ===== */
+/* ===== CronoGol v1.10.3: game feel improvements ===== */
 /* No modifica reglas, turnos, START/STOP ni lógica base del partido. */
 
 function machineDifficultyText(){
@@ -1374,9 +1374,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-/* ===== CronoGol v1.10.2 — Game Event Tracking Layer ===== */
+/* ===== CronoGol v1.10.3 — Game Event Tracking Layer ===== */
 (function(){
-  const CG_EVENT_VERSION = "1.10.1";
+  const CG_EVENT_VERSION = "1.10.3";
   function val(id){ const el=document.getElementById(id); return el ? el.value : ""; }
   function lang(){ try { if (typeof currentLang !== "undefined") return currentLang; return localStorage.getItem("cronogol_lang") || document.documentElement.lang || "es"; } catch(e){ return "es"; } }
   function localCount(eventName){ try { const key="cronogol_event_counts"; const data=JSON.parse(localStorage.getItem(key)||"{}"); data[eventName]=(data[eventName]||0)+1; localStorage.setItem(key, JSON.stringify(data)); } catch(e){} }
@@ -1411,7 +1411,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-/* ===== CronoGol v1.10.2 — Direct GA4 Event Bridge Patch =====
+/* ===== CronoGol v1.10.3 — Direct GA4 Event Bridge Patch =====
    Adds a second safe bridge for custom game events.
    It does not send page_view, so it does not duplicate GA4 pageviews.
 */
@@ -1435,7 +1435,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const gaPayload = {
       event_category: "cronogol_game",
       app_name: "CronoGol",
-      app_version: "1.10.2",
+      app_version: "1.10.3",
       game_mode: data.game_mode || "",
       match_mode: data.match_mode || "",
       lang: data.lang || "",
@@ -1464,4 +1464,234 @@ document.addEventListener("DOMContentLoaded", () => {
     try { console.debug("[CronoGol GA4 bridge]", eventName, gaPayload); } catch(e) {}
     return data;
   };
+})();
+
+
+
+/* ===== CronoGol v1.10.3 — Stability Hotfix Layer =====
+   Objetivo:
+   - Evitar timeouts fantasma de la máquina después de reiniciar/volver al setup.
+   - Limpiar timers en reset/nueva partida/cambio de pantalla.
+   - Hacer el tracking menos dependiente de wrappers frágiles.
+   - Proteger debug en producción.
+   - No cambiar reglas ni lógica principal del juego.
+*/
+(function(){
+  if (window.__cgStabilityHotfixInstalled) return;
+  window.__cgStabilityHotfixInstalled = true;
+
+  const machineTimeouts = new Set();
+  const originalSetTimeout = window.setTimeout;
+  const originalClearTimeout = window.clearTimeout;
+
+  function isMachineRelatedCallback(callback){
+    try {
+      const text = String(callback || "");
+      return (
+        text.includes("machine") ||
+        text.includes("maybeMachineTurn") ||
+        text.includes("machineTurn") ||
+        text.includes("autoStop") ||
+        text.includes("stopChrono") ||
+        text.includes("startChrono")
+      );
+    } catch(e) {
+      return false;
+    }
+  }
+
+  window.setTimeout = function(callback, delay){
+    const id = originalSetTimeout.apply(window, arguments);
+    if (isMachineRelatedCallback(callback)) {
+      machineTimeouts.add(id);
+    }
+    return id;
+  };
+
+  window.clearTimeout = function(id){
+    machineTimeouts.delete(id);
+    return originalClearTimeout.call(window, id);
+  };
+
+  window.cgClearMachineTimeouts = function(){
+    machineTimeouts.forEach(function(id){
+      try { originalClearTimeout.call(window, id); } catch(e) {}
+    });
+    machineTimeouts.clear();
+
+    try {
+      if (typeof machineTurnTimeout !== "undefined" && machineTurnTimeout) {
+        originalClearTimeout.call(window, machineTurnTimeout);
+        machineTurnTimeout = null;
+      }
+    } catch(e) {}
+
+    try {
+      if (typeof machineStopTimeout !== "undefined" && machineStopTimeout) {
+        originalClearTimeout.call(window, machineStopTimeout);
+        machineStopTimeout = null;
+      }
+    } catch(e) {}
+
+    try {
+      if (typeof clearMachineTimers === "function") clearMachineTimers();
+    } catch(e) {}
+  };
+
+  function wrapWithMachineCleanup(functionName, eventName){
+    const original = window[functionName];
+    if (typeof original !== "function" || original.__cgStabilityWrapped) return;
+
+    const wrapped = function(){
+      try { window.cgClearMachineTimeouts(); } catch(e) {}
+      try {
+        if (eventName && typeof window.cgTrackEvent === "function") {
+          window.cgTrackEvent(eventName);
+        }
+      } catch(e) {}
+      return original.apply(this, arguments);
+    };
+
+    wrapped.__cgStabilityWrapped = true;
+    window[functionName] = wrapped;
+  }
+
+  function wrapFinalTracking(){
+    const original = window.showFinal;
+    if (typeof original !== "function" || original.__cgFinalTrackingWrapped) return;
+
+    const wrapped = function(){
+      try {
+        if (typeof window.cgTrackEvent === "function") {
+          let payload = {};
+          try {
+            if (typeof gameState !== "undefined" && gameState && gameState.players) {
+              payload = {
+                score_p1: gameState.players[0] ? gameState.players[0].goals : null,
+                score_p2: gameState.players[1] ? gameState.players[1].goals : null,
+                total_turns: gameState.totalTurns || null,
+                final_context: arguments && arguments.length ? "special" : "normal"
+              };
+            }
+          } catch(e) {}
+          window.cgTrackEvent("finish_match", payload);
+        }
+      } catch(e) {}
+      try { window.cgClearMachineTimeouts(); } catch(e) {}
+      return original.apply(this, arguments);
+    };
+
+    wrapped.__cgFinalTrackingWrapped = true;
+    window.showFinal = wrapped;
+  }
+
+  function protectDebugInProduction(){
+    try {
+      const host = location.hostname || "";
+      const isLocal = host === "localhost" || host === "127.0.0.1" || host === "";
+      const debugAllowed = isLocal || localStorage.getItem("cronogol_debug_allowed") === "true";
+
+      if (!debugAllowed) {
+        const debugBox = document.getElementById("debug-box");
+        if (debugBox) {
+          debugBox.hidden = true;
+          debugBox.style.display = "none";
+          debugBox.setAttribute("aria-hidden", "true");
+        }
+
+        window.showDebugBox = function(){
+          try { console.info("[CronoGol] Debug deshabilitado en producción."); } catch(e) {}
+        };
+      }
+    } catch(e) {}
+  }
+
+  function addButtonTypes(){
+    try {
+      document.querySelectorAll("button:not([type])").forEach(function(btn){
+        btn.setAttribute("type", "button");
+      });
+    } catch(e) {}
+  }
+
+  function bindDirectTrackingFallbacks(){
+    const map = [
+      ["#start-match-btn", "start_match"],
+      ["#rules-btn", "rules_open"],
+      ["#support-btn", "support_open"],
+      ['a[href^="apoya.html"]', "support_open"],
+      ['a[href^="feedback.html"]', "feedback_open"],
+      ['button[data-action="copy-link"]', "copy_link"],
+      ['button[data-action="share"]', "share_home"]
+    ];
+
+    map.forEach(function(item){
+      try {
+        document.querySelectorAll(item[0]).forEach(function(el){
+          if (el.__cgDirectTrackingBound) return;
+          el.__cgDirectTrackingBound = true;
+          el.addEventListener("click", function(){
+            try {
+              if (typeof window.cgTrackEvent === "function") {
+                window.cgTrackEvent(item[1]);
+              }
+            } catch(e) {}
+          }, { passive: true });
+        });
+      } catch(e) {}
+    });
+
+    try {
+      document.querySelectorAll('.segment-btn[data-target="game-mode"]').forEach(function(btn){
+        if (btn.__cgModeTrackingBound) return;
+        btn.__cgModeTrackingBound = true;
+        btn.addEventListener("click", function(){
+          try {
+            if (typeof window.cgTrackEvent === "function") {
+              if (btn.dataset.value === "machine") window.cgTrackEvent("mode_machine");
+              if (btn.dataset.value === "local") window.cgTrackEvent("mode_local");
+            }
+          } catch(e) {}
+        }, { passive: true });
+      });
+
+      document.querySelectorAll('.segment-btn[data-target="match-mode"]').forEach(function(btn){
+        if (btn.__cgMatchModeTrackingBound) return;
+        btn.__cgMatchModeTrackingBound = true;
+        btn.addEventListener("click", function(){
+          try {
+            if (typeof window.cgTrackEvent === "function") {
+              if (btn.dataset.value === "five") window.cgTrackEvent("mode_fast");
+              if (btn.dataset.value === "classic") window.cgTrackEvent("mode_classic");
+            }
+          } catch(e) {}
+        }, { passive: true });
+      });
+    } catch(e) {}
+  }
+
+  function install(){
+    wrapWithMachineCleanup("resetToSetup", "reset_to_setup");
+    wrapWithMachineCleanup("resetGame", "reset_game");
+    wrapWithMachineCleanup("newMatch", "new_match");
+    wrapWithMachineCleanup("showSetup", "show_setup");
+    wrapWithMachineCleanup("startMatch", "start_match");
+    wrapFinalTracking();
+    protectDebugInProduction();
+    addButtonTypes();
+    bindDirectTrackingFallbacks();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", install);
+  } else {
+    install();
+  }
+
+  setTimeout(install, 250);
+  setTimeout(install, 1000);
+
+  window.addEventListener("beforeunload", function(){
+    try { window.cgClearMachineTimeouts(); } catch(e) {}
+  });
 })();

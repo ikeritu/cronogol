@@ -1,5 +1,36 @@
 # CHANGELOG
 
+## v1.10.3 — Stability Hotfix
+
+### Cambios
+
+- Añadida capa defensiva para evitar timeouts fantasma de la máquina.
+- Limpieza de timeouts al reiniciar, volver al setup, iniciar partida o abandonar página.
+- Protección del debug oculto en producción.
+- Refuerzo de tracking directo en acciones clave.
+- Añadido `type="button"` a botones HTML sin tipo.
+- Actualizada documentación.
+
+### No se ha tocado
+
+- Lógica base de reglas.
+- Sistema de turnos.
+- Penalti/falta.
+- Marcador.
+- Estadísticas.
+- Historial.
+- CSS principal.
+- Diseño visual.
+
+### QA recomendado
+
+- Reiniciar durante turno de máquina.
+- Volver al setup durante turno de máquina.
+- Iniciar nueva partida tras una partida contra máquina.
+- Probar GA4 eventos.
+- Probar móvil.
+
+
 ## v1.10.2 — Direct GA4 Event Bridge
 
 ### Cambios
