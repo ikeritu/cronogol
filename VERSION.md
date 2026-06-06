@@ -1,19 +1,20 @@
 # VERSION
 
-Current version: v1.9.8
+Current version: v1.9.0
 
-Release name: Game Feel Improvements
+Release name: Analytics Release
 
-Base version: v1.9.7 Secondary Actions CSS-only Final Fix
+Base version: v1.8.8 Stable Clean Release
 
-Status: Stable
+Status: Stable candidate
 
-Official URL:
+Primary URL:
 
 https://cronogol.es/
 
-Main changes:
+Notes:
 
-- Machine difficulty explanation.
-- Emotional post-match headline.
-- Emotional result sharing.
+- This version intentionally does not change gameplay logic.
+- Adds Cloudflare Web Analytics.
+- Adds CNAME for GitHub Pages custom domain.
+- Adds copyright footer and README rights section.

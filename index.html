@@ -11,7 +11,7 @@
   <meta property="og:image" content="https://cronogol.es/og-cronogol.png" />
   <link rel="icon" href="favicon.png" type="image/png" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-  <title>CronoGol v1.9.8</title>
+  <title>CronoGol v1.9.0</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -62,7 +62,6 @@
               <option value="normal" selected>Normal</option>
               <option value="hard">Difícil</option>
             </select>
-              <small id="machine-difficulty-hint" class="field-hint" data-i18n="machineDifficultyHint">Normal: partida equilibrada.</small>
           </label>
 
           <div class="segmented-field">
@@ -92,32 +91,30 @@
           <button id="start-match-btn" class="main-start-btn" data-i18n="startMatch"> EMPEZAR PARTIDO</button>
         </section>
 
-        <nav class="setup-links secondary-actions-final" aria-label="Acciones secundarias">
-          <button id="rules-btn" data-slot="rules" type="button" data-i18n="rules">Reglas</button>
-          <a data-slot="modes" href="modos.html" data-i18n="modes">Modos</a>
-          <a data-slot="history" href="historia.html" data-i18n="history">Historia</a>
-
-          <button id="share-btn" data-slot="share" type="button" data-i18n="share">Compartir</button>
-          <button id="copy-link-btn" data-slot="copy" type="button" data-i18n="copyLink">Copiar enlace</button>
-          <a data-slot="feedback" href="feedback.html?lang=es" data-i18n="feedback">Feedback</a>
-
-          <button id="support-btn" data-slot="support" class="support-wide-btn" type="button" data-i18n="supportFull">☕ Apoya CronoGol</button>
+        <nav class="setup-links">
+          <button id="rules-btn" type="button" data-i18n="rules">Reglas</button>
+          <button id="share-btn" type="button" data-i18n="share">Compartir</button>
+          <button id="copy-link-btn" type="button" data-i18n="copyLink">Copiar enlace</button>
+          <a href="feedback.html?lang=es" data-i18n="feedback">Feedback</a>
+          <button id="support-btn" type="button" data-i18n="supportShort">Apoya</button>
         </nav>
 
-        <section class="coming-soon coming-soon-compact">
-          <span class="tag" data-i18n="inDevelopment">En desarrollo</span>
-          <p><strong data-i18n="onlineSoon">Modo online próximamente</strong> · <span data-i18n="onlineSoonText">Salas privadas para jugar con amigos.</span></p>
+        <section class="coming-soon">
+          <span class="tag" data-i18n="inDevelopment"><span data-i18n="inDevelopment">En desarrollo</span></span>
+          <strong data-i18n="onlineSoon">Modo online próximamente</strong>
+          <p><span data-i18n="onlineSoonText"><span data-i18n="onlineSoonText">Crea una sala privada y juega en tiempo real con un amigo.</span></span></p>
         </section>
 
-        <section class="sponsor-slot support-strip">
-          <p><strong data-i18n="sponsorSpace">CronoGol es gratis</strong> · <span data-i18n="sponsorText">Puedes apoyar el proyecto invitándome a un café.</span></p>
+        <section class="sponsor-slot">
+          <strong data-i18n="sponsorSpace">Espacio de patrocinador</strong>
+          <p><span data-i18n="sponsorText"><span data-i18n="sponsorText">Visible solo fuera del partido. Nunca interrumpe la jugada.</span></span></p>
         </section>
 
         <div class="watch-footer-labels">
           <span>WATER RESIST</span>
           <span>FOOTBALL CHRONO</span>
         </div>
-        <footer class="version-footer">CronoGol v1.9.8 · Partidas en este dispositivo: <strong id="local-matches-count">0</strong></footer>
+        <footer class="version-footer">CronoGol v1.9.0 · Partidas en este dispositivo: <strong id="local-matches-count">0</strong><br><span class="copyright-footer">© 2026 CronoGol. Juego original creado por Iker Ituarte. Todos los derechos reservados.</span></footer>
       </div>
     </section>
 
@@ -233,12 +230,14 @@
         <button id="menu-share-btn" type="button" data-i18n="share">Compartir</button>
         <button id="menu-copy-btn" type="button" data-i18n="copyLink">Copiar enlace</button>
         <a href="feedback.html?lang=es" data-i18n="feedback">Feedback</a>
-          <a href="historia.html">Historia</a>
-        <button id="menu-support-btn" type="button" data-i18n="supportFull">☕ Apoya CronoGol</button>
+        <button id="menu-support-btn" type="button" data-i18n="supportFull">Apoya CronoGol</button>
         <button id="menu-reset-btn" type="button" data-i18n="resetMatch">Reiniciar partido</button>
       </div>
     </section>
   </main>
 <script src="game.js"></script>
+<!-- Cloudflare Web Analytics -->
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7ee638b73aa24300b417a555e67fd1ae"}'></script>
+<!-- End Cloudflare Web Analytics -->
 </body>
 </html>

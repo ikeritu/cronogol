@@ -62,8 +62,6 @@ const I18N = {
     labelMode:"Modo",
     labelDuration:"Duración",
     labelDifficulty:"Dificultad",
-    machineDifficultyHint:"Normal: partida equilibrada.",
-    advancedOptions:"Opciones avanzadas",
     labelPlayer1:"Jugador 1",
     labelPlayer2:"Jugador 2 / Máquina",
     modeLocal:"1 vs 1",
@@ -74,17 +72,15 @@ const I18N = {
     forceMachine:"Forzar descanso/final contra máquina",
     sound:"Sonido",
     rules:"Reglas",
-    modes:"Modos",
-    history:"Historia",
     share:"Compartir",
     copyLink:"Copiar enlace",
     feedback:"Feedback",
     supportShort:"Apoya",
     inDevelopment:"En desarrollo",
     onlineSoon:"Modo online próximamente",
-    onlineSoonText:"Salas privadas para jugar con amigos.",
-    sponsorSpace:"CronoGol es gratis",
-    sponsorText:"Puedes apoyar el proyecto invitándome a un café.",
+    onlineSoonText:"Crea una sala privada y juega en tiempo real con un amigo.",
+    sponsorSpace:"Espacio de patrocinador",
+    sponsorText:"Visible solo fuera del partido. Nunca interrumpe la jugada.",
     lastThrow:"ÚLTIMA TIRADA",
     turnOf:"TURNO DE",
     stats:"Estadísticas",
@@ -97,8 +93,6 @@ const I18N = {
     labelMode:"Mode",
     labelDuration:"Duration",
     labelDifficulty:"Difficulty",
-    machineDifficultyHint:"Normal: balanced match.",
-    advancedOptions:"Advanced options",
     labelPlayer1:"Player 1",
     labelPlayer2:"Player 2 / Machine",
     modeLocal:"1 vs 1",
@@ -109,17 +103,15 @@ const I18N = {
     forceMachine:"Force half/full time vs machine",
     sound:"Sound",
     rules:"Rules",
-    modes:"Modes",
-    history:"History",
     share:"Share",
     copyLink:"Copy link",
     feedback:"Feedback",
     supportShort:"Support",
     inDevelopment:"In development",
     onlineSoon:"Online mode coming soon",
-    onlineSoonText:"Private rooms to play with friends.",
-    sponsorSpace:"CronoGol is free",
-    sponsorText:"You can support the project by buying me a coffee.",
+    onlineSoonText:"Create a private room and play live with a friend.",
+    sponsorSpace:"Sponsor space",
+    sponsorText:"Visible only outside the match. Never interrupts play.",
     lastThrow:"LAST THROW",
     turnOf:"TURN OF",
     stats:"Stats",
@@ -624,57 +616,40 @@ function showRulesModal(){
     [{text:"CERRAR",action:closeModal}]
   );
 }
-function showSupportModal(){
-  const isEn = currentLang === "en";
-  showModal(
-    isEn ? "SUPPORT CRONOGOL" : "APOYA CRONOGOL",
-    isEn
-      ? "CronoGol is free and will remain free. If you enjoy it, you can buy me a coffee."
-      : "CronoGol es gratis y lo seguirá siendo. Si te divierte, puedes invitarme a un café.",
-    `<div class="support-modal">
-      <div class="support-highlight">☕ ${isEn ? "Voluntary support" : "Apoyo voluntario"}</div>
-      <div class="donation-data">
-        <div class="donation-item">
-          <strong>Bizum</strong><br>
-          ${CRONOGOL_CONFIG.bizumPhone}<br>
-          <small>${isEn ? "Concept" : "Concepto"}: ${CRONOGOL_CONFIG.bizumConcept}</small>
-          <button class="bizum-direct-btn" onclick="openBizum()">${isEn ? "Open Bizum" : "Abrir Bizum"}</button>
-        </div>
-        <div class="donation-item">
-          <strong>PayPal</strong><br>
-          <a class="support-link" href="${CRONOGOL_CONFIG.paypalUrl}" target="_blank" rel="noopener">${isEn ? "Open PayPal" : "Abrir PayPal"}</a>
-        </div>
-      </div>
-      <p class="support-note">${isEn ? "No ads during the match. No paywalls." : "Sin anuncios durante la partida. Sin pagos obligatorios."}</p>
-    </div>`,
-    [{text:isEn ? "CLOSE" : "CERRAR", action:closeModal}]
-  );
+function showSupportModal(){ showModal("APOYA CRONOGOL","CronoGol es gratis y lo seguirá siendo.",`<div class="donation-data"><div class="donation-item"><strong>Bizum</strong><br>${CRONOGOL_CONFIG.bizumPhone} · Concepto: ${CRONOGOL_CONFIG.bizumConcept}<button class="bizum-direct-btn" onclick="openBizum()">Abrir Bizum</button></div><div class="donation-item"><strong>PayPal</strong><br><a class="support-link" href="${CRONOGOL_CONFIG.paypalUrl}" target="_blank">Abrir PayPal</a></div></div>`,[{text:"CERRAR",action:closeModal}]); }
+async function copyBizumData(){ return copyText(`${CRONOGOL_CONFIG.bizumPhone} · Concepto: ${CRONOGOL_CONFIG.bizumConcept}`,"Datos de Bizum copiados"); }
+async function openBizum(){
+  await copyBizumData();
+  showToast("Datos de Bizum copiados. Abriendo tu app bancaria...");
+  window.location.href=`bizum://send?phone=${encodeURIComponent(CRONOGOL_CONFIG.bizumPhone)}&concept=${encodeURIComponent(CRONOGOL_CONFIG.bizumConcept)}`;
+  setTimeout(()=>showToast(`Bizum: ${CRONOGOL_CONFIG.bizumPhone} · Concepto: ${CRONOGOL_CONFIG.bizumConcept}`),1200);
 }
 function whatsappShareUrl(){ return `https://wa.me/?text=${encodeURIComponent(CRONOGOL_CONFIG.whatsappText)}`; }
 async function shareCronoGol(){
-  const nativeText = currentLang === "en"
-    ? "I'm playing CronoGol ⚽⌚"
-    : "Estoy jugando a CronoGol ⚽⌚";
-
-  const fullText = `${nativeText}
+  const text = currentLang === "en"
+    ? `I'm playing CronoGol ⚽⌚
+${CRONOGOL_CONFIG.siteUrl}`
+    : `Estoy jugando a CronoGol ⚽⌚
 ${CRONOGOL_CONFIG.siteUrl}`;
 
   try{
     if(navigator.share){
       await navigator.share({
         title:"CronoGol",
-        text:nativeText,
-        url:CRONOGOL_CONFIG.siteUrl
+        text: currentLang === "en" ? "I'm playing CronoGol ⚽⌚" : "Estoy jugando a CronoGol ⚽⌚",
+        url: CRONOGOL_CONFIG.siteUrl
       });
       return;
     }
   }catch(e){}
 
-  window.open(`https://wa.me/?text=${encodeURIComponent(fullText)}`,"_blank","noopener");
+  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`,"_blank","noopener");
 }
 
 function resultText(includeUrl=true){
-  const final = gameState.lastFinalText || formattedFinalResult();
+  const final = gameState.lastFinalText && gameState.lastFinalText.includes("Penaltis:")
+    ? gameState.lastFinalText
+    : formattedFinalResult();
   const challenge = currentLang === "en" ? "Do you dare?" : "¿Te atreves?";
   const base = `⚽ CronoGol
 ${final}
@@ -697,7 +672,10 @@ async function shareResult(){
   window.open(`https://wa.me/?text=${encodeURIComponent(resultText(true))}`,"_blank","noopener");
 }
 function copyCronoGolLink(){
-  copyText(CRONOGOL_CONFIG.siteUrl, currentLang === "en" ? "Link copied" : "Enlace copiado");
+  copyText(
+    CRONOGOL_CONFIG.siteUrl,
+    currentLang === "en" ? "Link copied" : "Enlace copiado"
+  );
 }
 
 function showSupportModal(){
@@ -1162,212 +1140,3 @@ if(document.readyState === "loading"){
 } else {
   bootCronoGol();
 }
-
-
-/* ===== CronoGol v1.9.6: support bugfix + clean share/support functions ===== */
-
-async function openBizum(){
-  const isEn = currentLang === "en";
-  const conceptLabel = isEn ? "Concept" : "Concepto";
-  const copiedMsg = isEn ? "Bizum details copied" : "Datos de Bizum copiados";
-  const fallbackMsg = isEn
-    ? "If your bank app does not open, use the copied details."
-    : "Si tu banco no se abre, usa los datos copiados.";
-
-  const text = `Bizum: ${CRONOGOL_CONFIG.bizumPhone} · ${conceptLabel}: ${CRONOGOL_CONFIG.bizumConcept}`;
-
-  try {
-    await copyText(text, copiedMsg);
-  } catch(e) {
-    showToast(text);
-  }
-
-  window.location.href = `bizum://send?phone=${encodeURIComponent(CRONOGOL_CONFIG.bizumPhone)}&concept=${encodeURIComponent(CRONOGOL_CONFIG.bizumConcept)}`;
-
-  setTimeout(() => {
-    showToast(fallbackMsg);
-  }, 1200);
-}
-
-async function shareCronoGol(){
-  const nativeText = currentLang === "en"
-    ? "I'm playing CronoGol ⚽⌚"
-    : "Estoy jugando a CronoGol ⚽⌚";
-
-  const fullText = `${nativeText}\n${CRONOGOL_CONFIG.siteUrl}`;
-
-  try{
-    if(navigator.share){
-      await navigator.share({
-        title:"CronoGol",
-        text:nativeText,
-        url:CRONOGOL_CONFIG.siteUrl
-      });
-      return;
-    }
-  }catch(e){}
-
-  window.open(`https://wa.me/?text=${encodeURIComponent(fullText)}`,"_blank","noopener");
-}
-
-function copyCronoGolLink(){
-  copyText(CRONOGOL_CONFIG.siteUrl, currentLang === "en" ? "Link copied" : "Enlace copiado");
-}
-
-function showSupportModal(){
-  const isEn = currentLang === "en";
-  showModal(
-    isEn ? "SUPPORT CRONOGOL" : "APOYA CRONOGOL",
-    isEn
-      ? "CronoGol is free and will remain free. If you enjoy it, you can buy me a coffee."
-      : "CronoGol es gratis y lo seguirá siendo. Si te divierte, puedes invitarme a un café.",
-    `<div class="support-modal">
-      <div class="support-highlight">☕ ${isEn ? "Voluntary support" : "Apoyo voluntario"}</div>
-      <div class="donation-data">
-        <div class="donation-item">
-          <strong>Bizum</strong><br>
-          ${CRONOGOL_CONFIG.bizumPhone}<br>
-          <small>${isEn ? "Concept" : "Concepto"}: ${CRONOGOL_CONFIG.bizumConcept}</small>
-          <button class="bizum-direct-btn" onclick="openBizum()">${isEn ? "Open Bizum" : "Abrir Bizum"}</button>
-        </div>
-        <div class="donation-item">
-          <strong>PayPal</strong><br>
-          <a class="support-link" href="${CRONOGOL_CONFIG.paypalUrl}" target="_blank" rel="noopener">${isEn ? "Open PayPal" : "Abrir PayPal"}</a>
-        </div>
-      </div>
-      <p class="support-note">${isEn ? "No ads during the match. No paywalls." : "Sin anuncios durante la partida. Sin pagos obligatorios."}</p>
-    </div>`,
-    [{text:isEn ? "CLOSE" : "CERRAR", action:closeModal}]
-  );
-}
-
-
-/* ===== CronoGol v1.9.8: game feel improvements ===== */
-/* No modifica reglas, turnos, START/STOP ni lógica base del partido. */
-
-function machineDifficultyText(){
-  const level = machineLevelSelect ? machineLevelSelect.value : "normal";
-  const isEn = currentLang === "en";
-
-  const texts = {
-    es: {
-      easy: "Fácil: máquina torpe, ideal para aprender.",
-      normal: "Normal: partida equilibrada.",
-      hard: "Difícil: más precisión y más peligro en jugadas especiales."
-    },
-    en: {
-      easy: "Easy: clumsy machine, ideal for learning.",
-      normal: "Normal: balanced match.",
-      hard: "Hard: more precision and more danger in special plays."
-    }
-  };
-
-  return (isEn ? texts.en : texts.es)[level] || (isEn ? texts.en.normal : texts.es.normal);
-}
-
-function updateMachineDifficultyHint(){
-  const hint = document.getElementById("machine-difficulty-hint");
-  if(!hint) return;
-  hint.textContent = machineDifficultyText();
-}
-
-function getFinalEmotion(pens=false){
-  const p1 = gameState.players[0];
-  const p2 = gameState.players[1];
-  const goals1 = p1.goals;
-  const goals2 = p2.goals;
-  const totalGoals = goals1 + goals2;
-  const diff = Math.abs(goals1 - goals2);
-  const isEn = currentLang === "en";
-
-  if(pens){
-    return isEn
-      ? "Total drama from the penalty spot."
-      : "Drama total desde los once metros.";
-  }
-
-  if(totalGoals === 0){
-    return isEn
-      ? "Goalkeepers' match."
-      : "Partido de porteros.";
-  }
-
-  if(diff === 1){
-    return isEn
-      ? "Extremely tight match."
-      : "Partido ajustadísimo.";
-  }
-
-  if(totalGoals >= 7){
-    return isEn
-      ? "Attacking festival."
-      : "Festival ofensivo.";
-  }
-
-  if(diff >= 4){
-    return isEn
-      ? "Commanding victory."
-      : "Victoria contundente.";
-  }
-
-  if(gameState.gameMode === "machine" && goals2 > goals1){
-    return isEn
-      ? "The machine shows no mercy."
-      : "La máquina no perdona.";
-  }
-
-  if(gameState.gameMode === "machine" && goals1 > goals2 && machineLevelSelect && machineLevelSelect.value === "hard"){
-    return isEn
-      ? "Big statement against the hard machine."
-      : "Golpe sobre la mesa contra la máquina difícil.";
-  }
-
-  return isEn
-    ? "Decided by stopwatch precision."
-    : "Decidido por precisión de cronómetro.";
-}
-
-function resultText(includeUrl=true){
-  const final = gameState.lastFinalText || formattedFinalResult();
-  const emotion = getFinalEmotion(Boolean(penaltyShootout));
-  const challenge = currentLang === "en" ? "Do you dare?" : "¿Te atreves?";
-  const base = `⚽ CronoGol\n${final}\n\n${emotion}\n${challenge}`;
-  return includeUrl ? `${base}\n${CRONOGOL_CONFIG.siteUrl}` : base;
-}
-
-function finalHtml(pens=false){
-  const penaltyLine = (pens && penaltyShootout) ? `<br>Penaltis: ${penaltyShootout.goals[0]} - ${penaltyShootout.goals[1]}` : "";
-  const isEn = currentLang === "en";
-  const emotion = getFinalEmotion(pens);
-
-  return `<div class="final-emotion-box">${emotion}</div>
-  <div class="donation-item">
-    <strong>${isEn ? "Match summary" : "Resumen"}</strong><br>
-    ${isEn ? "Throws" : "Tiradas"}: ${gameState.totalTurns}<br>
-    ${isEn ? "Goals" : "Goles"}: ${gameState.stats.goals}<br>
-    ${isEn ? "Posts/Crossbars" : "Postes/Largueros"}: ${gameState.stats.woodwork}<br>
-    ${isEn ? "Cards" : "Tarjetas"}: ${gameState.stats.cards}<br>
-    ${isEn ? "Specials" : "Especiales"}: ${gameState.stats.specials}${penaltyLine}
-  </div>
-  <div class="donation-item final-support-box">
-    <strong>☕ ${isEn ? "CronoGol is free" : "CronoGol es gratis"}</strong><br>
-    ${isEn ? "If this match made you smile, you can buy me a coffee." : "Si esta partida te ha divertido, puedes invitarme a un café."}
-    <button class="bizum-direct-btn" onclick="openBizum()">${isEn ? "Open Bizum" : "Abrir Bizum"}</button>
-    <a class="support-link" href="${CRONOGOL_CONFIG.paypalUrl}" target="_blank" rel="noopener">${isEn ? "Open PayPal" : "Abrir PayPal"}</a>
-  </div>`;
-}
-
-/* Conecta la descripción de dificultad sin alterar el comportamiento de la máquina */
-document.addEventListener("DOMContentLoaded", () => {
-  updateMachineDifficultyHint();
-
-  if(machineLevelSelect){
-    machineLevelSelect.addEventListener("change", updateMachineDifficultyHint);
-  }
-
-  const esBtn = document.querySelector('[data-lang="es"]');
-  const enBtn = document.querySelector('[data-lang="en"]');
-
-  if(esBtn) esBtn.addEventListener("click", () => setTimeout(updateMachineDifficultyHint, 0));
-  if(enBtn) enBtn.addEventListener("click", () => setTimeout(updateMachineDifficultyHint, 0));
-});

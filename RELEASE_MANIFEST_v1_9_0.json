@@ -1,22 +1,27 @@
 {
   "project": "CronoGol",
   "version": "1.9.0",
-  "release_name": "Support & Monetization Starter",
-  "base_version": "1.8.9 Custom Domain Share Fix",
-  "official_url": "https://cronogol.es/",
+  "release_name": "Analytics Release",
+  "base_version": "1.8.8 Stable Clean Release",
+  "status": "stable_candidate",
+  "primary_url": "https://cronogol.es/",
+  "analytics": {
+    "provider": "Cloudflare Web Analytics",
+    "token": "7ee638b73aa24300b417a555e67fd1ae",
+    "snippet_added": true
+  },
   "logic_changed": false,
-  "monetization_phase": "voluntary_support",
-  "ads_enabled": false,
-  "donations_enabled": true,
-  "payment_methods": [
-    "Bizum",
-    "PayPal"
-  ],
+  "game_rules_changed": false,
+  "custom_domain": "cronogol.es",
+  "cname_file": true,
+  "copyright_footer": "© 2026 CronoGol. Juego original creado por Iker Ituarte. Todos los derechos reservados.",
+  "node_check": "ok",
+  "node_check_output": "",
   "files_expected": [
     "CHANGELOG.md",
     "CNAME",
     "README.md",
-    "RELEASE_MANIFEST_v1_8_9.json",
+    "RELEASE_MANIFEST_v1_8_8.json",
     "VERSION.md",
     "apoya.html",
     "como-jugar.html",
@@ -36,7 +41,5 @@
     "og-cronogol.svg",
     "privacidad.html",
     "style.css"
-  ],
-  "node_check": "ok",
-  "node_check_output": ""
+  ]
 }
