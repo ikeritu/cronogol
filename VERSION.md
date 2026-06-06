@@ -1,10 +1,10 @@
 # VERSION
 
-Current version: v1.10.4
+Current version: v1.10.5
 
-Release name: Machine Special Lock Fix
+Release name: Native GA4 Tracking
 
-Base version: v1.10.3 Stability Hotfix
+Base version: v1.10.4 Machine Special Lock Fix
 
 Status: Stable candidate
 
@@ -12,8 +12,13 @@ Primary URL:
 
 https://cronogol.es/
 
+Measurement ID:
+
+G-B7KQNZZLPR
+
 Notes:
 
-- Fixes machine special throw UI lock.
-- User cannot press START during machine penalty/free kick.
-- Gameplay rules unchanged.
+- Adds native GA4 gtag.js on all HTML pages.
+- Keeps Cloudflare Web Analytics.
+- Avoid using GA4 also through Zaraz to prevent duplicates.
+- Gameplay logic unchanged.

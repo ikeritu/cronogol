@@ -1,5 +1,31 @@
 # CHANGELOG
 
+## v1.10.5 — Native GA4 Tracking
+
+### Cambios
+
+- Añadido Google Analytics 4 directo con `gtag.js`.
+- Measurement ID: `G-B7KQNZZLPR`.
+- Añadido `data-cfasync="false"` al script de GA4.
+- GA4 añadido en todas las páginas HTML.
+- Se mantiene Cloudflare Web Analytics.
+- Se mantiene la capa de eventos existente en `game.js`.
+- Actualizada privacidad y documentación.
+- Recomendación: no usar GA4 también en Zaraz para evitar duplicados.
+
+### No se ha tocado
+
+- Lógica del juego.
+- Reglas.
+- Turnos.
+- Máquina.
+- Penalti/falta.
+- Estadísticas.
+- Historial.
+- START/STOP.
+- CSS principal.
+- Diseño visual.
+
 ## v1.10.4 — Machine Special Lock Fix
 
 ### Cambios

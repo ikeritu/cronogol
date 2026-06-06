@@ -1,4 +1,4 @@
-# CronoGol v1.10.4 — Machine Special Lock Fix
+# CronoGol v1.10.5 — Native GA4 Tracking
 
 ## Objetivo
 
@@ -273,3 +273,41 @@ No se ha tocado:
 - Estadísticas.
 - Historial.
 - Diseño principal.
+
+
+## v1.10.5 — Native GA4 Tracking
+
+Esta versión parte de `v1.10.4 Machine Special Lock Fix`.
+
+Motivo:
+
+Cloudflare Web Analytics estaba instalado y GA4 recibía pageviews mediante Zaraz, pero los eventos personalizados del juego no estaban garantizados. Para una app estática pequeña como CronoGol, se añade Google Analytics 4 de forma directa con `gtag.js`.
+
+Cambios:
+
+- Añadido Google Analytics 4 directo en todos los HTML.
+- Measurement ID: `G-B7KQNZZLPR`.
+- Añadido `data-cfasync="false"` para evitar interferencias de Cloudflare Rocket Loader.
+- Se mantiene Cloudflare Web Analytics.
+- Se mantiene la capa de eventos de `game.js`.
+- Se recomienda no configurar GA4 también en Zaraz para evitar duplicidades.
+- Actualizada privacidad.
+
+Eventos esperados en GA4:
+
+- `app_loaded`
+- `start_match`
+- `finish_match`
+- `share_result`
+- `share_home`
+- `copy_result`
+- `copy_link`
+- `rules_open`
+- `support_open`
+- `feedback_open`
+- `mode_machine`
+- `mode_local`
+- `mode_fast`
+- `mode_classic`
+
+No se ha tocado la lógica del juego.

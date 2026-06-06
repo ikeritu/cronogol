@@ -598,7 +598,7 @@ function maybeMachineTurn(){
 
       stopTimerAndEvaluate(getMachineForcedValue());
 
-      // Importante v1.10.4:
+      // Importante v1.10.5:
       // Si la tirada normal de la máquina genera penalti/falta, applyNormalResult()
       // crea pendingSpecial y maybeMachineSpecialTurn() toma el control.
       // En ese caso NO debemos reactivar START ni el botón especial para el usuario.
@@ -1306,7 +1306,7 @@ function showSupportModal(){
 }
 
 
-/* ===== CronoGol v1.10.4: game feel improvements ===== */
+/* ===== CronoGol v1.10.5: game feel improvements ===== */
 /* No modifica reglas, turnos, START/STOP ni lógica base del partido. */
 
 function machineDifficultyText(){
@@ -1438,9 +1438,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-/* ===== CronoGol v1.10.4 — Game Event Tracking Layer ===== */
+/* ===== CronoGol v1.10.5 — Game Event Tracking Layer ===== */
 (function(){
-  const CG_EVENT_VERSION = "1.10.4";
+  const CG_EVENT_VERSION = "1.10.5";
   function val(id){ const el=document.getElementById(id); return el ? el.value : ""; }
   function lang(){ try { if (typeof currentLang !== "undefined") return currentLang; return localStorage.getItem("cronogol_lang") || document.documentElement.lang || "es"; } catch(e){ return "es"; } }
   function localCount(eventName){ try { const key="cronogol_event_counts"; const data=JSON.parse(localStorage.getItem(key)||"{}"); data[eventName]=(data[eventName]||0)+1; localStorage.setItem(key, JSON.stringify(data)); } catch(e){} }
@@ -1475,7 +1475,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-/* ===== CronoGol v1.10.4 — Direct GA4 Event Bridge Patch =====
+/* ===== CronoGol v1.10.5 — Direct GA4 Event Bridge Patch =====
    Adds a second safe bridge for custom game events.
    It does not send page_view, so it does not duplicate GA4 pageviews.
 */
@@ -1499,7 +1499,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const gaPayload = {
       event_category: "cronogol_game",
       app_name: "CronoGol",
-      app_version: "1.10.4",
+      app_version: "1.10.5",
       game_mode: data.game_mode || "",
       match_mode: data.match_mode || "",
       lang: data.lang || "",
@@ -1532,7 +1532,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-/* ===== CronoGol v1.10.4 — Stability Hotfix Layer =====
+/* ===== CronoGol v1.10.5 — Stability Hotfix Layer =====
    Objetivo:
    - Evitar timeouts fantasma de la máquina después de reiniciar/volver al setup.
    - Limpiar timers en reset/nueva partida/cambio de pantalla.
