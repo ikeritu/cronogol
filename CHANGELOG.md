@@ -1,15 +1,16 @@
 # CHANGELOG
 
-## v1.10.15 — Mobile Layout Fix
+## v1.10.16 — Secondary Actions Fix
 
 ### Cambios
 
-- Corregida la distribución responsive de `.setup-links`.
-- Añadido soporte explícito para `.setup-action-group`.
-- Evitado desbordamiento horizontal en móvil.
-- Ajustado selector ES/EN para que no flote sobre todo el contenido.
-- Ajustada altura máxima del menú/modal en móvil.
-- Actualizada versión/cache a `v1.10.15`.
+- Corregida definitivamente la parrilla de acciones secundarias.
+- `.setup-action-group` usa `display: contents`.
+- Los botones internos ya no quedan comprimidos ni se pisan.
+- Parrilla estable: 3 columnas en desktop/tablet, 2 columnas en móvil.
+- `Apoya CronoGol` queda a ancho completo.
+- Eliminado contenido accidental antes del `DOCTYPE` si existía.
+- Actualizada versión/cache a `v1.10.16`.
 
 ### No se ha tocado
 
@@ -24,7 +25,31 @@
 - Estadísticas.
 
 
-## v1.10.15 — Menu & Home Hierarchy Polish
+## v1.10.16 — Mobile Layout Fix
+
+### Cambios
+
+- Corregida la distribución responsive de `.setup-links`.
+- Añadido soporte explícito para `.setup-action-group`.
+- Evitado desbordamiento horizontal en móvil.
+- Ajustado selector ES/EN para que no flote sobre todo el contenido.
+- Ajustada altura máxima del menú/modal en móvil.
+- Actualizada versión/cache a `v1.10.16`.
+
+### No se ha tocado
+
+- Lógica del juego.
+- Reglas.
+- Turnos.
+- Máquina.
+- Penalti/falta.
+- Sonidos.
+- Vibración.
+- Historial.
+- Estadísticas.
+
+
+## v1.10.16 — Menu & Home Hierarchy Polish
 
 ### UI/UX
 

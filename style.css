@@ -1766,14 +1766,14 @@ body.cg-flash-red .game-device {
 }
 
 
-/* ===== CronoGol v1.10.15: strict physical vibration gate =====
+/* ===== CronoGol v1.10.16: strict physical vibration gate =====
    La vibración física está totalmente centralizada en game.js:
    physicalVibration() -> solo goal / penalty_fail.
    Feedback visual activo solo para goal y penalty_fail.
 */
 
 
-/* ===== CronoGol v1.10.15: Project Audit UI/UX fixes ===== */
+/* ===== CronoGol v1.10.16: Project Audit UI/UX fixes ===== */
 .top-back-link {
   display: inline-flex;
   align-items: center;
@@ -1850,7 +1850,7 @@ body.cg-flash-red .game-device {
 }
 
 
-/* ===== CronoGol v1.10.15: Menu & Home Hierarchy Polish ===== */
+/* ===== CronoGol v1.10.16: Menu & Home Hierarchy Polish ===== */
 
 /* Home: acciones secundarias agrupadas, menos ruido visual */
 .setup-actions-polished {
@@ -1985,9 +1985,9 @@ body.cg-flash-red .game-device {
 }
 
 
-/* ===== CronoGol v1.10.15: Mobile Layout Fix ===== */
+/* ===== CronoGol v1.10.16: Mobile Layout Fix ===== */
 /* Corrección de la zona inferior de acciones en móvil.
-   La versión v1.10.14 agrupaba botones dentro de .setup-action-group,
+   La versión v1.10.16 agrupaba botones dentro de .setup-action-group,
    pero algunas reglas antiguas seguían esperando botones directos bajo .setup-links.
    Este override estabiliza la maqueta sin tocar JS ni lógica de juego. */
 
@@ -2114,5 +2114,113 @@ body.cg-flash-red .game-device {
   .modal-card button,
   .modal-card a {
     min-height: 46px !important;
+  }
+}
+
+
+/* ===== CronoGol v1.10.16: Secondary Actions Grid Hard Fix ===== */
+/* Fix real observado:
+   Los grupos internos .setup-action-group se estaban comportando como columnas
+   dentro de .setup-links, generando cajas estrechas y textos pisados.
+   Solución robusta: los grupos pasan a display: contents y sus hijos son los
+   elementos reales de la parrilla. */
+
+.setup-links.secondary-actions-final,
+.setup-links.setup-actions-polished,
+nav.setup-links {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-top: 12px !important;
+  overflow: visible !important;
+  align-items: stretch !important;
+}
+
+.setup-links .setup-action-group {
+  display: contents !important;
+}
+
+.setup-links .setup-action-group > button,
+.setup-links .setup-action-group > a,
+.setup-links > button,
+.setup-links > a {
+  min-width: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 46px !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+  word-break: normal !important;
+  line-height: 1.12 !important;
+  padding: 8px 6px !important;
+  font-size: 12px !important;
+  letter-spacing: .2px !important;
+}
+
+.setup-links > .support-wide-btn,
+.setup-links .support-wide-btn {
+  grid-column: 1 / -1 !important;
+  min-height: 56px !important;
+  font-size: 14px !important;
+  border-color: rgba(217,134,25,.90) !important;
+  background: rgba(217,134,25,.14) !important;
+}
+
+.setup-links > .support-wide-btn::after,
+.setup-links .support-wide-btn::after {
+  content: " · Bizum / PayPal";
+  color: var(--muted);
+  font-size: 11px;
+  margin-left: 6px;
+}
+
+@media(max-width:560px){
+  .setup-links.secondary-actions-final,
+  .setup-links.setup-actions-polished,
+  nav.setup-links {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    margin-top: 12px !important;
+  }
+
+  .setup-links .setup-action-group > button,
+  .setup-links .setup-action-group > a,
+  .setup-links > button,
+  .setup-links > a {
+    min-height: 48px !important;
+    padding: 8px 5px !important;
+    font-size: 12px !important;
+    letter-spacing: .15px !important;
+  }
+
+  .setup-links > .support-wide-btn,
+  .setup-links .support-wide-btn {
+    grid-column: 1 / -1 !important;
+    min-height: 54px !important;
+    font-size: 13px !important;
+  }
+
+  .setup-links > .support-wide-btn::after,
+  .setup-links .support-wide-btn::after {
+    display: inline;
+    margin-left: 5px;
+    font-size: 10px;
+  }
+}
+
+@media(max-width:360px){
+  .setup-links .setup-action-group > button,
+  .setup-links .setup-action-group > a,
+  .setup-links > button,
+  .setup-links > a {
+    font-size: 11px !important;
+    letter-spacing: 0 !important;
   }
 }

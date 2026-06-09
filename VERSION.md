@@ -1,13 +1,12 @@
 # VERSION
 
-Current version: v1.10.15
-Release name: Mobile Layout Fix
-Base version: v1.10.14
+Current version: v1.10.16
+Release name: Secondary Actions Fix
+Base version: v1.10.15 Mobile Layout Fix
 Status: Stable candidate
 Primary URL: https://cronogol.es/
 
 Notes:
-- Fixes mobile setup links layout.
-- Adjusts ES/EN language switcher positioning.
-- Limits mobile menu/modal height.
+- Fixes secondary actions layout in desktop and mobile.
+- Uses display: contents for nested action groups.
 - Gameplay logic unchanged.

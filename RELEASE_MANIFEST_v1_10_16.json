@@ -1,0 +1,25 @@
+{
+  "project": "CronoGol",
+  "version": "1.10.16",
+  "release_name": "Secondary Actions Fix",
+  "base_version": "1.10.15 Mobile Layout Fix",
+  "logic_changed": false,
+  "css_changed": true,
+  "fixes": [
+    "setup-action-group display contents",
+    "secondary buttons no longer overlap",
+    "desktop 3-column grid",
+    "mobile 2-column grid",
+    "support full-width"
+  ],
+  "node_check": {
+    "game.js": {
+      "status": "ok",
+      "output": ""
+    },
+    "sw.js": {
+      "status": "ok",
+      "output": ""
+    }
+  }
+}

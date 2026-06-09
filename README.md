@@ -1,4 +1,4 @@
-# CronoGol v1.10.15 — Mobile Layout Fix
+# CronoGol v1.10.16 — Secondary Actions Fix
 
 ## Objetivo
 
@@ -438,7 +438,7 @@ Ajuste de UX en pantalla de inicio:
 - No se toca juego, reglas, máquina, sonidos, vibración ni analítica.
 
 
-## v1.10.15 — Menu & Home Hierarchy Polish
+## v1.10.16 — Menu & Home Hierarchy Polish
 
 Pulido visual de interfaz sin tocar la lógica del juego.
 
@@ -452,7 +452,7 @@ Cambios:
 - `Reiniciar partido` separado como acción peligrosa.
 - `Apoya CronoGol` baja peso visual en home y menú.
 - Se mantiene la confirmación de reinicio añadida en v1.10.12.
-- Cache busting actualizado a `game.js?v=1.10.15` y `style.css?v=1.10.15`.
+- Cache busting actualizado a `game.js?v=1.10.16` y `style.css?v=1.10.16`.
 
 No se toca:
 
@@ -466,9 +466,9 @@ No se toca:
 - Zaraz/event tracking.
 
 
-## v1.10.15 — Mobile Layout Fix
+## v1.10.16 — Mobile Layout Fix
 
-Esta versión parte de `v1.10.14`.
+Esta versión parte de `v1.10.16`.
 
 Objetivo:
 
@@ -487,3 +487,26 @@ No se toca:
 - Vibración.
 - Historial.
 - Estadísticas.
+
+
+## v1.10.16 — Secondary Actions Fix
+
+Esta versión corrige el fallo real visto en PC y móvil en la zona inferior de acciones secundarias.
+
+Problema:
+
+- Los grupos internos `.setup-action-group` se comportaban como columnas dentro de `.setup-links`.
+- Los botones quedaban estrechos, con cajas vacías y textos pisados.
+- En móvil y PC los enlaces `Reglas`, `Modos`, `Historia`, `Compartir`, `Copiar enlace` y `Feedback` no se distribuían correctamente.
+
+Solución:
+
+- `.setup-action-group` pasa a `display: contents`.
+- Los botones/enlaces internos pasan a ser elementos reales de la parrilla.
+- En desktop/tablet se usa una parrilla de 3 columnas.
+- En móvil se usa una parrilla de 2 columnas.
+- `Apoya CronoGol` queda siempre a ancho completo.
+- Se elimina cualquier contenido accidental antes de `<!DOCTYPE html>`.
+- Se actualiza cache/versionado a `v1.10.16`.
+
+No se toca la lógica del juego.
