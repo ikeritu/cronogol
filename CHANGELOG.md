@@ -1,6 +1,29 @@
 # CHANGELOG
 
-## v1.10.16 — Secondary Actions Fix
+## v1.10.17 — Flatten Secondary Actions
+
+### Cambios
+
+- Corregida la causa real del fallo de acciones secundarias.
+- Eliminados wrappers `.setup-action-group` dentro de `nav.setup-links` en `index.html`.
+- Los botones/enlaces vuelven a ser hijos directos de la parrilla.
+- Añadido override CSS final específico para `#setup-screen nav.setup-links.secondary-actions-final`.
+- Actualizada versión/cache a `v1.10.17`.
+
+### No se ha tocado
+
+- Lógica del juego.
+- Reglas.
+- Turnos.
+- Máquina.
+- Penalti/falta.
+- Sonidos.
+- Vibración.
+- Historial.
+- Estadísticas.
+
+
+## v1.10.17 — Secondary Actions Fix
 
 ### Cambios
 
@@ -10,7 +33,7 @@
 - Parrilla estable: 3 columnas en desktop/tablet, 2 columnas en móvil.
 - `Apoya CronoGol` queda a ancho completo.
 - Eliminado contenido accidental antes del `DOCTYPE` si existía.
-- Actualizada versión/cache a `v1.10.16`.
+- Actualizada versión/cache a `v1.10.17`.
 
 ### No se ha tocado
 
@@ -25,7 +48,7 @@
 - Estadísticas.
 
 
-## v1.10.16 — Mobile Layout Fix
+## v1.10.17 — Mobile Layout Fix
 
 ### Cambios
 
@@ -34,7 +57,7 @@
 - Evitado desbordamiento horizontal en móvil.
 - Ajustado selector ES/EN para que no flote sobre todo el contenido.
 - Ajustada altura máxima del menú/modal en móvil.
-- Actualizada versión/cache a `v1.10.16`.
+- Actualizada versión/cache a `v1.10.17`.
 
 ### No se ha tocado
 
@@ -49,7 +72,7 @@
 - Estadísticas.
 
 
-## v1.10.16 — Menu & Home Hierarchy Polish
+## v1.10.17 — Menu & Home Hierarchy Polish
 
 ### UI/UX
 
@@ -71,7 +94,7 @@
 - Zaraz/event tracking.
 
 
-## v1.10.13 — Home Support Dedup
+## v1.10.17 — Home Support Dedup
 
 ### UI/UX
 
@@ -91,7 +114,7 @@
 - Zaraz/event tracking.
 
 
-## v1.10.12 — Project Audit Fixes
+## v1.10.17 — Project Audit Fixes
 
 ### Frontend
 
@@ -118,17 +141,17 @@
 - Añadidos `sw.js` y `site.webmanifest`.
 
 
-## v1.10.11_ESTABLE_VIBRATION_OK
+## v1.10.17_ESTABLE_VIBRATION_OK
 
 ### Estado
 
 - Congelada como versión estable tras validación manual.
 - Confirmado que la vibración física solo ocurre en gol y penalti fallado.
-- Confirmado cache busting `game.js?v=1.10.11` y `style.css?v=1.10.11`.
+- Confirmado cache busting `game.js?v=1.10.17` y `style.css?v=1.10.17`.
 
 ### No se ha tocado
 
-- Código funcional respecto a `v1.10.11`.
+- Código funcional respecto a `v1.10.17`.
 - Reglas.
 - Marcador.
 - Máquina.
@@ -138,7 +161,7 @@
 - Footer/copyright.
 
 
-## v1.10.11 — Strict Physical Vibration Gate
+## v1.10.17 — Strict Physical Vibration Gate
 
 ### Correcciones
 
@@ -155,7 +178,7 @@
 - Tarjetas no vibran.
 - Descanso/final no vibra.
 - Eliminada animación de fallo normal.
-- Añadido cache busting `game.js?v=1.10.11` y `style.css?v=1.10.11`.
+- Añadido cache busting `game.js?v=1.10.17` y `style.css?v=1.10.17`.
 
 ### No se ha tocado
 
@@ -167,7 +190,7 @@
 - Zaraz/tracking de eventos.
 
 
-## v1.10.10 — Vibration Strict Fix
+## v1.10.17 — Vibration Strict Fix
 
 ### Correcciones
 
@@ -189,7 +212,7 @@
 - Zaraz/tracking de eventos.
 
 
-## v1.10.9 — Haptics Tuning
+## v1.10.17 — Haptics Tuning
 
 ### Cambios
 
@@ -209,7 +232,7 @@
 - Zaraz/tracking de eventos.
 
 
-## v1.10.8 — Sound & Haptics Polish
+## v1.10.17 — Sound & Haptics Polish
 
 ### Mejoras
 
@@ -230,7 +253,7 @@
 - Zaraz/tracking de eventos.
 
 
-## v1.10.7_ESTABLE_MACHINE_SPECIAL_OK
+## v1.10.17_ESTABLE_MACHINE_SPECIAL_OK
 
 ### Estado
 
@@ -245,7 +268,7 @@ Esta versión queda como base estable para futuras modificaciones.
 
 ### No se ha tocado
 
-- Código funcional respecto a `v1.10.7`.
+- Código funcional respecto a `v1.10.17`.
 - Reglas.
 - Marcador.
 - Sonidos.
@@ -253,7 +276,7 @@ Esta versión queda como base estable para futuras modificaciones.
 - Footer/copyright.
 
 
-## v1.10.7 — Machine Special Direct Resolve
+## v1.10.17 — Machine Special Direct Resolve
 
 ### Correcciones
 
@@ -276,7 +299,7 @@ Esta versión queda como base estable para futuras modificaciones.
 - Zaraz/tracking de eventos.
 
 
-## v1.10.6 — Machine Special Flow Fix
+## v1.10.17 — Machine Special Flow Fix
 
 ### Correcciones
 
@@ -299,7 +322,7 @@ Esta versión queda como base estable para futuras modificaciones.
 - Zaraz/tracking de eventos.
 
 
-## v1.10.5 — Machine Special Autoshot Fix
+## v1.10.17 — Machine Special Autoshot Fix
 
 ### Correcciones
 
@@ -320,7 +343,7 @@ Esta versión queda como base estable para futuras modificaciones.
 - Zaraz/tracking de eventos.
 
 
-## v1.10.4 — Machine Special Lock Fix
+## v1.10.17 — Machine Special Lock Fix
 
 ### Correcciones
 
@@ -338,11 +361,11 @@ Esta versión queda como base estable para futuras modificaciones.
 - Modo clásico.
 - Estadísticas.
 - Historial.
-- Sonidos/feedback visual de v1.10.3.
+- Sonidos/feedback visual de v1.10.17.
 - Zaraz/tracking de eventos.
 
 
-## v1.10.3 — Goal & Penalty Feedback
+## v1.10.17 — Goal & Penalty Feedback
 
 ### Cambios
 
@@ -365,14 +388,14 @@ Esta versión queda como base estable para futuras modificaciones.
 - Tracking de eventos/Zaraz.
 
 
-## v1.10.2 — Stability Rollback
+## v1.10.17 — Stability Rollback
 
 ### Cambios
 
-- Rollback a la base estable `v1.10.0 CSS Refactor`.
-- Retirada la capa de eventos de juego introducida en `v1.10.1`.
+- Rollback a la base estable `v1.10.17 CSS Refactor`.
+- Retirada la capa de eventos de juego introducida en `v1.10.17`.
 - Mantenido Cloudflare Web Analytics básico.
-- Actualizada versión a `v1.10.2`.
+- Actualizada versión a `v1.10.17`.
 
 ### Motivo
 
@@ -390,7 +413,7 @@ Se detectó bloqueo de la web durante partida tras añadir tracking de eventos.
 - START/STOP.
 
 
-## v1.10.0 — CSS Refactor
+## v1.10.17 — CSS Refactor
 
 ### Cambios
 
@@ -399,7 +422,7 @@ Se detectó bloqueo de la web durante partida tras añadir tracking de eventos.
 - Añadido encabezado técnico único con mapa funcional del CSS.
 - Normalizado espaciado general del CSS.
 - Añadido `CSS_AUDIT_v1_10_0.md`.
-- Actualizada versión visible a `v1.10.0`.
+- Actualizada versión visible a `v1.10.17`.
 
 ### No se ha tocado
 

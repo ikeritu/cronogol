@@ -1,4 +1,4 @@
-# CronoGol v1.10.0 — CSS Audit
+# CronoGol v1.10.17 — CSS Audit
 
 ## Objetivo
 
@@ -16,7 +16,7 @@ No se ha realizado un reordenamiento agresivo por módulos porque el archivo acu
 - Añadido encabezado técnico único con mapa funcional.
 - Normalizado espaciado general.
 - Mantenida la cascada original.
-- Actualizada versión a `v1.10.0`.
+- Actualizada versión a `v1.10.17`.
 - Limpieza del `data-i18n` duplicado en `ÚLTIMA TIRADA` si estaba presente.
 - Documentación de versión actualizada.
 

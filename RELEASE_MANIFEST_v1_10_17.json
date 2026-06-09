@@ -1,0 +1,30 @@
+{
+  "project": "CronoGol",
+  "version": "1.10.17",
+  "release_name": "Flatten Secondary Actions",
+  "base_version": "1.10.16 Secondary Actions Fix",
+  "logic_changed": false,
+  "html_changed": true,
+  "css_changed": true,
+  "root_cause": "Nested setup-action-group wrappers prevented direct [data-slot] CSS rules from targeting buttons",
+  "setup_action_group_wrappers_remaining_in_index": false,
+  "direct_data_slots": [
+    "rules",
+    "modes",
+    "history",
+    "share",
+    "copy",
+    "feedback",
+    "support"
+  ],
+  "node_check": {
+    "game.js": {
+      "status": "ok",
+      "output": ""
+    },
+    "sw.js": {
+      "status": "ok",
+      "output": ""
+    }
+  }
+}
