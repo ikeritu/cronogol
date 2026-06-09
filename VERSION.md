@@ -1,13 +1,12 @@
 # VERSION
 
-Current version: v1.10.6
-Release name: Machine Special Flow Fix
-Base version: v1.10.5 Machine Special Autoshot Fix
+Current version: v1.10.7
+Release name: Machine Special Direct Resolve
+Base version: v1.10.6 Machine Special Flow Fix
 Status: Stable candidate
 Primary URL: https://cronogol.es/
 
 Notes:
-- Fixes full machine penalty/free-kick special flow.
-- Adds machine special forced value and delay functions.
-- Removes button-dependent machine special flow.
+- Fully decouples machine penalty/free-kick from user buttons.
+- Adds direct machine special resolver.
 - Keeps event tracking removed.

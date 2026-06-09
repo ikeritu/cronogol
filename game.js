@@ -537,25 +537,130 @@ function evaluateThrow(v){
   return {type:"miss",msg:"FALLO",cls:"neutral"};
 }
 function applyNormalResult(v,r){
-  const p=currentPlayer(); setEvent(r.msg,`${p.name} sacó ${pad(v)} → ${r.msg}`,r.cls); addLog(`${clockSec()}  ${p.name} — ${pad(v)} — ${r.msg}`); playSound(r.type); triggerScreenFeedback(r.type);
-  if(r.type==="goal"){ p.goals++; gameState.stats.goals++; vibrate([90,40,90]); if(isFastMode() && hasFastModeWinner()){ endMatch(); } else { switchTurn(); } }
-  else if(r.type==="post"||r.type==="crossbar"){ gameState.stats.woodwork++; vibrate([50,30,50]); messageLabel.textContent+=". Repite."; }
-  else if(r.type==="half_time"){ if(gameState.half===1) showHalfTime(); else switchTurn(); }
-  else if(r.type==="yellow"){ p.skipTurns++; gameState.stats.cards++; vibrate([120]); switchTurn(); }
-  else if(r.type==="red"){ p.skipTurns+=2; gameState.stats.cards++; vibrate([160,60,160]); switchTurn(); }
-  else if(r.type==="full_time"){ endMatch(); }
-  else if(r.special){ gameState.stats.specials++; if(r.special==="free_kick")gameState.stats.freeKicks++; if(r.special==="penalty")gameState.stats.penalties++; pendingSpecial=r.special; specialPanel.classList.remove("hidden"); specialLabel.textContent=r.special==="free_kick"?`${p.name}: 00-20 es gol.`:`${p.name}: par es gol.`; mainActionBtn.disabled=true; vibrate([80,40,80]); maybeMachineSpecialTurn(); }
-  else { gameState.stats.misses++; switchTurn(); }
-  updateUI(); if(!gameState.matchEnded&&!pendingSpecial&&!penaltyShootout) maybeMachineTurn();
+  const p = currentPlayer();
+  setEvent(r.msg, `${p.name} sacó ${pad(v)} → ${r.msg}`, r.cls);
+  addLog(`${clockSec()}  ${p.name} — ${pad(v)} — ${r.msg}`);
+  playSound(r.type);
+  triggerScreenFeedback(r.type);
+
+  if(r.type === "goal"){
+    p.goals++;
+    gameState.stats.goals++;
+    vibrate([90,40,90]);
+    if(isFastMode() && hasFastModeWinner()){
+      endMatch();
+    } else {
+      switchTurn();
+    }
+  }
+  else if(r.type === "post" || r.type === "crossbar"){
+    gameState.stats.woodwork++;
+    vibrate([50,30,50]);
+    messageLabel.textContent += ". Repite.";
+  }
+  else if(r.type === "half_time"){
+    if(gameState.half === 1) showHalfTime();
+    else switchTurn();
+  }
+  else if(r.type === "yellow"){
+    p.skipTurns++;
+    gameState.stats.cards++;
+    vibrate([120]);
+    switchTurn();
+  }
+  else if(r.type === "red"){
+    p.skipTurns += 2;
+    gameState.stats.cards++;
+    vibrate([160,60,160]);
+    switchTurn();
+  }
+  else if(r.type === "full_time"){
+    endMatch();
+  }
+  else if(r.special){
+    gameState.stats.specials++;
+    if(r.special === "free_kick") gameState.stats.freeKicks++;
+    if(r.special === "penalty") gameState.stats.penalties++;
+
+    pendingSpecial = r.special;
+    specialPanel.classList.remove("hidden");
+    specialStartBtn.textContent = "TIRADA ESPECIAL";
+    specialLabel.textContent =
+      r.special === "free_kick"
+        ? `${p.name}: 00-20 es gol.`
+        : `${p.name}: par es gol.`;
+
+    mainActionBtn.disabled = true;
+    specialStartBtn.disabled = true;
+    vibrate([80,40,80]);
+
+    updateUI();
+    syncActionControls();
+
+    if(
+      gameState.gameMode === "machine" &&
+      gameState.currentPlayerIndex === 1 &&
+      !gameState.matchEnded
+    ){
+      resolveMachineSpecialDirectly();
+    }
+    return;
+  }
+  else {
+    gameState.stats.misses++;
+    switchTurn();
+  }
+
+  updateUI();
+  syncActionControls();
+
+  if(!gameState.matchEnded && !pendingSpecial && !penaltyShootout){
+    maybeMachineTurn();
+  }
 }
 function handleSpecialButton(){ if(!pendingSpecial) return; if(gameState.gameMode==="machine" && gameState.currentPlayerIndex===1) return; if(!gameState.isRunning){ startTimer(); specialStartBtn.textContent="STOP ESPECIAL"; } else { stopTimer(); evaluateSpecialThrow(getLastTwoDigits(currentElapsedMs)); } }
 function evaluateSpecialThrow(v){
-  const p=currentPlayer(); let goal=false,msg="";
-  if(pendingSpecial==="free_kick"){ goal=v>=0&&v<=20; msg=goal?"GOL DE FALTA":"FALTA FALLADA"; }
-  if(pendingSpecial==="penalty"){ goal=v%2===0; msg=goal?"GOL DE PENALTI":"PENALTI FALLADO"; }
-  if(goal){ p.goals++; gameState.stats.goals++; } else gameState.stats.misses++;
-  setEvent(msg,`${pad(v)} → ${msg}`,goal?"goal":"neutral"); addLog(`${clockSec()}  ${p.name} — ${pad(v)} — ${msg}`); const finishedSpecial=pendingSpecial; playSound(goal?"goal":(finishedSpecial==="penalty"?"penalty_fail":"miss")); triggerScreenFeedback(goal?"goal":finishedSpecial); vibrate(goal?[120,50,120]:[45]); pendingSpecial=null; specialPanel.classList.add("hidden"); specialStartBtn.textContent="TIRADA ESPECIAL";
-if(isFastMode() && goal && hasFastModeWinner()){ endMatch(); } else { switchTurn(); updateUI(); maybeMachineTurn(); }
+  const p = currentPlayer();
+  const specialType = pendingSpecial;
+  let goal = false;
+  let msg = "";
+
+  if(specialType === "free_kick"){
+    goal = v >= 0 && v <= 20;
+    msg = goal ? "GOL DE FALTA" : "FALTA FALLADA";
+  }
+
+  if(specialType === "penalty"){
+    goal = v % 2 === 0;
+    msg = goal ? "GOL DE PENALTI" : "PENALTI FALLADO";
+  }
+
+  if(goal){
+    p.goals++;
+    gameState.stats.goals++;
+  } else {
+    gameState.stats.misses++;
+  }
+
+  setEvent(msg, `${pad(v)} → ${msg}`, goal ? "goal" : "neutral");
+  addLog(`${clockSec()}  ${p.name} — ${pad(v)} — ${msg}`);
+  playSound(goal ? "goal" : (specialType === "penalty" ? "penalty_fail" : "miss"));
+  triggerScreenFeedback(goal ? "goal" : specialType);
+  vibrate(goal ? [120,50,120] : [45]);
+
+  pendingSpecial = null;
+  specialPanel.classList.add("hidden");
+  specialStartBtn.textContent = "TIRADA ESPECIAL";
+  resetMainTimerVisualState();
+
+  if(isFastMode() && goal && hasFastModeWinner()){
+    endMatch();
+  } else {
+    switchTurn();
+    updateUI();
+    syncActionControls();
+    maybeMachineTurn();
+  }
 
   syncActionControls();
 }
@@ -571,9 +676,9 @@ function switchTurn(){ gameState.currentPlayerIndex=gameState.currentPlayerIndex
 function processSkippedTurns(){ let safe=0; while(currentPlayer().skipTurns>0&&safe<4){ const p=currentPlayer(); p.skipTurns--; addLog(`${clockSec()}  ${p.name} pierde turno por sanción`); gameState.currentPlayerIndex=gameState.currentPlayerIndex===0?1:0; safe++; } }
 
 function getMachineSpecialStopDelay(){
-  if(gameState.machineLevel === "easy") return randomInt(650, 1500);
-  if(gameState.machineLevel === "hard") return randomInt(900, 2400);
-  return randomInt(750, 1900);
+  if(gameState.machineLevel === "easy") return randomInt(700, 1300);
+  if(gameState.machineLevel === "hard") return randomInt(900, 1700);
+  return randomInt(800, 1500);
 }
 
 function pickMachineSpecialValue(values){
@@ -595,7 +700,8 @@ function getMachineSpecialForcedValue(type){
       else odds.push(i);
     }
 
-    return pickMachineSpecialValue(wantsGoal ? evens : odds);
+    const pool = wantsGoal ? evens : odds;
+    return pool[randomInt(0, pool.length - 1)];
   }
 
   if(type === "free_kick"){
@@ -617,7 +723,17 @@ function setMachineSpecialStatus(text){
   }catch(e){}
 }
 
-function maybeMachineSpecialTurn(){
+function resetMainTimerVisualState(){
+  try{
+    clearInterval(timerInterval);
+    timerInterval = null;
+    gameState.isRunning = false;
+    mainActionBtn.textContent = "START";
+    mainActionBtn.classList.remove("stop");
+  }catch(e){}
+}
+
+function resolveMachineSpecialDirectly(){
   clearTimeout(machineSpecialTurnTimeout);
   clearTimeout(machineSpecialStopTimeout);
 
@@ -633,16 +749,20 @@ function maybeMachineSpecialTurn(){
     return;
   }
 
+  // Estado seguro: el humano no puede interactuar y la IA no depende de botones.
+  resetMainTimerVisualState();
   mainActionBtn.disabled = true;
   specialStartBtn.disabled = true;
   setMachineSpecialStatus("MÁQUINA...");
+
+  const specialTypeAtStart = pendingSpecial;
 
   machineSpecialTurnTimeout = setTimeout(() => {
     if(
       gameState.gameMode !== "machine" ||
       gameState.currentPlayerIndex !== 1 ||
       gameState.matchEnded ||
-      !pendingSpecial ||
+      pendingSpecial !== specialTypeAtStart ||
       penaltyShootout ||
       !gameScreen.classList.contains("active")
     ){
@@ -651,15 +771,15 @@ function maybeMachineSpecialTurn(){
     }
 
     setMachineSpecialStatus("DISPARO");
-    playSound(pendingSpecial === "penalty" ? "penalty" : "free_kick");
-    triggerScreenFeedback(pendingSpecial);
+    playSound(specialTypeAtStart === "penalty" ? "penalty" : "free_kick");
+    triggerScreenFeedback(specialTypeAtStart);
 
     machineSpecialStopTimeout = setTimeout(() => {
       if(
         gameState.gameMode !== "machine" ||
         gameState.currentPlayerIndex !== 1 ||
         gameState.matchEnded ||
-        !pendingSpecial ||
+        pendingSpecial !== specialTypeAtStart ||
         penaltyShootout ||
         !gameScreen.classList.contains("active")
       ){
@@ -667,30 +787,19 @@ function maybeMachineSpecialTurn(){
         return;
       }
 
-      const specialType = pendingSpecial;
-      const value = getMachineSpecialForcedValue(specialType);
-
+      const value = getMachineSpecialForcedValue(specialTypeAtStart);
       currentElapsedMs = value * 10;
+      stopwatchBaseMs = currentElapsedMs;
+      updateTimerDisplay(currentElapsedMs);
       lastTwoDisplay.textContent = pad(value);
 
       evaluateSpecialThrow(value);
-
-      setMachineSpecialStatus("TIRADA ESPECIAL");
-      updateUI();
-      syncActionControls();
-
-      if(
-        !gameState.matchEnded &&
-        !pendingSpecial &&
-        gameState.gameMode === "machine" &&
-        gameState.currentPlayerIndex === 1 &&
-        !penaltyShootout &&
-        gameScreen.classList.contains("active")
-      ){
-        maybeMachineTurn();
-      }
     }, getMachineSpecialStopDelay());
-  }, randomInt(500,1000));
+  }, randomInt(500, 950));
+}
+
+function maybeMachineSpecialTurn(){
+  resolveMachineSpecialDirectly();
 }
 
 
@@ -1478,7 +1587,7 @@ function showSupportModal(){
 }
 
 
-/* ===== CronoGol v1.10.6: game feel improvements ===== */
+/* ===== CronoGol v1.10.7: game feel improvements ===== */
 /* No modifica reglas, turnos, START/STOP ni lógica base del partido. */
 
 function machineDifficultyText(){

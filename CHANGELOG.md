@@ -1,5 +1,28 @@
 # CHANGELOG
 
+## v1.10.7 — Machine Special Direct Resolve
+
+### Correcciones
+
+- Corregido el caso en que la máquina obtiene penalti/falta y no ejecuta la tirada especial.
+- Añadida función `resolveMachineSpecialDirectly()`.
+- La especial de máquina queda desacoplada de botones y cronómetro manual.
+- `applyNormalResult()` actualiza UI antes de programar especial automática.
+- `evaluateSpecialThrow()` limpia panel, botones y turno de forma centralizada.
+- Añadida función `resetMainTimerVisualState()` para evitar quedarse en STOP.
+
+### No se ha tocado
+
+- Reglas.
+- Marcador.
+- Modo rápido.
+- Modo clásico.
+- Estadísticas.
+- Historial.
+- Sonidos/feedback visual.
+- Zaraz/tracking de eventos.
+
+
 ## v1.10.6 — Machine Special Flow Fix
 
 ### Correcciones

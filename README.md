@@ -1,4 +1,4 @@
-# CronoGol v1.10.6 — Machine Special Flow Fix
+# CronoGol v1.10.7 — Machine Special Direct Resolve
 
 ## Objetivo
 
@@ -234,5 +234,26 @@ Corrige los 6 errores detectados:
 6. Añade estado visual durante la especial de máquina: `MÁQUINA...` y `DISPARO`.
 
 No se reintroduce Zaraz ni tracking de eventos.
+
+No se cambian reglas ni marcador.
+
+
+## v1.10.7 — Machine Special Direct Resolve
+
+Esta versión corrige de forma más robusta el penalti/falta de la máquina.
+
+Motivo:
+
+- En versiones anteriores la máquina podía quedarse con el panel especial visible y los botones en STOP/STOP ESPECIAL sin resolver.
+- El problema era que la especial seguía acoplada al flujo de botones/cronómetro manual.
+
+Corrección:
+
+- Nueva función `resolveMachineSpecialDirectly()`.
+- La máquina resuelve penalti/falta sin depender de `START`, `STOP`, `TIRADA ESPECIAL` ni de botones habilitados.
+- `applyNormalResult()` programa la especial de máquina solo después de `updateUI()` y `syncActionControls()`.
+- `evaluateSpecialThrow()` centraliza el cierre de panel especial, cambio de turno y limpieza visual.
+- Se restaura visualmente el botón principal con `resetMainTimerVisualState()`.
+- No se reintroduce Zaraz ni tracking de eventos.
 
 No se cambian reglas ni marcador.
