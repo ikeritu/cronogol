@@ -1,16 +1,20 @@
 {
   "project": "CronoGol",
   "version": "1.10.6",
-  "release_name": "Machine Fast Penalty + GA4 Fix",
-  "base_version": "1.10.5 Native GA4 Tracking",
+  "release_name": "Machine Special Flow Fix",
+  "base_version": "1.10.5 Machine Special Autoshot Fix",
   "logic_changed": true,
-  "game_rules_changed": false,
+  "scope": "machine special flow only",
+  "event_tracking_removed": true,
   "fixes": [
-    "Capture-phase blocking for machine special throws",
-    "Keyboard blocking for machine special throws",
-    "Observer keeps START locked during machine penalty/free kick",
-    "Direct click-based GA4 fallback events"
+    "getMachineSpecialForcedValue added",
+    "getMachineSpecialStopDelay added",
+    "maybeMachineSpecialTurn no longer depends on user buttons",
+    "evaluateSpecialThrow unconditional unlock removed",
+    "syncActionControls centralizes controls",
+    "machine special visual status added"
   ],
+  "missing_refs": [],
   "node_check": {
     "game.js": {
       "status": "ok",
@@ -21,13 +25,8 @@
     "CHANGELOG.md",
     "CNAME",
     "CSS_AUDIT_v1_10_0.md",
-    "QA_CHECKLIST_v1_10_3.md",
-    "QA_CHECKLIST_v1_10_4.md",
-    "QA_CHECKLIST_v1_10_5.md",
-    "QA_CHECKLIST_v1_10_6.md",
     "README.md",
     "RELEASE_MANIFEST_v1_10_0.json",
-    "RELEASE_MANIFEST_v1_10_1.json",
     "RELEASE_MANIFEST_v1_10_2.json",
     "RELEASE_MANIFEST_v1_10_3.json",
     "RELEASE_MANIFEST_v1_10_4.json",

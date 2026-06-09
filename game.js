@@ -554,7 +554,10 @@ function evaluateSpecialThrow(v){
   if(pendingSpecial==="free_kick"){ goal=v>=0&&v<=20; msg=goal?"GOL DE FALTA":"FALTA FALLADA"; }
   if(pendingSpecial==="penalty"){ goal=v%2===0; msg=goal?"GOL DE PENALTI":"PENALTI FALLADO"; }
   if(goal){ p.goals++; gameState.stats.goals++; } else gameState.stats.misses++;
-  setEvent(msg,`${pad(v)} → ${msg}`,goal?"goal":"neutral"); addLog(`${clockSec()}  ${p.name} — ${pad(v)} — ${msg}`); const finishedSpecial=pendingSpecial; playSound(goal?"goal":(finishedSpecial==="penalty"?"penalty_fail":"miss")); triggerScreenFeedback(goal?"goal":finishedSpecial); vibrate(goal?[120,50,120]:[45]); pendingSpecial=null; specialPanel.classList.add("hidden"); specialStartBtn.textContent="TIRADA ESPECIAL"; mainActionBtn.disabled=false; specialStartBtn.disabled=false; if(isFastMode() && goal && hasFastModeWinner()){ endMatch(); } else { switchTurn(); updateUI(); maybeMachineTurn(); }
+  setEvent(msg,`${pad(v)} → ${msg}`,goal?"goal":"neutral"); addLog(`${clockSec()}  ${p.name} — ${pad(v)} — ${msg}`); const finishedSpecial=pendingSpecial; playSound(goal?"goal":(finishedSpecial==="penalty"?"penalty_fail":"miss")); triggerScreenFeedback(goal?"goal":finishedSpecial); vibrate(goal?[120,50,120]:[45]); pendingSpecial=null; specialPanel.classList.add("hidden"); specialStartBtn.textContent="TIRADA ESPECIAL";
+if(isFastMode() && goal && hasFastModeWinner()){ endMatch(); } else { switchTurn(); updateUI(); maybeMachineTurn(); }
+
+  syncActionControls();
 }
 function showHalfTime(){ gameState.half=2; currentElapsedMs=0; stopwatchBaseMs=0; timerDisplay.textContent="00:00:00"; lastTwoDisplay.textContent="--"; switchTurn(); showModal("DESCANSO",scoreText(),"<p>Se resetea el cronómetro y comienza la segunda parte.</p>",[{text:"CONTINUAR",action:()=>{closeModal();maybeMachineTurn();}}]); }
 function endMatch(){ gameState.matchEnded=true; clearInterval(matchClockInterval); if(gameState.isRunning) stopTimer(); if(gameState.players[0].goals===gameState.players[1].goals){ showModal("FINAL",`${scoreText()}. Empate.`,finalHtml(),[{text:"IR A PENALTIS",action:startPenaltyShootout},{text:"TERMINAR EN EMPATE",action:()=>showFinal(false)}]); } else showFinal(false); }
@@ -566,6 +569,53 @@ function finalHtml(){ return `<div class="donation-item"><strong>Resumen</strong
 function restartSameMatch(){ closeModal(); player1Input.value=gameState.players[0].name; player2Input.value=gameState.players[1].name; startMatch(); }
 function switchTurn(){ gameState.currentPlayerIndex=gameState.currentPlayerIndex===0?1:0; processSkippedTurns(); }
 function processSkippedTurns(){ let safe=0; while(currentPlayer().skipTurns>0&&safe<4){ const p=currentPlayer(); p.skipTurns--; addLog(`${clockSec()}  ${p.name} pierde turno por sanción`); gameState.currentPlayerIndex=gameState.currentPlayerIndex===0?1:0; safe++; } }
+
+function getMachineSpecialStopDelay(){
+  if(gameState.machineLevel === "easy") return randomInt(650, 1500);
+  if(gameState.machineLevel === "hard") return randomInt(900, 2400);
+  return randomInt(750, 1900);
+}
+
+function pickMachineSpecialValue(values){
+  return values[randomInt(0, values.length - 1)];
+}
+
+function getMachineSpecialForcedValue(type){
+  if(type === "penalty"){
+    const goalChance =
+      gameState.machineLevel === "easy" ? 0.55 :
+      gameState.machineLevel === "hard" ? 0.75 :
+      0.65;
+
+    const wantsGoal = Math.random() < goalChance;
+    const evens = [];
+    const odds = [];
+    for(let i = 0; i <= 99; i++){
+      if(i % 2 === 0) evens.push(i);
+      else odds.push(i);
+    }
+
+    return pickMachineSpecialValue(wantsGoal ? evens : odds);
+  }
+
+  if(type === "free_kick"){
+    const goalChance =
+      gameState.machineLevel === "easy" ? 0.35 :
+      gameState.machineLevel === "hard" ? 0.58 :
+      0.45;
+
+    if(Math.random() < goalChance) return randomInt(0, 20);
+    return randomInt(21, 99);
+  }
+
+  return randomInt(0, 99);
+}
+
+function setMachineSpecialStatus(text){
+  try{
+    if(specialStartBtn) specialStartBtn.textContent = text;
+  }catch(e){}
+}
 
 function maybeMachineSpecialTurn(){
   clearTimeout(machineSpecialTurnTimeout);
@@ -583,9 +633,9 @@ function maybeMachineSpecialTurn(){
     return;
   }
 
-  // Bloquea controles humanos, pero la IA no depende de botones habilitados.
   mainActionBtn.disabled = true;
   specialStartBtn.disabled = true;
+  setMachineSpecialStatus("MÁQUINA...");
 
   machineSpecialTurnTimeout = setTimeout(() => {
     if(
@@ -600,12 +650,9 @@ function maybeMachineSpecialTurn(){
       return;
     }
 
-    // v1.10.5:
-    // En el código actual no existe startSpecialTimer().
-    // La tirada especial comparte el cronómetro principal usando startTimer()/stopTimer().
-    // Como el botón visible está bloqueado para el usuario, la máquina debe ejecutar esto por código.
-    startTimer();
-    specialStartBtn.textContent = "STOP ESPECIAL";
+    setMachineSpecialStatus("DISPARO");
+    playSound(pendingSpecial === "penalty" ? "penalty" : "free_kick");
+    triggerScreenFeedback(pendingSpecial);
 
     machineSpecialStopTimeout = setTimeout(() => {
       if(
@@ -616,18 +663,20 @@ function maybeMachineSpecialTurn(){
         penaltyShootout ||
         !gameScreen.classList.contains("active")
       ){
-        if(gameState.isRunning) stopTimer();
         syncActionControls();
         return;
       }
 
-      const value = getMachineSpecialForcedValue(pendingSpecial);
-      stopTimer();
+      const specialType = pendingSpecial;
+      const value = getMachineSpecialForcedValue(specialType);
+
+      currentElapsedMs = value * 10;
       lastTwoDisplay.textContent = pad(value);
+
       evaluateSpecialThrow(value);
 
-      // evaluateSpecialThrow puede activar/desactivar botones internamente.
-      // Forzamos el estado correcto después.
+      setMachineSpecialStatus("TIRADA ESPECIAL");
+      updateUI();
       syncActionControls();
 
       if(
@@ -646,15 +695,16 @@ function maybeMachineSpecialTurn(){
 
 
 function syncActionControls(){
-  const machineTurn =
-    gameState.gameMode === "machine" &&
-    gameState.currentPlayerIndex === 1 &&
-    !gameState.matchEnded;
-
   const gameActive =
     gameScreen &&
     gameScreen.classList &&
     gameScreen.classList.contains("active");
+
+  const machineTurn =
+    gameState.gameMode === "machine" &&
+    gameState.currentPlayerIndex === 1 &&
+    !gameState.matchEnded &&
+    gameActive;
 
   const shouldDisableMain =
     gameState.matchEnded ||
@@ -716,22 +766,23 @@ function maybeMachineTurn(){
         penaltyShootout ||
         !gameScreen.classList.contains("active")
       ){
+        if(gameState.isRunning) stopTimer();
         syncActionControls();
         return;
       }
 
       stopTimerAndEvaluate(getMachineForcedValue());
 
-      // IMPORTANTE:
-      // stopTimerAndEvaluate puede crear pendingSpecial (penalti/falta).
-      // No se desbloquean controles de forma incondicional.
+      updateUI();
       syncActionControls();
 
       if(
         !gameState.matchEnded &&
         pendingSpecial &&
         gameState.gameMode === "machine" &&
-        gameState.currentPlayerIndex === 1
+        gameState.currentPlayerIndex === 1 &&
+        !penaltyShootout &&
+        gameScreen.classList.contains("active")
       ){
         maybeMachineSpecialTurn();
       }
@@ -1427,7 +1478,7 @@ function showSupportModal(){
 }
 
 
-/* ===== CronoGol v1.10.5: game feel improvements ===== */
+/* ===== CronoGol v1.10.6: game feel improvements ===== */
 /* No modifica reglas, turnos, START/STOP ni lógica base del partido. */
 
 function machineDifficultyText(){

@@ -1,5 +1,28 @@
 # CHANGELOG
 
+## v1.10.6 — Machine Special Flow Fix
+
+### Correcciones
+
+- Añadida función `getMachineSpecialForcedValue()`.
+- Añadida función `getMachineSpecialStopDelay()`.
+- Rehecho `maybeMachineSpecialTurn()` para resolver penalti/falta de máquina sin depender de botones.
+- Eliminados desbloqueos incondicionales en `evaluateSpecialThrow()`.
+- Reforzado `syncActionControls()` como control central.
+- Añadido estado visual `MÁQUINA...` / `DISPARO` durante tirada especial automática.
+
+### No se ha tocado
+
+- Reglas.
+- Marcador.
+- Modo rápido.
+- Modo clásico.
+- Estadísticas.
+- Historial.
+- Sonidos/feedback visual.
+- Zaraz/tracking de eventos.
+
+
 ## v1.10.5 — Machine Special Autoshot Fix
 
 ### Correcciones

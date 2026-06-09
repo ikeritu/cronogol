@@ -1,4 +1,4 @@
-# CronoGol v1.10.5 — Machine Special Autoshot Fix
+# CronoGol v1.10.6 — Machine Special Flow Fix
 
 ## Objetivo
 
@@ -216,5 +216,23 @@ Corrección:
 - La máquina ejecuta el disparo especial por código.
 - Se mantiene `syncActionControls()` después de la tirada.
 - No se reintroduce Zaraz ni tracking de eventos.
+
+No se cambian reglas ni marcador.
+
+
+## v1.10.6 — Machine Special Flow Fix
+
+Esta versión corrige de forma completa el flujo automático de penalti/falta de la máquina.
+
+Corrige los 6 errores detectados:
+
+1. Crea `getMachineSpecialForcedValue()`.
+2. Crea `getMachineSpecialStopDelay()`.
+3. Rehace `maybeMachineSpecialTurn()` sin depender de botones ni de `startTimer()/stopTimer()`.
+4. Evita desbloqueos manuales peligrosos en `evaluateSpecialThrow()`.
+5. Mantiene `syncActionControls()` como autoridad del estado de botones.
+6. Añade estado visual durante la especial de máquina: `MÁQUINA...` y `DISPARO`.
+
+No se reintroduce Zaraz ni tracking de eventos.
 
 No se cambian reglas ni marcador.
