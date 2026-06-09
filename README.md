@@ -1,4 +1,4 @@
-# CronoGol v1.10.3 — Goal & Penalty Feedback
+# CronoGol v1.10.4 — Machine Special Lock Fix
 
 ## Objetivo
 
@@ -175,3 +175,26 @@ Cambios:
 - No se reintroduce Zaraz ni Game Event Tracking.
 
 No se toca la lógica del juego.
+
+
+## v1.10.4 — Machine Special Lock Fix
+
+Esta versión parte de `v1.10.3 Goal & Penalty Feedback`.
+
+Objetivo:
+
+- Corregir el bloqueo del botón START/STOP cuando la máquina obtiene penalti o falta.
+- Evitar desbloqueos incondicionales después de tiradas automáticas de la máquina.
+- Guardar y cancelar correctamente los timeouts de la máquina.
+- Añadir una función central `syncActionControls()` para mantener coherente el estado de los controles.
+
+Cambios:
+
+- `maybeMachineTurn()` ya no reactiva controles si `pendingSpecial` queda activo.
+- `maybeMachineSpecialTurn()` ya no reactiva controles de forma incondicional.
+- Los timeouts de máquina se almacenan en `machineTurnTimeout`, `machineStopTimeout`, `machineSpecialTurnTimeout` y `machineSpecialStopTimeout`.
+- Se añaden guardas de pantalla activa, final de partido, tanda de penaltis y turno real.
+- Se mantiene sonido/feedback visual de v1.10.3.
+- No se reintroduce Zaraz ni tracking de eventos.
+
+No se cambian reglas ni comportamiento de marcador.

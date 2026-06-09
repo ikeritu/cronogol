@@ -2,16 +2,16 @@
   "project": "CronoGol",
   "version": "1.10.4",
   "release_name": "Machine Special Lock Fix",
-  "base_version": "1.10.3 Stability Hotfix",
-  "status": "stable_candidate",
-  "primary_url": "https://cronogol.es/",
+  "base_version": "1.10.3 Goal & Penalty Feedback",
   "logic_changed": true,
-  "game_rules_changed": false,
+  "scope": "machine control lock only",
+  "event_tracking_removed": true,
   "fixes": [
-    "User cannot press START during machine penalty/free kick",
-    "maybeMachineTurn does not re-enable controls when pendingSpecial is created",
-    "machine timers stored in machineTurnTimeout/machineStopTimeout",
-    "handleMainAction blocks machine turns"
+    "machine penalty/free-kick keeps main action disabled",
+    "machine timers are stored and cleared",
+    "no unconditional unlock after machine normal turn",
+    "no unconditional unlock after machine special turn",
+    "syncActionControls centralizes button disabled state"
   ],
   "node_check": {
     "game.js": {
@@ -23,11 +23,8 @@
     "CHANGELOG.md",
     "CNAME",
     "CSS_AUDIT_v1_10_0.md",
-    "QA_CHECKLIST_v1_10_3.md",
-    "QA_CHECKLIST_v1_10_4.md",
     "README.md",
     "RELEASE_MANIFEST_v1_10_0.json",
-    "RELEASE_MANIFEST_v1_10_1.json",
     "RELEASE_MANIFEST_v1_10_2.json",
     "RELEASE_MANIFEST_v1_10_3.json",
     "RELEASE_MANIFEST_v1_8_9.json",

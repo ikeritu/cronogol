@@ -482,6 +482,8 @@ function startMatch(){
   setupScreen.classList.remove("active"); gameScreen.classList.add("active"); closeModal(); sideMenu.classList.add("hidden");
   timerDisplay.textContent="00:00:00"; lastTwoDisplay.textContent="--"; setEvent("--", currentLang === "en" ? "Press START to begin." : "Pulsa START para comenzar.","neutral");
   startMatchClock(); updateUI(); addLog("Comienza el partido."); vibrate([30]); maybeMachineTurn();
+
+  syncActionControls();
 }
 
 function handleMainAction(){ if(gameState.matchEnded||pendingSpecial) return; gameState.isRunning ? stopTimerAndEvaluate() : startTimer(); }
@@ -569,41 +571,152 @@ function maybeMachineSpecialTurn(){
   clearTimeout(machineSpecialTurnTimeout);
   clearTimeout(machineSpecialStopTimeout);
 
-  if(gameState.gameMode!=="machine") return;
-  if(gameState.currentPlayerIndex!==1) return;
-  if(!pendingSpecial) return;
-  if(gameState.matchEnded) return;
-  if(!gameScreen.classList.contains("active")) return;
+  if(
+    gameState.gameMode !== "machine" ||
+    gameState.currentPlayerIndex !== 1 ||
+    gameState.matchEnded ||
+    !pendingSpecial ||
+    penaltyShootout ||
+    !gameScreen.classList.contains("active")
+  ){
+    syncActionControls();
+    return;
+  }
 
-  mainActionBtn.disabled=true;
-  specialStartBtn.disabled=true;
+  mainActionBtn.disabled = true;
+  specialStartBtn.disabled = true;
 
-  machineSpecialTurnTimeout=setTimeout(()=>{
-    if(gameState.matchEnded || gameState.gameMode!=="machine" || gameState.currentPlayerIndex!==1 || !pendingSpecial || !gameScreen.classList.contains("active")) return;
+  machineSpecialTurnTimeout = setTimeout(() => {
+    if(
+      gameState.gameMode !== "machine" ||
+      gameState.currentPlayerIndex !== 1 ||
+      gameState.matchEnded ||
+      !pendingSpecial ||
+      penaltyShootout ||
+      !gameScreen.classList.contains("active")
+    ){
+      syncActionControls();
+      return;
+    }
+
+    startSpecialTimer();
+
+    machineSpecialStopTimeout = setTimeout(() => {
+      if(
+        gameState.gameMode !== "machine" ||
+        gameState.currentPlayerIndex !== 1 ||
+        gameState.matchEnded ||
+        !pendingSpecial ||
+        penaltyShootout ||
+        !gameScreen.classList.contains("active")
+      ){
+        syncActionControls();
+        return;
+      }
+
+      const value = getMachineSpecialForcedValue(pendingSpecial);
+      evaluateSpecialThrow(value);
+
+      // evaluateSpecialThrow cambia turno/estado. Sin desbloqueo incondicional.
+      syncActionControls();
+    }, getMachineSpecialStopDelay());
+  }, randomInt(500,1000));
+}
+
+
+function syncActionControls(){
+  const machineTurn =
+    gameState.gameMode === "machine" &&
+    gameState.currentPlayerIndex === 1 &&
+    !gameState.matchEnded;
+
+  const gameActive =
+    gameScreen &&
+    gameScreen.classList &&
+    gameScreen.classList.contains("active");
+
+  const shouldDisableMain =
+    gameState.matchEnded ||
+    Boolean(pendingSpecial) ||
+    Boolean(penaltyShootout) ||
+    machineTurn ||
+    !gameActive;
+
+  const shouldDisableSpecial =
+    gameState.matchEnded ||
+    !Boolean(pendingSpecial) ||
+    machineTurn ||
+    !gameActive;
+
+  mainActionBtn.disabled = shouldDisableMain;
+  specialStartBtn.disabled = shouldDisableSpecial;
+}
+
+function maybeMachineTurn(){
+  clearTimeout(machineTurnTimeout);
+  clearTimeout(machineStopTimeout);
+
+  if(
+    gameState.gameMode !== "machine" ||
+    gameState.currentPlayerIndex !== 1 ||
+    gameState.matchEnded ||
+    pendingSpecial ||
+    penaltyShootout ||
+    !gameScreen.classList.contains("active")
+  ){
+    syncActionControls();
+    return;
+  }
+
+  mainActionBtn.disabled = true;
+  specialStartBtn.disabled = true;
+
+  machineTurnTimeout = setTimeout(() => {
+    if(
+      gameState.gameMode !== "machine" ||
+      gameState.currentPlayerIndex !== 1 ||
+      gameState.matchEnded ||
+      pendingSpecial ||
+      penaltyShootout ||
+      !gameScreen.classList.contains("active")
+    ){
+      syncActionControls();
+      return;
+    }
 
     startTimer();
 
-    machineSpecialStopTimeout=setTimeout(()=>{
-      if(gameState.matchEnded || gameState.gameMode!=="machine" || gameState.currentPlayerIndex!==1 || !pendingSpecial || !gameScreen.classList.contains("active")) return;
-
-      stopTimer();
-
-      let value = getLastTwoDigits(currentElapsedMs);
-
-      if(gameState.machineLevel==="hard"){
-        const roll = Math.random();
-        if(pendingSpecial==="penalty" && roll < 0.58) value = randomInt(0,49) * 2;
-        if(pendingSpecial==="free_kick" && roll < 0.42) value = randomInt(0,20);
+    machineStopTimeout = setTimeout(() => {
+      if(
+        gameState.gameMode !== "machine" ||
+        gameState.currentPlayerIndex !== 1 ||
+        gameState.matchEnded ||
+        pendingSpecial ||
+        penaltyShootout ||
+        !gameScreen.classList.contains("active")
+      ){
+        syncActionControls();
+        return;
       }
 
-      evaluateSpecialThrow(value);
-      mainActionBtn.disabled=false;
-      specialStartBtn.disabled=false;
-    }, getMachineStopDelay());
-  }, randomInt(600,1200));
-}
+      stopTimerAndEvaluate(getMachineForcedValue());
 
-function maybeMachineTurn(){ if(gameState.gameMode!=="machine"||gameState.currentPlayerIndex!==1||gameState.matchEnded||pendingSpecial) return; mainActionBtn.disabled=true; specialStartBtn.disabled=true; setTimeout(()=>{ startTimer(); setTimeout(()=>{ stopTimerAndEvaluate(getMachineForcedValue()); mainActionBtn.disabled=false; specialStartBtn.disabled=false; },getMachineStopDelay()); },randomInt(500,1100)); }
+      // IMPORTANTE:
+      // stopTimerAndEvaluate puede crear pendingSpecial (penalti/falta).
+      // No se desbloquean controles de forma incondicional.
+      syncActionControls();
+
+      if(
+        !gameState.matchEnded &&
+        pendingSpecial &&
+        gameState.gameMode === "machine" &&
+        gameState.currentPlayerIndex === 1
+      ){
+        maybeMachineSpecialTurn();
+      }
+    }, getMachineStopDelay());
+  }, randomInt(500,1100));
+}
 function getMachineStopDelay(){ return gameState.machineLevel==="easy"?randomInt(600,1800):gameState.machineLevel==="hard"?randomInt(900,3200):randomInt(800,2500); }
 function getMachineForcedValue(){ if(isFastMode()) return null; if(gameState.forceEvents){ if(gameState.half===1&&gameState.firstHalfTurns>=gameState.machineForceHalfAt) return 45; if(gameState.half===2&&gameState.secondHalfTurns>=gameState.machineForceEndAt) return 90; } if(gameState.machineLevel==="hard"){ const r=Math.random(); if(r<.025)return 0; if(r<.055)return [96,97,98,99][randomInt(0,3)]; } return null; }
 function startMatchClock(){ clearInterval(matchClockInterval); matchClockInterval=setInterval(()=>{ const sec=Math.floor((Date.now()-matchStartTime)/1000); matchClockLabel.textContent=`${pad(Math.floor(sec/60))}:${pad(sec%60)}`; /* En modo rápido v1.6.1 no hay límite de 5 minutos: gana quien llega a 6 con 2 de ventaja. */ },1000); }
@@ -672,6 +785,8 @@ function showRulesModal(){
     </div>`,
     [{text:"CERRAR",action:closeModal}]
   );
+
+  syncActionControls();
 }
 function showSupportModal(){
   const isEn = currentLang === "en";
@@ -1291,7 +1406,7 @@ function showSupportModal(){
 }
 
 
-/* ===== CronoGol v1.10.3: game feel improvements ===== */
+/* ===== CronoGol v1.10.4: game feel improvements ===== */
 /* No modifica reglas, turnos, START/STOP ni lógica base del partido. */
 
 function machineDifficultyText(){

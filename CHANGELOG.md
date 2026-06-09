@@ -1,5 +1,27 @@
 # CHANGELOG
 
+## v1.10.4 — Machine Special Lock Fix
+
+### Correcciones
+
+- Corregido bug donde el botón START/STOP quedaba activo cuando la máquina obtenía penalti/falta.
+- Eliminado desbloqueo incondicional tras tirada automática de máquina.
+- Eliminado desbloqueo incondicional tras tirada especial automática de máquina.
+- Guardados y limpiados timeouts de máquina.
+- Añadida función central `syncActionControls()`.
+
+### No se ha tocado
+
+- Reglas.
+- Marcador.
+- Modo rápido.
+- Modo clásico.
+- Estadísticas.
+- Historial.
+- Sonidos/feedback visual de v1.10.3.
+- Zaraz/tracking de eventos.
+
+
 ## v1.10.3 — Goal & Penalty Feedback
 
 ### Cambios
