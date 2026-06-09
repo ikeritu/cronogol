@@ -1,6 +1,6 @@
 {
   "project": "CronoGol",
-  "version": "v1.10.14",
+  "version": "v1.10.15",
   "release_name": "Menu & Home Hierarchy Polish",
   "base_version": "v1.10.13 Home Support Dedup",
   "scope": "UI hierarchy polish only",

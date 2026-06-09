@@ -1,6 +1,30 @@
 # CHANGELOG
 
-## v1.10.14 — Menu & Home Hierarchy Polish
+## v1.10.15 — Mobile Layout Fix
+
+### Cambios
+
+- Corregida la distribución responsive de `.setup-links`.
+- Añadido soporte explícito para `.setup-action-group`.
+- Evitado desbordamiento horizontal en móvil.
+- Ajustado selector ES/EN para que no flote sobre todo el contenido.
+- Ajustada altura máxima del menú/modal en móvil.
+- Actualizada versión/cache a `v1.10.15`.
+
+### No se ha tocado
+
+- Lógica del juego.
+- Reglas.
+- Turnos.
+- Máquina.
+- Penalti/falta.
+- Sonidos.
+- Vibración.
+- Historial.
+- Estadísticas.
+
+
+## v1.10.15 — Menu & Home Hierarchy Polish
 
 ### UI/UX
 

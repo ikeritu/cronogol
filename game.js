@@ -273,7 +273,7 @@ function clockSec(){
 
 
 function physicalVibration(event){
-  // v1.10.14 — Strict Physical Vibration Gate
+  // v1.10.15 — Strict Physical Vibration Gate
   // ÚNICO punto permitido para activar vibración física.
   // Norma:
   // - Gol: vibración fuerte
@@ -578,7 +578,7 @@ function startMatch(){
   pendingSpecial=null; penaltyShootout=null; currentElapsedMs=0; stopwatchBaseMs=0; matchStartTime=Date.now();
   setupScreen.classList.remove("active"); gameScreen.classList.add("active"); closeModal(); sideMenu.classList.add("hidden");
   timerDisplay.textContent="00:00:00"; lastTwoDisplay.textContent="--"; setEvent("--", currentLang === "en" ? "Press START to begin." : "Pulsa START para comenzar.","neutral");
-  // v1.10.14: vibración física directa eliminada; usar
+  // v1.10.15: vibración física directa eliminada; usar
 }
 
 function handleMainAction(){ if(gameState.matchEnded||pendingSpecial) return; gameState.isRunning ? stopTimerAndEvaluate() : startTimer(); }
@@ -1848,7 +1848,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-/* ===== CronoGol v1.10.14: Project Audit Fixes =====
+/* ===== CronoGol v1.10.15: Project Audit Fixes =====
    Jefe de proyecto: se aplican correcciones críticas de Frontend + UI/UX
    sin tocar reglas, marcador, máquina, sonidos ni vibración estable.
 */

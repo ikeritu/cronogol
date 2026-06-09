@@ -1,4 +1,4 @@
-# CronoGol v1.10.11 — Strict Physical Vibration Gate
+# CronoGol v1.10.15 — Mobile Layout Fix
 
 ## Objetivo
 
@@ -438,7 +438,7 @@ Ajuste de UX en pantalla de inicio:
 - No se toca juego, reglas, máquina, sonidos, vibración ni analítica.
 
 
-## v1.10.14 — Menu & Home Hierarchy Polish
+## v1.10.15 — Menu & Home Hierarchy Polish
 
 Pulido visual de interfaz sin tocar la lógica del juego.
 
@@ -452,7 +452,7 @@ Cambios:
 - `Reiniciar partido` separado como acción peligrosa.
 - `Apoya CronoGol` baja peso visual en home y menú.
 - Se mantiene la confirmación de reinicio añadida en v1.10.12.
-- Cache busting actualizado a `game.js?v=1.10.14` y `style.css?v=1.10.14`.
+- Cache busting actualizado a `game.js?v=1.10.15` y `style.css?v=1.10.15`.
 
 No se toca:
 
@@ -464,3 +464,26 @@ No se toca:
 - Vibración estricta.
 - Cloudflare Web Analytics.
 - Zaraz/event tracking.
+
+
+## v1.10.15 — Mobile Layout Fix
+
+Esta versión parte de `v1.10.14`.
+
+Objetivo:
+
+- Corregir la maquetación móvil de los botones inferiores de la pantalla inicial.
+- Evitar que `Reglas`, `Modos`, `Compartir`, `Copiar enlace` y `Feedback` se pisen o se salgan del marco.
+- Ajustar el selector ES/EN para que no tape contenido al hacer scroll.
+- Limitar altura del menú/modal en móvil.
+
+No se toca:
+
+- Lógica del juego.
+- Reglas.
+- Máquina.
+- Penalti/falta.
+- Sonidos.
+- Vibración.
+- Historial.
+- Estadísticas.
