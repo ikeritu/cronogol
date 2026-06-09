@@ -1,5 +1,27 @@
 # CHANGELOG
 
+## v1.10.14 — Menu & Home Hierarchy Polish
+
+### UI/UX
+
+- Menú lateral más compacto y jerarquizado.
+- Acción `Reiniciar partido` separada como acción peligrosa.
+- Home organizada en grupos de acciones secundarias.
+- `Apoya CronoGol` queda como CTA suave, no protagonista.
+- Se reduce sensación comercial y saturación visual.
+
+### No se ha tocado
+
+- Reglas.
+- Marcador.
+- Máquina.
+- Penalti/falta automática de máquina.
+- Sonidos.
+- Vibración estricta.
+- Cloudflare Web Analytics.
+- Zaraz/event tracking.
+
+
 ## v1.10.13 — Home Support Dedup
 
 ### UI/UX

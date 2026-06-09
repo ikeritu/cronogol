@@ -436,3 +436,31 @@ Ajuste de UX en pantalla de inicio:
 - Se mantiene un único botón claro: `☕ Apoya CronoGol`.
 - Se elimina la franja redundante: `CronoGol es gratis · Puedes apoyar el proyecto invitándome a un café`.
 - No se toca juego, reglas, máquina, sonidos, vibración ni analítica.
+
+
+## v1.10.14 — Menu & Home Hierarchy Polish
+
+Pulido visual de interfaz sin tocar la lógica del juego.
+
+Cambios:
+
+- Home reorganizada por grupos de acciones:
+  - ayuda/contenido;
+  - compartir/feedback;
+  - apoyo como CTA suave.
+- Menú lateral más compacto.
+- `Reiniciar partido` separado como acción peligrosa.
+- `Apoya CronoGol` baja peso visual en home y menú.
+- Se mantiene la confirmación de reinicio añadida en v1.10.12.
+- Cache busting actualizado a `game.js?v=1.10.14` y `style.css?v=1.10.14`.
+
+No se toca:
+
+- Reglas.
+- Marcador.
+- Máquina.
+- Penalti/falta automática de máquina.
+- Sonidos.
+- Vibración estricta.
+- Cloudflare Web Analytics.
+- Zaraz/event tracking.

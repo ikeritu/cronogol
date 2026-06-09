@@ -1,12 +1,15 @@
 # VERSION
 
-Current version: v1.10.13
-Release name: Home Support Dedup
-Base version: v1.10.12 Project Audit Fixes
+Current version: v1.10.14
+Release name: Menu & Home Hierarchy Polish
+Base version: v1.10.13 Home Support Dedup
 Status: Stable candidate
 
 Scope:
-- Remove redundant support/donation copy from home screen.
+- Home hierarchy polish
+- Side menu compact layout
+- Dangerous reset visual separation
+- Softer support CTA
 
 Not changed:
 - Game rules

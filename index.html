@@ -11,8 +11,8 @@
   <meta property="og:image" content="https://cronogol.es/og-cronogol.png" />
   <link rel="icon" href="favicon.png" type="image/png" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-  <title>CronoGol v1.10.13</title>
-  <link rel="stylesheet" href="style.css?v=1.10.13" />
+  <title>CronoGol v1.10.14</title>
+  <link rel="stylesheet" href="style.css?v=1.10.14" />
   <link rel="manifest" href="site.webmanifest" />
 </head>
 <body>
@@ -93,16 +93,20 @@
           <button id="start-match-btn" class="main-start-btn" data-i18n="startMatch"> EMPEZAR PARTIDO</button>
         </section>
 
-        <nav class="setup-links secondary-actions-final" aria-label="Acciones secundarias">
-          <button id="rules-btn" data-slot="rules" type="button" data-i18n="rules">Reglas</button>
-          <a data-slot="modes" href="modos.html" data-i18n="modes">Modos</a>
-          <a data-slot="history" href="historia.html" data-i18n="history">Historia</a>
+        <nav class="setup-links secondary-actions-final setup-actions-polished" aria-label="Acciones secundarias">
+          <div class="setup-action-group setup-action-group-primary" aria-label="Ayuda y contenido">
+            <button id="rules-btn" data-slot="rules" type="button" data-i18n="rules">Reglas</button>
+            <a data-slot="modes" href="modos.html" data-i18n="modes">Modos</a>
+            <a data-slot="history" href="historia.html" data-i18n="history">Historia</a>
+          </div>
 
-          <button id="share-btn" data-slot="share" type="button" data-i18n="share">Compartir</button>
-          <button id="copy-link-btn" data-slot="copy" type="button" data-i18n="copyLink">Copiar enlace</button>
-          <a data-slot="feedback" href="feedback.html?lang=es" data-i18n="feedback">Feedback</a>
+          <div class="setup-action-group setup-action-group-secondary" aria-label="Compartir y feedback">
+            <button id="share-btn" data-slot="share" type="button" data-i18n="share">Compartir</button>
+            <button id="copy-link-btn" data-slot="copy" type="button" data-i18n="copyLink">Copiar enlace</button>
+            <a data-slot="feedback" href="feedback.html?lang=es" data-i18n="feedback">Feedback</a>
+          </div>
 
-          <button id="support-btn" data-slot="support" class="support-wide-btn" type="button" data-i18n="supportFull">☕ Apoya CronoGol</button>
+          <button id="support-btn" data-slot="support" class="support-wide-btn support-soft-btn" type="button" data-i18n="supportFull">☕ Apoya CronoGol</button>
         </nav>
 
         <section class="coming-soon coming-soon-compact">
@@ -113,7 +117,7 @@
           <span>WATER RESIST</span>
           <span>FOOTBALL CHRONO</span>
         </div>
-        <footer class="version-footer">CronoGol v1.10.13 · Partidas en este dispositivo: <strong id="local-matches-count">0</strong><br><span class="copyright-footer">© 2026 CronoGol. Juego original creado por Iker Ituarte. Todos los derechos reservados.</span></footer>
+        <footer class="version-footer">CronoGol v1.10.14 · Partidas en este dispositivo: <strong id="local-matches-count">0</strong><br><span class="copyright-footer">© 2026 CronoGol. Juego original creado por Iker Ituarte. Todos los derechos reservados.</span></footer>
       </div>
     </section>
 
@@ -221,21 +225,31 @@
       </div>
     </section>
 
-    <section id="side-menu" class="side-menu hidden">
-      <div class="side-menu-card">
-        <button id="close-menu-btn" type="button" class="close-btn">×</button>
+    <section id="side-menu" class="side-menu hidden" aria-hidden="true">
+      <div class="side-menu-card side-menu-card-polished">
+        <button id="close-menu-btn" type="button" class="close-btn" aria-label="Cerrar menú">×</button>
         <h2 data-i18n="menu">Menú</h2>
-        <button id="menu-rules-btn" type="button" data-i18n="rules">Reglas</button>
-        <button id="menu-share-btn" type="button" data-i18n="share">Compartir</button>
-        <button id="menu-copy-btn" type="button" data-i18n="copyLink">Copiar enlace</button>
-        <a href="feedback.html?lang=es" data-i18n="feedback">Feedback</a>
+
+        <div class="side-menu-group">
+          <button id="menu-rules-btn" type="button" data-i18n="rules">Reglas</button>
+          <a href="modos.html" data-i18n="modes">Modos</a>
           <a href="historia.html">Historia</a>
-        <button id="menu-support-btn" type="button" data-i18n="supportFull">☕ Apoya CronoGol</button>
-        <button id="menu-reset-btn" type="button" data-i18n="resetMatch">Reiniciar partido</button>
+        </div>
+
+        <div class="side-menu-group side-menu-group-secondary">
+          <button id="menu-share-btn" type="button" data-i18n="share">Compartir</button>
+          <button id="menu-copy-btn" type="button" data-i18n="copyLink">Copiar enlace</button>
+          <a href="feedback.html?lang=es" data-i18n="feedback">Feedback</a>
+          <button id="menu-support-btn" type="button" class="menu-support-soft" data-i18n="supportFull">☕ Apoya CronoGol</button>
+        </div>
+
+        <div class="side-menu-danger-zone">
+          <button id="menu-reset-btn" class="danger-action-btn" type="button" data-i18n="resetMatch">Reiniciar partido</button>
+        </div>
       </div>
     </section>
   </main>
-<script src="game.js?v=1.10.13"></script>
+<script src="game.js?v=1.10.14"></script>
 <!-- Cloudflare Web Analytics -->
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7ee638b73aa24300b417a555e67fd1ae"}'></script>
 <!-- End Cloudflare Web Analytics -->
