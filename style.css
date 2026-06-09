@@ -1721,3 +1721,46 @@ body.cg-shake-soft .game-device {
     animation: none !important;
   }
 }
+
+
+/* ===== CronoGol v1.10.8: sound & haptics polish visual feedback ===== */
+body.cg-flash-goal .game-device {
+  animation: cgGoalDevicePop 0.62s ease-out 1;
+}
+
+body.cg-flash-penalty .game-device,
+body.cg-flash-special .game-device {
+  animation: cgSpecialDevicePulse 0.52s ease-out 1;
+}
+
+body.cg-flash-red .game-device {
+  animation: cgRedDeviceHit 0.42s ease-out 1;
+}
+
+@keyframes cgGoalDevicePop {
+  0%, 100% { transform: translateY(0) scale(1); }
+  28% { transform: translateY(-2px) scale(1.006); }
+  48% { transform: translateY(1px) scale(1.002); }
+}
+
+@keyframes cgSpecialDevicePulse {
+  0%, 100% { transform: scale(1); }
+  42% { transform: scale(1.004); }
+}
+
+@keyframes cgRedDeviceHit {
+  0%, 100% { transform: translateX(0); }
+  18% { transform: translateX(-4px); }
+  36% { transform: translateX(4px); }
+  54% { transform: translateX(-3px); }
+  72% { transform: translateX(2px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.cg-flash-goal .game-device,
+  body.cg-flash-penalty .game-device,
+  body.cg-flash-special .game-device,
+  body.cg-flash-red .game-device {
+    animation: none !important;
+  }
+}

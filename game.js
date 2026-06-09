@@ -269,44 +269,132 @@ function clockSec(){
     return `${pad(Math.floor(sec/60))}:${pad(sec%60)}`;
   }catch(e){ return "00:00"; }
 }
-function vibrate(pattern){ try{ if(navigator.vibrate) navigator.vibrate(pattern); }catch(e){} }
+function vibrate(pattern){
+  try{
+    if(!navigator.vibrate) return;
+    navigator.vibrate(pattern);
+  }catch(e){}
+}
+
+function haptic(type){
+  const patterns = {
+    tap: [12],
+    start: [18],
+    stop: [24],
+    goal: [80,35,80,35,130],
+    penalty: [50,35,50,35,90],
+    penalty_fail: [35,25,35],
+    free_kick: [45,30,80],
+    woodwork: [35,25,35,25,35],
+    yellow: [90],
+    red: [130,45,130],
+    miss: [20],
+    special: [60,35,60],
+    half_time: [45,35,45],
+    full_time: [70,35,70,35,150]
+  };
+  vibrate(patterns[type] || patterns.tap);
+}
 function playSound(type){
   try{
     if(!gameState.soundEnabled || !soundEnabledInput.checked) return;
     if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
     const patterns = {
-      beep: [[880,0.045,0.030]],
-      stop: [[420,0.050,0.032]],
+      beep: [
+        {f:880,d:0.040,v:0.026,w:"square"}
+      ],
+      stop: [
+        {f:390,d:0.060,v:0.030,w:"square"}
+      ],
 
-      goal: [[660,0.070,0.045],[880,0.080,0.050],[1180,0.120,0.060]],
-      penalty: [[520,0.080,0.045],[760,0.080,0.050],[520,0.080,0.045]],
-      penalty_fail: [[240,0.120,0.050],[180,0.140,0.040]],
-      free_kick: [[620,0.070,0.040],[720,0.090,0.045]],
+      // Celebración corta tipo arcade, sin ser molesta.
+      goal: [
+        {f:523.25,d:0.065,v:0.045,w:"triangle"},
+        {f:659.25,d:0.070,v:0.050,w:"triangle"},
+        {f:783.99,d:0.080,v:0.052,w:"triangle"},
+        {f:1046.50,d:0.140,v:0.058,w:"square"}
+      ],
 
-      post: [[620,0.050,0.040],[340,0.080,0.045]],
-      crossbar: [[700,0.050,0.040],[380,0.090,0.045]],
-      yellow: [[540,0.100,0.045]],
-      red: [[180,0.160,0.055]],
-      miss: [[260,0.060,0.030]],
-      half_time: [[440,0.080,0.040],[440,0.080,0.040]],
-      full_time: [[360,0.080,0.040],[520,0.080,0.045],[360,0.120,0.040]]
+      // Aviso de tensión.
+      penalty: [
+        {f:392.00,d:0.075,v:0.044,w:"square"},
+        {f:0,d:0.045,v:0,w:"square"},
+        {f:587.33,d:0.095,v:0.050,w:"square"},
+        {f:0,d:0.035,v:0,w:"square"},
+        {f:783.99,d:0.120,v:0.052,w:"triangle"}
+      ],
+
+      penalty_fail: [
+        {f:220.00,d:0.120,v:0.050,w:"sawtooth"},
+        {f:164.81,d:0.170,v:0.040,w:"sawtooth"}
+      ],
+
+      // Sonido tipo silbato corto.
+      free_kick: [
+        {f:1108.73,d:0.080,v:0.040,w:"sine"},
+        {f:1318.51,d:0.110,v:0.045,w:"sine"}
+      ],
+
+      post: [
+        {f:740.00,d:0.045,v:0.045,w:"square"},
+        {f:310.00,d:0.110,v:0.035,w:"sawtooth"}
+      ],
+      crossbar: [
+        {f:860.00,d:0.050,v:0.045,w:"square"},
+        {f:350.00,d:0.125,v:0.036,w:"sawtooth"}
+      ],
+
+      yellow: [
+        {f:560.00,d:0.090,v:0.044,w:"square"},
+        {f:560.00,d:0.060,v:0.032,w:"square"}
+      ],
+      red: [
+        {f:210.00,d:0.170,v:0.055,w:"sawtooth"},
+        {f:150.00,d:0.130,v:0.045,w:"sawtooth"}
+      ],
+      miss: [
+        {f:260.00,d:0.070,v:0.030,w:"triangle"}
+      ],
+      half_time: [
+        {f:440.00,d:0.080,v:0.038,w:"square"},
+        {f:0,d:0.050,v:0,w:"square"},
+        {f:440.00,d:0.080,v:0.038,w:"square"}
+      ],
+      full_time: [
+        {f:360.00,d:0.080,v:0.040,w:"square"},
+        {f:520.00,d:0.080,v:0.044,w:"square"},
+        {f:360.00,d:0.150,v:0.040,w:"square"}
+      ]
     };
 
     const sequence = patterns[type] || patterns.beep;
     let offset = 0;
-    sequence.forEach(([freq,duration,volume])=>{
+
+    sequence.forEach((step)=>{
+      const duration = step.d || 0.05;
+      if(!step.f || step.v === 0){
+        offset += duration;
+        return;
+      }
+
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
-      osc.type = "square";
-      osc.frequency.value = freq;
+
+      osc.type = step.w || "square";
+      osc.frequency.setValueAtTime(step.f, audioCtx.currentTime + offset);
+
       gain.gain.setValueAtTime(0.0001, audioCtx.currentTime + offset);
-      gain.gain.exponentialRampToValueAtTime(volume, audioCtx.currentTime + offset + 0.01);
+      gain.gain.exponentialRampToValueAtTime(step.v || 0.035, audioCtx.currentTime + offset + 0.012);
       gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + offset + duration);
-      osc.connect(gain); gain.connect(audioCtx.destination);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
       osc.start(audioCtx.currentTime + offset);
-      osc.stop(audioCtx.currentTime + offset + duration + 0.02);
-      offset += duration + 0.035;
+      osc.stop(audioCtx.currentTime + offset + duration + 0.025);
+
+      offset += duration + 0.028;
     });
   }catch(e){}
 }
@@ -316,20 +404,23 @@ function triggerScreenFeedback(type){
     const map = {
       goal: "cg-flash-goal",
       penalty: "cg-flash-penalty",
+      penalty_fail: "cg-shake-soft",
       free_kick: "cg-flash-special",
       post: "cg-shake-soft",
       crossbar: "cg-shake-soft",
       yellow: "cg-flash-yellow",
       red: "cg-flash-red",
+      miss: "cg-shake-soft",
       half_time: "cg-flash-special",
       full_time: "cg-flash-special"
     };
     const cls = map[type];
     if(!cls) return;
-    document.body.classList.remove("cg-flash-goal","cg-flash-penalty","cg-flash-special","cg-shake-soft","cg-flash-yellow","cg-flash-red");
+    const classes = ["cg-flash-goal","cg-flash-penalty","cg-flash-special","cg-shake-soft","cg-flash-yellow","cg-flash-red"];
+    document.body.classList.remove(...classes);
     void document.body.offsetWidth;
     document.body.classList.add(cls);
-    window.setTimeout(()=>document.body.classList.remove(cls), 650);
+    window.setTimeout(()=>document.body.classList.remove(cls), type === "goal" ? 760 : 620);
   }catch(e){}
 }
 async function copyText(text,msg){
@@ -488,7 +579,7 @@ function startMatch(){
 
 function handleMainAction(){ if(gameState.matchEnded||pendingSpecial) return; gameState.isRunning ? stopTimerAndEvaluate() : startTimer(); }
 function startTimer(){
-  gameState.isRunning=true; timerStartTime=performance.now(); mainActionBtn.textContent="STOP"; mainActionBtn.classList.add("stop"); playSound("beep"); vibrate([20]);
+  gameState.isRunning=true; timerStartTime=performance.now(); mainActionBtn.textContent="STOP"; mainActionBtn.classList.add("stop"); playSound("beep"); haptic("start");
   timerInterval=setInterval(()=>{ currentElapsedMs=stopwatchBaseMs+(performance.now()-timerStartTime); updateTimerDisplay(currentElapsedMs); },16);
 }
 function stopTimerAndEvaluate(forcedValue=null){
@@ -497,7 +588,7 @@ function stopTimerAndEvaluate(forcedValue=null){
   gameState.totalTurns++; if(gameState.half===1) gameState.firstHalfTurns++; else gameState.secondHalfTurns++;
   applyNormalResult(value,evaluateThrow(value));
 }
-function stopTimer(){ gameState.isRunning=false; clearInterval(timerInterval); timerInterval=null; stopwatchBaseMs=currentElapsedMs; mainActionBtn.textContent="START"; mainActionBtn.classList.remove("stop"); playSound("stop"); }
+function stopTimer(){ gameState.isRunning=false; clearInterval(timerInterval); timerInterval=null; stopwatchBaseMs=currentElapsedMs; mainActionBtn.textContent="START"; mainActionBtn.classList.remove("stop"); playSound("stop"); haptic("stop"); }
 function getLastTwoDigits(ms){ return Math.floor(ms/10)%100; }
 function updateTimerDisplay(ms){ const h=Math.floor(ms/10),m=Math.floor(h/6000),s=Math.floor((h%6000)/100),c=h%100; timerDisplay.textContent=`${pad(m)}:${pad(s)}:${pad(c)}`; lastTwoDisplay.textContent=pad(c); }
 
@@ -546,7 +637,7 @@ function applyNormalResult(v,r){
   if(r.type === "goal"){
     p.goals++;
     gameState.stats.goals++;
-    vibrate([90,40,90]);
+    haptic("goal");
     if(isFastMode() && hasFastModeWinner()){
       endMatch();
     } else {
@@ -555,7 +646,7 @@ function applyNormalResult(v,r){
   }
   else if(r.type === "post" || r.type === "crossbar"){
     gameState.stats.woodwork++;
-    vibrate([50,30,50]);
+    haptic("woodwork");
     messageLabel.textContent += ". Repite.";
   }
   else if(r.type === "half_time"){
@@ -565,13 +656,13 @@ function applyNormalResult(v,r){
   else if(r.type === "yellow"){
     p.skipTurns++;
     gameState.stats.cards++;
-    vibrate([120]);
+    haptic("yellow");
     switchTurn();
   }
   else if(r.type === "red"){
     p.skipTurns += 2;
     gameState.stats.cards++;
-    vibrate([160,60,160]);
+    haptic("red");
     switchTurn();
   }
   else if(r.type === "full_time"){
@@ -592,7 +683,7 @@ function applyNormalResult(v,r){
 
     mainActionBtn.disabled = true;
     specialStartBtn.disabled = true;
-    vibrate([80,40,80]);
+    haptic("special");
 
     updateUI();
     syncActionControls();
@@ -646,7 +737,7 @@ function evaluateSpecialThrow(v){
   addLog(`${clockSec()}  ${p.name} — ${pad(v)} — ${msg}`);
   playSound(goal ? "goal" : (specialType === "penalty" ? "penalty_fail" : "miss"));
   triggerScreenFeedback(goal ? "goal" : specialType);
-  vibrate(goal ? [120,50,120] : [45]);
+  haptic(goal ? "goal" : (specialType === "penalty" ? "penalty_fail" : "miss"));
 
   pendingSpecial = null;
   specialPanel.classList.add("hidden");
@@ -667,7 +758,39 @@ function evaluateSpecialThrow(v){
 function showHalfTime(){ gameState.half=2; currentElapsedMs=0; stopwatchBaseMs=0; timerDisplay.textContent="00:00:00"; lastTwoDisplay.textContent="--"; switchTurn(); showModal("DESCANSO",scoreText(),"<p>Se resetea el cronómetro y comienza la segunda parte.</p>",[{text:"CONTINUAR",action:()=>{closeModal();maybeMachineTurn();}}]); }
 function endMatch(){ gameState.matchEnded=true; clearInterval(matchClockInterval); if(gameState.isRunning) stopTimer(); if(gameState.players[0].goals===gameState.players[1].goals){ showModal("FINAL",`${scoreText()}. Empate.`,finalHtml(),[{text:"IR A PENALTIS",action:startPenaltyShootout},{text:"TERMINAR EN EMPATE",action:()=>showFinal(false)}]); } else showFinal(false); }
 function startPenaltyShootout(){ closeModal(); gameState.matchEnded=false; penaltyShootout={currentPlayerIndex:0,shots:[[],[]],goals:[0,0]}; gameState.currentPlayerIndex=0; shootoutPanel.classList.remove("hidden"); setEvent("PENALTIS","Par = gol, impar = fallo.","special"); updateUI(); maybeMachineTurn(); }
-function evaluateShootoutPenalty(v){ const idx=penaltyShootout.currentPlayerIndex, goal=v%2===0; penaltyShootout.shots[idx].push(goal); if(goal){gameState.players[idx].goals++;gameState.stats.goals++;}else gameState.stats.misses++; addLog(`${clockSec()}  ${gameState.players[idx].name} — ${pad(v)} — ${goal?"Gol penalti":"Penalti fallado"}`); setEvent(goal?"GOL":"FALLO",pad(v),goal?"goal":"neutral"); if(isShootoutFinished()){ gameState.matchEnded=true; showFinal(true); updateUI(); return; } penaltyShootout.currentPlayerIndex=idx===0?1:0; gameState.currentPlayerIndex=penaltyShootout.currentPlayerIndex; updateUI(); maybeMachineTurn(); }
+function evaluateShootoutPenalty(v){
+  const idx = penaltyShootout.currentPlayerIndex;
+  const goal = v % 2 === 0;
+
+  penaltyShootout.shots[idx].push(goal);
+
+  if(goal){
+    gameState.players[idx].goals++;
+    gameState.stats.goals++;
+  } else {
+    gameState.stats.misses++;
+  }
+
+  addLog(`${clockSec()}  ${gameState.players[idx].name} — ${pad(v)} — ${goal ? "Gol penalti" : "Penalti fallado"}`);
+  setEvent(goal ? "GOL" : "FALLO", pad(v), goal ? "goal" : "neutral");
+  playSound(goal ? "goal" : "penalty_fail");
+  triggerScreenFeedback(goal ? "goal" : "penalty");
+  haptic(goal ? "goal" : "penalty_fail");
+
+  if(isShootoutFinished()){
+    gameState.matchEnded = true;
+    showFinal(true);
+    updateUI();
+    syncActionControls();
+    return;
+  }
+
+  penaltyShootout.currentPlayerIndex = idx === 0 ? 1 : 0;
+  gameState.currentPlayerIndex = penaltyShootout.currentPlayerIndex;
+  updateUI();
+  syncActionControls();
+  maybeMachineTurn();
+}
 function isShootoutFinished(){ const a=penaltyShootout.shots[0],b=penaltyShootout.shots[1]; return a.length>=5&&b.length>=5&&a.length===b.length&&gameState.players[0].goals!==gameState.players[1].goals; }
 function showFinal(pens){ incrementMatches(); let text=scoreText(); if(gameState.players[0].goals>gameState.players[1].goals) text+=`. Gana ${gameState.players[0].name}.`; else if(gameState.players[1].goals>gameState.players[0].goals) text+=`. Gana ${gameState.players[1].name}.`; else text+=". Empate final."; if(pens) text+=" Resuelto en penaltis."; gameState.lastFinalText=formattedFinalResult(); showModal("FINAL DEL PARTIDO",text,finalHtml(),[{text:"REVANCHA",action:restartSameMatch},{text:"COMPARTIR RESULTADO",action:shareResult},{text:"COPIAR RESULTADO",action:copyResult},{text:"NUEVA PARTIDA",action:resetToSetup}]); }
 function finalHtml(){ return `<div class="donation-item"><strong>Resumen</strong><br>Tiradas: ${gameState.totalTurns}<br>Goles: ${gameState.stats.goals}<br>Postes/Largueros: ${gameState.stats.woodwork}<br>Tarjetas: ${gameState.stats.cards}<br>Especiales: ${gameState.stats.specials}</div><div class="donation-item"><strong>☕ CronoGol es gratis</strong><br><button class="bizum-direct-btn" onclick="openBizum()">Abrir Bizum</button><a class="support-link" href="${CRONOGOL_CONFIG.paypalUrl}" target="_blank">PayPal</a></div>`; }
@@ -1587,7 +1710,7 @@ function showSupportModal(){
 }
 
 
-/* ===== CronoGol v1.10.7: game feel improvements ===== */
+/* ===== CronoGol v1.10.8: game feel improvements ===== */
 /* No modifica reglas, turnos, START/STOP ni lógica base del partido. */
 
 function machineDifficultyText(){

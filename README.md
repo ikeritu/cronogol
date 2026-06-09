@@ -1,4 +1,4 @@
-# CronoGol v1.10.7 — Machine Special Direct Resolve
+# CronoGol v1.10.8 — Sound & Haptics Polish
 
 ## Objetivo
 
@@ -257,3 +257,56 @@ Corrección:
 - No se reintroduce Zaraz ni tracking de eventos.
 
 No se cambian reglas ni marcador.
+
+
+## v1.10.7_ESTABLE_MACHINE_SPECIAL_OK
+
+Versión congelada como estable tras confirmar el arreglo del flujo de penalti/falta de la máquina.
+
+Confirmado:
+
+- Botones humanos bloqueados durante turno especial de máquina.
+- Máquina ejecuta automáticamente penalti/falta.
+- El botón principal no queda atascado en STOP.
+- El turno continúa correctamente.
+- Sin Zaraz/event tracking.
+- Cloudflare Web Analytics básico se mantiene.
+
+Esta versión debe usarse como base para futuras modificaciones.
+
+
+## v1.10.8 — Sound & Haptics Polish
+
+Esta versión parte de `v1.10.7_ESTABLE_MACHINE_SPECIAL_OK`.
+
+Objetivo:
+
+- Mejorar la sensación de juego sin tocar reglas ni lógica de máquina.
+- Hacer más reconocibles los sonidos de gol, penalti, falta, palos, tarjetas y final.
+- Añadir vibraciones físicas más diferenciadas en móviles compatibles.
+- Mejorar la vibración visual de pantalla/dispositivo.
+
+Cambios:
+
+- Nuevo sistema semántico `haptic(type)`.
+- Sonidos más diferenciados para:
+  - gol,
+  - penalti,
+  - penalti fallado,
+  - falta,
+  - poste/larguero,
+  - amarilla/roja,
+  - descanso/final.
+- Feedback de tanda de penaltis con sonido, vibración y flash.
+- Animaciones visuales ligeras para gol, penalti/falta y roja.
+- Respeta `prefers-reduced-motion`.
+- No se reintroduce Zaraz ni tracking de eventos.
+
+No se toca:
+
+- Reglas.
+- Marcador.
+- Máquina.
+- Penalti/falta de máquina.
+- Historial.
+- Estadísticas.

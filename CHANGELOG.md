@@ -1,5 +1,49 @@
 # CHANGELOG
 
+## v1.10.8 — Sound & Haptics Polish
+
+### Mejoras
+
+- Sonidos más reconocibles para gol, penalti, falta, poste/larguero, tarjetas y final.
+- Añadido helper `haptic(type)` con patrones de vibración diferenciados.
+- Mejorado feedback de tanda de penaltis.
+- Añadidas animaciones visuales suaves para gol, penalti/falta y roja.
+- Se mantiene soporte `prefers-reduced-motion`.
+
+### No se ha tocado
+
+- Reglas.
+- Marcador.
+- Máquina.
+- Penalti/falta automática de máquina.
+- Historial.
+- Estadísticas.
+- Zaraz/tracking de eventos.
+
+
+## v1.10.7_ESTABLE_MACHINE_SPECIAL_OK
+
+### Estado
+
+- Congelada como versión estable tras validación manual.
+- Confirmado que la máquina resuelve penalti/falta automáticamente.
+- Confirmado que el botón no se queda bloqueado en STOP.
+- Confirmado que los controles humanos quedan bloqueados durante la acción automática.
+
+### Uso
+
+Esta versión queda como base estable para futuras modificaciones.
+
+### No se ha tocado
+
+- Código funcional respecto a `v1.10.7`.
+- Reglas.
+- Marcador.
+- Sonidos.
+- Cloudflare Web Analytics.
+- Footer/copyright.
+
+
 ## v1.10.7 — Machine Special Direct Resolve
 
 ### Correcciones

@@ -1,12 +1,13 @@
 # VERSION
 
-Current version: v1.10.7
-Release name: Machine Special Direct Resolve
-Base version: v1.10.6 Machine Special Flow Fix
+Current version: v1.10.8
+Release name: Sound & Haptics Polish
+Base version: v1.10.7_ESTABLE_MACHINE_SPECIAL_OK
 Status: Stable candidate
 Primary URL: https://cronogol.es/
 
 Notes:
-- Fully decouples machine penalty/free-kick from user buttons.
-- Adds direct machine special resolver.
+- Improves sounds and haptics.
+- Keeps stable machine special flow.
 - Keeps event tracking removed.
+- Gameplay rules unchanged.
