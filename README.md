@@ -1,4 +1,4 @@
-# CronoGol v1.10.8 — Sound & Haptics Polish
+# CronoGol v1.10.9 — Haptics Tuning
 
 ## Objetivo
 
@@ -310,3 +310,26 @@ No se toca:
 - Penalti/falta de máquina.
 - Historial.
 - Estadísticas.
+
+
+## v1.10.9 — Haptics Tuning
+
+Esta versión parte de `v1.10.8 Sound & Haptics Polish`.
+
+Ajuste solicitado:
+
+- La vibración física queda limitada a dos casos:
+  - gol: vibración más fuerte;
+  - penalti fallado: vibración leve.
+- El resto de eventos mantienen sonido y feedback visual, pero no vibración física.
+
+No se toca:
+
+- Reglas.
+- Marcador.
+- Máquina.
+- Penalti/falta automática de máquina.
+- Historial.
+- Estadísticas.
+- Sonidos.
+- Zaraz/tracking de eventos.

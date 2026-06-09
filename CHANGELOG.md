@@ -1,5 +1,25 @@
 # CHANGELOG
 
+## v1.10.9 — Haptics Tuning
+
+### Cambios
+
+- Vibración física solo tras gol.
+- Vibración física leve tras penalti fallado.
+- Eliminada vibración física para start, stop, falta, poste, larguero, tarjetas, descanso y final.
+- Se mantienen sonidos y feedback visual.
+
+### No se ha tocado
+
+- Reglas.
+- Marcador.
+- Máquina.
+- Penalti/falta automática de máquina.
+- Historial.
+- Estadísticas.
+- Zaraz/tracking de eventos.
+
+
 ## v1.10.8 — Sound & Haptics Polish
 
 ### Mejoras

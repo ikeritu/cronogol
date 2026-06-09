@@ -277,23 +277,18 @@ function vibrate(pattern){
 }
 
 function haptic(type){
+  // v1.10.9:
+  // Vibración física solo en dos casos:
+  // - gol: vibración fuerte
+  // - penalti fallado: vibración leve
+  // El resto de eventos conservan sonido/feedback visual, pero no vibración física.
   const patterns = {
-    tap: [12],
-    start: [18],
-    stop: [24],
-    goal: [80,35,80,35,130],
-    penalty: [50,35,50,35,90],
-    penalty_fail: [35,25,35],
-    free_kick: [45,30,80],
-    woodwork: [35,25,35,25,35],
-    yellow: [90],
-    red: [130,45,130],
-    miss: [20],
-    special: [60,35,60],
-    half_time: [45,35,45],
-    full_time: [70,35,70,35,150]
+    goal: [120, 45, 160],
+    penalty_fail: [35]
   };
-  vibrate(patterns[type] || patterns.tap);
+
+  if(!patterns[type]) return;
+  vibrate(patterns[type]);
 }
 function playSound(type){
   try{
