@@ -273,7 +273,7 @@ function clockSec(){
 
 
 function physicalVibration(event){
-  // v1.10.11 — Strict Physical Vibration Gate
+  // v1.10.13 — Strict Physical Vibration Gate
   // ÚNICO punto permitido para activar vibración física.
   // Norma:
   // - Gol: vibración fuerte
@@ -578,7 +578,7 @@ function startMatch(){
   pendingSpecial=null; penaltyShootout=null; currentElapsedMs=0; stopwatchBaseMs=0; matchStartTime=Date.now();
   setupScreen.classList.remove("active"); gameScreen.classList.add("active"); closeModal(); sideMenu.classList.add("hidden");
   timerDisplay.textContent="00:00:00"; lastTwoDisplay.textContent="--"; setEvent("--", currentLang === "en" ? "Press START to begin." : "Pulsa START para comenzar.","neutral");
-  // v1.10.11: vibración física directa eliminada; usar
+  // v1.10.13: vibración física directa eliminada; usar
 }
 
 function handleMainAction(){ if(gameState.matchEnded||pendingSpecial) return; gameState.isRunning ? stopTimerAndEvaluate() : startTimer(); }
@@ -1846,3 +1846,337 @@ document.addEventListener("DOMContentLoaded", () => {
   if(esBtn) esBtn.addEventListener("click", () => setTimeout(updateMachineDifficultyHint, 0));
   if(enBtn) enBtn.addEventListener("click", () => setTimeout(updateMachineDifficultyHint, 0));
 });
+
+
+/* ===== CronoGol v1.10.13: Project Audit Fixes =====
+   Jefe de proyecto: se aplican correcciones críticas de Frontend + UI/UX
+   sin tocar reglas, marcador, máquina, sonidos ni vibración estable.
+*/
+
+let actionLockUntil = 0;
+let resetConfirmationOpen = false;
+
+function safePlayerName(raw, fallback){
+  const value = String(raw || "")
+    .replace(/[\u0000-\u001F\u007F]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  const clipped = value.slice(0, 24);
+  return clipped || fallback;
+}
+
+function safeDisplayName(name){
+  return safePlayerName(name, "Jugador");
+}
+
+function lockActionTemporarily(ms = 150){
+  actionLockUntil = performance.now() + ms;
+}
+
+function isActionLocked(){
+  return performance.now() < actionLockUntil;
+}
+
+function openSideMenu(){
+  if(!sideMenu) return;
+  sideMenu.classList.remove("hidden");
+  sideMenu.setAttribute("aria-hidden", "false");
+  try{
+    if(location.hash !== "#menu"){
+      history.pushState({cronogolLayer:"menu"}, "", "#menu");
+    }
+  }catch(e){}
+}
+
+function closeSideMenu(){
+  if(!sideMenu) return;
+  sideMenu.classList.add("hidden");
+  sideMenu.setAttribute("aria-hidden", "true");
+}
+
+function hasOpenLayer(){
+  return (modalScreen && !modalScreen.classList.contains("hidden")) ||
+         (sideMenu && !sideMenu.classList.contains("hidden"));
+}
+
+function closeTopLayer(){
+  if(modalScreen && !modalScreen.classList.contains("hidden")){
+    closeModal();
+    return true;
+  }
+  if(sideMenu && !sideMenu.classList.contains("hidden")){
+    closeSideMenu();
+    return true;
+  }
+  return false;
+}
+
+function closeModal(){
+  modalScreen.classList.add("hidden");
+  modalScreen.setAttribute("aria-hidden", "true");
+  modalExtra.replaceChildren();
+  modalActions.replaceChildren();
+  resetConfirmationOpen = false;
+}
+
+function setTrustedModalHtml(html){
+  modalExtra.replaceChildren();
+  if(!html) return;
+  const tpl = document.createElement("template");
+  tpl.innerHTML = String(html);
+  modalExtra.appendChild(tpl.content.cloneNode(true));
+}
+
+function showModal(t, txt, html, actions){
+  modalTitle.textContent = String(t || "");
+  modalText.textContent = String(txt || "");
+  setTrustedModalHtml(html || "");
+  modalActions.replaceChildren();
+
+  (actions || []).forEach((a)=>{
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = String(a.text || "");
+    b.onclick = typeof a.action === "function" ? a.action : closeModal;
+    modalActions.appendChild(b);
+  });
+
+  modalScreen.classList.remove("hidden");
+  modalScreen.setAttribute("aria-hidden", "false");
+}
+
+function confirmReset(){
+  if(resetConfirmationOpen) return;
+  resetConfirmationOpen = true;
+
+  showModal(
+    currentLang === "en" ? "RESET MATCH" : "REINICIAR PARTIDO",
+    currentLang === "en"
+      ? "Are you sure you want to restart the current match? Current progress will be lost."
+      : "¿Seguro que deseas reiniciar el partido actual? Se perderá el progreso.",
+    "",
+    [
+      {
+        text: currentLang === "en" ? "YES, RESET" : "SÍ, REINICIAR",
+        action: () => {
+          resetConfirmationOpen = false;
+          resetToSetup();
+        }
+      },
+      {
+        text: currentLang === "en" ? "CANCEL" : "CANCELAR",
+        action: closeModal
+      }
+    ]
+  );
+}
+
+function resetToSetup(){
+  resetRuntimeState();
+  setupScreen.classList.add("active");
+  gameScreen.classList.remove("active");
+  closeModal();
+  closeSideMenu();
+
+  if(mainActionBtn){
+    mainActionBtn.textContent = "START";
+    mainActionBtn.classList.remove("stop");
+  }
+  if(specialPanel) specialPanel.classList.add("hidden");
+  if(shootoutPanel) shootoutPanel.classList.add("hidden");
+
+  syncActionControls();
+}
+
+function startMatch(){
+  clearMachineTimers();
+
+  const p1 = safePlayerName(player1Input.value, "Jugador 1");
+  const p2Default = gameModeSelect.value === "machine" ? "Máquina" : "Jugador 2";
+  const p2 = safePlayerName(player2Input.value, p2Default);
+
+  player1Input.value = p1;
+  player2Input.value = p2;
+  saveLocal(p1, p2);
+
+  Object.assign(gameState,{
+    players:[{name:p1,goals:0,skipTurns:0},{name:p2,goals:0,skipTurns:0}],
+    currentPlayerIndex:0,
+    half:1,
+    isRunning:false,
+    gameMode:gameModeSelect.value,
+    machineLevel:machineLevelSelect.value,
+    matchMode:matchModeSelect.value,
+    forceEvents:forceEventsInput.checked,
+    soundEnabled:soundEnabledInput.checked,
+    matchEnded:false,
+    totalTurns:0,
+    firstHalfTurns:0,
+    secondHalfTurns:0,
+    machineForceHalfAt:randomInt(20,30),
+    machineForceEndAt:randomInt(20,30),
+    log:[],
+    stats:{goals:0,woodwork:0,cards:0,specials:0,penalties:0,freeKicks:0,misses:0},
+    lastFinalText:""
+  });
+
+  pendingSpecial = null;
+  penaltyShootout = null;
+  currentElapsedMs = 0;
+  stopwatchBaseMs = 0;
+  matchStartTime = Date.now();
+
+  setupScreen.classList.remove("active");
+  gameScreen.classList.add("active");
+  closeModal();
+  closeSideMenu();
+
+  timerDisplay.textContent = "00:00:00";
+  lastTwoDisplay.textContent = "--";
+  setEvent("--", currentLang === "en" ? "Press START to begin." : "Pulsa START para comenzar.", "neutral");
+  addLog(currentLang === "en" ? "Match started." : "Comienza el partido.");
+
+  startMatchClock();
+  updateUI();
+  syncActionControls();
+  lockActionTemporarily(180);
+  maybeMachineTurn();
+}
+
+function handleMainAction(){
+  if(isActionLocked()) return;
+  lockActionTemporarily(150);
+
+  if(gameState.matchEnded || pendingSpecial) return;
+
+  if(mainActionBtn){
+    mainActionBtn.disabled = true;
+    setTimeout(syncActionControls, 150);
+  }
+
+  if(gameState.isRunning) stopTimerAndEvaluate();
+  else startTimer();
+}
+
+function handleSpecialButton(){
+  if(isActionLocked()) return;
+  lockActionTemporarily(150);
+
+  if(!pendingSpecial || gameState.matchEnded) return;
+  if(gameState.gameMode === "machine" && gameState.currentPlayerIndex === 1) return;
+
+  if(gameState.isRunning){
+    stopTimer();
+    const v = getLastTwoDigits(currentElapsedMs);
+    lastTwoDisplay.textContent = pad(v);
+    evaluateSpecialThrow(v);
+  } else {
+    startTimer();
+    specialStartBtn.textContent = currentLang === "en" ? "STOP SPECIAL" : "STOP ESPECIAL";
+    setTimeout(syncActionControls, 150);
+  }
+}
+
+function formattedFinalResult(){
+  const p1 = gameState.players[0], p2 = gameState.players[1];
+  let text = `${safeDisplayName(p1.name)} | ${p1.goals} - ${p2.goals} | ${safeDisplayName(p2.name)}`;
+  if(p1.goals > p2.goals) text += `. Gana ${safeDisplayName(p1.name)}.`;
+  else if(p2.goals > p1.goals) text += `. Gana ${safeDisplayName(p2.name)}.`;
+  else text += ". Empate final.";
+  return text;
+}
+
+function showFinal(pens){
+  incrementMatches();
+
+  const p1 = gameState.players[0];
+  const p2 = gameState.players[1];
+
+  let text = `${safeDisplayName(p1.name)} ${p1.goals} - ${p2.goals} ${safeDisplayName(p2.name)}`;
+  if(p1.goals > p2.goals) text += `. Gana ${safeDisplayName(p1.name)}.`;
+  else if(p2.goals > p1.goals) text += `. Gana ${safeDisplayName(p2.name)}.`;
+  else text += ". Empate final.";
+  if(pens) text += currentLang === "en" ? " Decided on penalties." : " Resuelto en penaltis.";
+
+  gameState.lastFinalText = formattedFinalResult();
+
+  showModal(
+    currentLang === "en" ? "FULL TIME" : "FINAL DEL PARTIDO",
+    text,
+    finalHtml(),
+    [
+      {text: currentLang === "en" ? "REMATCH" : "REVANCHA", action: restartSameMatch},
+      {text: currentLang === "en" ? "SHARE RESULT" : "COMPARTIR RESULTADO", action: shareResult},
+      {text: currentLang === "en" ? "COPY RESULT" : "COPIAR RESULTADO", action: copyResult},
+      {text: currentLang === "en" ? "NEW MATCH" : "NUEVA PARTIDA", action: resetToSetup}
+    ]
+  );
+}
+
+function restartSameMatch(){
+  closeModal();
+  player1Input.value = safeDisplayName(gameState.players[0].name);
+  player2Input.value = safeDisplayName(gameState.players[1].name);
+  startMatch();
+}
+
+function wireAuditSafeEvents(){
+  if(startMatchBtn) startMatchBtn.onclick = startMatch;
+  if(mainActionBtn) mainActionBtn.onclick = handleMainAction;
+  if(specialStartBtn) specialStartBtn.onclick = handleSpecialButton;
+  if(debugThrowBtn) debugThrowBtn.onclick = forceDebugThrow;
+
+  if(resetBtn) resetBtn.onclick = confirmReset;
+  if(menuResetBtn) menuResetBtn.onclick = () => {
+    closeSideMenu();
+    confirmReset();
+  };
+
+  if(menuBtn) menuBtn.onclick = openSideMenu;
+  if(closeMenuBtn) closeMenuBtn.onclick = closeSideMenu;
+
+  if(rulesBtn) rulesBtn.onclick = showRulesModal;
+  if(menuRulesBtn) menuRulesBtn.onclick = () => {
+    closeSideMenu();
+    showRulesModal();
+  };
+
+  if(supportBtn) supportBtn.onclick = showSupportModal;
+  if(menuSupportBtn) menuSupportBtn.onclick = () => {
+    closeSideMenu();
+    showSupportModal();
+  };
+
+  if(shareBtn) shareBtn.onclick = shareCronoGol;
+  if(menuShareBtn) menuShareBtn.onclick = () => {
+    closeSideMenu();
+    shareCronoGol();
+  };
+
+  if(copyLinkBtn) copyLinkBtn.onclick = copyCronoGolLink;
+  if(menuCopyBtn) menuCopyBtn.onclick = () => {
+    closeSideMenu();
+    copyCronoGolLink();
+  };
+
+  [player1Input, player2Input].forEach((input)=>{
+    if(!input) return;
+    input.setAttribute("maxlength", "24");
+    input.addEventListener("blur", () => {
+      input.value = safePlayerName(input.value, input.id === "player2" ? "Jugador 2" : "Jugador 1");
+    });
+  });
+}
+
+window.addEventListener("popstate", () => {
+  closeTopLayer();
+});
+
+window.addEventListener("keydown", (event) => {
+  if(event.key === "Escape") closeTopLayer();
+});
+
+wireAuditSafeEvents();
+syncActionControls();
+

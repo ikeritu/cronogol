@@ -1,0 +1,20 @@
+{
+  "name": "CronoGol",
+  "short_name": "CronoGol",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050909",
+  "theme_color": "#d98619",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

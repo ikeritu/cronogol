@@ -1766,8 +1766,85 @@ body.cg-flash-red .game-device {
 }
 
 
-/* ===== CronoGol v1.10.11: strict physical vibration gate =====
+/* ===== CronoGol v1.10.13: strict physical vibration gate =====
    La vibración física está totalmente centralizada en game.js:
    physicalVibration() -> solo goal / penalty_fail.
    Feedback visual activo solo para goal y penalty_fail.
 */
+
+
+/* ===== CronoGol v1.10.13: Project Audit UI/UX fixes ===== */
+.top-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  margin-bottom: 14px;
+  padding: 8px 11px;
+  border: 2px solid var(--line);
+  border-radius: 999px;
+  color: var(--orange);
+  background: rgba(0,0,0,.26);
+  text-decoration: none;
+  font-family: "Courier New", monospace;
+  font-weight: 900;
+  letter-spacing: .4px;
+}
+
+.top-back-link:hover,
+.top-back-link:focus-visible {
+  border-color: var(--orange);
+  background: rgba(217,134,25,.16);
+  outline: none;
+}
+
+.side-menu {
+  opacity: 1;
+  transition: opacity .18s ease;
+}
+
+.side-menu.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.side-menu-card {
+  transform: translateX(0);
+  transition: transform .18s ease;
+}
+
+.side-menu.hidden .side-menu-card {
+  transform: translateX(16px);
+}
+
+.lang-btn {
+  border: 1px solid transparent;
+}
+
+.lang-btn:hover,
+.lang-btn:focus-visible {
+  border-color: rgba(217,134,25,.72);
+  outline: none;
+}
+
+.lang-btn.active {
+  background: #d98619;
+  color: #111;
+  border-color: #f4c06d;
+  box-shadow: 0 0 0 2px rgba(217,134,25,.20);
+}
+
+.modal-card {
+  max-width: min(620px, 94vw);
+}
+
+.modal-actions button:first-child {
+  border-color: var(--orange);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .side-menu,
+  .side-menu-card {
+    transition: none !important;
+  }
+}

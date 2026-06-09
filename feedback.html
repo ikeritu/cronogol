@@ -7,7 +7,7 @@
   <link rel="icon" href="favicon.png" type="image/png" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <title>Feedback · CronoGol</title>
-  <link rel="stylesheet" href="style.css?v=1.10.11" />
+  <link rel="stylesheet" href="style.css?v=1.10.13" />
 </head>
 <body>
   <div class="top-language-switch" aria-label="Language selector">
@@ -16,6 +16,7 @@
   </div>
   <main class="static-page">
     <section class="static-card">
+      <a class="top-back-link" href="index.html">← Inicio</a>
       <img src="logo-cronogol-horizontal.png" alt="CronoGol" class="cg-logo cg-logo-static" />
 
       <h1 data-i18n="title">Feedback</h1>
@@ -45,7 +46,7 @@
 
         <label>
           Email opcional
-          <input name="email" type="email" placeholder="Solo si quieres que te pueda responder" />
+          <input name="email" type="email" placeholder="Solo si quieres que te pueda responder" / maxlength="120">
         </label>
 
         <label>
@@ -79,6 +80,7 @@
 
   <script>
     const FORMSPREE_ENDPOINT = "https://formspree.io/f/xjgdkwev";
+    const AUDIT_FRONTEND_NOTE = "Pendiente opcional: mover este endpoint a Cloudflare Worker/Pages Function si se requiere ocultación perimetral.";
 
     const form = document.getElementById("feedback-form");
     const statusBox = document.getElementById("feedback-status");

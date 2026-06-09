@@ -1,0 +1,23 @@
+{
+  "project": "CronoGol",
+  "stable_freeze": "v1.10.11_ESTABLE_VIBRATION_OK",
+  "base_version": "v1.10.11 Strict Physical Vibration Gate",
+  "status": "stable_confirmed",
+  "logic_changed_from_v1_10_11": false,
+  "confirmed_by_user": true,
+  "event_tracking_removed": true,
+  "technical_checks": {
+    "haptic_removed": true,
+    "generic_vibrate_removed": true,
+    "physicalVibration_exists": true,
+    "applyPhysicalVibration_exists": true,
+    "machine_special_direct_resolve_kept": true,
+    "event_tracking_removed": true
+  },
+  "node_check": {
+    "game.js": {
+      "status": "ok",
+      "output": ""
+    }
+  }
+}

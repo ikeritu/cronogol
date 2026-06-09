@@ -11,8 +11,9 @@
   <meta property="og:image" content="https://cronogol.es/og-cronogol.png" />
   <link rel="icon" href="favicon.png" type="image/png" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-  <title>CronoGol v1.10.11</title>
-  <link rel="stylesheet" href="style.css?v=1.10.11" />
+  <title>CronoGol v1.10.13</title>
+  <link rel="stylesheet" href="style.css?v=1.10.13" />
+  <link rel="manifest" href="site.webmanifest" />
 </head>
 <body>
   <main class="app">
@@ -108,16 +109,11 @@
           <span class="tag" data-i18n="inDevelopment">En desarrollo</span>
           <p><strong data-i18n="onlineSoon">Modo online próximamente</strong> · <span data-i18n="onlineSoonText">Salas privadas para jugar con amigos.</span></p>
         </section>
-
-        <section class="sponsor-slot support-strip">
-          <p><strong data-i18n="sponsorSpace">CronoGol es gratis</strong> · <span data-i18n="sponsorText">Puedes apoyar el proyecto invitándome a un café.</span></p>
-        </section>
-
-        <div class="watch-footer-labels">
+<div class="watch-footer-labels">
           <span>WATER RESIST</span>
           <span>FOOTBALL CHRONO</span>
         </div>
-        <footer class="version-footer">CronoGol v1.10.11 · Partidas en este dispositivo: <strong id="local-matches-count">0</strong><br><span class="copyright-footer">© 2026 CronoGol. Juego original creado por Iker Ituarte. Todos los derechos reservados.</span></footer>
+        <footer class="version-footer">CronoGol v1.10.13 · Partidas en este dispositivo: <strong id="local-matches-count">0</strong><br><span class="copyright-footer">© 2026 CronoGol. Juego original creado por Iker Ituarte. Todos los derechos reservados.</span></footer>
       </div>
     </section>
 
@@ -239,9 +235,16 @@
       </div>
     </section>
   </main>
-<script src="game.js?v=1.10.11"></script>
+<script src="game.js?v=1.10.13"></script>
 <!-- Cloudflare Web Analytics -->
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7ee638b73aa24300b417a555e67fd1ae"}'></script>
 <!-- End Cloudflare Web Analytics -->
+<script>
+if("serviceWorker" in navigator){
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(()=>{});
+  });
+}
+</script>
 </body>
 </html>

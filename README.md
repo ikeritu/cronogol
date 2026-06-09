@@ -399,3 +399,40 @@ No se toca:
 - Penalti/falta automática de máquina.
 - Sonidos.
 - Zaraz/tracking de eventos.
+
+
+## v1.10.11_ESTABLE_VIBRATION_OK
+
+Versión congelada como estable tras confirmar que la vibración física cumple la norma cerrada.
+
+Confirmado: gol fuerte, penalti fallado leve, y sin vibración en fallo normal, falta fallada, poste/larguero, START/STOP, tarjetas y descanso/final.
+
+Esta versión debe usarse como base para futuras modificaciones.
+
+
+## v1.10.12 — Project Audit Fixes
+
+Correcciones aplicadas desde la auditoría multidisciplinar:
+
+- Debounce/bloqueo temporal de START/STOP y tirada especial.
+- Sanitización y límite de nombres de jugadores.
+- Confirmación real antes de reiniciar partido.
+- Cierre de menú/modal con Escape y botón atrás.
+- Botón superior "Inicio" en páginas secundarias.
+- Mejora visual de estados del selector de idioma.
+- Transición suave del menú lateral.
+- Fallback de portapapeles ya mantenido.
+- Cache busting actualizado a `game.js?v=1.10.12` y `style.css?v=1.10.12`.
+- PWA mínima con `sw.js` y `site.webmanifest`.
+
+No se han cambiado reglas, marcador, máquina, sonidos ni vibración estable.
+
+
+## v1.10.13 — Home Support Dedup
+
+Ajuste de UX en pantalla de inicio:
+
+- Se elimina la segunda llamada de apoyo económico.
+- Se mantiene un único botón claro: `☕ Apoya CronoGol`.
+- Se elimina la franja redundante: `CronoGol es gratis · Puedes apoyar el proyecto invitándome a un café`.
+- No se toca juego, reglas, máquina, sonidos, vibración ni analítica.

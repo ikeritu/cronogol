@@ -1,5 +1,72 @@
 # CHANGELOG
 
+## v1.10.13 — Home Support Dedup
+
+### UI/UX
+
+- Eliminada la franja redundante de apoyo económico en la pantalla de inicio.
+- Se conserva un único CTA de apoyo: `☕ Apoya CronoGol`.
+- La home queda menos insistente y más limpia.
+
+### No se ha tocado
+
+- Reglas.
+- Marcador.
+- Máquina.
+- Penalti/falta automática de máquina.
+- Sonidos.
+- Vibración estricta.
+- Cloudflare Web Analytics.
+- Zaraz/event tracking.
+
+
+## v1.10.12 — Project Audit Fixes
+
+### Frontend
+
+- Añadido debounce de 150 ms en botón principal y tirada especial.
+- Sanitizados y truncados nombres de jugadores a 24 caracteres.
+- Reducido riesgo de inyección accidental en textos de usuario.
+- Cierre de capas con Escape y `popstate`.
+
+### UI/UX
+
+- Confirmación antes de reiniciar partido.
+- Botón superior de vuelta a inicio en páginas estáticas.
+- Transición suave del menú lateral.
+- Estado activo/focus del selector de idioma reforzado.
+
+### QA / estabilidad
+
+- Botón principal se deshabilita temporalmente durante el ciclo crítico.
+- Reset limpia timers, intervalos y paneles.
+- Se mantiene flujo estable de máquina y vibración estricta.
+
+### PWA mínima
+
+- Añadidos `sw.js` y `site.webmanifest`.
+
+
+## v1.10.11_ESTABLE_VIBRATION_OK
+
+### Estado
+
+- Congelada como versión estable tras validación manual.
+- Confirmado que la vibración física solo ocurre en gol y penalti fallado.
+- Confirmado cache busting `game.js?v=1.10.11` y `style.css?v=1.10.11`.
+
+### No se ha tocado
+
+- Código funcional respecto a `v1.10.11`.
+- Reglas.
+- Marcador.
+- Máquina.
+- Penalti/falta automática de máquina.
+- Sonidos.
+- Cloudflare Web Analytics.
+- Footer/copyright.
+
+
 ## v1.10.11 — Strict Physical Vibration Gate
 
 ### Correcciones
