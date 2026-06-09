@@ -1764,3 +1764,10 @@ body.cg-flash-red .game-device {
     animation: none !important;
   }
 }
+
+
+/* ===== CronoGol v1.10.11: strict physical vibration gate =====
+   La vibración física está totalmente centralizada en game.js:
+   physicalVibration() -> solo goal / penalty_fail.
+   Feedback visual activo solo para goal y penalty_fail.
+*/

@@ -1,4 +1,4 @@
-# CronoGol v1.10.10 — Vibration Strict Fix
+# CronoGol v1.10.11 — Strict Physical Vibration Gate
 
 ## Objetivo
 
@@ -351,6 +351,45 @@ Ajuste:
 - START/STOP: sin vibración física.
 - Tarjetas/descanso/final: sin vibración física.
 - También se elimina la vibración visual de fallo normal/poste/larguero para evitar confusión.
+
+No se toca:
+
+- Reglas.
+- Marcador.
+- Máquina.
+- Penalti/falta automática de máquina.
+- Sonidos.
+- Zaraz/tracking de eventos.
+
+
+## v1.10.11 — Strict Physical Vibration Gate
+
+Esta versión blinda la vibración física según la norma cerrada:
+
+| Caso | Vibración física |
+|---|---:|
+| Gol | Fuerte |
+| Penalti fallado | Leve |
+| Fallo normal | Eliminada |
+| Falta fallada | Eliminada |
+| Poste/larguero | Eliminada |
+| START/STOP | Eliminada |
+| Tarjetas | Eliminada |
+| Descanso/final | Eliminada |
+
+Cambios técnicos:
+
+- Eliminado `haptic()` genérico.
+- Eliminado `vibrate()` genérico.
+- Añadido `physicalVibration(event)` como único punto que puede llamar a `navigator.vibrate`.
+- Añadido `applyPhysicalVibration(context)` como única puerta de decisión.
+- Eliminadas llamadas directas a vibración fuera de `physicalVibration()`.
+- `triggerScreenFeedback()` solo aplica animación en:
+  - `goal`;
+  - `penalty_fail`.
+- Añadido cache busting:
+  - `game.js?v=1.10.11`;
+  - `style.css?v=1.10.11`.
 
 No se toca:
 

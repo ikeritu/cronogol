@@ -1,5 +1,34 @@
 # CHANGELOG
 
+## v1.10.11 — Strict Physical Vibration Gate
+
+### Correcciones
+
+- Eliminado `haptic()` genérico.
+- Eliminado `vibrate()` genérico.
+- Añadido `physicalVibration(event)` como único punto permitido para `navigator.vibrate`.
+- Añadido `applyPhysicalVibration(context)` como única función de decisión.
+- Gol vibra fuerte.
+- Penalti fallado vibra leve.
+- Fallo normal no vibra.
+- Falta fallada no vibra.
+- Poste/larguero no vibra.
+- START/STOP no vibra.
+- Tarjetas no vibran.
+- Descanso/final no vibra.
+- Eliminada animación de fallo normal.
+- Añadido cache busting `game.js?v=1.10.11` y `style.css?v=1.10.11`.
+
+### No se ha tocado
+
+- Reglas.
+- Marcador.
+- Máquina.
+- Penalti/falta automática de máquina.
+- Sonidos.
+- Zaraz/tracking de eventos.
+
+
 ## v1.10.10 — Vibration Strict Fix
 
 ### Correcciones

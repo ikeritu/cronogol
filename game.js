@@ -269,27 +269,47 @@ function clockSec(){
     return `${pad(Math.floor(sec/60))}:${pad(sec%60)}`;
   }catch(e){ return "00:00"; }
 }
-function vibrate(pattern){
+
+
+
+function physicalVibration(event){
+  // v1.10.11 — Strict Physical Vibration Gate
+  // ÚNICO punto permitido para activar vibración física.
+  // Norma:
+  // - Gol: vibración fuerte
+  // - Penalti fallado: vibración leve
+  // - Todo lo demás: sin vibración física
   try{
     if(!navigator.vibrate) return;
-    navigator.vibrate(pattern);
+
+    if(event === "goal"){
+      navigator.vibrate([130, 45, 170]);
+      return;
+    }
+
+    if(event === "penalty_fail"){
+      navigator.vibrate([35]);
+      return;
+    }
   }catch(e){}
 }
 
-function haptic(type){
-  // v1.10.10:
-  // ÚNICA puerta de vibración física.
-  // Solo vibra en:
-  // - gol: fuerte
-  // - penalti fallado: leve
-  const patterns = {
-    goal: [120, 45, 160],
-    penalty_fail: [35]
-  };
+function applyPhysicalVibration(context){
+  if(!context || !context.result) return;
 
-  if(!patterns[type]) return;
-  vibrate(patterns[type]);
+  if(context.result === "goal"){
+    physicalVibration("goal");
+    return;
+  }
+
+  if(context.result === "penalty_fail"){
+    physicalVibration("penalty_fail");
+    return;
+  }
+
+  // Todos los demás eventos quedan explícitamente sin vibración.
 }
+
 function playSound(type){
   try{
     if(!gameState.soundEnabled || !soundEnabledInput.checked) return;
@@ -398,16 +418,7 @@ function triggerScreenFeedback(type){
   try{
     const map = {
       goal: "cg-flash-goal",
-      penalty: "cg-flash-penalty",
-      penalty_fail: "cg-shake-soft",
-      free_kick: "cg-flash-special",
-      post: "",
-      crossbar: "",
-      yellow: "cg-flash-yellow",
-      red: "cg-flash-red",
-      miss: "",
-      half_time: "cg-flash-special",
-      full_time: "cg-flash-special"
+      penalty_fail: "cg-shake-soft"
     };
     const cls = map[type];
     if(!cls) return;
@@ -415,7 +426,7 @@ function triggerScreenFeedback(type){
     document.body.classList.remove(...classes);
     void document.body.offsetWidth;
     document.body.classList.add(cls);
-    window.setTimeout(()=>document.body.classList.remove(cls), type === "goal" ? 760 : 620);
+    window.setTimeout(()=>document.body.classList.remove(cls), type === "goal" ? 760 : 520);
   }catch(e){}
 }
 async function copyText(text,msg){
@@ -567,9 +578,7 @@ function startMatch(){
   pendingSpecial=null; penaltyShootout=null; currentElapsedMs=0; stopwatchBaseMs=0; matchStartTime=Date.now();
   setupScreen.classList.remove("active"); gameScreen.classList.add("active"); closeModal(); sideMenu.classList.add("hidden");
   timerDisplay.textContent="00:00:00"; lastTwoDisplay.textContent="--"; setEvent("--", currentLang === "en" ? "Press START to begin." : "Pulsa START para comenzar.","neutral");
-  // v1.10.10: vibración física directa eliminada; usar haptic('goal') o haptic('penalty_fail') si procede.
-
-  syncActionControls();
+  // v1.10.11: vibración física directa eliminada; usar
 }
 
 function handleMainAction(){ if(gameState.matchEnded||pendingSpecial) return; gameState.isRunning ? stopTimerAndEvaluate() : startTimer(); }
@@ -633,7 +642,8 @@ function applyNormalResult(v,r){
   if(r.type === "goal"){
     p.goals++;
     gameState.stats.goals++;
-    haptic("goal");
+    applyPhysicalVibration({ result: "goal" });
+
     if(isFastMode() && hasFastModeWinner()){
       endMatch();
     } else {
@@ -642,7 +652,7 @@ function applyNormalResult(v,r){
   }
   else if(r.type === "post" || r.type === "crossbar"){
     gameState.stats.woodwork++;
-messageLabel.textContent += ". Repite.";
+    messageLabel.textContent += ". Repite.";
   }
   else if(r.type === "half_time"){
     if(gameState.half === 1) showHalfTime();
@@ -651,12 +661,12 @@ messageLabel.textContent += ". Repite.";
   else if(r.type === "yellow"){
     p.skipTurns++;
     gameState.stats.cards++;
-switchTurn();
+    switchTurn();
   }
   else if(r.type === "red"){
     p.skipTurns += 2;
     gameState.stats.cards++;
-switchTurn();
+    switchTurn();
   }
   else if(r.type === "full_time"){
     endMatch();
@@ -676,7 +686,8 @@ switchTurn();
 
     mainActionBtn.disabled = true;
     specialStartBtn.disabled = true;
-updateUI();
+
+    updateUI();
     syncActionControls();
 
     if(
@@ -727,9 +738,13 @@ function evaluateSpecialThrow(v){
   setEvent(msg, `${pad(v)} → ${msg}`, goal ? "goal" : "neutral");
   addLog(`${clockSec()}  ${p.name} — ${pad(v)} — ${msg}`);
   playSound(goal ? "goal" : (specialType === "penalty" ? "penalty_fail" : "miss"));
-  triggerScreenFeedback(goal ? "goal" : specialType);
-  if(goal) haptic("goal");
-  else if(specialType === "penalty") haptic("penalty_fail");
+  triggerScreenFeedback(goal ? "goal" : (specialType === "penalty" ? "penalty_fail" : "free_kick_fail"));
+
+  if(goal){
+    applyPhysicalVibration({ result: "goal" });
+  } else if(specialType === "penalty"){
+    applyPhysicalVibration({ result: "penalty_fail" });
+  }
 
   pendingSpecial = null;
   specialPanel.classList.add("hidden");
@@ -766,9 +781,8 @@ function evaluateShootoutPenalty(v){
   addLog(`${clockSec()}  ${gameState.players[idx].name} — ${pad(v)} — ${goal ? "Gol penalti" : "Penalti fallado"}`);
   setEvent(goal ? "GOL" : "FALLO", pad(v), goal ? "goal" : "neutral");
   playSound(goal ? "goal" : "penalty_fail");
-  triggerScreenFeedback(goal ? "goal" : "penalty");
-  if(goal) haptic("goal");
-  else haptic("penalty_fail");
+  triggerScreenFeedback(goal ? "goal" : "penalty_fail");
+  applyPhysicalVibration({ result: goal ? "goal" : "penalty_fail" });
 
   if(isShootoutFinished()){
     gameState.matchEnded = true;
