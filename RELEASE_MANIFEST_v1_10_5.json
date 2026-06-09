@@ -1,30 +1,16 @@
 {
   "project": "CronoGol",
   "version": "1.10.5",
-  "release_name": "Native GA4 Tracking",
+  "release_name": "Machine Special Autoshot Fix",
   "base_version": "1.10.4 Machine Special Lock Fix",
-  "status": "stable_candidate",
-  "primary_url": "https://cronogol.es/",
-  "ga4": {
-    "native_gtag": true,
-    "measurement_id": "G-B7KQNZZLPR",
-    "data_cfasync_false": true,
-    "added_to_html": {
-      "apoya.html": true,
-      "como-jugar.html": true,
-      "contacto.html": true,
-      "feedback.html": true,
-      "gracias.html": true,
-      "historia.html": true,
-      "index.html": true,
-      "modos.html": true,
-      "privacidad.html": true
-    }
-  },
-  "cloudflare_web_analytics_kept": true,
-  "recommendation": "Disable/remove GA4 tool in Zaraz to avoid duplicates.",
-  "logic_changed": false,
-  "game_rules_changed": false,
+  "logic_changed": true,
+  "scope": "machine special autoshot only",
+  "event_tracking_removed": true,
+  "fixes": [
+    "removed nonexistent startSpecialTimer call",
+    "machine special uses existing startTimer/stopTimer",
+    "human controls remain locked during machine special"
+  ],
   "node_check": {
     "game.js": {
       "status": "ok",
@@ -35,12 +21,8 @@
     "CHANGELOG.md",
     "CNAME",
     "CSS_AUDIT_v1_10_0.md",
-    "QA_CHECKLIST_v1_10_3.md",
-    "QA_CHECKLIST_v1_10_4.md",
-    "QA_CHECKLIST_v1_10_5.md",
     "README.md",
     "RELEASE_MANIFEST_v1_10_0.json",
-    "RELEASE_MANIFEST_v1_10_1.json",
     "RELEASE_MANIFEST_v1_10_2.json",
     "RELEASE_MANIFEST_v1_10_3.json",
     "RELEASE_MANIFEST_v1_10_4.json",

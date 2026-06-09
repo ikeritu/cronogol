@@ -583,6 +583,7 @@ function maybeMachineSpecialTurn(){
     return;
   }
 
+  // Bloquea controles humanos, pero la IA no depende de botones habilitados.
   mainActionBtn.disabled = true;
   specialStartBtn.disabled = true;
 
@@ -599,7 +600,12 @@ function maybeMachineSpecialTurn(){
       return;
     }
 
-    startSpecialTimer();
+    // v1.10.5:
+    // En el código actual no existe startSpecialTimer().
+    // La tirada especial comparte el cronómetro principal usando startTimer()/stopTimer().
+    // Como el botón visible está bloqueado para el usuario, la máquina debe ejecutar esto por código.
+    startTimer();
+    specialStartBtn.textContent = "STOP ESPECIAL";
 
     machineSpecialStopTimeout = setTimeout(() => {
       if(
@@ -610,15 +616,30 @@ function maybeMachineSpecialTurn(){
         penaltyShootout ||
         !gameScreen.classList.contains("active")
       ){
+        if(gameState.isRunning) stopTimer();
         syncActionControls();
         return;
       }
 
       const value = getMachineSpecialForcedValue(pendingSpecial);
+      stopTimer();
+      lastTwoDisplay.textContent = pad(value);
       evaluateSpecialThrow(value);
 
-      // evaluateSpecialThrow cambia turno/estado. Sin desbloqueo incondicional.
+      // evaluateSpecialThrow puede activar/desactivar botones internamente.
+      // Forzamos el estado correcto después.
       syncActionControls();
+
+      if(
+        !gameState.matchEnded &&
+        !pendingSpecial &&
+        gameState.gameMode === "machine" &&
+        gameState.currentPlayerIndex === 1 &&
+        !penaltyShootout &&
+        gameScreen.classList.contains("active")
+      ){
+        maybeMachineTurn();
+      }
     }, getMachineSpecialStopDelay());
   }, randomInt(500,1000));
 }
@@ -1406,7 +1427,7 @@ function showSupportModal(){
 }
 
 
-/* ===== CronoGol v1.10.4: game feel improvements ===== */
+/* ===== CronoGol v1.10.5: game feel improvements ===== */
 /* No modifica reglas, turnos, START/STOP ni lógica base del partido. */
 
 function machineDifficultyText(){

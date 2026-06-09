@@ -1,5 +1,26 @@
 # CHANGELOG
 
+## v1.10.5 — Machine Special Autoshot Fix
+
+### Correcciones
+
+- Corregido el caso en el que la máquina conseguía penalti/falta, el botón quedaba bloqueado, pero la máquina no ejecutaba la tirada especial.
+- Sustituida llamada inexistente a `startSpecialTimer()` por el flujo real `startTimer()` / `stopTimer()`.
+- El botón especial sigue bloqueado para el usuario durante el turno automático.
+- La máquina resuelve penalti/falta automáticamente.
+
+### No se ha tocado
+
+- Reglas.
+- Marcador.
+- Modo rápido.
+- Modo clásico.
+- Estadísticas.
+- Historial.
+- Sonidos/feedback visual.
+- Zaraz/tracking de eventos.
+
+
 ## v1.10.4 — Machine Special Lock Fix
 
 ### Correcciones

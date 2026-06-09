@@ -1,4 +1,4 @@
-# CronoGol v1.10.4 — Machine Special Lock Fix
+# CronoGol v1.10.5 — Machine Special Autoshot Fix
 
 ## Objetivo
 
@@ -198,3 +198,23 @@ Cambios:
 - No se reintroduce Zaraz ni tracking de eventos.
 
 No se cambian reglas ni comportamiento de marcador.
+
+
+## v1.10.5 — Machine Special Autoshot Fix
+
+Esta versión parte de `v1.10.4 Machine Special Lock Fix`.
+
+Motivo:
+
+- `v1.10.4` bloqueaba correctamente el botón START/STOP cuando la máquina obtenía penalti/falta.
+- Pero la máquina no ejecutaba la tirada especial porque `maybeMachineSpecialTurn()` llamaba a una función inexistente (`startSpecialTimer()`).
+
+Corrección:
+
+- La tirada especial automática de la máquina usa el cronómetro real existente: `startTimer()` y `stopTimer()`.
+- El botón sigue bloqueado para el usuario.
+- La máquina ejecuta el disparo especial por código.
+- Se mantiene `syncActionControls()` después de la tirada.
+- No se reintroduce Zaraz ni tracking de eventos.
+
+No se cambian reglas ni marcador.
