@@ -1,5 +1,27 @@
 # CHANGELOG
 
+## v1.10.10 — Vibration Strict Fix
+
+### Correcciones
+
+- Eliminada vibración física residual tras fallo normal.
+- Eliminadas llamadas directas a `vibrate()` fuera de `haptic()`.
+- `haptic()` queda como única puerta de vibración física.
+- Solo vibra:
+  - gol;
+  - penalti fallado.
+- Eliminada vibración visual de fallo normal, poste y larguero.
+
+### No se ha tocado
+
+- Reglas.
+- Marcador.
+- Máquina.
+- Penalti/falta automática de máquina.
+- Sonidos.
+- Zaraz/tracking de eventos.
+
+
 ## v1.10.9 — Haptics Tuning
 
 ### Cambios

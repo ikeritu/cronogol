@@ -1,4 +1,4 @@
-# CronoGol v1.10.9 — Haptics Tuning
+# CronoGol v1.10.10 — Vibration Strict Fix
 
 ## Objetivo
 
@@ -331,5 +331,32 @@ No se toca:
 - Penalti/falta automática de máquina.
 - Historial.
 - Estadísticas.
+- Sonidos.
+- Zaraz/tracking de eventos.
+
+
+## v1.10.10 — Vibration Strict Fix
+
+Corrige la vibración tras fallo normal.
+
+Ajuste:
+
+- Se eliminan todas las llamadas directas a vibración física fuera de `haptic()`.
+- `haptic()` solo permite vibrar en:
+  - gol: vibración fuerte;
+  - penalti fallado: vibración leve.
+- Fallo normal: sin vibración física.
+- Falta fallada: sin vibración física.
+- Poste/larguero: sin vibración física.
+- START/STOP: sin vibración física.
+- Tarjetas/descanso/final: sin vibración física.
+- También se elimina la vibración visual de fallo normal/poste/larguero para evitar confusión.
+
+No se toca:
+
+- Reglas.
+- Marcador.
+- Máquina.
+- Penalti/falta automática de máquina.
 - Sonidos.
 - Zaraz/tracking de eventos.

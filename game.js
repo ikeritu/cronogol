@@ -277,11 +277,11 @@ function vibrate(pattern){
 }
 
 function haptic(type){
-  // v1.10.9:
-  // Vibración física solo en dos casos:
-  // - gol: vibración fuerte
-  // - penalti fallado: vibración leve
-  // El resto de eventos conservan sonido/feedback visual, pero no vibración física.
+  // v1.10.10:
+  // ÚNICA puerta de vibración física.
+  // Solo vibra en:
+  // - gol: fuerte
+  // - penalti fallado: leve
   const patterns = {
     goal: [120, 45, 160],
     penalty_fail: [35]
@@ -401,11 +401,11 @@ function triggerScreenFeedback(type){
       penalty: "cg-flash-penalty",
       penalty_fail: "cg-shake-soft",
       free_kick: "cg-flash-special",
-      post: "cg-shake-soft",
-      crossbar: "cg-shake-soft",
+      post: "",
+      crossbar: "",
       yellow: "cg-flash-yellow",
       red: "cg-flash-red",
-      miss: "cg-shake-soft",
+      miss: "",
       half_time: "cg-flash-special",
       full_time: "cg-flash-special"
     };
@@ -567,15 +567,15 @@ function startMatch(){
   pendingSpecial=null; penaltyShootout=null; currentElapsedMs=0; stopwatchBaseMs=0; matchStartTime=Date.now();
   setupScreen.classList.remove("active"); gameScreen.classList.add("active"); closeModal(); sideMenu.classList.add("hidden");
   timerDisplay.textContent="00:00:00"; lastTwoDisplay.textContent="--"; setEvent("--", currentLang === "en" ? "Press START to begin." : "Pulsa START para comenzar.","neutral");
-  startMatchClock(); updateUI(); addLog("Comienza el partido."); vibrate([30]); maybeMachineTurn();
+  // v1.10.10: vibración física directa eliminada; usar haptic('goal') o haptic('penalty_fail') si procede.
 
   syncActionControls();
 }
 
 function handleMainAction(){ if(gameState.matchEnded||pendingSpecial) return; gameState.isRunning ? stopTimerAndEvaluate() : startTimer(); }
 function startTimer(){
-  gameState.isRunning=true; timerStartTime=performance.now(); mainActionBtn.textContent="STOP"; mainActionBtn.classList.add("stop"); playSound("beep"); haptic("start");
-  timerInterval=setInterval(()=>{ currentElapsedMs=stopwatchBaseMs+(performance.now()-timerStartTime); updateTimerDisplay(currentElapsedMs); },16);
+  gameState.isRunning=true; timerStartTime=performance.now(); mainActionBtn.textContent="STOP"; mainActionBtn.classList.add("stop"); playSound("beep");
+timerInterval=setInterval(()=>{ currentElapsedMs=stopwatchBaseMs+(performance.now()-timerStartTime); updateTimerDisplay(currentElapsedMs); },16);
 }
 function stopTimerAndEvaluate(forcedValue=null){
   stopTimer(); const value = forcedValue ?? getLastTwoDigits(currentElapsedMs); lastTwoDisplay.textContent=pad(value);
@@ -583,7 +583,8 @@ function stopTimerAndEvaluate(forcedValue=null){
   gameState.totalTurns++; if(gameState.half===1) gameState.firstHalfTurns++; else gameState.secondHalfTurns++;
   applyNormalResult(value,evaluateThrow(value));
 }
-function stopTimer(){ gameState.isRunning=false; clearInterval(timerInterval); timerInterval=null; stopwatchBaseMs=currentElapsedMs; mainActionBtn.textContent="START"; mainActionBtn.classList.remove("stop"); playSound("stop"); haptic("stop"); }
+function stopTimer(){ gameState.isRunning=false; clearInterval(timerInterval); timerInterval=null; stopwatchBaseMs=currentElapsedMs; mainActionBtn.textContent="START"; mainActionBtn.classList.remove("stop"); playSound("stop");
+}
 function getLastTwoDigits(ms){ return Math.floor(ms/10)%100; }
 function updateTimerDisplay(ms){ const h=Math.floor(ms/10),m=Math.floor(h/6000),s=Math.floor((h%6000)/100),c=h%100; timerDisplay.textContent=`${pad(m)}:${pad(s)}:${pad(c)}`; lastTwoDisplay.textContent=pad(c); }
 
@@ -641,8 +642,7 @@ function applyNormalResult(v,r){
   }
   else if(r.type === "post" || r.type === "crossbar"){
     gameState.stats.woodwork++;
-    haptic("woodwork");
-    messageLabel.textContent += ". Repite.";
+messageLabel.textContent += ". Repite.";
   }
   else if(r.type === "half_time"){
     if(gameState.half === 1) showHalfTime();
@@ -651,14 +651,12 @@ function applyNormalResult(v,r){
   else if(r.type === "yellow"){
     p.skipTurns++;
     gameState.stats.cards++;
-    haptic("yellow");
-    switchTurn();
+switchTurn();
   }
   else if(r.type === "red"){
     p.skipTurns += 2;
     gameState.stats.cards++;
-    haptic("red");
-    switchTurn();
+switchTurn();
   }
   else if(r.type === "full_time"){
     endMatch();
@@ -678,9 +676,7 @@ function applyNormalResult(v,r){
 
     mainActionBtn.disabled = true;
     specialStartBtn.disabled = true;
-    haptic("special");
-
-    updateUI();
+updateUI();
     syncActionControls();
 
     if(
@@ -732,7 +728,8 @@ function evaluateSpecialThrow(v){
   addLog(`${clockSec()}  ${p.name} — ${pad(v)} — ${msg}`);
   playSound(goal ? "goal" : (specialType === "penalty" ? "penalty_fail" : "miss"));
   triggerScreenFeedback(goal ? "goal" : specialType);
-  haptic(goal ? "goal" : (specialType === "penalty" ? "penalty_fail" : "miss"));
+  if(goal) haptic("goal");
+  else if(specialType === "penalty") haptic("penalty_fail");
 
   pendingSpecial = null;
   specialPanel.classList.add("hidden");
@@ -770,7 +767,8 @@ function evaluateShootoutPenalty(v){
   setEvent(goal ? "GOL" : "FALLO", pad(v), goal ? "goal" : "neutral");
   playSound(goal ? "goal" : "penalty_fail");
   triggerScreenFeedback(goal ? "goal" : "penalty");
-  haptic(goal ? "goal" : "penalty_fail");
+  if(goal) haptic("goal");
+  else haptic("penalty_fail");
 
   if(isShootoutFinished()){
     gameState.matchEnded = true;
