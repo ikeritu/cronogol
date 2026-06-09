@@ -1,37 +1,40 @@
 # CHANGELOG
 
-## v1.10.6 — Machine Fast Penalty + GA4 Fix
+## v1.10.3 — Goal & Penalty Feedback
 
 ### Cambios
 
-- Corregido bloqueo de `START` durante penalti/falta de la máquina también en modo rápido.
-- Añadido bloqueo en fase de captura para impedir que listeners antiguos reciban el click.
-- Añadido bloqueo por teclado.
-- Añadido observador de estado para mantener botones bloqueados durante tiradas especiales de máquina.
-- Reforzado tracking con eventos por click real.
-- Añadido fallback directo a `gtag("event", ...)` si la capa principal falla.
+- Mejorado el sonido de gol.
+- Añadido sonido reconocible para penalti/falta.
+- Añadido sonido de penalti fallado.
+- Añadido flash visual para gol, penalti, falta y tarjetas.
+- Añadida vibración visual suave del dispositivo para palo/larguero.
+- Añadido soporte `prefers-reduced-motion`.
 
 ### No se ha tocado
 
-- Reglas del juego.
-- Probabilidad de penalti/falta.
-- Marcador.
+- Lógica del juego.
+- Reglas.
+- Turnos.
+- Máquina.
 - Estadísticas.
 - Historial.
-- CSS principal.
+- START/STOP.
+- Tracking de eventos/Zaraz.
 
-## v1.10.5 — Native GA4 Tracking
+
+## v1.10.2 — Stability Rollback
 
 ### Cambios
 
-- Añadido Google Analytics 4 directo con `gtag.js`.
-- Measurement ID: `G-B7KQNZZLPR`.
-- Añadido `data-cfasync="false"` al script de GA4.
-- GA4 añadido en todas las páginas HTML.
-- Se mantiene Cloudflare Web Analytics.
-- Se mantiene la capa de eventos existente en `game.js`.
-- Actualizada privacidad y documentación.
-- Recomendación: no usar GA4 también en Zaraz para evitar duplicados.
+- Rollback a la base estable `v1.10.0 CSS Refactor`.
+- Retirada la capa de eventos de juego introducida en `v1.10.1`.
+- Mantenido Cloudflare Web Analytics básico.
+- Actualizada versión a `v1.10.2`.
+
+### Motivo
+
+Se detectó bloqueo de la web durante partida tras añadir tracking de eventos.
 
 ### No se ha tocado
 
@@ -43,118 +46,6 @@
 - Estadísticas.
 - Historial.
 - START/STOP.
-- CSS principal.
-- Diseño visual.
-
-## v1.10.4 — Machine Special Lock Fix
-
-### Cambios
-
-- Corregido bug por el que el usuario podía pulsar `START` cuando la máquina iba a lanzar un penalti o falta.
-- `handleMainAction()` bloquea clics durante turno de máquina.
-- `maybeMachineTurn()` ahora conserva IDs de timeout y no reactiva botones si se genera una tirada especial.
-- `maybeMachineSpecialTurn()` mantiene botones bloqueados mientras la máquina controla la jugada especial.
-- Mensaje añadido: la máquina lanzará automáticamente.
-
-### No se ha tocado
-
-- Reglas del juego.
-- Sistema de turnos base.
-- Penalti/falta como mecánica.
-- Estadísticas.
-- Historial.
-- CSS principal.
-- Diseño visual.
-
-## v1.10.3 — Stability Hotfix
-
-### Cambios
-
-- Añadida capa defensiva para evitar timeouts fantasma de la máquina.
-- Limpieza de timeouts al reiniciar, volver al setup, iniciar partida o abandonar página.
-- Protección del debug oculto en producción.
-- Refuerzo de tracking directo en acciones clave.
-- Añadido `type="button"` a botones HTML sin tipo.
-- Actualizada documentación.
-
-### No se ha tocado
-
-- Lógica base de reglas.
-- Sistema de turnos.
-- Penalti/falta.
-- Marcador.
-- Estadísticas.
-- Historial.
-- CSS principal.
-- Diseño visual.
-
-### QA recomendado
-
-- Reiniciar durante turno de máquina.
-- Volver al setup durante turno de máquina.
-- Iniciar nueva partida tras una partida contra máquina.
-- Probar GA4 eventos.
-- Probar móvil.
-
-
-## v1.10.2 — Direct GA4 Event Bridge
-
-### Cambios
-
-- Añadido puente directo a GA4 para eventos personalizados.
-- `cgTrackEvent()` ahora mantiene el comportamiento anterior y además intenta enviar por:
-  - `gtag("event", ...)`
-  - `dataLayer.push(...)`
-- No se duplica `page_view`.
-- Actualizada documentación y privacidad.
-
-### No se ha tocado
-
-- Lógica del juego.
-- Reglas.
-- Turnos.
-- Máquina.
-- Penalti/falta.
-- Estadísticas.
-- Historial.
-- START/STOP.
-- CSS principal.
-
-## v1.10.1 — Game Event Tracking
-
-### Cambios
-
-- Añadida capa segura de tracking de eventos del juego.
-- Eventos preparados para `zaraz.track()` si Cloudflare Zaraz está disponible.
-- Fallback seguro a `localStorage` y `console.debug` si Zaraz no está activo.
-
-### Eventos
-
-- `app_loaded`
-- `start_match`
-- `finish_match`
-- `share_result`
-- `share_home`
-- `copy_result`
-- `copy_link`
-- `rules_open`
-- `support_open`
-- `feedback_open`
-- `mode_machine`
-- `mode_local`
-- `mode_fast`
-- `mode_classic`
-
-### No se ha tocado
-
-- Lógica del juego.
-- Reglas.
-- Turnos.
-- Máquina.
-- Penalti/falta.
-- Estadísticas.
-- Historial.
-- Flujo START/STOP.
 
 
 ## v1.10.0 — CSS Refactor

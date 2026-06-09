@@ -274,13 +274,62 @@ function playSound(type){
   try{
     if(!gameState.soundEnabled || !soundEnabledInput.checked) return;
     if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    const freqMap = {beep:880, stop:420, goal:980, miss:260, yellow:540, red:180, penalty:760, free_kick:720, post:620, crossbar:650};
-    osc.frequency.value = freqMap[type] || 480;
-    gain.gain.value = 0.035;
-    osc.connect(gain); gain.connect(audioCtx.destination);
-    osc.start(); osc.stop(audioCtx.currentTime + 0.06);
+
+    const patterns = {
+      beep: [[880,0.045,0.030]],
+      stop: [[420,0.050,0.032]],
+
+      goal: [[660,0.070,0.045],[880,0.080,0.050],[1180,0.120,0.060]],
+      penalty: [[520,0.080,0.045],[760,0.080,0.050],[520,0.080,0.045]],
+      penalty_fail: [[240,0.120,0.050],[180,0.140,0.040]],
+      free_kick: [[620,0.070,0.040],[720,0.090,0.045]],
+
+      post: [[620,0.050,0.040],[340,0.080,0.045]],
+      crossbar: [[700,0.050,0.040],[380,0.090,0.045]],
+      yellow: [[540,0.100,0.045]],
+      red: [[180,0.160,0.055]],
+      miss: [[260,0.060,0.030]],
+      half_time: [[440,0.080,0.040],[440,0.080,0.040]],
+      full_time: [[360,0.080,0.040],[520,0.080,0.045],[360,0.120,0.040]]
+    };
+
+    const sequence = patterns[type] || patterns.beep;
+    let offset = 0;
+    sequence.forEach(([freq,duration,volume])=>{
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = "square";
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.0001, audioCtx.currentTime + offset);
+      gain.gain.exponentialRampToValueAtTime(volume, audioCtx.currentTime + offset + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + offset + duration);
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.start(audioCtx.currentTime + offset);
+      osc.stop(audioCtx.currentTime + offset + duration + 0.02);
+      offset += duration + 0.035;
+    });
+  }catch(e){}
+}
+
+function triggerScreenFeedback(type){
+  try{
+    const map = {
+      goal: "cg-flash-goal",
+      penalty: "cg-flash-penalty",
+      free_kick: "cg-flash-special",
+      post: "cg-shake-soft",
+      crossbar: "cg-shake-soft",
+      yellow: "cg-flash-yellow",
+      red: "cg-flash-red",
+      half_time: "cg-flash-special",
+      full_time: "cg-flash-special"
+    };
+    const cls = map[type];
+    if(!cls) return;
+    document.body.classList.remove("cg-flash-goal","cg-flash-penalty","cg-flash-special","cg-shake-soft","cg-flash-yellow","cg-flash-red");
+    void document.body.offsetWidth;
+    document.body.classList.add(cls);
+    window.setTimeout(()=>document.body.classList.remove(cls), 650);
   }catch(e){}
 }
 async function copyText(text,msg){
@@ -435,12 +484,7 @@ function startMatch(){
   startMatchClock(); updateUI(); addLog("Comienza el partido."); vibrate([30]); maybeMachineTurn();
 }
 
-function handleMainAction(){
-  if(gameState.matchEnded || pendingSpecial) return;
-  if(gameState.gameMode==="machine" && gameState.currentPlayerIndex===1) return;
-  if(typeof window !== "undefined" && window.__cgMachineControlsLocked) return;
-  gameState.isRunning ? stopTimerAndEvaluate() : startTimer();
-}
+function handleMainAction(){ if(gameState.matchEnded||pendingSpecial) return; gameState.isRunning ? stopTimerAndEvaluate() : startTimer(); }
 function startTimer(){
   gameState.isRunning=true; timerStartTime=performance.now(); mainActionBtn.textContent="STOP"; mainActionBtn.classList.add("stop"); playSound("beep"); vibrate([20]);
   timerInterval=setInterval(()=>{ currentElapsedMs=stopwatchBaseMs+(performance.now()-timerStartTime); updateTimerDisplay(currentElapsedMs); },16);
@@ -491,21 +535,14 @@ function evaluateThrow(v){
   return {type:"miss",msg:"FALLO",cls:"neutral"};
 }
 function applyNormalResult(v,r){
-  const p=currentPlayer(); setEvent(r.msg,`${p.name} sacó ${pad(v)} → ${r.msg}`,r.cls); addLog(`${clockSec()}  ${p.name} — ${pad(v)} — ${r.msg}`); playSound(r.type);
+  const p=currentPlayer(); setEvent(r.msg,`${p.name} sacó ${pad(v)} → ${r.msg}`,r.cls); addLog(`${clockSec()}  ${p.name} — ${pad(v)} — ${r.msg}`); playSound(r.type); triggerScreenFeedback(r.type);
   if(r.type==="goal"){ p.goals++; gameState.stats.goals++; vibrate([90,40,90]); if(isFastMode() && hasFastModeWinner()){ endMatch(); } else { switchTurn(); } }
   else if(r.type==="post"||r.type==="crossbar"){ gameState.stats.woodwork++; vibrate([50,30,50]); messageLabel.textContent+=". Repite."; }
   else if(r.type==="half_time"){ if(gameState.half===1) showHalfTime(); else switchTurn(); }
   else if(r.type==="yellow"){ p.skipTurns++; gameState.stats.cards++; vibrate([120]); switchTurn(); }
   else if(r.type==="red"){ p.skipTurns+=2; gameState.stats.cards++; vibrate([160,60,160]); switchTurn(); }
   else if(r.type==="full_time"){ endMatch(); }
-  else if(r.special){ gameState.stats.specials++; if(r.special==="free_kick")gameState.stats.freeKicks++; if(r.special==="penalty")gameState.stats.penalties++; pendingSpecial=r.special; specialPanel.classList.remove("hidden"); specialLabel.textContent=r.special==="free_kick"?`${p.name}: 00-20 es gol.`:`${p.name}: par es gol.`;
-    mainActionBtn.disabled=true;
-    specialStartBtn.disabled = (gameState.gameMode==="machine" && gameState.currentPlayerIndex===1);
-    if(gameState.gameMode==="machine" && gameState.currentPlayerIndex===1){
-      messageLabel.textContent += " La máquina lanzará automáticamente.";
-    }
-    vibrate([80,40,80]);
-    maybeMachineSpecialTurn(); }
+  else if(r.special){ gameState.stats.specials++; if(r.special==="free_kick")gameState.stats.freeKicks++; if(r.special==="penalty")gameState.stats.penalties++; pendingSpecial=r.special; specialPanel.classList.remove("hidden"); specialLabel.textContent=r.special==="free_kick"?`${p.name}: 00-20 es gol.`:`${p.name}: par es gol.`; mainActionBtn.disabled=true; vibrate([80,40,80]); maybeMachineSpecialTurn(); }
   else { gameState.stats.misses++; switchTurn(); }
   updateUI(); if(!gameState.matchEnded&&!pendingSpecial&&!penaltyShootout) maybeMachineTurn();
 }
@@ -515,7 +552,7 @@ function evaluateSpecialThrow(v){
   if(pendingSpecial==="free_kick"){ goal=v>=0&&v<=20; msg=goal?"GOL DE FALTA":"FALTA FALLADA"; }
   if(pendingSpecial==="penalty"){ goal=v%2===0; msg=goal?"GOL DE PENALTI":"PENALTI FALLADO"; }
   if(goal){ p.goals++; gameState.stats.goals++; } else gameState.stats.misses++;
-  setEvent(msg,`${pad(v)} → ${msg}`,goal?"goal":"neutral"); addLog(`${clockSec()}  ${p.name} — ${pad(v)} — ${msg}`); pendingSpecial=null; specialPanel.classList.add("hidden"); specialStartBtn.textContent="TIRADA ESPECIAL"; mainActionBtn.disabled=false; specialStartBtn.disabled=false; if(isFastMode() && goal && hasFastModeWinner()){ endMatch(); } else { switchTurn(); updateUI(); maybeMachineTurn(); }
+  setEvent(msg,`${pad(v)} → ${msg}`,goal?"goal":"neutral"); addLog(`${clockSec()}  ${p.name} — ${pad(v)} — ${msg}`); const finishedSpecial=pendingSpecial; playSound(goal?"goal":(finishedSpecial==="penalty"?"penalty_fail":"miss")); triggerScreenFeedback(goal?"goal":finishedSpecial); vibrate(goal?[120,50,120]:[45]); pendingSpecial=null; specialPanel.classList.add("hidden"); specialStartBtn.textContent="TIRADA ESPECIAL"; mainActionBtn.disabled=false; specialStartBtn.disabled=false; if(isFastMode() && goal && hasFastModeWinner()){ endMatch(); } else { switchTurn(); updateUI(); maybeMachineTurn(); }
 }
 function showHalfTime(){ gameState.half=2; currentElapsedMs=0; stopwatchBaseMs=0; timerDisplay.textContent="00:00:00"; lastTwoDisplay.textContent="--"; switchTurn(); showModal("DESCANSO",scoreText(),"<p>Se resetea el cronómetro y comienza la segunda parte.</p>",[{text:"CONTINUAR",action:()=>{closeModal();maybeMachineTurn();}}]); }
 function endMatch(){ gameState.matchEnded=true; clearInterval(matchClockInterval); if(gameState.isRunning) stopTimer(); if(gameState.players[0].goals===gameState.players[1].goals){ showModal("FINAL",`${scoreText()}. Empate.`,finalHtml(),[{text:"IR A PENALTIS",action:startPenaltyShootout},{text:"TERMINAR EN EMPATE",action:()=>showFinal(false)}]); } else showFinal(false); }
@@ -560,66 +597,13 @@ function maybeMachineSpecialTurn(){
       }
 
       evaluateSpecialThrow(value);
-
-      if(gameState.matchEnded || pendingSpecial){
-        mainActionBtn.disabled = true;
-        specialStartBtn.disabled = true;
-        return;
-      }
-
-      if(gameState.gameMode==="machine" && gameState.currentPlayerIndex===1){
-        mainActionBtn.disabled = true;
-        specialStartBtn.disabled = true;
-        return;
-      }
-
       mainActionBtn.disabled=false;
       specialStartBtn.disabled=false;
     }, getMachineStopDelay());
   }, randomInt(600,1200));
 }
 
-function maybeMachineTurn(){
-  clearTimeout(machineTurnTimeout);
-  clearTimeout(machineStopTimeout);
-
-  if(gameState.gameMode!=="machine" || gameState.currentPlayerIndex!==1 || gameState.matchEnded || pendingSpecial) return;
-  if(!gameScreen.classList.contains("active")) return;
-
-  mainActionBtn.disabled = true;
-  specialStartBtn.disabled = true;
-
-  machineTurnTimeout = setTimeout(()=>{
-    if(gameState.matchEnded || gameState.gameMode!=="machine" || gameState.currentPlayerIndex!==1 || pendingSpecial || !gameScreen.classList.contains("active")) return;
-
-    startTimer();
-
-    machineStopTimeout = setTimeout(()=>{
-      if(gameState.matchEnded || gameState.gameMode!=="machine" || gameState.currentPlayerIndex!==1 || pendingSpecial || !gameScreen.classList.contains("active")) return;
-
-      stopTimerAndEvaluate(getMachineForcedValue());
-
-      // Importante v1.10.6:
-      // Si la tirada normal de la máquina genera penalti/falta, applyNormalResult()
-      // crea pendingSpecial y maybeMachineSpecialTurn() toma el control.
-      // En ese caso NO debemos reactivar START ni el botón especial para el usuario.
-      if(pendingSpecial || gameState.matchEnded){
-        mainActionBtn.disabled = true;
-        specialStartBtn.disabled = true;
-        return;
-      }
-
-      if(gameState.gameMode==="machine" && gameState.currentPlayerIndex===1){
-        mainActionBtn.disabled = true;
-        specialStartBtn.disabled = true;
-        return;
-      }
-
-      mainActionBtn.disabled = false;
-      specialStartBtn.disabled = false;
-    }, getMachineStopDelay());
-  }, randomInt(500,1100));
-}
+function maybeMachineTurn(){ if(gameState.gameMode!=="machine"||gameState.currentPlayerIndex!==1||gameState.matchEnded||pendingSpecial) return; mainActionBtn.disabled=true; specialStartBtn.disabled=true; setTimeout(()=>{ startTimer(); setTimeout(()=>{ stopTimerAndEvaluate(getMachineForcedValue()); mainActionBtn.disabled=false; specialStartBtn.disabled=false; },getMachineStopDelay()); },randomInt(500,1100)); }
 function getMachineStopDelay(){ return gameState.machineLevel==="easy"?randomInt(600,1800):gameState.machineLevel==="hard"?randomInt(900,3200):randomInt(800,2500); }
 function getMachineForcedValue(){ if(isFastMode()) return null; if(gameState.forceEvents){ if(gameState.half===1&&gameState.firstHalfTurns>=gameState.machineForceHalfAt) return 45; if(gameState.half===2&&gameState.secondHalfTurns>=gameState.machineForceEndAt) return 90; } if(gameState.machineLevel==="hard"){ const r=Math.random(); if(r<.025)return 0; if(r<.055)return [96,97,98,99][randomInt(0,3)]; } return null; }
 function startMatchClock(){ clearInterval(matchClockInterval); matchClockInterval=setInterval(()=>{ const sec=Math.floor((Date.now()-matchStartTime)/1000); matchClockLabel.textContent=`${pad(Math.floor(sec/60))}:${pad(sec%60)}`; /* En modo rápido v1.6.1 no hay límite de 5 minutos: gana quien llega a 6 con 2 de ventaja. */ },1000); }
@@ -1307,7 +1291,7 @@ function showSupportModal(){
 }
 
 
-/* ===== CronoGol v1.10.6: game feel improvements ===== */
+/* ===== CronoGol v1.10.3: game feel improvements ===== */
 /* No modifica reglas, turnos, START/STOP ni lógica base del partido. */
 
 function machineDifficultyText(){
@@ -1436,517 +1420,3 @@ document.addEventListener("DOMContentLoaded", () => {
   if(esBtn) esBtn.addEventListener("click", () => setTimeout(updateMachineDifficultyHint, 0));
   if(enBtn) enBtn.addEventListener("click", () => setTimeout(updateMachineDifficultyHint, 0));
 });
-
-
-
-/* ===== CronoGol v1.10.6 — Game Event Tracking Layer ===== */
-(function(){
-  const CG_EVENT_VERSION = "1.10.6";
-  function val(id){ const el=document.getElementById(id); return el ? el.value : ""; }
-  function lang(){ try { if (typeof currentLang !== "undefined") return currentLang; return localStorage.getItem("cronogol_lang") || document.documentElement.lang || "es"; } catch(e){ return "es"; } }
-  function localCount(eventName){ try { const key="cronogol_event_counts"; const data=JSON.parse(localStorage.getItem(key)||"{}"); data[eventName]=(data[eventName]||0)+1; localStorage.setItem(key, JSON.stringify(data)); } catch(e){} }
-  window.cgTrackEvent=function(eventName,payload){
-    const data=Object.assign({app:"CronoGol",version:CG_EVENT_VERSION,lang:lang(),game_mode:val("game-mode"),match_mode:val("match-mode"),page:location.pathname||"/",timestamp:new Date().toISOString()}, payload||{});
-    localCount(eventName);
-    try { if (window.zaraz && typeof window.zaraz.track === "function") window.zaraz.track(eventName,data); } catch(e){}
-    try { console.debug("[CronoGol event]", eventName, data); } catch(e){}
-    return data;
-  };
-  function wrap(name,eventName,builder){
-    const original=window[name];
-    if(typeof original!=="function" || original.__cgEventWrapped) return;
-    const wrapped=function(){
-      try { const args=Array.prototype.slice.call(arguments); window.cgTrackEvent(eventName, typeof builder==="function" ? builder(args) : {}); } catch(e){}
-      return original.apply(this, arguments);
-    };
-    wrapped.__cgEventWrapped=true; window[name]=wrapped;
-  }
-  function bind(){
-    wrap("startMatch","start_match",function(){ return {selected_mode:val("game-mode"),selected_match_mode:val("match-mode")}; });
-    wrap("showFinal","finish_match",function(){ try { return {score_p1:gameState&&gameState.players?gameState.players[0].goals:null,score_p2:gameState&&gameState.players?gameState.players[1].goals:null,total_turns:gameState?gameState.totalTurns:null}; } catch(e){ return {}; } });
-    wrap("shareResult","share_result"); wrap("shareCronoGol","share_home"); wrap("copyResult","copy_result"); wrap("copyCronoGolLink","copy_link"); wrap("showRulesModal","rules_open"); wrap("showSupportModal","support_open");
-    document.querySelectorAll('.segment-btn[data-target="game-mode"]').forEach(function(btn){ if(btn.__cgEventBound) return; btn.__cgEventBound=true; btn.addEventListener("click",function(){ if(btn.dataset.value==="machine") window.cgTrackEvent("mode_machine"); if(btn.dataset.value==="local") window.cgTrackEvent("mode_local"); },{passive:true}); });
-    document.querySelectorAll('.segment-btn[data-target="match-mode"]').forEach(function(btn){ if(btn.__cgEventBound) return; btn.__cgEventBound=true; btn.addEventListener("click",function(){ if(btn.dataset.value==="five") window.cgTrackEvent("mode_fast"); if(btn.dataset.value==="classic") window.cgTrackEvent("mode_classic"); },{passive:true}); });
-    document.querySelectorAll('a[href^="feedback.html"]').forEach(function(a){ if(a.__cgEventBound) return; a.__cgEventBound=true; a.addEventListener("click",function(){ window.cgTrackEvent("feedback_open"); },{passive:true}); });
-    if(!window.__cgPageViewTracked){ window.__cgPageViewTracked=true; window.cgTrackEvent("app_loaded"); }
-  }
-  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",bind); else bind();
-  setTimeout(bind,500);
-})();
-
-
-
-/* ===== CronoGol v1.10.6 — Direct GA4 Event Bridge Patch =====
-   Adds a second safe bridge for custom game events.
-   It does not send page_view, so it does not duplicate GA4 pageviews.
-*/
-(function(){
-  if (window.__cgDirectGa4BridgeInstalled) return;
-  window.__cgDirectGa4BridgeInstalled = true;
-
-  const previousCgTrackEvent = window.cgTrackEvent;
-
-  window.cgTrackEvent = function(eventName, payload){
-    let data = payload || {};
-
-    try {
-      if (typeof previousCgTrackEvent === "function") {
-        data = previousCgTrackEvent(eventName, payload) || data;
-      }
-    } catch(e) {
-      try { console.warn("[CronoGol event previous bridge failed]", e); } catch(_) {}
-    }
-
-    const gaPayload = {
-      event_category: "cronogol_game",
-      app_name: "CronoGol",
-      app_version: "1.10.6",
-      game_mode: data.game_mode || "",
-      match_mode: data.match_mode || "",
-      lang: data.lang || "",
-      page_path: data.page || location.pathname || "/",
-      score_p1: data.score_p1,
-      score_p2: data.score_p2,
-      total_turns: data.total_turns,
-      selected_mode: data.selected_mode,
-      selected_match_mode: data.selected_match_mode
-    };
-
-    try {
-      if (typeof window.gtag === "function") {
-        window.gtag("event", eventName, gaPayload);
-      }
-    } catch(e) {}
-
-    try {
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push(Object.assign({
-        event: eventName,
-        event_category: "cronogol_game"
-      }, data || {}));
-    } catch(e) {}
-
-    try { console.debug("[CronoGol GA4 bridge]", eventName, gaPayload); } catch(e) {}
-    return data;
-  };
-})();
-
-
-
-/* ===== CronoGol v1.10.6 — Stability Hotfix Layer =====
-   Objetivo:
-   - Evitar timeouts fantasma de la máquina después de reiniciar/volver al setup.
-   - Limpiar timers en reset/nueva partida/cambio de pantalla.
-   - Hacer el tracking menos dependiente de wrappers frágiles.
-   - Proteger debug en producción.
-   - No cambiar reglas ni lógica principal del juego.
-*/
-(function(){
-  if (window.__cgStabilityHotfixInstalled) return;
-  window.__cgStabilityHotfixInstalled = true;
-
-  const machineTimeouts = new Set();
-  const originalSetTimeout = window.setTimeout;
-  const originalClearTimeout = window.clearTimeout;
-
-  function isMachineRelatedCallback(callback){
-    try {
-      const text = String(callback || "");
-      return (
-        text.includes("machine") ||
-        text.includes("maybeMachineTurn") ||
-        text.includes("machineTurn") ||
-        text.includes("autoStop") ||
-        text.includes("stopChrono") ||
-        text.includes("startChrono")
-      );
-    } catch(e) {
-      return false;
-    }
-  }
-
-  window.setTimeout = function(callback, delay){
-    const id = originalSetTimeout.apply(window, arguments);
-    if (isMachineRelatedCallback(callback)) {
-      machineTimeouts.add(id);
-    }
-    return id;
-  };
-
-  window.clearTimeout = function(id){
-    machineTimeouts.delete(id);
-    return originalClearTimeout.call(window, id);
-  };
-
-  window.cgClearMachineTimeouts = function(){
-    machineTimeouts.forEach(function(id){
-      try { originalClearTimeout.call(window, id); } catch(e) {}
-    });
-    machineTimeouts.clear();
-
-    try {
-      if (typeof machineTurnTimeout !== "undefined" && machineTurnTimeout) {
-        originalClearTimeout.call(window, machineTurnTimeout);
-        machineTurnTimeout = null;
-      }
-    } catch(e) {}
-
-    try {
-      if (typeof machineStopTimeout !== "undefined" && machineStopTimeout) {
-        originalClearTimeout.call(window, machineStopTimeout);
-        machineStopTimeout = null;
-      }
-    } catch(e) {}
-
-    try {
-      if (typeof clearMachineTimers === "function") clearMachineTimers();
-    } catch(e) {}
-  };
-
-  function wrapWithMachineCleanup(functionName, eventName){
-    const original = window[functionName];
-    if (typeof original !== "function" || original.__cgStabilityWrapped) return;
-
-    const wrapped = function(){
-      try { window.cgClearMachineTimeouts(); } catch(e) {}
-      try {
-        if (eventName && typeof window.cgTrackEvent === "function") {
-          window.cgTrackEvent(eventName);
-        }
-      } catch(e) {}
-      return original.apply(this, arguments);
-    };
-
-    wrapped.__cgStabilityWrapped = true;
-    window[functionName] = wrapped;
-  }
-
-  function wrapFinalTracking(){
-    const original = window.showFinal;
-    if (typeof original !== "function" || original.__cgFinalTrackingWrapped) return;
-
-    const wrapped = function(){
-      try {
-        if (typeof window.cgTrackEvent === "function") {
-          let payload = {};
-          try {
-            if (typeof gameState !== "undefined" && gameState && gameState.players) {
-              payload = {
-                score_p1: gameState.players[0] ? gameState.players[0].goals : null,
-                score_p2: gameState.players[1] ? gameState.players[1].goals : null,
-                total_turns: gameState.totalTurns || null,
-                final_context: arguments && arguments.length ? "special" : "normal"
-              };
-            }
-          } catch(e) {}
-          window.cgTrackEvent("finish_match", payload);
-        }
-      } catch(e) {}
-      try { window.cgClearMachineTimeouts(); } catch(e) {}
-      return original.apply(this, arguments);
-    };
-
-    wrapped.__cgFinalTrackingWrapped = true;
-    window.showFinal = wrapped;
-  }
-
-  function protectDebugInProduction(){
-    try {
-      const host = location.hostname || "";
-      const isLocal = host === "localhost" || host === "127.0.0.1" || host === "";
-      const debugAllowed = isLocal || localStorage.getItem("cronogol_debug_allowed") === "true";
-
-      if (!debugAllowed) {
-        const debugBox = document.getElementById("debug-box");
-        if (debugBox) {
-          debugBox.hidden = true;
-          debugBox.style.display = "none";
-          debugBox.setAttribute("aria-hidden", "true");
-        }
-
-        window.showDebugBox = function(){
-          try { console.info("[CronoGol] Debug deshabilitado en producción."); } catch(e) {}
-        };
-      }
-    } catch(e) {}
-  }
-
-  function addButtonTypes(){
-    try {
-      document.querySelectorAll("button:not([type])").forEach(function(btn){
-        btn.setAttribute("type", "button");
-      });
-    } catch(e) {}
-  }
-
-  function bindDirectTrackingFallbacks(){
-    const map = [
-      ["#start-match-btn", "start_match"],
-      ["#rules-btn", "rules_open"],
-      ["#support-btn", "support_open"],
-      ['a[href^="apoya.html"]', "support_open"],
-      ['a[href^="feedback.html"]', "feedback_open"],
-      ['button[data-action="copy-link"]', "copy_link"],
-      ['button[data-action="share"]', "share_home"]
-    ];
-
-    map.forEach(function(item){
-      try {
-        document.querySelectorAll(item[0]).forEach(function(el){
-          if (el.__cgDirectTrackingBound) return;
-          el.__cgDirectTrackingBound = true;
-          el.addEventListener("click", function(){
-            try {
-              if (typeof window.cgTrackEvent === "function") {
-                window.cgTrackEvent(item[1]);
-              }
-            } catch(e) {}
-          }, { passive: true });
-        });
-      } catch(e) {}
-    });
-
-    try {
-      document.querySelectorAll('.segment-btn[data-target="game-mode"]').forEach(function(btn){
-        if (btn.__cgModeTrackingBound) return;
-        btn.__cgModeTrackingBound = true;
-        btn.addEventListener("click", function(){
-          try {
-            if (typeof window.cgTrackEvent === "function") {
-              if (btn.dataset.value === "machine") window.cgTrackEvent("mode_machine");
-              if (btn.dataset.value === "local") window.cgTrackEvent("mode_local");
-            }
-          } catch(e) {}
-        }, { passive: true });
-      });
-
-      document.querySelectorAll('.segment-btn[data-target="match-mode"]').forEach(function(btn){
-        if (btn.__cgMatchModeTrackingBound) return;
-        btn.__cgMatchModeTrackingBound = true;
-        btn.addEventListener("click", function(){
-          try {
-            if (typeof window.cgTrackEvent === "function") {
-              if (btn.dataset.value === "five") window.cgTrackEvent("mode_fast");
-              if (btn.dataset.value === "classic") window.cgTrackEvent("mode_classic");
-            }
-          } catch(e) {}
-        }, { passive: true });
-      });
-    } catch(e) {}
-  }
-
-  function install(){
-    wrapWithMachineCleanup("resetToSetup", "reset_to_setup");
-    wrapWithMachineCleanup("resetGame", "reset_game");
-    wrapWithMachineCleanup("newMatch", "new_match");
-    wrapWithMachineCleanup("showSetup", "show_setup");
-    wrapWithMachineCleanup("startMatch", "start_match");
-    wrapFinalTracking();
-    protectDebugInProduction();
-    addButtonTypes();
-    bindDirectTrackingFallbacks();
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", install);
-  } else {
-    install();
-  }
-
-  setTimeout(install, 250);
-  setTimeout(install, 1000);
-
-  window.addEventListener("beforeunload", function(){
-    try { window.cgClearMachineTimeouts(); } catch(e) {}
-  });
-})();
-
-
-
-/* ===== CronoGol v1.10.6 — Machine Fast Penalty + GA4 Reliable Events Patch =====
-   Corrige:
-   1) Bloqueo real en fase de penalti/falta de la máquina, también en modo rápido.
-   2) Eventos GA4 desde clicks reales, sin depender solo de wrappers sobre funciones.
-*/
-(function(){
-  if (window.__cgV1106PatchInstalled) return;
-  window.__cgV1106PatchInstalled = true;
-
-  window.__cgMachineControlsLocked = false;
-
-  function getGameMode(){
-    try {
-      const el = document.getElementById("game-mode");
-      return el ? el.value : "";
-    } catch(e) { return ""; }
-  }
-
-  function isMachineTurn(){
-    try {
-      if (typeof gameState !== "undefined" && gameState) {
-        return gameState.gameMode === "machine" && gameState.currentPlayerIndex === 1 && !gameState.matchEnded;
-      }
-    } catch(e) {}
-    return getGameMode() === "machine" && window.__cgMachineControlsLocked === true;
-  }
-
-  function isPendingSpecial(){
-    try {
-      if (typeof pendingSpecial !== "undefined" && pendingSpecial) return true;
-    } catch(e) {}
-    const specialPanel = document.getElementById("special-panel");
-    if (specialPanel && !specialPanel.hidden && specialPanel.offsetParent !== null) return true;
-    return false;
-  }
-
-  function shouldBlockHumanStart(){
-    return isMachineTurn() || window.__cgMachineControlsLocked === true;
-  }
-
-  function setMachineLock(locked){
-    window.__cgMachineControlsLocked = !!locked;
-
-    const mainBtn = document.getElementById("main-action-btn");
-    const specialBtn = document.getElementById("special-start-btn");
-
-    if (mainBtn) {
-      mainBtn.disabled = !!locked;
-      mainBtn.setAttribute("aria-disabled", locked ? "true" : "false");
-      if (locked) mainBtn.classList.add("is-locked");
-      else mainBtn.classList.remove("is-locked");
-    }
-
-    if (specialBtn) {
-      specialBtn.disabled = !!locked;
-      specialBtn.setAttribute("aria-disabled", locked ? "true" : "false");
-      if (locked) specialBtn.classList.add("is-locked");
-      else specialBtn.classList.remove("is-locked");
-    }
-  }
-
-  function syncMachineLock(){
-    const locked = isMachineTurn() && (isPendingSpecial() || window.__cgMachineControlsLocked);
-    if (locked) setMachineLock(true);
-  }
-
-  // Bloqueo en fase captura: aunque algún listener antiguo quede vivo, no llega el click.
-  document.addEventListener("click", function(ev){
-    const target = ev.target && ev.target.closest ? ev.target.closest("#main-action-btn, #special-start-btn") : null;
-    if (!target) return;
-
-    if (shouldBlockHumanStart()) {
-      ev.preventDefault();
-      ev.stopPropagation();
-      ev.stopImmediatePropagation();
-      setMachineLock(true);
-      try {
-        if (typeof showToast === "function") showToast("Es turno de la máquina");
-      } catch(e) {}
-      return false;
-    }
-  }, true);
-
-  // En keydown también, por accesibilidad/teclado.
-  document.addEventListener("keydown", function(ev){
-    if ((ev.key !== "Enter" && ev.key !== " ") || !ev.target) return;
-    const target = ev.target.closest ? ev.target.closest("#main-action-btn, #special-start-btn") : null;
-    if (!target) return;
-
-    if (shouldBlockHumanStart()) {
-      ev.preventDefault();
-      ev.stopPropagation();
-      ev.stopImmediatePropagation();
-      setMachineLock(true);
-      return false;
-    }
-  }, true);
-
-  // Tracking fiable por click real: no sustituye lógica, solo garantiza eventos.
-  function track(eventName, payload){
-    try {
-      if (typeof window.cgTrackEvent === "function") window.cgTrackEvent(eventName, payload || {});
-    } catch(e) {}
-    // Fallback extremo: si cgTrackEvent falla, usar gtag directo.
-    try {
-      if (typeof window.gtag === "function") {
-        window.gtag("event", eventName, Object.assign({
-          event_category: "cronogol_game",
-          app_name: "CronoGol",
-          app_version: "1.10.6"
-        }, payload || {}));
-      }
-    } catch(e) {}
-    try { console.debug("[CronoGol v1.10.6 direct click event]", eventName, payload || {}); } catch(e) {}
-  }
-
-  function bindClick(selector, eventName, payloadBuilder){
-    document.querySelectorAll(selector).forEach(function(el){
-      if (el.__cgV1106Bound) return;
-      el.__cgV1106Bound = true;
-      el.addEventListener("click", function(){
-        const payload = typeof payloadBuilder === "function" ? payloadBuilder(el) : {};
-        track(eventName, payload);
-      }, { passive: true });
-    });
-  }
-
-  function bindEvents(){
-    bindClick("#start-match-btn", "start_match", function(){
-      return {
-        selected_mode: (document.getElementById("game-mode") || {}).value || "",
-        selected_match_mode: (document.getElementById("match-mode") || {}).value || ""
-      };
-    });
-
-    bindClick("#rules-btn, [data-action='rules'], a[href*='como-jugar']", "rules_open");
-    bindClick("#support-btn, [data-action='support'], a[href*='apoya.html']", "support_open");
-    bindClick("#share-btn, [data-action='share']", "share_home");
-    bindClick("#copy-link-btn, [data-action='copy-link']", "copy_link");
-    bindClick("a[href*='feedback.html']", "feedback_open");
-
-    document.querySelectorAll(".segment-btn[data-target='game-mode']").forEach(function(btn){
-      if (btn.__cgV1106ModeBound) return;
-      btn.__cgV1106ModeBound = true;
-      btn.addEventListener("click", function(){
-        if (btn.dataset.value === "machine") track("mode_machine");
-        if (btn.dataset.value === "local") track("mode_local");
-      }, { passive: true });
-    });
-
-    document.querySelectorAll(".segment-btn[data-target='match-mode']").forEach(function(btn){
-      if (btn.__cgV1106MatchBound) return;
-      btn.__cgV1106MatchBound = true;
-      btn.addEventListener("click", function(){
-        if (btn.dataset.value === "five") track("mode_fast");
-        if (btn.dataset.value === "classic") track("mode_classic");
-      }, { passive: true });
-    });
-  }
-
-  // Detectar panel especial de máquina y mantener bloqueo aunque funciones antiguas reactiven botones.
-  const observer = new MutationObserver(function(){
-    try {
-      if (isMachineTurn() && isPendingSpecial()) setMachineLock(true);
-    } catch(e) {}
-  });
-
-  function install(){
-    bindEvents();
-    syncMachineLock();
-
-    const specialPanel = document.getElementById("special-panel");
-    const gameScreen = document.getElementById("game-screen");
-    if (specialPanel) observer.observe(specialPanel, { attributes: true, childList: true, subtree: true });
-    if (gameScreen) observer.observe(gameScreen, { attributes: true, childList: true, subtree: true });
-  }
-
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", install);
-  else install();
-
-  setInterval(function(){
-    try {
-      if (isMachineTurn() && isPendingSpecial()) setMachineLock(true);
-      if (!isMachineTurn() && !isPendingSpecial()) setMachineLock(false);
-    } catch(e) {}
-  }, 120);
-})();

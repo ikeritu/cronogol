@@ -1,4 +1,4 @@
-# CronoGol v1.10.6 — Machine Fast Penalty + GA4 Fix
+# CronoGol v1.10.3 — Goal & Penalty Feedback
 
 ## Objetivo
 
@@ -139,212 +139,39 @@ No se ha tocado:
 - Dominio personalizado.
 
 
-## v1.10.1 — Game Event Tracking
+## v1.10.2 — Stability Rollback
 
-Esta versión parte de `v1.10.0 CSS Refactor`.
+Esta versión parte de `v1.10.0 CSS Refactor`, última versión estable confirmada antes de añadir la capa de eventos de juego.
 
-Objetivo: medir acciones importantes dentro del juego, no solo visitas de página.
+Motivo:
 
-Eventos añadidos:
+- Se detectó bloqueo de la web durante partida tras la versión con tracking de eventos.
+- Se retira la capa `Game Event Tracking` de `v1.10.1`.
+- Se mantiene Cloudflare Web Analytics básico.
+- Se mantiene dominio `https://cronogol.es/`.
+- Se mantiene CSS refactor.
+- Se mantiene copyright/footer.
 
-- `app_loaded`
-- `start_match`
-- `finish_match`
-- `share_result`
-- `share_home`
-- `copy_result`
-- `copy_link`
-- `rules_open`
-- `support_open`
-- `feedback_open`
-- `mode_machine`
-- `mode_local`
-- `mode_fast`
-- `mode_classic`
-
-Funcionamiento:
-
-- Si Cloudflare Zaraz está disponible, se usa `zaraz.track(eventName, payload)`.
-- Si Zaraz no está disponible, la web no se rompe: se guardan contadores locales en `localStorage` y se muestran en consola para pruebas.
-- Cloudflare Web Analytics básico sigue midiendo visitas y rendimiento.
-
-Para ver eventos personalizados en Cloudflare, hay que activar/configurar Zaraz o una herramienta compatible con eventos personalizados.
-
-No se ha tocado la lógica del juego.
+No se toca la lógica del juego.
 
 
-## v1.10.2 — Direct GA4 Event Bridge
+## v1.10.3 — Goal & Penalty Feedback
 
-Esta versión parte de `v1.10.1 Game Event Tracking`.
-
-GA4 ya recibía visitas mediante Zaraz, pero los eventos personalizados del juego no aparecían todavía en tiempo real.
-
-Cambios:
-
-- Se mantiene el envío a `zaraz.track()`.
-- Se añade envío directo a `gtag("event", eventName, payload)` si `gtag` está disponible.
-- Se añade `dataLayer.push({ event: eventName, ... })` como puente adicional.
-- No se duplica `page_view`, porque solo se envían eventos personalizados.
-- Se mantiene fallback a `localStorage` y `console.debug`.
-
-Eventos esperados en GA4:
-
-- `app_loaded`
-- `start_match`
-- `finish_match`
-- `share_result`
-- `share_home`
-- `copy_result`
-- `copy_link`
-- `rules_open`
-- `support_open`
-- `feedback_open`
-- `mode_machine`
-- `mode_local`
-- `mode_fast`
-- `mode_classic`
-
-No se ha tocado la lógica del juego.
-
-
-## v1.10.3 — Stability Hotfix
-
-Esta versión parte de `v1.10.2 Direct GA4 Event Bridge`.
+Esta versión parte de `v1.10.2 Stability Rollback`.
 
 Objetivo:
 
-Corregir riesgos de estabilidad detectados en auditoría, sin cambiar reglas ni diseño.
+- Añadir feedback audiovisual de gol, penalti, falta, tarjetas y palos sin reintroducir tracking de eventos.
+- Mantener la estabilidad recuperada en `v1.10.2`.
 
 Cambios:
 
-- Capa defensiva para controlar timeouts de la máquina.
-- Limpieza de timeouts al volver al setup, reiniciar o iniciar nueva partida.
-- Protección del debug oculto en producción.
-- Refuerzo del tracking directo en botones clave.
-- Añadido `type="button"` a botones HTML sin tipo.
-- Actualización documental.
+- Sonido de gol más reconocible.
+- Sonido de penalti/falta más claro.
+- Sonido de penalti fallado.
+- Flash visual en gol y eventos especiales.
+- Vibración visual del dispositivo en poste/larguero.
+- Respeta `prefers-reduced-motion`.
+- No se reintroduce Zaraz ni Game Event Tracking.
 
-No se ha tocado:
-
-- Reglas del juego.
-- Sistema de turnos.
-- Marcador.
-- Penalti/falta.
-- Estadísticas.
-- Historial.
-- CSS principal.
-- Diseño visual.
-
-QA recomendado:
-
-1. 1 vs Máquina → esperar turno de máquina → reiniciar.
-2. 1 vs Máquina → volver a setup → iniciar nueva partida.
-3. Rápido → empezar → reiniciar.
-4. Abrir reglas/apoya/feedback.
-5. Probar eventos en consola y GA4.
-6. Probar en móvil.
-
-
-## v1.10.4 — Machine Special Lock Fix
-
-Esta versión parte de `v1.10.3 Stability Hotfix`.
-
-Motivo:
-
-Se detectó que, cuando la máquina obtenía un penalti o falta peligrosa, el botón principal `START` podía quedar pulsable para el usuario antes de que la máquina lanzase la tirada especial.
-
-Causa:
-
-La tirada normal automática de la máquina reactivaba los botones al terminar, incluso si esa tirada había generado `pendingSpecial`. En ese caso la tirada especial debía quedar controlada por `maybeMachineSpecialTurn()`.
-
-Correcciones:
-
-- `handleMainAction()` ignora clics durante turno de máquina.
-- `maybeMachineTurn()` guarda correctamente sus timeouts.
-- `maybeMachineTurn()` no reactiva botones si la tirada genera penalti/falta.
-- `maybeMachineSpecialTurn()` no reactiva botones si sigue siendo turno de máquina.
-- El panel especial indica que la máquina lanzará automáticamente.
-
-No se ha tocado:
-
-- Reglas del juego.
-- Probabilidad de penalti/falta.
-- Sistema de goles.
-- Estadísticas.
-- Historial.
-- Diseño principal.
-
-
-## v1.10.5 — Native GA4 Tracking
-
-Esta versión parte de `v1.10.4 Machine Special Lock Fix`.
-
-Motivo:
-
-Cloudflare Web Analytics estaba instalado y GA4 recibía pageviews mediante Zaraz, pero los eventos personalizados del juego no estaban garantizados. Para una app estática pequeña como CronoGol, se añade Google Analytics 4 de forma directa con `gtag.js`.
-
-Cambios:
-
-- Añadido Google Analytics 4 directo en todos los HTML.
-- Measurement ID: `G-B7KQNZZLPR`.
-- Añadido `data-cfasync="false"` para evitar interferencias de Cloudflare Rocket Loader.
-- Se mantiene Cloudflare Web Analytics.
-- Se mantiene la capa de eventos de `game.js`.
-- Se recomienda no configurar GA4 también en Zaraz para evitar duplicidades.
-- Actualizada privacidad.
-
-Eventos esperados en GA4:
-
-- `app_loaded`
-- `start_match`
-- `finish_match`
-- `share_result`
-- `share_home`
-- `copy_result`
-- `copy_link`
-- `rules_open`
-- `support_open`
-- `feedback_open`
-- `mode_machine`
-- `mode_local`
-- `mode_fast`
-- `mode_classic`
-
-No se ha tocado la lógica del juego.
-
-
-## v1.10.6 — Machine Fast Penalty + GA4 Fix
-
-Esta versión parte de `v1.10.5 Native GA4 Tracking`.
-
-Motivo:
-
-- En modo rápido, si la máquina generaba un penalti, el usuario todavía podía pulsar `START`.
-- GA4 recibía `page_view`, pero no aparecían claramente eventos personalizados al pulsar `Compartir`, `Reglas` o `Apoya`.
-
-Cambios:
-
-- Bloqueo real en fase de captura de clicks para `START` y botón especial durante turno de máquina.
-- Bloqueo también por teclado (`Enter` / espacio).
-- Observador de estado para mantener bloqueados los controles si hay penalti/falta de máquina.
-- Eventos directos por click real para:
-  - `start_match`
-  - `mode_machine`
-  - `mode_local`
-  - `mode_fast`
-  - `mode_classic`
-  - `rules_open`
-  - `support_open`
-  - `share_home`
-  - `copy_link`
-  - `feedback_open`
-- Fallback directo a `gtag("event", ...)` si `cgTrackEvent()` falla.
-
-No se ha tocado:
-
-- Reglas del juego.
-- Probabilidad de penalti/falta.
-- Marcador.
-- Estadísticas.
-- Historial.
-- CSS principal.
+No se toca la lógica del juego.

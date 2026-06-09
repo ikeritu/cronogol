@@ -1,21 +1,57 @@
 {
   "project": "CronoGol",
   "version": "1.10.2",
-  "release_name": "Direct GA4 Event Bridge",
-  "base_version": "1.10.1 Game Event Tracking",
+  "release_name": "Stability Rollback",
+  "base_version": "1.10.0 CSS Refactor",
   "logic_changed": false,
-  "game_rules_changed": false,
-  "primary_url": "https://cronogol.es/",
-  "custom_event_bridge": {
-    "zaraz_track_kept": true,
-    "gtag_event": true,
-    "dataLayer_push": true,
-    "page_view_duplication": false
-  },
+  "event_tracking_removed": true,
+  "cloudflare_web_analytics_kept": true,
   "node_check": {
     "game.js": {
       "status": "ok",
       "output": ""
     }
-  }
+  },
+  "files_expected": [
+    "CHANGELOG.md",
+    "CNAME",
+    "CSS_AUDIT_v1_10_0.md",
+    "README.md",
+    "RELEASE_MANIFEST_v1_10_0.json",
+    "RELEASE_MANIFEST_v1_8_9.json",
+    "RELEASE_MANIFEST_v1_9_0.json",
+    "RELEASE_MANIFEST_v1_9_1.json",
+    "RELEASE_MANIFEST_v1_9_10.json",
+    "RELEASE_MANIFEST_v1_9_2.json",
+    "RELEASE_MANIFEST_v1_9_3.json",
+    "RELEASE_MANIFEST_v1_9_4.json",
+    "RELEASE_MANIFEST_v1_9_5.json",
+    "RELEASE_MANIFEST_v1_9_6.json",
+    "RELEASE_MANIFEST_v1_9_7.json",
+    "RELEASE_MANIFEST_v1_9_8.json",
+    "RELEASE_MANIFEST_v1_9_9.json",
+    "VERSION.md",
+    "apoya.html",
+    "como-jugar.html",
+    "contacto.html",
+    "favicon.png",
+    "favicon.svg",
+    "feedback.html",
+    "game.js",
+    "gracias.html",
+    "historia.html",
+    "index.html",
+    "logo-cronogol-dark.png",
+    "logo-cronogol-horizontal.png",
+    "logo-cronogol-new.png",
+    "logo-cronogol-transparent.png",
+    "logo-cronogol.png",
+    "modos.html",
+    "og-cronogol.png",
+    "og-cronogol.svg",
+    "privacidad.html",
+    "robots.txt",
+    "sitemap.xml",
+    "style.css"
+  ]
 }

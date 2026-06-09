@@ -1643,3 +1643,81 @@ button[data-action="start-match"]:hover {
 .setup-links button:hover {
   opacity: 1;
 }
+
+
+/* ===== CronoGol v1.10.3: goal/penalty visual feedback ===== */
+body.cg-flash-goal .game-device,
+body.cg-flash-penalty .game-device,
+body.cg-flash-special .game-device,
+body.cg-flash-yellow .game-device,
+body.cg-flash-red .game-device,
+body.cg-shake-soft .game-device {
+  will-change: transform, filter;
+}
+
+body.cg-flash-goal .game-lcd,
+body.cg-flash-goal #event-card {
+  animation: cgGoalFlash 0.55s ease-in-out 1;
+}
+
+body.cg-flash-penalty .game-lcd,
+body.cg-flash-special .game-lcd,
+body.cg-flash-penalty #event-card,
+body.cg-flash-special #event-card {
+  animation: cgSpecialPulse 0.55s ease-in-out 1;
+}
+
+body.cg-flash-yellow #event-card {
+  animation: cgYellowPulse 0.48s ease-in-out 1;
+}
+
+body.cg-flash-red #event-card {
+  animation: cgRedPulse 0.48s ease-in-out 1;
+}
+
+body.cg-shake-soft .game-device {
+  animation: cgDeviceShake 0.24s linear 1;
+}
+
+@keyframes cgGoalFlash {
+  0%, 100% { filter: brightness(1); transform: scale(1); }
+  38% { filter: brightness(1.75) saturate(1.28); transform: scale(1.012); }
+  66% { filter: brightness(1.25); transform: scale(1.004); }
+}
+
+@keyframes cgSpecialPulse {
+  0%, 100% { filter: brightness(1); }
+  45% { filter: brightness(1.55) saturate(1.18); }
+}
+
+@keyframes cgYellowPulse {
+  0%, 100% { box-shadow: inherit; filter: brightness(1); }
+  50% { box-shadow: 0 0 0 2px rgba(255, 204, 0, .9), 0 0 22px rgba(255, 204, 0, .55); filter: brightness(1.2); }
+}
+
+@keyframes cgRedPulse {
+  0%, 100% { box-shadow: inherit; filter: brightness(1); }
+  50% { box-shadow: 0 0 0 2px rgba(255, 60, 48, .95), 0 0 24px rgba(255, 60, 48, .58); filter: brightness(1.18); }
+}
+
+@keyframes cgDeviceShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-3px); }
+  40% { transform: translateX(3px); }
+  60% { transform: translateX(-2px); }
+  80% { transform: translateX(2px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.cg-flash-goal .game-lcd,
+  body.cg-flash-goal #event-card,
+  body.cg-flash-penalty .game-lcd,
+  body.cg-flash-special .game-lcd,
+  body.cg-flash-penalty #event-card,
+  body.cg-flash-special #event-card,
+  body.cg-flash-yellow #event-card,
+  body.cg-flash-red #event-card,
+  body.cg-shake-soft .game-device {
+    animation: none !important;
+  }
+}
