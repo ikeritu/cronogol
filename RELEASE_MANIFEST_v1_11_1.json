@@ -1,7 +1,7 @@
 {
   "project": "CronoGol",
-  "version": "1.11.1",
-  "release_name": "Mobile Menu Cleanup",
+  "version": "1.12.0",
+  "release_name": "Local Stats & Match History",
   "base_version": "1.11.0 Technical Foundation",
   "purpose": "Fix mobile setup secondary action layout without touching gameplay",
   "gameplay_changed": false,

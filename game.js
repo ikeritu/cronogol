@@ -2287,3 +2287,239 @@ syncActionControls();
 
 
 try{ bindAudioUnlockOnce(); }catch(e){}
+
+
+/* ===== CronoGol v1.12.0: Local Stats & Match History =====
+   Rejugabilidad local sin backend: guarda resumen, acumulados e historial
+   en localStorage. No cambia reglas, eventos de juego ni Cloudflare.
+*/
+const CG_LOCAL_STATS_KEY = "cronogol_local_stats_v112";
+
+function cgDefaultLocalStats(){
+  return {
+    matches:0,
+    leftWins:0,
+    rightWins:0,
+    draws:0,
+    goals:0,
+    throws:0,
+    specials:0,
+    woodwork:0,
+    cards:0,
+    history:[]
+  };
+}
+
+function cgReadLocalStats(){
+  try{
+    const raw = localStorage.getItem(CG_LOCAL_STATS_KEY);
+    if(!raw) return cgDefaultLocalStats();
+    const parsed = JSON.parse(raw);
+    return Object.assign(cgDefaultLocalStats(), parsed, {
+      history:Array.isArray(parsed.history) ? parsed.history.slice(0,10) : []
+    });
+  }catch(e){
+    return cgDefaultLocalStats();
+  }
+}
+
+function cgWriteLocalStats(stats){
+  try{
+    stats.history = Array.isArray(stats.history) ? stats.history.slice(0,10) : [];
+    localStorage.setItem(CG_LOCAL_STATS_KEY, JSON.stringify(stats));
+  }catch(e){}
+}
+
+function cgMatchModeLabel(){
+  if(gameState.matchMode === "five") return currentLang === "en" ? "Fast" : "Rápido";
+  return currentLang === "en" ? "Classic" : "Clásico";
+}
+
+function cgWinnerLabel(p1, p2){
+  if(p1.goals > p2.goals) return safeDisplayName(p1.name);
+  if(p2.goals > p1.goals) return safeDisplayName(p2.name);
+  return currentLang === "en" ? "Draw" : "Empate";
+}
+
+function cgSaveFinishedMatch(pens){
+  if(gameState.localStatsSaved) return cgReadLocalStats();
+  if(!gameState.players || gameState.players.length < 2) return cgReadLocalStats();
+
+  const p1 = gameState.players[0];
+  const p2 = gameState.players[1];
+  const stats = cgReadLocalStats();
+
+  stats.matches += 1;
+  stats.goals += Number(gameState.stats && gameState.stats.goals || 0);
+  stats.throws += Number(gameState.totalTurns || 0);
+  stats.specials += Number(gameState.stats && gameState.stats.specials || 0);
+  stats.woodwork += Number(gameState.stats && gameState.stats.woodwork || 0);
+  stats.cards += Number(gameState.stats && gameState.stats.cards || 0);
+
+  if(p1.goals > p2.goals) stats.leftWins += 1;
+  else if(p2.goals > p1.goals) stats.rightWins += 1;
+  else stats.draws += 1;
+
+  stats.history.unshift({
+    date:new Date().toISOString(),
+    p1:safeDisplayName(p1.name),
+    p2:safeDisplayName(p2.name),
+    g1:Number(p1.goals || 0),
+    g2:Number(p2.goals || 0),
+    winner:cgWinnerLabel(p1, p2),
+    mode:cgMatchModeLabel(),
+    machine:gameState.gameMode === "machine",
+    pens:Boolean(pens),
+    throws:Number(gameState.totalTurns || 0),
+    goals:Number(gameState.stats && gameState.stats.goals || 0),
+    specials:Number(gameState.stats && gameState.stats.specials || 0)
+  });
+
+  cgWriteLocalStats(stats);
+  gameState.localStatsSaved = true;
+  cgRenderLocalStatsPanel();
+  return stats;
+}
+
+function cgRenderLocalStatsPanel(){
+  const stats = cgReadLocalStats();
+  const matchesEl = $("cg-stat-matches");
+  const goalsEl = $("cg-stat-goals");
+  const drawsEl = $("cg-stat-draws");
+  const historyEl = $("cg-stat-history-count");
+
+  if(matchesEl) matchesEl.textContent = String(stats.matches);
+  if(goalsEl) goalsEl.textContent = String(stats.goals);
+  if(drawsEl) drawsEl.textContent = String(stats.draws);
+  if(historyEl) historyEl.textContent = String(stats.history.length);
+  if(localMatchesCount) localMatchesCount.textContent = String(stats.matches || localStorage.getItem("cronogol_matches_played") || "0");
+}
+
+function cgFormatHistoryDate(iso){
+  try{
+    return new Intl.DateTimeFormat(currentLang === "en" ? "en-GB" : "es-ES", {
+      day:"2-digit", month:"2-digit", hour:"2-digit", minute:"2-digit"
+    }).format(new Date(iso));
+  }catch(e){
+    return "--";
+  }
+}
+
+function cgLocalHistoryHtml(){
+  const stats = cgReadLocalStats();
+  if(!stats.history.length){
+    return `<div class="donation-item"><strong>${currentLang === "en" ? "No matches yet" : "Aún no hay partidas"}</strong><br>${currentLang === "en" ? "Finish a match and it will appear here." : "Termina una partida y aparecerá aquí."}</div>`;
+  }
+
+  const items = stats.history.map((m)=>{
+    const extra = [
+      m.mode,
+      m.machine ? (currentLang === "en" ? "vs Machine" : "vs Máquina") : "1 vs 1",
+      m.pens ? (currentLang === "en" ? "Penalties" : "Penaltis") : null,
+      `${m.throws || 0} ${currentLang === "en" ? "throws" : "tiradas"}`
+    ].filter(Boolean).join(" · ");
+
+    return `<div class="local-history-item">
+      <strong>${m.p1} ${m.g1} - ${m.g2} ${m.p2}</strong>
+      <small>${cgFormatHistoryDate(m.date)} · ${currentLang === "en" ? "Winner" : "Ganador"}: ${m.winner}</small>
+      <small>${extra}</small>
+    </div>`;
+  }).join("");
+
+  return `<div class="local-history-list">${items}</div>`;
+}
+
+function cgShowLocalHistory(){
+  const stats = cgReadLocalStats();
+  showModal(
+    currentLang === "en" ? "LOCAL HISTORY" : "HISTORIAL LOCAL",
+    currentLang === "en"
+      ? `${stats.matches} matches saved on this device.`
+      : `${stats.matches} partidas guardadas en este dispositivo.`,
+    cgLocalHistoryHtml(),
+    [{text: currentLang === "en" ? "CLOSE" : "CERRAR", action: closeModal}]
+  );
+}
+
+function cgConfirmResetStats(){
+  showModal(
+    currentLang === "en" ? "RESET STATS" : "BORRAR STATS",
+    currentLang === "en"
+      ? "Delete local match history from this device?"
+      : "¿Borrar el historial local de este dispositivo?",
+    "",
+    [
+      {text: currentLang === "en" ? "YES, DELETE" : "SÍ, BORRAR", action: () => {
+        cgWriteLocalStats(cgDefaultLocalStats());
+        try{ localStorage.setItem("cronogol_matches_played", "0"); }catch(e){}
+        cgRenderLocalStatsPanel();
+        closeModal();
+        showToast(currentLang === "en" ? "Stats deleted" : "Stats borradas");
+      }},
+      {text: currentLang === "en" ? "CANCEL" : "CANCELAR", action: closeModal}
+    ]
+  );
+}
+
+function cgLocalStatsFinalHtml(stats){
+  const total = Math.max(1, Number(stats.matches || 0));
+  const avgGoals = (Number(stats.goals || 0) / total).toFixed(1);
+  const avgThrows = (Number(stats.throws || 0) / total).toFixed(1);
+  const isEn = currentLang === "en";
+
+  return `<div class="donation-item final-local-stats">
+    <strong>${isEn ? "On this device" : "En este dispositivo"}</strong><br>
+    ${isEn ? "Matches" : "Partidas"}: ${stats.matches}<br>
+    ${isEn ? "Left wins" : "Victorias jugador izquierda"}: ${stats.leftWins}<br>
+    ${isEn ? "Right wins" : "Victorias jugador derecha"}: ${stats.rightWins}<br>
+    ${isEn ? "Draws" : "Empates"}: ${stats.draws}<br>
+    ${isEn ? "Avg. goals" : "Media de goles"}: ${avgGoals}<br>
+    ${isEn ? "Avg. throws" : "Media de tiradas"}: ${avgThrows}
+  </div>`;
+}
+
+const cgStartMatchBeforeLocalStats = startMatch;
+startMatch = function(){
+  gameState.localStatsSaved = false;
+  cgStartMatchBeforeLocalStats();
+};
+
+showFinal = function(pens){
+  const savedStats = cgSaveFinishedMatch(Boolean(pens));
+  incrementMatches();
+  if(localMatchesCount) localMatchesCount.textContent = String(savedStats.matches);
+
+  const p1 = gameState.players[0];
+  const p2 = gameState.players[1];
+
+  let text = `${safeDisplayName(p1.name)} ${p1.goals} - ${p2.goals} ${safeDisplayName(p2.name)}`;
+  if(p1.goals > p2.goals) text += `. ${currentLang === "en" ? "Winner" : "Gana"} ${safeDisplayName(p1.name)}.`;
+  else if(p2.goals > p1.goals) text += `. ${currentLang === "en" ? "Winner" : "Gana"} ${safeDisplayName(p2.name)}.`;
+  else text += currentLang === "en" ? ". Final draw." : ". Empate final.";
+  if(pens) text += currentLang === "en" ? " Decided on penalties." : " Resuelto en penaltis.";
+
+  gameState.lastFinalText = formattedFinalResult();
+
+  showModal(
+    currentLang === "en" ? "FULL TIME" : "FINAL DEL PARTIDO",
+    text,
+    finalHtml(Boolean(pens)) + cgLocalStatsFinalHtml(savedStats),
+    [
+      {text: currentLang === "en" ? "REMATCH" : "REVANCHA", action: restartSameMatch},
+      {text: currentLang === "en" ? "SHARE RESULT" : "COMPARTIR RESULTADO", action: shareResult},
+      {text: currentLang === "en" ? "HISTORY" : "HISTORIAL", action: cgShowLocalHistory},
+      {text: currentLang === "en" ? "NEW MATCH" : "NUEVA PARTIDA", action: resetToSetup}
+    ]
+  );
+};
+
+function cgWireLocalStats(){
+  const showBtn = $("cg-show-history-btn");
+  const resetBtnStats = $("cg-reset-stats-btn");
+  if(showBtn) showBtn.onclick = cgShowLocalHistory;
+  if(resetBtnStats) resetBtnStats.onclick = cgConfirmResetStats;
+  if(startMatchBtn) startMatchBtn.onclick = startMatch;
+  cgRenderLocalStatsPanel();
+}
+
+try{ cgWireLocalStats(); }catch(e){}

@@ -1,6 +1,26 @@
-# CronoGol v1.11.1 — Mobile Menu Cleanup
+# CronoGol v1.12.0 — Local Stats & Match History
 
-## v1.11.1 — Mobile Menu Cleanup
+## v1.12.0 — Local Stats & Match History
+
+Versión de cierre evolutivo de V1 centrada en rejugabilidad local sin tocar el núcleo del juego.
+
+### Cambios principales
+
+- Añadido panel de estadísticas locales en la pantalla inicial.
+- Añadido historial de las últimas partidas guardado en este dispositivo.
+- Añadido resumen acumulado al final del partido.
+- Añadida opción para borrar estadísticas locales.
+- Persistencia mediante `localStorage`, sin backend, sin login y sin analítica nueva.
+
+### Seguridad de la versión
+
+- No cambia reglas de juego.
+- No cambia modo clásico ni modo rápido.
+- No cambia máquina.
+- No reintroduce tracking avanzado ni Zaraz.
+- Mantiene Cloudflare Web Analytics básico.
+
+## v1.12.0 — Local Stats & Match History
 
 Versión conservadora basada en `v1.11.0 — Technical Foundation`.
 

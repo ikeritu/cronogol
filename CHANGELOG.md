@@ -1,6 +1,15 @@
 # Changelog
 
-## v1.11.1 — Mobile Menu Cleanup
+## v1.12.0 — Local Stats & Match History
+
+- Añadido panel de estadísticas locales visible desde la pantalla inicial.
+- Guardadas las últimas 10 partidas en `localStorage`.
+- Añadido resumen de victorias, empates, goles y tiradas acumuladas.
+- Añadidos botones para ver historial y borrar estadísticas locales.
+- Añadido resumen acumulado dentro del modal final del partido.
+- No se modifican reglas, sonidos, machine mode ni configuración de Cloudflare.
+
+## v1.12.0 — Local Stats & Match History
 
 - Corrección responsive conservadora de la botonera secundaria en móvil.
 - Reseteados `grid-column`/`grid-row` heredados que podían crear columnas implícitas y provocar botones cortados.
