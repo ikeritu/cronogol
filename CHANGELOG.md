@@ -1,4 +1,13 @@
-## v1.12.2 — Stats UI Final Polish
+## v2.0.0 — Online Foundation
+
+- Inicio de la rama V2.
+- Añadido `online-foundation.js` con helpers seguros para futura sala online.
+- Añadido panel V2 online en la pantalla inicial.
+- Botones de crear/unirse generan borradores locales, sin backend ni sincronización real.
+- Actualizado cache/versionado a `v2.0.0`.
+- No se modifica la lógica jugable estable de v1.12.3.
+
+## v1.12.3 — Stats UI Final Polish
 
 - Pulido visual final del bloque de estadísticas locales.
 - Cambio de etiqueta `STATS` a `LOCAL`.
@@ -9,7 +18,7 @@
 
 # Changelog
 
-## v1.12.2 — Fast Rules & Stats Polish
+## v1.12.3 — Fast Rules & Stats Polish
 
 - Pulido visual del panel de estadísticas locales para mantener el estilo CronoGol.
 - Estadísticas desde la perspectiva de Jugador 1: victorias, derrotas, goles a favor y goles en contra.
@@ -17,7 +26,7 @@
 - Modo rápido actualizado: 00 gol, 01-02 poste, 03-04 larguero, 50 amarilla, 60 roja, 96-97 falta peligrosa.
 - No se toca Cloudflare, analítica ni modo online.
 
-## v1.12.2 — Fast Rules & Stats Polish
+## v1.12.3 — Fast Rules & Stats Polish
 
 - Añadido panel de estadísticas locales visible desde la pantalla inicial.
 - Guardadas las últimas 10 partidas en `localStorage`.
@@ -26,7 +35,7 @@
 - Añadido resumen acumulado dentro del modal final del partido.
 - No se modifican reglas, sonidos, machine mode ni configuración de Cloudflare.
 
-## v1.12.2 — Fast Rules & Stats Polish
+## v1.12.3 — Fast Rules & Stats Polish
 
 - Corrección responsive conservadora de la botonera secundaria en móvil.
 - Reseteados `grid-column`/`grid-row` heredados que podían crear columnas implícitas y provocar botones cortados.

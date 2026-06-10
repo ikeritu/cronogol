@@ -1,10 +1,34 @@
-# CronoGol v1.12.2 — Stats UI Final Polish
+# CronoGol v2.0.0 — Online Foundation
 
-## v1.12.2 — Stats UI Final Polish
+## v2.0.0 — Online Foundation
+
+Primera versión de la rama V2. Esta versión no activa todavía partidas online reales; prepara una base segura para salas privadas sin romper la V1 estable.
+
+Incluye:
+
+- nuevo módulo `online-foundation.js`;
+- modelo inicial de borrador de sala;
+- normalización y validación de códigos de sala;
+- snapshot serializable del estado de partido para futura sincronización;
+- panel V2 online en la pantalla inicial;
+- botones de crear/unirse en modo local seguro, sin backend;
+- actualización de versión/cache a `v2.0.0`.
+
+No incluye todavía:
+
+- Supabase conectado;
+- sincronización real entre dispositivos;
+- login;
+- ranking público;
+- monetización nueva.
+
+La base jugable local de `v1.12.3` queda intacta.
+
+## v1.12.3 — Stats UI Final Polish
 
 Pulido final de la interfaz del panel de estadísticas locales. No modifica reglas, lógica del juego, sonidos, online ni analítica.
 
-## v1.12.2 — Fast Rules & Stats Polish
+## v1.12.3 — Fast Rules & Stats Polish
 
 Versión de cierre evolutivo de V1 centrada en rejugabilidad local sin tocar el núcleo del juego.
 
@@ -24,7 +48,7 @@ Versión de cierre evolutivo de V1 centrada en rejugabilidad local sin tocar el 
 - No reintroduce tracking avanzado ni Zaraz.
 - Mantiene Cloudflare Web Analytics básico.
 
-## v1.12.2 — Fast Rules & Stats Polish
+## v1.12.3 — Fast Rules & Stats Polish
 
 Versión conservadora basada en `v1.11.0 — Technical Foundation`.
 

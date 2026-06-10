@@ -180,7 +180,8 @@ const MODAL_TEXTS = {
     </div>
     <div class="donation-item">
       <strong>Modo rápido</strong><br>
-      <strong>00</strong> = Gol.<br>
+      <strong>Números acabados en 0</strong> = Gol, excepto <strong>50</strong> y <strong>60</strong>: 00, 10, 20, 30, 40, 70, 80 y 90.<br>
+      <strong>Números acabados en 9</strong> = Penalti: 09, 19, 29, 39, 49, 59, 69, 79, 89 y 99. Tirada especial: <strong>par = gol</strong>; <strong>impar = fallo</strong>.<br>
       <strong>01-02</strong> = Poste. Repite el mismo jugador.<br>
       <strong>03-04</strong> = Larguero. Repite el mismo jugador.<br>
       <strong>50</strong> = Amarilla. Termina el turno y pierde el siguiente.<br>
@@ -214,9 +215,14 @@ const MODAL_TEXTS = {
     </div>
     <div class="donation-item">
       <strong>Fast mode</strong><br>
-      Any number ending in <strong>0</strong> is a goal: 00, 10, 20, 30, 40, 50, 60, 70, 80 and 90.<br>
+      Any number ending in <strong>0</strong> is a goal, except <strong>50</strong> and <strong>60</strong>: 00, 10, 20, 30, 40, 70, 80 and 90.<br>
       Any number ending in <strong>9</strong> is a penalty: 09, 19, 29, 39, 49, 59, 69, 79, 89 and 99.<br>
       Penalty special throw: <strong>even = goal</strong>, <strong>odd = miss</strong>.<br>
+      <strong>01-02</strong> = Post. Same player repeats.<br>
+      <strong>03-04</strong> = Crossbar. Same player repeats.<br>
+      <strong>50</strong> = Yellow card. Turn ends and the player skips the next turn.<br>
+      <strong>60</strong> = Red card. Turn ends and the player skips two turns.<br>
+      <strong>96-97</strong> = Dangerous free kick. Special throw: <strong>00 to 20</strong> is a goal; <strong>21 to 99</strong> is a miss.<br>
       The first player to reach <strong>6 goals with a 2-goal lead</strong> wins. Example: 6-4 wins; 6-5 does not; you need 7-5.
     </div>`,
     close: "CLOSE",
@@ -686,19 +692,21 @@ function hasFastModeWinner() {
 }
 
 function evaluateFastThrow(v) {
-  // Modo rápido v1.12.2:
-  // - 00 = gol.
+  // Modo rápido v1.12.3:
+  // - Números acabados en 0 = gol, excepto 50 y 60.
+  // - Números acabados en 9 = penalti.
   // - 01-02 = poste, repite el mismo jugador.
   // - 03-04 = larguero, repite el mismo jugador.
   // - 50 = amarilla, termina turno y pierde el siguiente.
   // - 60 = roja, termina turno y pierde dos turnos.
   // - 96-97 = falta peligrosa con tirada especial: 00-20 gol, 21-99 falla.
-  if (v === 0) return {type:"goal",msg:"⚽ GOOOL",cls:"goal"};
   if (v === 1 || v === 2) return {type:"post",msg:"POSTE",cls:"special",repeat:true};
   if (v === 3 || v === 4) return {type:"crossbar",msg:"LARGUERO",cls:"special",repeat:true};
   if (v === 50) return {type:"yellow",msg:"🟨 AMARILLA",cls:"yellow"};
   if (v === 60) return {type:"red",msg:"🟥 ROJA",cls:"red"};
   if (v === 96 || v === 97) return {type:"free_kick",msg:"FALTA PELIGROSA",cls:"special",special:"free_kick"};
+  if (v % 10 === 0) return {type:"goal",msg:"⚽ GOOOL",cls:"goal"};
+  if (v % 10 === 9) return {type:"penalty",msg:"PENALTI",cls:"special",special:"penalty"};
   return {type:"miss",msg:"FALLO",cls:"neutral"};
 }
 
@@ -1203,7 +1211,8 @@ function showRulesModal(){
     </div>
     <div class="donation-item">
       <strong>Modo rápido</strong><br>
-      <strong>00</strong> = Gol.<br>
+      <strong>Números acabados en 0</strong> = Gol, excepto <strong>50</strong> y <strong>60</strong>: 00, 10, 20, 30, 40, 70, 80 y 90.<br>
+      <strong>Números acabados en 9</strong> = Penalti: 09, 19, 29, 39, 49, 59, 69, 79, 89 y 99. Tirada especial: <strong>par = gol</strong>; <strong>impar = fallo</strong>.<br>
       <strong>01-02</strong> = Poste. Repite el mismo jugador.<br>
       <strong>03-04</strong> = Larguero. Repite el mismo jugador.<br>
       <strong>50</strong> = Amarilla. Termina el turno y pierde el siguiente.<br>
@@ -1405,7 +1414,8 @@ const CG_TEXT = {
     </div>
     <div class="donation-item">
       <strong>Modo rápido</strong><br>
-      <strong>00</strong> = Gol.<br>
+      <strong>Números acabados en 0</strong> = Gol, excepto <strong>50</strong> y <strong>60</strong>: 00, 10, 20, 30, 40, 70, 80 y 90.<br>
+      <strong>Números acabados en 9</strong> = Penalti: 09, 19, 29, 39, 49, 59, 69, 79, 89 y 99. Tirada especial: <strong>par = gol</strong>; <strong>impar = fallo</strong>.<br>
       <strong>01-02</strong> = Poste. Repite el mismo jugador.<br>
       <strong>03-04</strong> = Larguero. Repite el mismo jugador.<br>
       <strong>50</strong> = Amarilla. Termina el turno y pierde el siguiente.<br>
@@ -2307,7 +2317,7 @@ syncActionControls();
 try{ bindAudioUnlockOnce(); }catch(e){}
 
 
-/* ===== CronoGol v1.12.2: Fast Rules & Stats Polish =====
+/* ===== CronoGol v1.12.3: Fast Rules & Stats Polish =====
    Rejugabilidad local sin backend: guarda resumen, acumulados e historial
    en localStorage. No cambia reglas, eventos de juego ni Cloudflare.
 */

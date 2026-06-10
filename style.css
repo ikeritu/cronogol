@@ -2308,7 +2308,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v1.12.2: Local Stats & Match History ===== */
+/* ===== CronoGol v1.12.3: Local Stats & Match History ===== */
 /* Fix conservador para móvil:
    - Resetea grid-column/grid-row históricos con !important que podían crear columnas implícitas.
    - Evita que la botonera secundaria se salga del reloj en pantallas estrechas.
@@ -2419,7 +2419,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v1.12.2: Local Stats UI Polish ===== */
+/* ===== CronoGol v1.12.3: Local Stats UI Polish ===== */
 .local-stats-panel {
   margin: 10px 0 14px;
   padding: 12px;
@@ -2553,7 +2553,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v1.12.2: Stats UI Final Polish ===== */
+/* ===== CronoGol v1.12.3: Stats UI Final Polish ===== */
 .local-stats-panel {
   margin: 12px 0 18px;
   padding: 14px 12px;
@@ -2646,4 +2646,46 @@ nav.setup-links {
   .local-stats-header strong {
     padding: 0;
   }
+}
+
+
+/* ===== CronoGol v2.0.0: Online Foundation Panel ===== */
+.online-foundation-panel{
+  margin-top:12px;
+  background:rgba(0,0,0,.38);
+  border:2px solid var(--line);
+  padding:12px;
+  text-align:center;
+  font-size:12px;
+  color:var(--muted);
+}
+.online-foundation-header{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  margin-bottom:8px;
+}
+.online-foundation-header .tag{margin-bottom:0}
+.online-foundation-header strong{color:var(--orange);letter-spacing:1px}
+.online-foundation-panel p{margin:6px auto 10px;max-width:390px;line-height:1.35}
+.online-foundation-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:8px;
+}
+.online-foundation-actions button{
+  background:rgba(0,0,0,.28);
+  border:2px solid var(--line);
+  color:var(--orange);
+  padding:10px;
+  font-weight:900;
+  cursor:pointer;
+}
+.online-foundation-actions button:hover{border-color:var(--orange)}
+#cg-online-status{display:block;margin-top:9px;color:var(--muted);font-size:11px;line-height:1.35}
+@media(max-width:430px){
+  .online-foundation-header{display:grid;gap:6px}
+  .online-foundation-actions{grid-template-columns:1fr}
 }

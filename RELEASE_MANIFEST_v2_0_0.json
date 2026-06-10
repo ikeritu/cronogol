@@ -1,0 +1,21 @@
+{
+  "version": "2.0.0",
+  "name": "CronoGol v2.0.0 — Online Foundation",
+  "base": "v1.12.3 — Fast Penalty Restore",
+  "created": "2026-06-10",
+  "changes": [
+    "added online-foundation.js",
+    "added safe V2 online panel",
+    "added room code helpers and local room draft model",
+    "added match snapshot helper for future sync",
+    "updated cache/version references to v2.0.0"
+  ],
+  "not_changed": [
+    "game rules",
+    "fast mode penalty restore",
+    "local stats logic",
+    "sounds and vibration",
+    "Cloudflare Web Analytics"
+  ],
+  "backend_enabled": false
+}
