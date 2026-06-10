@@ -1,8 +1,8 @@
 {
   "project": "CronoGol",
-  "version": "1.10.6",
+  "version": "1.11.0",
   "release_name": "Machine Special Flow Fix",
-  "base_version": "1.10.5 Machine Special Autoshot Fix",
+  "base_version": "1.11.0 Machine Special Autoshot Fix",
   "logic_changed": true,
   "scope": "machine special flow only",
   "event_tracking_removed": true,

@@ -1,8 +1,8 @@
 {
   "project": "CronoGol",
-  "version": "1.10.7",
+  "version": "1.11.0",
   "release_name": "Machine Special Direct Resolve",
-  "base_version": "1.10.6 Machine Special Flow Fix",
+  "base_version": "1.11.0 Machine Special Flow Fix",
   "logic_changed": true,
   "scope": "machine special direct resolver",
   "event_tracking_removed": true,

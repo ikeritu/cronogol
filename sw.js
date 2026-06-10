@@ -1,12 +1,19 @@
-const CACHE_NAME = "cronogol-v1.10.17";
+const CACHE_NAME = "cronogol-v1.11.1";
 const ASSETS = [
   "./",
   "./index.html",
-  "./style.css?v=1.10.17",
-  "./game.js?v=1.10.17",
-  "./logo-cronogol-v1.10.17",
+  "./style.css?v=1.11.1",
+  "./game.js?v=1.11.1",
+  "./logo-cronogol.png",
+  "./logo-cronogol-horizontal.png",
   "./favicon.png",
-  "./favicon.svg"
+  "./favicon.svg",
+  "./como-jugar.html",
+  "./modos.html",
+  "./feedback.html",
+  "./apoya.html",
+  "./privacidad.html",
+  "./contacto.html"
 ];
 
 self.addEventListener("install", (event) => {

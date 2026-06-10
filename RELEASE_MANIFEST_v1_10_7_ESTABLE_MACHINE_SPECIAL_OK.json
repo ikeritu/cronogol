@@ -1,7 +1,7 @@
 {
   "project": "CronoGol",
-  "stable_freeze": "v1.10.7_ESTABLE_MACHINE_SPECIAL_OK",
-  "base_version": "v1.10.7 Machine Special Direct Resolve",
+  "stable_freeze": "v1.11.0_ESTABLE_MACHINE_SPECIAL_OK",
+  "base_version": "v1.11.0 Machine Special Direct Resolve",
   "status": "stable_confirmed",
   "primary_url": "https://cronogol.es/",
   "confirmed_by_user": true,

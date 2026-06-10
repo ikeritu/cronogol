@@ -1,8 +1,8 @@
 {
   "project": "CronoGol",
-  "version": "1.10.11",
+  "version": "1.11.0",
   "release_name": "Strict Physical Vibration Gate",
-  "base_version": "v1.10.10 Vibration Strict Fix",
+  "base_version": "v1.11.0 Vibration Strict Fix",
   "logic_changed": false,
   "scope": "strict physical vibration + cache busting only",
   "event_tracking_removed": true,

@@ -1,8 +1,8 @@
 {
   "project": "CronoGol",
-  "version": "1.10.9",
+  "version": "1.11.0",
   "release_name": "Haptics Tuning",
-  "base_version": "v1.10.8 Sound & Haptics Polish",
+  "base_version": "v1.11.0 Sound & Haptics Polish",
   "logic_changed": false,
   "scope": "haptic physical vibration only",
   "event_tracking_removed": true,

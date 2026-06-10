@@ -1,7 +1,7 @@
 {
   "project": "CronoGol",
-  "stable_freeze": "v1.10.11_ESTABLE_VIBRATION_OK",
-  "base_version": "v1.10.11 Strict Physical Vibration Gate",
+  "stable_freeze": "v1.11.0_ESTABLE_VIBRATION_OK",
+  "base_version": "v1.11.0 Strict Physical Vibration Gate",
   "status": "stable_confirmed",
   "logic_changed_from_v1_10_11": false,
   "confirmed_by_user": true,

@@ -1,6 +1,6 @@
 {
   "project": "CronoGol",
-  "version": "1.10.17",
+  "version": "1.11.0",
   "release_name": "Flatten Secondary Actions",
   "base_version": "1.10.16 Secondary Actions Fix",
   "logic_changed": false,

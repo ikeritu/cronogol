@@ -1,8 +1,8 @@
 {
   "project": "CronoGol",
-  "version": "1.10.3",
+  "version": "1.11.0",
   "release_name": "Goal & Penalty Feedback",
-  "base_version": "1.10.2 Stability Rollback",
+  "base_version": "1.11.0 Stability Rollback",
   "logic_changed": false,
   "event_tracking_removed": true,
   "changes": [

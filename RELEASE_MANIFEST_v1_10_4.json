@@ -1,8 +1,8 @@
 {
   "project": "CronoGol",
-  "version": "1.10.4",
+  "version": "1.11.0",
   "release_name": "Machine Special Lock Fix",
-  "base_version": "1.10.3 Goal & Penalty Feedback",
+  "base_version": "1.11.0 Goal & Penalty Feedback",
   "logic_changed": true,
   "scope": "machine control lock only",
   "event_tracking_removed": true,

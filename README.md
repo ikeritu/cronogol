@@ -1,4 +1,30 @@
-# CronoGol v1.10.17 — Flatten Secondary Actions
+# CronoGol v1.11.1 — Mobile Menu Cleanup
+
+## v1.11.1 — Mobile Menu Cleanup
+
+Versión conservadora basada en `v1.11.0 — Technical Foundation`.
+
+### Objetivo
+
+Corregir la visualización móvil de la botonera secundaria de la pantalla inicial para que no se monte, no se corte y no cree desplazamiento horizontal dentro del reloj.
+
+### Cambios
+
+- Reseteo final de `grid-column` y `grid-row` heredados en botones con `data-slot`.
+- Botonera secundaria en móvil organizada en 2 columnas.
+- En pantallas muy estrechas, botonera en 1 columna.
+- Contención de overflow horizontal en la pantalla inicial.
+- Ajuste ligero del modal de menú en móvil.
+
+### No se toca
+
+- Reglas del juego.
+- Lógica de cronómetro.
+- Sonidos.
+- Penalti/falta especial.
+- Analytics.
+- Cloudflare/Zaraz.
+
 
 ## Objetivo
 
@@ -105,7 +131,7 @@ Cambios:
 No se modifica la lógica del juego.
 
 
-## v1.10.17 — CSS Refactor
+## v1.11.0 — CSS Refactor
 
 Esta versión parte de `v1.9.10 Home UI Polish`.
 
@@ -139,14 +165,14 @@ No se ha tocado:
 - Dominio personalizado.
 
 
-## v1.10.17 — Stability Rollback
+## v1.11.0 — Stability Rollback
 
-Esta versión parte de `v1.10.17 CSS Refactor`, última versión estable confirmada antes de añadir la capa de eventos de juego.
+Esta versión parte de `v1.11.0 CSS Refactor`, última versión estable confirmada antes de añadir la capa de eventos de juego.
 
 Motivo:
 
 - Se detectó bloqueo de la web durante partida tras la versión con tracking de eventos.
-- Se retira la capa `Game Event Tracking` de `v1.10.17`.
+- Se retira la capa `Game Event Tracking` de `v1.11.0`.
 - Se mantiene Cloudflare Web Analytics básico.
 - Se mantiene dominio `https://cronogol.es/`.
 - Se mantiene CSS refactor.
@@ -155,14 +181,14 @@ Motivo:
 No se toca la lógica del juego.
 
 
-## v1.10.17 — Goal & Penalty Feedback
+## v1.11.0 — Goal & Penalty Feedback
 
-Esta versión parte de `v1.10.17 Stability Rollback`.
+Esta versión parte de `v1.11.0 Stability Rollback`.
 
 Objetivo:
 
 - Añadir feedback audiovisual de gol, penalti, falta, tarjetas y palos sin reintroducir tracking de eventos.
-- Mantener la estabilidad recuperada en `v1.10.17`.
+- Mantener la estabilidad recuperada en `v1.11.0`.
 
 Cambios:
 
@@ -177,9 +203,9 @@ Cambios:
 No se toca la lógica del juego.
 
 
-## v1.10.17 — Machine Special Lock Fix
+## v1.11.0 — Machine Special Lock Fix
 
-Esta versión parte de `v1.10.17 Goal & Penalty Feedback`.
+Esta versión parte de `v1.11.0 Goal & Penalty Feedback`.
 
 Objetivo:
 
@@ -194,19 +220,19 @@ Cambios:
 - `maybeMachineSpecialTurn()` ya no reactiva controles de forma incondicional.
 - Los timeouts de máquina se almacenan en `machineTurnTimeout`, `machineStopTimeout`, `machineSpecialTurnTimeout` y `machineSpecialStopTimeout`.
 - Se añaden guardas de pantalla activa, final de partido, tanda de penaltis y turno real.
-- Se mantiene sonido/feedback visual de v1.10.17.
+- Se mantiene sonido/feedback visual de v1.11.0.
 - No se reintroduce Zaraz ni tracking de eventos.
 
 No se cambian reglas ni comportamiento de marcador.
 
 
-## v1.10.17 — Machine Special Autoshot Fix
+## v1.11.0 — Machine Special Autoshot Fix
 
-Esta versión parte de `v1.10.17 Machine Special Lock Fix`.
+Esta versión parte de `v1.11.0 Machine Special Lock Fix`.
 
 Motivo:
 
-- `v1.10.17` bloqueaba correctamente el botón START/STOP cuando la máquina obtenía penalti/falta.
+- `v1.11.0` bloqueaba correctamente el botón START/STOP cuando la máquina obtenía penalti/falta.
 - Pero la máquina no ejecutaba la tirada especial porque `maybeMachineSpecialTurn()` llamaba a una función inexistente (`startSpecialTimer()`).
 
 Corrección:
@@ -220,7 +246,7 @@ Corrección:
 No se cambian reglas ni marcador.
 
 
-## v1.10.17 — Machine Special Flow Fix
+## v1.11.0 — Machine Special Flow Fix
 
 Esta versión corrige de forma completa el flujo automático de penalti/falta de la máquina.
 
@@ -238,7 +264,7 @@ No se reintroduce Zaraz ni tracking de eventos.
 No se cambian reglas ni marcador.
 
 
-## v1.10.17 — Machine Special Direct Resolve
+## v1.11.0 — Machine Special Direct Resolve
 
 Esta versión corrige de forma más robusta el penalti/falta de la máquina.
 
@@ -259,7 +285,7 @@ Corrección:
 No se cambian reglas ni marcador.
 
 
-## v1.10.17_ESTABLE_MACHINE_SPECIAL_OK
+## v1.11.0_ESTABLE_MACHINE_SPECIAL_OK
 
 Versión congelada como estable tras confirmar el arreglo del flujo de penalti/falta de la máquina.
 
@@ -275,9 +301,9 @@ Confirmado:
 Esta versión debe usarse como base para futuras modificaciones.
 
 
-## v1.10.17 — Sound & Haptics Polish
+## v1.11.0 — Sound & Haptics Polish
 
-Esta versión parte de `v1.10.17_ESTABLE_MACHINE_SPECIAL_OK`.
+Esta versión parte de `v1.11.0_ESTABLE_MACHINE_SPECIAL_OK`.
 
 Objetivo:
 
@@ -312,9 +338,9 @@ No se toca:
 - Estadísticas.
 
 
-## v1.10.17 — Haptics Tuning
+## v1.11.0 — Haptics Tuning
 
-Esta versión parte de `v1.10.17 Sound & Haptics Polish`.
+Esta versión parte de `v1.11.0 Sound & Haptics Polish`.
 
 Ajuste solicitado:
 
@@ -335,7 +361,7 @@ No se toca:
 - Zaraz/tracking de eventos.
 
 
-## v1.10.17 — Vibration Strict Fix
+## v1.11.0 — Vibration Strict Fix
 
 Corrige la vibración tras fallo normal.
 
@@ -362,7 +388,7 @@ No se toca:
 - Zaraz/tracking de eventos.
 
 
-## v1.10.17 — Strict Physical Vibration Gate
+## v1.11.0 — Strict Physical Vibration Gate
 
 Esta versión blinda la vibración física según la norma cerrada:
 
@@ -388,8 +414,8 @@ Cambios técnicos:
   - `goal`;
   - `penalty_fail`.
 - Añadido cache busting:
-  - `game.js?v=1.10.17`;
-  - `style.css?v=1.10.17`.
+  - `game.js?v=1.11.0`;
+  - `style.css?v=1.11.0`.
 
 No se toca:
 
@@ -401,7 +427,7 @@ No se toca:
 - Zaraz/tracking de eventos.
 
 
-## v1.10.17_ESTABLE_VIBRATION_OK
+## v1.11.0_ESTABLE_VIBRATION_OK
 
 Versión congelada como estable tras confirmar que la vibración física cumple la norma cerrada.
 
@@ -410,7 +436,7 @@ Confirmado: gol fuerte, penalti fallado leve, y sin vibración en fallo normal, 
 Esta versión debe usarse como base para futuras modificaciones.
 
 
-## v1.10.17 — Project Audit Fixes
+## v1.11.0 — Project Audit Fixes
 
 Correcciones aplicadas desde la auditoría multidisciplinar:
 
@@ -422,13 +448,13 @@ Correcciones aplicadas desde la auditoría multidisciplinar:
 - Mejora visual de estados del selector de idioma.
 - Transición suave del menú lateral.
 - Fallback de portapapeles ya mantenido.
-- Cache busting actualizado a `game.js?v=1.10.17` y `style.css?v=1.10.17`.
+- Cache busting actualizado a `game.js?v=1.11.0` y `style.css?v=1.11.0`.
 - PWA mínima con `sw.js` y `site.webmanifest`.
 
 No se han cambiado reglas, marcador, máquina, sonidos ni vibración estable.
 
 
-## v1.10.17 — Home Support Dedup
+## v1.11.0 — Home Support Dedup
 
 Ajuste de UX en pantalla de inicio:
 
@@ -438,7 +464,7 @@ Ajuste de UX en pantalla de inicio:
 - No se toca juego, reglas, máquina, sonidos, vibración ni analítica.
 
 
-## v1.10.17 — Menu & Home Hierarchy Polish
+## v1.11.0 — Menu & Home Hierarchy Polish
 
 Pulido visual de interfaz sin tocar la lógica del juego.
 
@@ -451,8 +477,8 @@ Cambios:
 - Menú lateral más compacto.
 - `Reiniciar partido` separado como acción peligrosa.
 - `Apoya CronoGol` baja peso visual en home y menú.
-- Se mantiene la confirmación de reinicio añadida en v1.10.17.
-- Cache busting actualizado a `game.js?v=1.10.17` y `style.css?v=1.10.17`.
+- Se mantiene la confirmación de reinicio añadida en v1.11.0.
+- Cache busting actualizado a `game.js?v=1.11.0` y `style.css?v=1.11.0`.
 
 No se toca:
 
@@ -466,9 +492,9 @@ No se toca:
 - Zaraz/event tracking.
 
 
-## v1.10.17 — Mobile Layout Fix
+## v1.11.0 — Mobile Layout Fix
 
-Esta versión parte de `v1.10.17`.
+Esta versión parte de `v1.11.0`.
 
 Objetivo:
 
@@ -489,7 +515,7 @@ No se toca:
 - Estadísticas.
 
 
-## v1.10.17 — Secondary Actions Fix
+## v1.11.0 — Secondary Actions Fix
 
 Esta versión corrige el fallo real visto en PC y móvil en la zona inferior de acciones secundarias.
 
@@ -507,12 +533,12 @@ Solución:
 - En móvil se usa una parrilla de 2 columnas.
 - `Apoya CronoGol` queda siempre a ancho completo.
 - Se elimina cualquier contenido accidental antes de `<!DOCTYPE html>`.
-- Se actualiza cache/versionado a `v1.10.17`.
+- Se actualiza cache/versionado a `v1.11.0`.
 
 No se toca la lógica del juego.
 
 
-## v1.10.17 — Flatten Secondary Actions
+## v1.11.0 — Flatten Secondary Actions
 
 Esta versión corrige la causa real del fallo de los botones inferiores.
 
@@ -529,6 +555,33 @@ Solución real:
 - Se elimina la agrupación interna y los botones vuelven a ser hijos directos de `nav.setup-links`.
 - Se añade un override final específico para `#setup-screen nav.setup-links.secondary-actions-final`.
 - Se mantiene `Apoya CronoGol` a ancho completo.
-- Se actualiza versión/cache a `v1.10.17`.
+- Se actualiza versión/cache a `v1.11.0`.
 
 No se toca la lógica del juego.
+
+
+## v1.11.0 — Technical Foundation
+
+Versión puente antes de V2 online.
+
+Objetivo: preparar la base técnica para salas online sin tocar la jugabilidad.
+
+Incluye:
+
+- guarda idempotente en `endMatch()`;
+- helpers para limpiar timers críticos;
+- desbloqueo robusto de `AudioContext` tras interacción del usuario;
+- restauración segura del texto de tirada especial;
+- corrección de `sw.js` eliminando asset inexistente;
+- actualización de cache/versionado a `v1.11.0`;
+- honeypot y cooldown local en feedback;
+- plantilla de Cloudflare Worker para proteger Formspree;
+- documento `TECHNICAL_FOUNDATION_V1_11_0.md`.
+
+No incluye todavía:
+
+- Supabase;
+- salas online;
+- partida online;
+- anuncios nuevos;
+- automatización de contenidos.

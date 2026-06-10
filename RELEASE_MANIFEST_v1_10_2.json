@@ -1,8 +1,8 @@
 {
   "project": "CronoGol",
-  "version": "1.10.2",
+  "version": "1.11.0",
   "release_name": "Stability Rollback",
-  "base_version": "1.10.0 CSS Refactor",
+  "base_version": "1.11.0 CSS Refactor",
   "logic_changed": false,
   "event_tracking_removed": true,
   "cloudflare_web_analytics_kept": true,

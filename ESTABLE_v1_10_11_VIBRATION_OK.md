@@ -1,10 +1,10 @@
-# CronoGol v1.10.17_ESTABLE_VIBRATION_OK
+# CronoGol v1.11.0_ESTABLE_VIBRATION_OK
 
 Versión estable congelada tras confirmar que la vibración física cumple la norma cerrada.
 
 ## Base
 
-`CronoGol v1.10.17 — Strict Physical Vibration Gate`
+`CronoGol v1.11.0 — Strict Physical Vibration Gate`
 
 ## Confirmado
 
@@ -25,7 +25,7 @@ Versión estable congelada tras confirmar que la vibración física cumple la no
 - `vibrate()` genérico eliminado.
 - `navigator.vibrate` solo se usa dentro de `physicalVibration()`.
 - `applyPhysicalVibration()` es la única puerta de decisión.
-- Cache busting activo: `game.js?v=1.10.17` y `style.css?v=1.10.17`.
+- Cache busting activo: `game.js?v=1.11.0` y `style.css?v=1.11.0`.
 - Penalti/falta automática de máquina se mantiene.
 - Zaraz/event tracking sigue fuera.
 

@@ -7,7 +7,7 @@
   <link rel="icon" href="favicon.png" type="image/png" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <title>Feedback · CronoGol</title>
-  <link rel="stylesheet" href="style.css?v=1.10.17" />
+  <link rel="stylesheet" href="style.css?v=1.11.1" />
 </head>
 <body>
   <div class="top-language-switch" aria-label="Language selector">
@@ -56,6 +56,8 @@
 
         <input type="hidden" name="url" value="https://cronogol.es/" />
         <input type="hidden" name="_subject" value="Nuevo feedback de CronoGol" />
+        <input type="text" name="website_check" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;opacity:0;height:0;width:0" aria-hidden="true" />
+        <input type="hidden" name="client_ts" id="feedback-client-ts" />
 
         <button class="main-start-btn" type="submit" id="feedback-submit-btn">Enviar feedback</button>
 
@@ -80,11 +82,13 @@
 
   <script>
     const FORMSPREE_ENDPOINT = "https://formspree.io/f/xjgdkwev";
-    const AUDIT_FRONTEND_NOTE = "Pendiente opcional: mover este endpoint a Cloudflare Worker/Pages Function si se requiere ocultación perimetral.";
+    const AUDIT_FRONTEND_NOTE = "v1.11.0: añadido honeypot y limitación local. Recomendado en V2: proxy Cloudflare Worker para ocultar endpoint.";
 
     const form = document.getElementById("feedback-form");
     const statusBox = document.getElementById("feedback-status");
     const submitBtn = document.getElementById("feedback-submit-btn");
+    const FEEDBACK_COOLDOWN_MS = 60000;
+    const FEEDBACK_LAST_SENT_KEY = "CRONOGOL_FEEDBACK_LAST_SENT";
 
     function showStatus(message, type) {
       statusBox.textContent = message;
@@ -93,6 +97,21 @@
 
     form.addEventListener("submit", async function (event) {
       event.preventDefault();
+
+      const honeypot = form.querySelector("[name='website_check']");
+      if(honeypot && honeypot.value){
+        showStatus("No se ha podido enviar.", "error");
+        return;
+      }
+
+      const lastSent = Number(localStorage.getItem(FEEDBACK_LAST_SENT_KEY) || "0");
+      if(Date.now() - lastSent < FEEDBACK_COOLDOWN_MS){
+        showStatus("Espera un minuto antes de enviar otro feedback.", "error");
+        return;
+      }
+
+      const tsInput = document.getElementById("feedback-client-ts");
+      if(tsInput) tsInput.value = new Date().toISOString();
 
       const formData = new FormData(form);
 
@@ -111,6 +130,7 @@
           throw new Error("HTTP " + response.status);
         }
 
+        localStorage.setItem(FEEDBACK_LAST_SENT_KEY, String(Date.now()));
         form.reset();
         showStatus((window.FEEDBACK_TEXT ? window.FEEDBACK_TEXT().ok : "✅ Feedback enviado correctamente. ¡Gracias por ayudar a mejorar CronoGol!"), "success");
       } catch (error) {

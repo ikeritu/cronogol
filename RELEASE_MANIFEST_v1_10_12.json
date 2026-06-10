@@ -1,8 +1,8 @@
 {
   "project": "CronoGol",
-  "version": "v1.10.12",
+  "version": "v1.11.0",
   "release_name": "Project Audit Fixes",
-  "base_version": "v1.10.11_ESTABLE_VIBRATION_OK",
+  "base_version": "v1.11.0_ESTABLE_VIBRATION_OK",
   "project_lead_note": "Correcciones aplicadas por subagentes Frontend y UI/UX, preservando reglas y funcionamiento del juego.",
   "checks": {
     "node_ok": true,

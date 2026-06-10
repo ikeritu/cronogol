@@ -1,6 +1,6 @@
 /*
 ===============================================================================
-CronoGol v1.10.17 — CSS Refactor
+CronoGol v1.11.0 — CSS Refactor
 ===============================================================================
 
 Objetivo:
@@ -1645,7 +1645,7 @@ button[data-action="start-match"]:hover {
 }
 
 
-/* ===== CronoGol v1.10.17: goal/penalty visual feedback ===== */
+/* ===== CronoGol v1.11.0: goal/penalty visual feedback ===== */
 body.cg-flash-goal .game-device,
 body.cg-flash-penalty .game-device,
 body.cg-flash-special .game-device,
@@ -1723,7 +1723,7 @@ body.cg-shake-soft .game-device {
 }
 
 
-/* ===== CronoGol v1.10.17: sound & haptics polish visual feedback ===== */
+/* ===== CronoGol v1.11.0: sound & haptics polish visual feedback ===== */
 body.cg-flash-goal .game-device {
   animation: cgGoalDevicePop 0.62s ease-out 1;
 }
@@ -1766,14 +1766,14 @@ body.cg-flash-red .game-device {
 }
 
 
-/* ===== CronoGol v1.10.17: strict physical vibration gate =====
+/* ===== CronoGol v1.11.0: strict physical vibration gate =====
    La vibración física está totalmente centralizada en game.js:
    physicalVibration() -> solo goal / penalty_fail.
    Feedback visual activo solo para goal y penalty_fail.
 */
 
 
-/* ===== CronoGol v1.10.17: Project Audit UI/UX fixes ===== */
+/* ===== CronoGol v1.11.0: Project Audit UI/UX fixes ===== */
 .top-back-link {
   display: inline-flex;
   align-items: center;
@@ -1850,7 +1850,7 @@ body.cg-flash-red .game-device {
 }
 
 
-/* ===== CronoGol v1.10.17: Menu & Home Hierarchy Polish ===== */
+/* ===== CronoGol v1.11.0: Menu & Home Hierarchy Polish ===== */
 
 /* Home: acciones secundarias agrupadas, menos ruido visual */
 .setup-actions-polished {
@@ -1985,7 +1985,7 @@ body.cg-flash-red .game-device {
 }
 
 
-/* ===== CronoGol v1.10.17: Mobile Layout Fix ===== */
+/* ===== CronoGol v1.11.0: Mobile Layout Fix ===== */
 /* Corrección de la zona inferior de acciones en móvil.
 .setup-links.secondary-actions-final,
 .setup-links.setup-actions-polished {
@@ -2114,7 +2114,7 @@ body.cg-flash-red .game-device {
 }
 
 
-/* ===== CronoGol v1.10.17: Secondary Actions Grid Hard Fix ===== */
+/* ===== CronoGol v1.11.0: Secondary Actions Grid Hard Fix ===== */
 /* Fix real observado:
    Los grupos internos .setup-action-group se estaban comportando como columnas
    dentro de .setup-links, generando cajas estrechas y textos pisados.
@@ -2222,7 +2222,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v1.10.17: Flattened Secondary Actions Final Fix ===== */
+/* ===== CronoGol v1.11.0: Flattened Secondary Actions Final Fix ===== */
 /* Causa real corregida:
    El HTML tenía grupos .setup-action-group dentro de .setup-links, mientras parte
    del CSS histórico esperaba botones/enlaces directos con [data-slot].
@@ -2304,5 +2304,116 @@ nav.setup-links {
     font-size: 11px !important;
     padding-left: 4px !important;
     padding-right: 4px !important;
+  }
+}
+
+
+/* ===== CronoGol v1.11.1: Mobile Menu Cleanup ===== */
+/* Fix conservador para móvil:
+   - Resetea grid-column/grid-row históricos con !important que podían crear columnas implícitas.
+   - Evita que la botonera secundaria se salga del reloj en pantallas estrechas.
+   - No cambia reglas, sonidos, estados ni lógica del juego. */
+#setup-screen nav.setup-links.secondary-actions-final,
+#setup-screen nav.setup-links.setup-actions-polished {
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+#setup-screen nav.setup-links.secondary-actions-final > button,
+#setup-screen nav.setup-links.secondary-actions-final > a,
+#setup-screen nav.setup-links.setup-actions-polished > button,
+#setup-screen nav.setup-links.setup-actions-polished > a {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  text-overflow: clip !important;
+  overflow-wrap: anywhere !important;
+}
+
+#setup-screen nav.setup-links.secondary-actions-final > [data-slot],
+#setup-screen nav.setup-links.setup-actions-polished > [data-slot] {
+  grid-column: auto !important;
+  grid-row: auto !important;
+}
+
+#setup-screen nav.setup-links.secondary-actions-final > [data-slot="support"],
+#setup-screen nav.setup-links.setup-actions-polished > [data-slot="support"] {
+  grid-column: 1 / -1 !important;
+}
+
+@media (max-width: 640px) {
+  .app-shell {
+    overflow-x: hidden !important;
+  }
+
+  .setup-card,
+  .setup-card-polished,
+  #setup-screen .device {
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  #setup-screen nav.setup-links.secondary-actions-final,
+  #setup-screen nav.setup-links.setup-actions-polished {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-auto-flow: row !important;
+    grid-auto-columns: unset !important;
+    gap: 8px !important;
+    width: 100% !important;
+    margin-top: 18px !important;
+  }
+
+  #setup-screen nav.setup-links.secondary-actions-final > button,
+  #setup-screen nav.setup-links.secondary-actions-final > a,
+  #setup-screen nav.setup-links.setup-actions-polished > button,
+  #setup-screen nav.setup-links.setup-actions-polished > a {
+    width: 100% !important;
+    min-height: 46px !important;
+    padding: 8px 5px !important;
+    font-size: 11.5px !important;
+    line-height: 1.12 !important;
+    letter-spacing: 0 !important;
+    white-space: normal !important;
+  }
+
+  #setup-screen nav.setup-links.secondary-actions-final > [data-slot="support"],
+  #setup-screen nav.setup-links.setup-actions-polished > [data-slot="support"] {
+    grid-column: 1 / -1 !important;
+    min-height: 54px !important;
+    font-size: 13px !important;
+  }
+
+  #setup-screen nav.setup-links.secondary-actions-final > [data-slot="support"]::after,
+  #setup-screen nav.setup-links.setup-actions-polished > [data-slot="support"]::after {
+    display: inline !important;
+    font-size: 10px !important;
+    margin-left: 4px !important;
+  }
+
+  .side-menu-card-polished {
+    width: min(92vw, 520px) !important;
+    max-width: 92vw !important;
+    max-height: 86vh !important;
+    padding: 18px !important;
+    box-sizing: border-box !important;
+  }
+}
+
+@media (max-width: 360px) {
+  #setup-screen nav.setup-links.secondary-actions-final,
+  #setup-screen nav.setup-links.setup-actions-polished {
+    grid-template-columns: 1fr !important;
+  }
+
+  #setup-screen nav.setup-links.secondary-actions-final > button,
+  #setup-screen nav.setup-links.secondary-actions-final > a,
+  #setup-screen nav.setup-links.setup-actions-polished > button,
+  #setup-screen nav.setup-links.setup-actions-polished > a {
+    min-height: 44px !important;
+    font-size: 11px !important;
   }
 }

@@ -1,8 +1,8 @@
 {
   "project": "CronoGol",
-  "version": "1.10.16",
+  "version": "1.11.0",
   "release_name": "Secondary Actions Fix",
-  "base_version": "1.10.15 Mobile Layout Fix",
+  "base_version": "1.11.0 Mobile Layout Fix",
   "logic_changed": false,
   "css_changed": true,
   "fixes": [

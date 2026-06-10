@@ -1,12 +1,12 @@
 # VERSION
 
-Current version: v1.10.17
-Release name: Flatten Secondary Actions
-Base version: v1.10.16 Secondary Actions Fix
+Current version: v1.11.1
+Release name: Mobile Menu Cleanup
+Base version: v1.11.0 Technical Foundation
 Status: Stable candidate
 Primary URL: https://cronogol.es/
 
 Notes:
-- Fixes real cause of secondary actions layout bug.
-- Flattens nav HTML so data-slot selectors match direct children.
-- Gameplay logic unchanged.
+- Mobile responsive cleanup for setup secondary actions.
+- Gameplay logic intentionally unchanged.
+- No Supabase integration yet.

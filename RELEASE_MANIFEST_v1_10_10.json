@@ -1,8 +1,8 @@
 {
   "project": "CronoGol",
-  "version": "1.10.10",
+  "version": "1.11.0",
   "release_name": "Vibration Strict Fix",
-  "base_version": "v1.10.9 Haptics Tuning",
+  "base_version": "v1.11.0 Haptics Tuning",
   "logic_changed": false,
   "scope": "strict vibration gating only",
   "event_tracking_removed": true,

@@ -273,7 +273,7 @@ function clockSec(){
 
 
 function physicalVibration(event){
-  // v1.10.17 — Strict Physical Vibration Gate
+  // v1.11.0 — Strict Physical Vibration Gate
   // ÚNICO punto permitido para activar vibración física.
   // Norma:
   // - Gol: vibración fuerte
@@ -314,6 +314,7 @@ function playSound(type){
   try{
     if(!gameState.soundEnabled || !soundEnabledInput.checked) return;
     if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if(audioCtx && audioCtx.state === "suspended") resumeCronoGolAudio();
 
     const patterns = {
       beep: [
@@ -515,10 +516,8 @@ function closeMenuAndRun(fn){
 
 
 function clearMachineTimers(){
-  clearTimeout(machineTurnTimeout);
-  clearTimeout(machineStopTimeout);
-  clearTimeout(machineSpecialTurnTimeout);
-  clearTimeout(machineSpecialStopTimeout);
+  clearMachineTurnTimers();
+  clearMachineSpecialTimers();
   machineTurnTimeout = null;
   machineStopTimeout = null;
   machineSpecialTurnTimeout = null;
@@ -540,19 +539,93 @@ function resetRuntimeState(){
 
   if(mainActionBtn){
     mainActionBtn.disabled = false;
-    mainActionBtn.textContent = "START";
+    mainActionBtn.textContent = safeCgText("start", "START");
     mainActionBtn.classList.remove("stop");
   }
 
   if(specialStartBtn){
     specialStartBtn.disabled = false;
-    specialStartBtn.textContent = "TIRADA ESPECIAL";
+    specialStartBtn.textContent = safeCgText("specialThrow", "TIRADA ESPECIAL");
   }
 
   if(specialPanel) specialPanel.classList.add("hidden");
   if(shootoutPanel) shootoutPanel.classList.add("hidden");
 }
 
+
+
+
+/* ===== v1.11.0 TECHNICAL FOUNDATION HELPERS ===== */
+/* Preparación conservadora para V2 online:
+   - guardas idempotentes;
+   - limpieza centralizada de timers críticos;
+   - unlock robusto de AudioContext;
+   - restauración segura de textos de controles.
+   No cambia reglas ni mecánica de juego. */
+
+function safeCgText(key, fallback){
+  try{
+    if(typeof cgT === "function"){
+      const value = cgT(key);
+      if(value && value !== key) return value;
+    }
+  }catch(e){}
+  return fallback;
+}
+
+function clearMachineTurnTimers(){
+  try{ clearTimeout(machineTurnTimeout); }catch(e){}
+  try{ clearTimeout(machineStopTimeout); }catch(e){}
+  machineTurnTimeout = null;
+  machineStopTimeout = null;
+}
+
+function clearMachineSpecialTimers(){
+  try{ clearTimeout(machineSpecialTurnTimeout); }catch(e){}
+  try{ clearTimeout(machineSpecialStopTimeout); }catch(e){}
+  machineSpecialTurnTimeout = null;
+  machineSpecialStopTimeout = null;
+}
+
+function clearGameplayTimers(){
+  try{ clearInterval(timerInterval); }catch(e){}
+  try{ clearInterval(matchClockInterval); }catch(e){}
+  clearMachineTurnTimers();
+  clearMachineSpecialTimers();
+  timerInterval = null;
+  matchClockInterval = null;
+}
+
+function restoreSpecialButtonLabel(){
+  try{
+    if(!specialStartBtn) return;
+    if(!pendingSpecial && !penaltyShootout){
+      specialStartBtn.textContent = safeCgText("specialThrow", "TIRADA ESPECIAL");
+    }
+  }catch(e){}
+}
+
+async function resumeCronoGolAudio(){
+  try{
+    if(!audioCtx && window.AudioContext){
+      audioCtx = new window.AudioContext();
+    } else if(!audioCtx && window.webkitAudioContext){
+      audioCtx = new window.webkitAudioContext();
+    }
+    if(audioCtx && audioCtx.state === "suspended"){
+      await audioCtx.resume();
+    }
+  }catch(e){}
+}
+
+function bindAudioUnlockOnce(){
+  try{
+    const unlock = () => resumeCronoGolAudio();
+    ["pointerdown","touchstart","click","keydown"].forEach((eventName)=>{
+      document.addEventListener(eventName, unlock, {once:true, passive:true});
+    });
+  }catch(e){}
+}
 
 
 function updateSetupVisibility(){
@@ -578,7 +651,7 @@ function startMatch(){
   pendingSpecial=null; penaltyShootout=null; currentElapsedMs=0; stopwatchBaseMs=0; matchStartTime=Date.now();
   setupScreen.classList.remove("active"); gameScreen.classList.add("active"); closeModal(); sideMenu.classList.add("hidden");
   timerDisplay.textContent="00:00:00"; lastTwoDisplay.textContent="--"; setEvent("--", currentLang === "en" ? "Press START to begin." : "Pulsa START para comenzar.","neutral");
-  // v1.10.17: vibración física directa eliminada; usar
+  // v1.11.0: vibración física directa eliminada; usar
 }
 
 function handleMainAction(){ if(gameState.matchEnded||pendingSpecial) return; gameState.isRunning ? stopTimerAndEvaluate() : startTimer(); }
@@ -678,7 +751,7 @@ function applyNormalResult(v,r){
 
     pendingSpecial = r.special;
     specialPanel.classList.remove("hidden");
-    specialStartBtn.textContent = "TIRADA ESPECIAL";
+    specialStartBtn.textContent = safeCgText("specialThrow", "TIRADA ESPECIAL");
     specialLabel.textContent =
       r.special === "free_kick"
         ? `${p.name}: 00-20 es gol.`
@@ -711,7 +784,7 @@ function applyNormalResult(v,r){
     maybeMachineTurn();
   }
 }
-function handleSpecialButton(){ if(!pendingSpecial) return; if(gameState.gameMode==="machine" && gameState.currentPlayerIndex===1) return; if(!gameState.isRunning){ startTimer(); specialStartBtn.textContent="STOP ESPECIAL"; } else { stopTimer(); evaluateSpecialThrow(getLastTwoDigits(currentElapsedMs)); } }
+function handleSpecialButton(){ if(!pendingSpecial) return; if(gameState.gameMode==="machine" && gameState.currentPlayerIndex===1) return; if(!gameState.isRunning){ startTimer(); specialStartBtn.textContent=safeCgText("specialStop", "STOP ESPECIAL"); } else { stopTimer(); evaluateSpecialThrow(getLastTwoDigits(currentElapsedMs)); } }
 function evaluateSpecialThrow(v){
   const p = currentPlayer();
   const specialType = pendingSpecial;
@@ -748,7 +821,7 @@ function evaluateSpecialThrow(v){
 
   pendingSpecial = null;
   specialPanel.classList.add("hidden");
-  specialStartBtn.textContent = "TIRADA ESPECIAL";
+  specialStartBtn.textContent = safeCgText("specialThrow", "TIRADA ESPECIAL");
   resetMainTimerVisualState();
 
   if(isFastMode() && goal && hasFastModeWinner()){
@@ -763,8 +836,39 @@ function evaluateSpecialThrow(v){
   syncActionControls();
 }
 function showHalfTime(){ gameState.half=2; currentElapsedMs=0; stopwatchBaseMs=0; timerDisplay.textContent="00:00:00"; lastTwoDisplay.textContent="--"; switchTurn(); showModal("DESCANSO",scoreText(),"<p>Se resetea el cronómetro y comienza la segunda parte.</p>",[{text:"CONTINUAR",action:()=>{closeModal();maybeMachineTurn();}}]); }
-function endMatch(){ gameState.matchEnded=true; clearInterval(matchClockInterval); if(gameState.isRunning) stopTimer(); if(gameState.players[0].goals===gameState.players[1].goals){ showModal("FINAL",`${scoreText()}. Empate.`,finalHtml(),[{text:"IR A PENALTIS",action:startPenaltyShootout},{text:"TERMINAR EN EMPATE",action:()=>showFinal(false)}]); } else showFinal(false); }
-function startPenaltyShootout(){ closeModal(); gameState.matchEnded=false; penaltyShootout={currentPlayerIndex:0,shots:[[],[]],goals:[0,0]}; gameState.currentPlayerIndex=0; shootoutPanel.classList.remove("hidden"); setEvent("PENALTIS","Par = gol, impar = fallo.","special"); updateUI(); maybeMachineTurn(); }
+function endMatch(){
+  if(gameState.matchEnded) return;
+  gameState.matchEnded = true;
+  clearMachineTurnTimers();
+  clearMachineSpecialTimers();
+  try{ clearInterval(matchClockInterval); }catch(e){}
+  if(gameState.isRunning) stopTimer();
+  restoreSpecialButtonLabel();
+
+  if(gameState.players[0].goals === gameState.players[1].goals){
+    showModal("FINAL", `${scoreText()}. Empate.`, finalHtml(), [
+      {text:"IR A PENALTIS", action:startPenaltyShootout},
+      {text:"TERMINAR EN EMPATE", action:()=>showFinal(false)}
+    ]);
+  } else {
+    showFinal(false);
+  }
+}
+function startPenaltyShootout(){
+  closeModal();
+  clearMachineTurnTimers();
+  clearMachineSpecialTimers();
+  gameState.matchEnded = false;
+  pendingSpecial = null;
+  penaltyShootout = {currentPlayerIndex:0, shots:[[],[]], goals:[0,0]};
+  gameState.currentPlayerIndex = 0;
+  shootoutPanel.classList.remove("hidden");
+  restoreSpecialButtonLabel();
+  setEvent("PENALTIS", "Par = gol, impar = fallo.", "special");
+  updateUI();
+  syncActionControls();
+  maybeMachineTurn();
+}
 function evaluateShootoutPenalty(v){
   const idx = penaltyShootout.currentPlayerIndex;
   const goal = v % 2 === 0;
@@ -858,14 +962,13 @@ function resetMainTimerVisualState(){
     clearInterval(timerInterval);
     timerInterval = null;
     gameState.isRunning = false;
-    mainActionBtn.textContent = "START";
+    mainActionBtn.textContent = safeCgText("start", "START");
     mainActionBtn.classList.remove("stop");
   }catch(e){}
 }
 
 function resolveMachineSpecialDirectly(){
-  clearTimeout(machineSpecialTurnTimeout);
-  clearTimeout(machineSpecialStopTimeout);
+  clearMachineSpecialTimers();
 
   if(
     gameState.gameMode !== "machine" ||
@@ -960,11 +1063,12 @@ function syncActionControls(){
 
   mainActionBtn.disabled = shouldDisableMain;
   specialStartBtn.disabled = shouldDisableSpecial;
+
+  restoreSpecialButtonLabel();
 }
 
 function maybeMachineTurn(){
-  clearTimeout(machineTurnTimeout);
-  clearTimeout(machineStopTimeout);
+  clearMachineTurnTimers();
 
   if(
     gameState.gameMode !== "machine" ||
@@ -1717,7 +1821,7 @@ function showSupportModal(){
 }
 
 
-/* ===== CronoGol v1.10.17: game feel improvements ===== */
+/* ===== CronoGol v1.11.0: game feel improvements ===== */
 /* No modifica reglas, turnos, START/STOP ni lógica base del partido. */
 
 function machineDifficultyText(){
@@ -1848,7 +1952,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-/* ===== CronoGol v1.10.17: Project Audit Fixes =====
+/* ===== CronoGol v1.11.0: Project Audit Fixes =====
    Jefe de proyecto: se aplican correcciones críticas de Frontend + UI/UX
    sin tocar reglas, marcador, máquina, sonidos ni vibración estable.
 */
@@ -1980,7 +2084,7 @@ function resetToSetup(){
   closeSideMenu();
 
   if(mainActionBtn){
-    mainActionBtn.textContent = "START";
+    mainActionBtn.textContent = safeCgText("start", "START");
     mainActionBtn.classList.remove("stop");
   }
   if(specialPanel) specialPanel.classList.add("hidden");
@@ -2180,3 +2284,6 @@ window.addEventListener("keydown", (event) => {
 wireAuditSafeEvents();
 syncActionControls();
 
+
+
+try{ bindAudioUnlockOnce(); }catch(e){}

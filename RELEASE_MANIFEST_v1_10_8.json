@@ -1,8 +1,8 @@
 {
   "project": "CronoGol",
-  "version": "1.10.8",
+  "version": "1.11.0",
   "release_name": "Sound & Haptics Polish",
-  "base_version": "v1.10.7_ESTABLE_MACHINE_SPECIAL_OK",
+  "base_version": "v1.11.0_ESTABLE_MACHINE_SPECIAL_OK",
   "logic_changed": false,
   "scope": "audio and haptic feedback only",
   "event_tracking_removed": true,

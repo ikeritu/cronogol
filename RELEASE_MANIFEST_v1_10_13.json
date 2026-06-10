@@ -1,8 +1,8 @@
 {
   "project": "CronoGol",
-  "version": "v1.10.13",
+  "version": "v1.11.0",
   "release_name": "Home Support Dedup",
-  "base_version": "v1.10.12 Project Audit Fixes",
+  "base_version": "v1.11.0 Project Audit Fixes",
   "scope": "UI copy cleanup only",
   "checks": {
     "node_ok": true,
