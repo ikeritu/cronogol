@@ -1,6 +1,6 @@
 {
-  "version": "1.12.1",
-  "name": "CronoGol v1.12.1 — Fast Rules & Stats Polish",
+  "version": "1.12.2",
+  "name": "CronoGol v1.12.2 — Fast Rules & Stats Polish",
   "base": "CronoGol v1.12.0 — Local Stats & Match History",
   "changes": [
     "Pulido visual del panel de estadísticas locales",

@@ -686,7 +686,7 @@ function hasFastModeWinner() {
 }
 
 function evaluateFastThrow(v) {
-  // Modo rápido v1.12.1:
+  // Modo rápido v1.12.2:
   // - 00 = gol.
   // - 01-02 = poste, repite el mismo jugador.
   // - 03-04 = larguero, repite el mismo jugador.
@@ -2307,7 +2307,7 @@ syncActionControls();
 try{ bindAudioUnlockOnce(); }catch(e){}
 
 
-/* ===== CronoGol v1.12.1: Fast Rules & Stats Polish =====
+/* ===== CronoGol v1.12.2: Fast Rules & Stats Polish =====
    Rejugabilidad local sin backend: guarda resumen, acumulados e historial
    en localStorage. No cambia reglas, eventos de juego ni Cloudflare.
 */
@@ -2474,7 +2474,7 @@ function cgShowLocalHistory(){
 
 function cgConfirmResetStats(){
   showModal(
-    currentLang === "en" ? "RESET STATS" : "BORRAR STATS",
+    currentLang === "en" ? "RESET STATISTICS" : "BORRAR ESTADÍSTICAS",
     currentLang === "en"
       ? "Delete local match history from this device?"
       : "¿Borrar el historial local de este dispositivo?",
