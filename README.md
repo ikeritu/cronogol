@@ -1,6 +1,6 @@
-# CronoGol v1.12.0 — Local Stats & Match History
+# CronoGol v1.12.1 — Fast Rules & Stats Polish
 
-## v1.12.0 — Local Stats & Match History
+## v1.12.1 — Fast Rules & Stats Polish
 
 Versión de cierre evolutivo de V1 centrada en rejugabilidad local sin tocar el núcleo del juego.
 
@@ -20,7 +20,7 @@ Versión de cierre evolutivo de V1 centrada en rejugabilidad local sin tocar el 
 - No reintroduce tracking avanzado ni Zaraz.
 - Mantiene Cloudflare Web Analytics básico.
 
-## v1.12.0 — Local Stats & Match History
+## v1.12.1 — Fast Rules & Stats Polish
 
 Versión conservadora basada en `v1.11.0 — Technical Foundation`.
 

@@ -180,9 +180,13 @@ const MODAL_TEXTS = {
     </div>
     <div class="donation-item">
       <strong>Modo rápido</strong><br>
-      Todo número terminado en <strong>0</strong> es gol: 00, 10, 20, 30, 40, 50, 60, 70, 80 y 90.<br>
-      Todo número terminado en <strong>9</strong> es penalti: 09, 19, 29, 39, 49, 59, 69, 79, 89 y 99.<br>
-      En el penalti, se hace una tirada especial: <strong>par = gol</strong>, <strong>impar = fallo</strong>.<br>
+      <strong>00</strong> = Gol.<br>
+      <strong>01-02</strong> = Poste. Repite el mismo jugador.<br>
+      <strong>03-04</strong> = Larguero. Repite el mismo jugador.<br>
+      <strong>50</strong> = Amarilla. Termina el turno y pierde el siguiente.<br>
+      <strong>60</strong> = Roja. Termina el turno y pierde dos turnos.<br>
+      <strong>96-97</strong> = Falta peligrosa. Tirada especial: <strong>00 a 20</strong> gol; <strong>21 a 99</strong> fallo.<br>
+      <strong>Otros números</strong> = Fallo y cambia el turno.<br>
       Gana el primero que llegue a <strong>6 goles con 2 de ventaja</strong>. Ejemplo: 6-4 gana; 6-5 no gana; hay que llegar a 7-5.
     </div>`,
     close: "CERRAR",
@@ -457,7 +461,7 @@ function formattedFinalResult(){
   let text=`${p1.name} | ${p1.goals} - ${p2.goals} | ${p2.name}`;
   if(p1.goals>p2.goals) text+=`. Gana ${p1.name}.`;
   else if(p2.goals>p1.goals) text+=`. Gana ${p2.name}.`;
-  else text+='. Empate final.';
+  else text+='. Igualado antes de penaltis.';
   return text;
 }
 function copyResult(){ copyText(resultText(true), currentLang === "en" ? "Result copied" : "Resultado copiado"); }
@@ -682,12 +686,19 @@ function hasFastModeWinner() {
 }
 
 function evaluateFastThrow(v) {
-  // Modo rápido:
-  // - Todo número terminado en 0 es gol: 00, 10, 20... 90.
-  // - Todo número terminado en 9 es penalti: 09, 19, 29...
-  // - Gana el primero en llegar a 6 goles con 2 de ventaja.
-  if (v % 10 === 0) return {type:"goal",msg:"⚽ GOOOL",cls:"goal"};
-  if (v % 10 === 9) return {type:"penalty",msg:"PENALTI",cls:"special",special:"penalty"};
+  // Modo rápido v1.12.1:
+  // - 00 = gol.
+  // - 01-02 = poste, repite el mismo jugador.
+  // - 03-04 = larguero, repite el mismo jugador.
+  // - 50 = amarilla, termina turno y pierde el siguiente.
+  // - 60 = roja, termina turno y pierde dos turnos.
+  // - 96-97 = falta peligrosa con tirada especial: 00-20 gol, 21-99 falla.
+  if (v === 0) return {type:"goal",msg:"⚽ GOOOL",cls:"goal"};
+  if (v === 1 || v === 2) return {type:"post",msg:"POSTE",cls:"special",repeat:true};
+  if (v === 3 || v === 4) return {type:"crossbar",msg:"LARGUERO",cls:"special",repeat:true};
+  if (v === 50) return {type:"yellow",msg:"🟨 AMARILLA",cls:"yellow"};
+  if (v === 60) return {type:"red",msg:"🟥 ROJA",cls:"red"};
+  if (v === 96 || v === 97) return {type:"free_kick",msg:"FALTA PELIGROSA",cls:"special",special:"free_kick"};
   return {type:"miss",msg:"FALLO",cls:"neutral"};
 }
 
@@ -846,9 +857,8 @@ function endMatch(){
   restoreSpecialButtonLabel();
 
   if(gameState.players[0].goals === gameState.players[1].goals){
-    showModal("FINAL", `${scoreText()}. Empate.`, finalHtml(), [
-      {text:"IR A PENALTIS", action:startPenaltyShootout},
-      {text:"TERMINAR EN EMPATE", action:()=>showFinal(false)}
+    showModal("FINAL", `${scoreText()}. Partido igualado.`, finalHtml(), [
+      {text:"IR A PENALTIS", action:startPenaltyShootout}
     ]);
   } else {
     showFinal(false);
@@ -903,7 +913,7 @@ function evaluateShootoutPenalty(v){
   maybeMachineTurn();
 }
 function isShootoutFinished(){ const a=penaltyShootout.shots[0],b=penaltyShootout.shots[1]; return a.length>=5&&b.length>=5&&a.length===b.length&&gameState.players[0].goals!==gameState.players[1].goals; }
-function showFinal(pens){ incrementMatches(); let text=scoreText(); if(gameState.players[0].goals>gameState.players[1].goals) text+=`. Gana ${gameState.players[0].name}.`; else if(gameState.players[1].goals>gameState.players[0].goals) text+=`. Gana ${gameState.players[1].name}.`; else text+=". Empate final."; if(pens) text+=" Resuelto en penaltis."; gameState.lastFinalText=formattedFinalResult(); showModal("FINAL DEL PARTIDO",text,finalHtml(),[{text:"REVANCHA",action:restartSameMatch},{text:"COMPARTIR RESULTADO",action:shareResult},{text:"COPIAR RESULTADO",action:copyResult},{text:"NUEVA PARTIDA",action:resetToSetup}]); }
+function showFinal(pens){ incrementMatches(); let text=scoreText(); if(gameState.players[0].goals>gameState.players[1].goals) text+=`. Gana ${gameState.players[0].name}.`; else if(gameState.players[1].goals>gameState.players[0].goals) text+=`. Gana ${gameState.players[1].name}.`; else text+=". Igualado antes de penaltis."; if(pens) text+=" Resuelto en penaltis."; gameState.lastFinalText=formattedFinalResult(); showModal("FINAL DEL PARTIDO",text,finalHtml(),[{text:"REVANCHA",action:restartSameMatch},{text:"COMPARTIR RESULTADO",action:shareResult},{text:"COPIAR RESULTADO",action:copyResult},{text:"NUEVA PARTIDA",action:resetToSetup}]); }
 function finalHtml(){ return `<div class="donation-item"><strong>Resumen</strong><br>Tiradas: ${gameState.totalTurns}<br>Goles: ${gameState.stats.goals}<br>Postes/Largueros: ${gameState.stats.woodwork}<br>Tarjetas: ${gameState.stats.cards}<br>Especiales: ${gameState.stats.specials}</div><div class="donation-item"><strong>☕ CronoGol es gratis</strong><br><button class="bizum-direct-btn" onclick="openBizum()">Abrir Bizum</button><a class="support-link" href="${CRONOGOL_CONFIG.paypalUrl}" target="_blank">PayPal</a></div>`; }
 function restartSameMatch(){ closeModal(); player1Input.value=gameState.players[0].name; player2Input.value=gameState.players[1].name; startMatch(); }
 function switchTurn(){ gameState.currentPlayerIndex=gameState.currentPlayerIndex===0?1:0; processSkippedTurns(); }
@@ -1193,9 +1203,13 @@ function showRulesModal(){
     </div>
     <div class="donation-item">
       <strong>Modo rápido</strong><br>
-      Todo número terminado en <strong>0</strong> es gol: 00, 10, 20, 30, 40, 50, 60, 70, 80 y 90.<br>
-      Todo número terminado en <strong>9</strong> es penalti: 09, 19, 29, 39, 49, 59, 69, 79, 89 y 99.<br>
-      En el penalti, se hace una tirada especial: <strong>par = gol</strong>, <strong>impar = fallo</strong>.<br>
+      <strong>00</strong> = Gol.<br>
+      <strong>01-02</strong> = Poste. Repite el mismo jugador.<br>
+      <strong>03-04</strong> = Larguero. Repite el mismo jugador.<br>
+      <strong>50</strong> = Amarilla. Termina el turno y pierde el siguiente.<br>
+      <strong>60</strong> = Roja. Termina el turno y pierde dos turnos.<br>
+      <strong>96-97</strong> = Falta peligrosa. Tirada especial: <strong>00 a 20</strong> gol; <strong>21 a 99</strong> fallo.<br>
+      <strong>Otros números</strong> = Fallo y cambia el turno.<br>
       Gana el primero que llegue a <strong>6 goles con 2 de ventaja</strong>. Ejemplo: 6-4 gana; 6-5 no gana; hay que llegar a 7-5.
     </div>`,
     [{text:"CERRAR",action:closeModal}]
@@ -1346,7 +1360,7 @@ const CG_TEXT = {
     freeKick: "FALTA",
     noEvents: "Sin jugadas todavía.",
     playerGot: "sacó",
-    finalDraw: "Empate final.",
+    finalDraw: "Igualado antes de penaltis.",
     winsBefore: "Gana",
     winsAfter: "",
     penalties: "Penaltis",
@@ -1391,10 +1405,14 @@ const CG_TEXT = {
     </div>
     <div class="donation-item">
       <strong>Modo rápido</strong><br>
-      Todo número terminado en <strong>0</strong> es gol.<br>
-      Todo número terminado en <strong>9</strong> es penalti.<br>
-      En el penalti: <strong>par = gol</strong>, <strong>impar = fallo</strong>.<br>
-      Gana el primero que llegue a <strong>6 goles con 2 de ventaja</strong>.
+      <strong>00</strong> = Gol.<br>
+      <strong>01-02</strong> = Poste. Repite el mismo jugador.<br>
+      <strong>03-04</strong> = Larguero. Repite el mismo jugador.<br>
+      <strong>50</strong> = Amarilla. Termina el turno y pierde el siguiente.<br>
+      <strong>60</strong> = Roja. Termina el turno y pierde dos turnos.<br>
+      <strong>96-97</strong> = Falta peligrosa. Tirada especial: <strong>00 a 20</strong> gol; <strong>21 a 99</strong> fallo.<br>
+      <strong>Otros números</strong> = Fallo y cambia el turno.<br>
+      Gana el primero que llegue a <strong>6 goles con 2 de ventaja</strong>. Ejemplo: 6-4 gana; 6-5 no gana; hay que llegar a 7-5.
     </div>`
   },
   en: {
@@ -1416,7 +1434,7 @@ const CG_TEXT = {
     freeKick: "FREE KICK",
     noEvents: "No events yet.",
     playerGot: "got",
-    finalDraw: "Final draw.",
+    finalDraw: "Level before penalties.",
     winsBefore: "",
     winsAfter: "wins",
     penalties: "Penalties",
@@ -2187,7 +2205,7 @@ function formattedFinalResult(){
   let text = `${safeDisplayName(p1.name)} | ${p1.goals} - ${p2.goals} | ${safeDisplayName(p2.name)}`;
   if(p1.goals > p2.goals) text += `. Gana ${safeDisplayName(p1.name)}.`;
   else if(p2.goals > p1.goals) text += `. Gana ${safeDisplayName(p2.name)}.`;
-  else text += ". Empate final.";
+  else text += ". Igualado antes de penaltis.";
   return text;
 }
 
@@ -2200,7 +2218,7 @@ function showFinal(pens){
   let text = `${safeDisplayName(p1.name)} ${p1.goals} - ${p2.goals} ${safeDisplayName(p2.name)}`;
   if(p1.goals > p2.goals) text += `. Gana ${safeDisplayName(p1.name)}.`;
   else if(p2.goals > p1.goals) text += `. Gana ${safeDisplayName(p2.name)}.`;
-  else text += ". Empate final.";
+  else text += ". Igualado antes de penaltis.";
   if(pens) text += currentLang === "en" ? " Decided on penalties." : " Resuelto en penaltis.";
 
   gameState.lastFinalText = formattedFinalResult();
@@ -2289,7 +2307,7 @@ syncActionControls();
 try{ bindAudioUnlockOnce(); }catch(e){}
 
 
-/* ===== CronoGol v1.12.0: Local Stats & Match History =====
+/* ===== CronoGol v1.12.1: Fast Rules & Stats Polish =====
    Rejugabilidad local sin backend: guarda resumen, acumulados e historial
    en localStorage. No cambia reglas, eventos de juego ni Cloudflare.
 */
@@ -2298,9 +2316,12 @@ const CG_LOCAL_STATS_KEY = "cronogol_local_stats_v112";
 function cgDefaultLocalStats(){
   return {
     matches:0,
+    wins:0,
+    losses:0,
     leftWins:0,
     rightWins:0,
-    draws:0,
+    goalsFor:0,
+    goalsAgainst:0,
     goals:0,
     throws:0,
     specials:0,
@@ -2338,7 +2359,7 @@ function cgMatchModeLabel(){
 function cgWinnerLabel(p1, p2){
   if(p1.goals > p2.goals) return safeDisplayName(p1.name);
   if(p2.goals > p1.goals) return safeDisplayName(p2.name);
-  return currentLang === "en" ? "Draw" : "Empate";
+  return currentLang === "en" ? "Level" : "Igualado";
 }
 
 function cgSaveFinishedMatch(pens){
@@ -2351,14 +2372,20 @@ function cgSaveFinishedMatch(pens){
 
   stats.matches += 1;
   stats.goals += Number(gameState.stats && gameState.stats.goals || 0);
+  stats.goalsFor += Number(p1.goals || 0);
+  stats.goalsAgainst += Number(p2.goals || 0);
   stats.throws += Number(gameState.totalTurns || 0);
   stats.specials += Number(gameState.stats && gameState.stats.specials || 0);
   stats.woodwork += Number(gameState.stats && gameState.stats.woodwork || 0);
   stats.cards += Number(gameState.stats && gameState.stats.cards || 0);
 
-  if(p1.goals > p2.goals) stats.leftWins += 1;
-  else if(p2.goals > p1.goals) stats.rightWins += 1;
-  else stats.draws += 1;
+  if(p1.goals > p2.goals){
+    stats.wins += 1;
+    stats.leftWins += 1;
+  } else {
+    stats.losses += 1;
+    stats.rightWins += p2.goals > p1.goals ? 1 : 0;
+  }
 
   stats.history.unshift({
     date:new Date().toISOString(),
@@ -2384,13 +2411,17 @@ function cgSaveFinishedMatch(pens){
 function cgRenderLocalStatsPanel(){
   const stats = cgReadLocalStats();
   const matchesEl = $("cg-stat-matches");
-  const goalsEl = $("cg-stat-goals");
-  const drawsEl = $("cg-stat-draws");
+  const winsEl = $("cg-stat-wins");
+  const lossesEl = $("cg-stat-losses");
+  const goalsForEl = $("cg-stat-goals-for");
+  const goalsAgainstEl = $("cg-stat-goals-against");
   const historyEl = $("cg-stat-history-count");
 
   if(matchesEl) matchesEl.textContent = String(stats.matches);
-  if(goalsEl) goalsEl.textContent = String(stats.goals);
-  if(drawsEl) drawsEl.textContent = String(stats.draws);
+  if(winsEl) winsEl.textContent = String(stats.wins || stats.leftWins || 0);
+  if(lossesEl) lossesEl.textContent = String(stats.losses || stats.rightWins || 0);
+  if(goalsForEl) goalsForEl.textContent = String(stats.goalsFor || 0);
+  if(goalsAgainstEl) goalsAgainstEl.textContent = String(stats.goalsAgainst || 0);
   if(historyEl) historyEl.textContent = String(stats.history.length);
   if(localMatchesCount) localMatchesCount.textContent = String(stats.matches || localStorage.getItem("cronogol_matches_played") || "0");
 }
@@ -2470,9 +2501,10 @@ function cgLocalStatsFinalHtml(stats){
   return `<div class="donation-item final-local-stats">
     <strong>${isEn ? "On this device" : "En este dispositivo"}</strong><br>
     ${isEn ? "Matches" : "Partidas"}: ${stats.matches}<br>
-    ${isEn ? "Left wins" : "Victorias jugador izquierda"}: ${stats.leftWins}<br>
-    ${isEn ? "Right wins" : "Victorias jugador derecha"}: ${stats.rightWins}<br>
-    ${isEn ? "Draws" : "Empates"}: ${stats.draws}<br>
+    ${isEn ? "Wins" : "Victorias"}: ${stats.wins || stats.leftWins || 0}<br>
+    ${isEn ? "Losses" : "Derrotas"}: ${stats.losses || stats.rightWins || 0}<br>
+    ${isEn ? "Goals for" : "Goles a favor"}: ${stats.goalsFor || 0}<br>
+    ${isEn ? "Goals against" : "Goles en contra"}: ${stats.goalsAgainst || 0}<br>
     ${isEn ? "Avg. goals" : "Media de goles"}: ${avgGoals}<br>
     ${isEn ? "Avg. throws" : "Media de tiradas"}: ${avgThrows}
   </div>`;
@@ -2495,7 +2527,7 @@ showFinal = function(pens){
   let text = `${safeDisplayName(p1.name)} ${p1.goals} - ${p2.goals} ${safeDisplayName(p2.name)}`;
   if(p1.goals > p2.goals) text += `. ${currentLang === "en" ? "Winner" : "Gana"} ${safeDisplayName(p1.name)}.`;
   else if(p2.goals > p1.goals) text += `. ${currentLang === "en" ? "Winner" : "Gana"} ${safeDisplayName(p2.name)}.`;
-  else text += currentLang === "en" ? ". Final draw." : ". Empate final.";
+  else text += currentLang === "en" ? ". Level before penalties." : ". Igualado antes de penaltis.";
   if(pens) text += currentLang === "en" ? " Decided on penalties." : " Resuelto en penaltis.";
 
   gameState.lastFinalText = formattedFinalResult();

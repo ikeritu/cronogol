@@ -8,7 +8,7 @@
   <link rel="icon" href="favicon.png" type="image/png" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <title>Cómo jugar a CronoGol</title>
-  <link rel="stylesheet" href="style.css?v=1.12.0" />
+  <link rel="stylesheet" href="style.css?v=1.12.1" />
 </head>
 <body>
   <main class="static-page">
@@ -47,12 +47,15 @@
       </table>
 
       <h2>Modo rápido</h2>
-      <p>El modo rápido está pensado para partidas más cortas y con más goles.</p>
+      <p>El modo rápido está pensado para partidas más cortas, más acción y eventos especiales.</p>
 
       <ul>
-        <li>Todo número terminado en <strong>0</strong> es gol: 00, 10, 20, 30, 40, 50, 60, 70, 80 y 90.</li>
-        <li>Todo número terminado en <strong>9</strong> es penalti: 09, 19, 29, 39, 49, 59, 69, 79, 89 y 99.</li>
-        <li>En un penalti, una tirada par es gol y una impar es fallo.</li>
+        <li><strong>00</strong> = Gol.</li>
+        <li><strong>01-02</strong> = Poste. Repite el mismo jugador.</li>
+        <li><strong>03-04</strong> = Larguero. Repite el mismo jugador.</li>
+        <li><strong>50</strong> = Amarilla. Termina el turno y pierde el siguiente.</li>
+        <li><strong>60</strong> = Roja. Termina el turno y pierde dos turnos.</li>
+        <li><strong>96-97</strong> = Falta peligrosa. Tirada especial: 00 a 20 es gol; 21 a 99 es fallo.</li>
         <li>Gana el primero que llegue a <strong>6 goles con 2 de ventaja</strong>.</li>
       </ul>
 

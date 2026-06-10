@@ -1,0 +1,16 @@
+{
+  "version": "1.12.1",
+  "name": "CronoGol v1.12.1 — Fast Rules & Stats Polish",
+  "base": "CronoGol v1.12.0 — Local Stats & Match History",
+  "changes": [
+    "Pulido visual del panel de estadísticas locales",
+    "Sustituye empates por victorias, derrotas, goles a favor y goles en contra",
+    "Actualiza reglas del modo rápido con poste, larguero, amarilla, roja y falta peligrosa",
+    "Mantiene intactos clásico, online, Cloudflare y analítica"
+  ],
+  "validation": [
+    "node --check game.js",
+    "node --check sw.js",
+    "zip integrity"
+  ]
+}

@@ -2308,7 +2308,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v1.12.0: Local Stats & Match History ===== */
+/* ===== CronoGol v1.12.1: Local Stats & Match History ===== */
 /* Fix conservador para móvil:
    - Resetea grid-column/grid-row históricos con !important que podían crear columnas implícitas.
    - Evita que la botonera secundaria se salga del reloj en pantallas estrechas.
@@ -2415,5 +2415,139 @@ nav.setup-links {
   #setup-screen nav.setup-links.setup-actions-polished > a {
     min-height: 44px !important;
     font-size: 11px !important;
+  }
+}
+
+
+/* ===== CronoGol v1.12.1: Local Stats UI Polish ===== */
+.local-stats-panel {
+  margin: 10px 0 14px;
+  padding: 12px;
+  border: 2px solid rgba(69, 116, 139, 0.75);
+  background: linear-gradient(180deg, rgba(13, 24, 24, 0.94), rgba(5, 9, 9, 0.96));
+  box-shadow: inset 0 0 0 1px rgba(255, 174, 50, 0.12), 0 0 12px rgba(69, 116, 139, 0.18);
+}
+
+.local-stats-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+  color: var(--cg-orange, #e58d18);
+  letter-spacing: 1px;
+}
+
+.local-stats-header .tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 58px;
+  padding: 5px 8px;
+  border: 1px solid rgba(229, 141, 24, 0.95);
+  background: rgba(229, 141, 24, 0.12);
+  color: #ffb347;
+  font-size: 11px;
+  line-height: 1;
+}
+
+.local-stats-header strong {
+  flex: 1;
+  color: #f4efe2;
+  font-size: 14px;
+  text-align: right;
+}
+
+.local-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.local-stats-grid span {
+  display: flex;
+  min-height: 48px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px 5px;
+  border: 1px solid rgba(69, 116, 139, 0.72);
+  background: rgba(0, 0, 0, 0.28);
+  color: #d8ddc3;
+  font-size: 10px;
+  text-align: center;
+  line-height: 1.1;
+}
+
+.local-stats-grid strong {
+  color: #ffb347;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.local-stats-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.local-stats-actions button {
+  min-height: 42px;
+  border: 1px solid rgba(69, 116, 139, 0.9);
+  background: rgba(3, 12, 12, 0.95);
+  color: #ffb347;
+  font: inherit;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+}
+
+.local-stats-actions button.danger {
+  border-color: rgba(180, 62, 62, 0.95);
+  color: #ff9b9b;
+}
+
+.local-history-list {
+  display: grid;
+  gap: 8px;
+}
+
+.local-history-item {
+  padding: 10px;
+  border: 1px solid rgba(69, 116, 139, 0.75);
+  background: rgba(0,0,0,0.25);
+}
+
+.local-history-item strong,
+.local-history-item small {
+  display: block;
+}
+
+.local-history-item small {
+  margin-top: 4px;
+  opacity: 0.82;
+}
+
+@media (max-width: 520px) {
+  .local-stats-panel {
+    margin-top: 12px;
+    padding: 10px;
+  }
+
+  .local-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .local-stats-header strong {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 360px) {
+  .local-stats-grid,
+  .local-stats-actions {
+    grid-template-columns: 1fr;
   }
 }

@@ -1,9 +1,9 @@
-const CACHE_NAME = "cronogol-v1.12.0";
+const CACHE_NAME = "cronogol-v1.12.1";
 const ASSETS = [
   "./",
   "./index.html",
-  "./style.css?v=1.12.0",
-  "./game.js?v=1.12.0",
+  "./style.css?v=1.12.1",
+  "./game.js?v=1.12.1",
   "./logo-cronogol.png",
   "./logo-cronogol-horizontal.png",
   "./favicon.png",

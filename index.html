@@ -11,8 +11,8 @@
   <meta property="og:image" content="https://cronogol.es/og-cronogol.png" />
   <link rel="icon" href="favicon.png" type="image/png" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-  <title>CronoGol v1.12.0</title>
-  <link rel="stylesheet" href="style.css?v=1.12.0" />
+  <title>CronoGol v1.12.1</title>
+  <link rel="stylesheet" href="style.css?v=1.12.1" />
   <link rel="manifest" href="site.webmanifest" />
 </head>
 <body>
@@ -110,25 +110,27 @@
 
         <section class="local-stats-panel" aria-label="Estadísticas locales de CronoGol">
           <div class="local-stats-header">
-            <span class="tag">V1 STATS</span>
-            <strong>Historial local</strong>
+            <span class="tag">STATS</span>
+            <strong>Estadísticas locales</strong>
           </div>
           <div class="local-stats-grid">
             <span>Partidas <strong id="cg-stat-matches">0</strong></span>
-            <span>Goles <strong id="cg-stat-goals">0</strong></span>
-            <span>Empates <strong id="cg-stat-draws">0</strong></span>
+            <span>Victorias <strong id="cg-stat-wins">0</strong></span>
+            <span>Derrotas <strong id="cg-stat-losses">0</strong></span>
+            <span>Goles a favor <strong id="cg-stat-goals-for">0</strong></span>
+            <span>Goles en contra <strong id="cg-stat-goals-against">0</strong></span>
             <span>Últimas <strong id="cg-stat-history-count">0</strong></span>
           </div>
           <div class="local-stats-actions">
             <button id="cg-show-history-btn" type="button">Ver historial</button>
-            <button id="cg-reset-stats-btn" type="button">Borrar stats</button>
+            <button id="cg-reset-stats-btn" class="danger" type="button">Borrar stats</button>
           </div>
         </section>
 <div class="watch-footer-labels">
           <span>WATER RESIST</span>
           <span>FOOTBALL CHRONO</span>
         </div>
-        <footer class="version-footer">CronoGol v1.12.0 · Partidas en este dispositivo: <strong id="local-matches-count">0</strong><br><span class="copyright-footer">© 2026 CronoGol. Juego original creado por Iker Ituarte. Todos los derechos reservados.</span></footer>
+        <footer class="version-footer">CronoGol v1.12.1 · Partidas en este dispositivo: <strong id="local-matches-count">0</strong><br><span class="copyright-footer">© 2026 CronoGol. Juego original creado por Iker Ituarte. Todos los derechos reservados.</span></footer>
       </div>
     </section>
 
@@ -260,7 +262,7 @@
       </div>
     </section>
   </main>
-<script src="game.js?v=1.12.0"></script>
+<script src="game.js?v=1.12.1"></script>
 <!-- Cloudflare Web Analytics -->
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7ee638b73aa24300b417a555e67fd1ae"}'></script>
 <!-- End Cloudflare Web Analytics -->

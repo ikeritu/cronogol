@@ -1,5 +1,5 @@
 # CronoGol Version
 
-Current version: v1.12.0
+Current version: v1.12.1
 
-Release: Local Stats & Match History
+Release: Fast Rules & Stats Polish
