@@ -1,0 +1,20 @@
+{
+  "version": "2.0.2",
+  "name": "CronoGol v2.0.2 — Online Panel Clarity",
+  "date": "2026-06-11",
+  "base": "CronoGol v2.0.1 — Online Join UI Polish",
+  "changes": [
+    "join input remains empty by default",
+    "added copy room code button",
+    "create room button becomes Nueva sala after room exists",
+    "clarified local-only online status text",
+    "updated cache/version references to v2.0.2"
+  ],
+  "not_changed": [
+    "game rules",
+    "local stats",
+    "sounds",
+    "Cloudflare/analytics",
+    "backend real online"
+  ]
+}

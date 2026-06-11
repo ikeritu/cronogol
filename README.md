@@ -1,6 +1,21 @@
-# CronoGol v2.0.1 — Online Join UI Polish
+# CronoGol v2.0.2 — Online Panel Clarity
 
-## v2.0.1 — Online Join UI Polish
+## v2.0.2 — Online Panel Clarity
+
+Pulido del panel V2 online antes de conectar backend real.
+
+Cambios principales:
+- el campo “Unirse a una sala” queda vacío por defecto;
+- el placeholder pasa a “Introduce código”;
+- el código de sala creado se muestra separado de la unión a otra sala;
+- se añade botón “Copiar código”;
+- el botón “Crear sala” pasa a “Nueva sala” cuando ya existe una sala local;
+- se aclara el estado: sala local creada, todavía sin sincronización online.
+
+No modifica reglas, estadísticas, sonido, Cloudflare ni la lógica local del partido.
+
+
+## v2.0.2 — Online Panel Clarity
 
 Pulido de la primera base V2: el acceso “Unirse con código” ya no usa una ventana nativa del navegador. Ahora el código de sala se introduce dentro del propio panel online, manteniendo la estética CronoGol.
 
@@ -17,7 +32,7 @@ Incluye:
 - snapshot serializable del estado de partido para futura sincronización;
 - panel V2 online en la pantalla inicial;
 - botones de crear/unirse en modo local seguro, sin backend;
-- actualización de versión/cache a `v2.0.1`.
+- actualización de versión/cache a `v2.0.2`.
 
 No incluye todavía:
 

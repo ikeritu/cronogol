@@ -1,6 +1,6 @@
 {
-  "version": "2.0.1",
-  "name": "CronoGol v2.0.1 — Online Join UI Polish",
+  "version": "2.0.0",
+  "name": "CronoGol v2.0.0 — Online Foundation",
   "base": "v1.12.3 — Fast Penalty Restore",
   "created": "2026-06-10",
   "changes": [
@@ -8,7 +8,7 @@
     "added safe V2 online panel",
     "added room code helpers and local room draft model",
     "added match snapshot helper for future sync",
-    "updated cache/version references to v2.0.1"
+    "updated cache/version references to v2.0.0"
   ],
   "not_changed": [
     "game rules",

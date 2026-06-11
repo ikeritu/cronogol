@@ -2649,7 +2649,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.0.1: Online Join UI Polish Panel ===== */
+/* ===== CronoGol v2.0.2: Online Panel Clarity Panel ===== */
 .online-foundation-panel{
   margin-top:12px;
   background:rgba(0,0,0,.38);
@@ -2691,7 +2691,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.0.1: Online Join UI Polish ===== */
+/* ===== CronoGol v2.0.2: Online Panel Clarity ===== */
 .online-room-created{
   display:grid;
   gap:4px;
@@ -2761,4 +2761,24 @@ nav.setup-links {
   .online-join-row{grid-template-columns:1fr}
   .online-join-row button{width:100%}
   .online-room-created{max-width:100%}
+}
+
+
+/* ===== CronoGol v2.0.2: Online Panel Clarity ===== */
+.online-room-actions{
+  grid-template-columns:1fr 1fr;
+  max-width:300px;
+}
+.online-room-actions button:disabled{
+  opacity:.42;
+  cursor:not-allowed;
+  border-color:rgba(124,167,191,.35);
+  color:var(--muted);
+}
+.online-join-row input::placeholder{
+  color:rgba(0,0,0,.58);
+  letter-spacing:1px;
+}
+@media(max-width:430px){
+  .online-room-actions{grid-template-columns:1fr;max-width:100%}
 }

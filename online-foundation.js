@@ -1,6 +1,6 @@
 /*
 ===============================================================================
-CronoGol v2.0.1 — Online Join UI Polish
+CronoGol v2.0.2 — Online Panel Clarity
 ===============================================================================
 Primera base técnica para el futuro modo online.
 
@@ -13,7 +13,7 @@ Importante:
 (function(){
   "use strict";
 
-  const CG_ONLINE_VERSION = "2.0.1";
+  const CG_ONLINE_VERSION = "2.0.2";
   const CG_ONLINE_BACKEND_ENABLED = false;
   const ROOM_CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
@@ -100,22 +100,37 @@ Importante:
 
   function bindOnlineFoundationUI(){
     const createBtn = document.getElementById("cg-online-create-btn");
+    const copyBtn = document.getElementById("cg-online-copy-btn");
     const joinBtn = document.getElementById("cg-online-join-btn");
     const codeInput = document.getElementById("cg-online-code-input");
     const roomCodeEl = document.getElementById("cg-online-room-code");
     const status = document.getElementById("cg-online-status");
-    if(status) status.textContent = "V2.0.1: base online preparada · backend no conectado.";
+    if(status) status.textContent = "V2.0.2: sala local preparada · online real pendiente.";
+
+    function currentRoomCode(){
+      const value = roomCodeEl ? roomCodeEl.textContent : "";
+      const code = normalizeRoomCode(value || "");
+      return isValidRoomCode(code) ? code : "";
+    }
 
     function showRoomCode(code){
-      if(roomCodeEl) roomCodeEl.textContent = code || "— — — — — —";
+      const clean = normalizeRoomCode(code || "");
+      if(roomCodeEl) roomCodeEl.textContent = clean || "— — — — — —";
+      if(copyBtn) copyBtn.disabled = !clean;
+      if(createBtn) createBtn.textContent = clean ? "Nueva sala" : "Crear sala";
     }
 
     try{
       const existingDraft = JSON.parse(localStorage.getItem("cronogol_online_room_draft") || "null");
-      if(existingDraft && existingDraft.roomCode) showRoomCode(existingDraft.roomCode);
-      const existingJoin = localStorage.getItem("cronogol_online_join_code_draft") || "";
-      if(codeInput && existingJoin) codeInput.value = normalizeRoomCode(existingJoin);
-    }catch(e){}
+      if(existingDraft && existingDraft.roomCode){
+        showRoomCode(existingDraft.roomCode);
+        if(status) status.textContent = `Sala ${normalizeRoomCode(existingDraft.roomCode)} guardada localmente · todavía no sincroniza online.`;
+      }else{
+        showRoomCode("");
+      }
+      // El campo de unión queda vacío por claridad: no rellenar con la sala propia.
+      if(codeInput) codeInput.value = "";
+    }catch(e){ showRoomCode(""); }
 
     if(codeInput){
       codeInput.addEventListener("input", () => {
@@ -136,8 +151,38 @@ Importante:
         });
         try{ localStorage.setItem("cronogol_online_room_draft", JSON.stringify(draft)); }catch(e){}
         showRoomCode(draft.roomCode);
-        safeToast(`Sala ${draft.roomCode} preparada en modo local. Backend pendiente.`);
-        if(status) status.textContent = `Sala ${draft.roomCode} creada localmente · todavía no sincroniza entre dispositivos.`;
+        if(codeInput) codeInput.value = "";
+        safeToast(`Sala ${draft.roomCode} creada localmente. Online real pendiente.`);
+        if(status) status.textContent = `Sala ${draft.roomCode} creada localmente · todavía no sincroniza online.`;
+      });
+    }
+
+    if(copyBtn){
+      copyBtn.addEventListener("click", async () => {
+        const code = currentRoomCode();
+        if(!code){
+          safeToast("Primero crea una sala.");
+          return;
+        }
+        try{
+          if(navigator.clipboard && window.isSecureContext){
+            await navigator.clipboard.writeText(code);
+          }else{
+            const tmp = document.createElement("textarea");
+            tmp.value = code;
+            tmp.setAttribute("readonly", "");
+            tmp.style.position = "fixed";
+            tmp.style.opacity = "0";
+            document.body.appendChild(tmp);
+            tmp.select();
+            document.execCommand("copy");
+            tmp.remove();
+          }
+          safeToast(`Código ${code} copiado.`);
+          if(status) status.textContent = `Código ${code} copiado · compártelo cuando el backend esté activo.`;
+        }catch(e){
+          safeToast(`Código de sala: ${code}`);
+        }
       });
     }
 
@@ -158,6 +203,7 @@ Importante:
         try{ localStorage.setItem("cronogol_online_join_code_draft", code); }catch(e){}
         safeToast(`Código ${code} guardado. Conexión online pendiente.`);
         if(status) status.textContent = `Código ${code} guardado localmente · backend pendiente.`;
+        if(codeInput) codeInput.value = "";
       });
     }
   }

@@ -1,3 +1,3 @@
 CronoGol
-Current version: v2.0.1
-Codename: Online Join UI Polish
+Current version: v2.0.2
+Codename: Online Panel Clarity
