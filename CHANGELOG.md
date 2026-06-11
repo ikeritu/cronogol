@@ -1,10 +1,19 @@
-## v2.0.0 — Online Foundation
+## v2.0.1 — Online Join UI Polish
+
+- Sustituido el `prompt()` nativo del navegador por una UI integrada en el panel V2.
+- Añadido campo visual para introducir código de sala.
+- Añadido visor del código creado localmente.
+- Mantiene el backend online desactivado: no sincroniza todavía entre dispositivos.
+- No toca reglas, estadísticas, sonidos ni flujo local.
+- Actualizado cache/versionado a `v2.0.1`.
+
+## v2.0.1 — Online Join UI Polish
 
 - Inicio de la rama V2.
 - Añadido `online-foundation.js` con helpers seguros para futura sala online.
 - Añadido panel V2 online en la pantalla inicial.
 - Botones de crear/unirse generan borradores locales, sin backend ni sincronización real.
-- Actualizado cache/versionado a `v2.0.0`.
+- Actualizado cache/versionado a `v2.0.1`.
 - No se modifica la lógica jugable estable de v1.12.3.
 
 ## v1.12.3 — Stats UI Final Polish

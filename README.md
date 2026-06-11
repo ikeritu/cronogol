@@ -1,6 +1,11 @@
-# CronoGol v2.0.0 — Online Foundation
+# CronoGol v2.0.1 — Online Join UI Polish
 
-## v2.0.0 — Online Foundation
+## v2.0.1 — Online Join UI Polish
+
+Pulido de la primera base V2: el acceso “Unirse con código” ya no usa una ventana nativa del navegador. Ahora el código de sala se introduce dentro del propio panel online, manteniendo la estética CronoGol.
+
+El online real sigue sin backend conectado: esta versión prepara la UI y conserva el juego local estable.
+
 
 Primera versión de la rama V2. Esta versión no activa todavía partidas online reales; prepara una base segura para salas privadas sin romper la V1 estable.
 
@@ -12,7 +17,7 @@ Incluye:
 - snapshot serializable del estado de partido para futura sincronización;
 - panel V2 online en la pantalla inicial;
 - botones de crear/unirse en modo local seguro, sin backend;
-- actualización de versión/cache a `v2.0.0`.
+- actualización de versión/cache a `v2.0.1`.
 
 No incluye todavía:
 

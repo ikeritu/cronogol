@@ -1,0 +1,18 @@
+{
+  "version": "2.0.1",
+  "name": "CronoGol v2.0.1 — Online Join UI Polish",
+  "base": "v2.0.0 Online Foundation",
+  "changes": [
+    "replaced native prompt join flow with integrated online panel input",
+    "added local room code display",
+    "kept online backend disabled and local game intact",
+    "updated cache/version references to v2.0.1"
+  ],
+  "not_changed": [
+    "game rules",
+    "local stats",
+    "sounds",
+    "analytics",
+    "backend sync"
+  ]
+}
