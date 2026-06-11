@@ -1,0 +1,22 @@
+{
+  "version": "v2.1.0",
+  "name": "Supabase Private Rooms",
+  "base": "v2.0.3 Online Mode Visibility",
+  "changes": [
+    "Añade supabase-config.js con configuración segura desactivada por defecto",
+    "Añade SUPABASE_PRIVATE_ROOMS_SETUP.sql para tabla cronogol_rooms",
+    "online-foundation.js crea salas reales si Supabase está configurado",
+    "online-foundation.js permite unirse a salas reales por código",
+    "Mantiene fallback local si el backend no está configurado",
+    "No sincroniza todavía marcador ni turnos"
+  ],
+  "not_changed": [
+    "Reglas del juego",
+    "Modo rápido",
+    "Penalti acabado en 9",
+    "Estadísticas locales",
+    "Sonidos/vibración",
+    "Cloudflare Analytics"
+  ],
+  "generated_at": "2026-06-11T10:00:00Z"
+}

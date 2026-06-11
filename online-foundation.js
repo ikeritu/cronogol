@@ -1,21 +1,23 @@
 /*
 ===============================================================================
-CronoGol v2.0.3 — Online Mode Visibility
+CronoGol v2.1.0 — Supabase Private Rooms
 ===============================================================================
-Primera base técnica para el futuro modo online.
+Primera integración segura para salas privadas con Supabase.
 
 Importante:
-- No conecta todavía con Supabase ni con ningún backend.
+- Si supabase-config.js tiene enabled:false, la app conserva el borrador local.
+- Si enabled:true y hay url/anonKey válidos, Crear sala / Unirse consultan Supabase.
+- No sincroniza todavía el marcador completo ni turnos en tiempo real.
 - No modifica reglas ni flujo de la partida local.
-- Expone utilidades puras y una UI segura para evitar prometer online real antes de tiempo.
 ===============================================================================
 */
 (function(){
   "use strict";
 
-  const CG_ONLINE_VERSION = "2.0.3";
-  const CG_ONLINE_BACKEND_ENABLED = false;
+  const CG_ONLINE_VERSION = "2.1.0";
   const ROOM_CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const ROOMS_TABLE = "cronogol_rooms";
+  let supabaseClient = null;
 
   function randomRoomCode(length = 6){
     let code = "";
@@ -42,6 +44,34 @@ Importante:
     return code.length >= 4 && code.length <= 8;
   }
 
+  function getSupabaseConfig(){
+    const cfg = window.CRONOGOL_SUPABASE_CONFIG || {};
+    return {
+      enabled: Boolean(cfg.enabled),
+      url: String(cfg.url || "").trim(),
+      anonKey: String(cfg.anonKey || "").trim()
+    };
+  }
+
+  function hasBackendConfig(){
+    const cfg = getSupabaseConfig();
+    return Boolean(cfg.enabled && cfg.url && cfg.anonKey && window.supabase && typeof window.supabase.createClient === "function");
+  }
+
+  function getSupabaseClient(){
+    if(supabaseClient) return supabaseClient;
+    if(!hasBackendConfig()) return null;
+    const cfg = getSupabaseConfig();
+    supabaseClient = window.supabase.createClient(cfg.url, cfg.anonKey, {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+        detectSessionInUrl: false
+      }
+    });
+    return supabaseClient;
+  }
+
   function createRoomDraft(options = {}){
     const roomCode = normalizeRoomCode(options.roomCode) || randomRoomCode();
     return {
@@ -53,7 +83,7 @@ Importante:
       hostName: String(options.hostName || "Jugador 1").slice(0, 24),
       guestName: String(options.guestName || "Jugador 2").slice(0, 24),
       matchMode: options.matchMode === "five" ? "five" : "classic",
-      gameMode: options.gameMode === "online" ? "online" : (options.gameMode === "machine" ? "machine" : "local")
+      gameMode: "online"
     };
   }
 
@@ -76,11 +106,92 @@ Importante:
     };
   }
 
+  function roomPayloadFromDraft(draft){
+    return {
+      room_code: draft.roomCode,
+      status: "waiting",
+      host_name: draft.hostName,
+      guest_name: "",
+      match_mode: draft.matchMode,
+      game_mode: "online",
+      room_state: {
+        schemaVersion: 1,
+        appVersion: CG_ONLINE_VERSION,
+        createdAt: draft.createdAt,
+        phase: "waiting_guest",
+        hostName: draft.hostName,
+        guestName: draft.guestName,
+        matchMode: draft.matchMode
+      }
+    };
+  }
+
+  async function createRoomBackend(options = {}){
+    const client = getSupabaseClient();
+    if(!client) return { ok: false, offline: true, reason: "backend-not-configured" };
+
+    let lastError = null;
+    for(let attempt = 0; attempt < 4; attempt++){
+      const draft = createRoomDraft(options);
+      const payload = roomPayloadFromDraft(draft);
+      const { data, error } = await client
+        .from(ROOMS_TABLE)
+        .insert(payload)
+        .select("room_code,status,host_name,guest_name,created_at")
+        .single();
+
+      if(!error && data){
+        return { ok: true, data, roomCode: normalizeRoomCode(data.room_code), draft };
+      }
+      lastError = error;
+    }
+    return { ok: false, error: lastError, reason: "create-room-failed" };
+  }
+
+  async function joinRoomBackend(code, options = {}){
+    const client = getSupabaseClient();
+    const roomCode = normalizeRoomCode(code);
+    if(!client) return { ok: false, offline: true, reason: "backend-not-configured" };
+    if(!isValidRoomCode(roomCode)) return { ok: false, reason: "invalid-code" };
+
+    const { data: room, error: selectError } = await client
+      .from(ROOMS_TABLE)
+      .select("room_code,status,host_name,guest_name,room_state")
+      .eq("room_code", roomCode)
+      .maybeSingle();
+
+    if(selectError) return { ok: false, error: selectError, reason: "select-room-failed" };
+    if(!room) return { ok: false, reason: "room-not-found" };
+
+    const guestName = String(options.guestName || "Jugador 2").slice(0, 24);
+    const mergedState = Object.assign({}, room.room_state || {}, {
+      phase: "guest_joined",
+      guestName,
+      joinedAt: new Date().toISOString()
+    });
+
+    const { data, error: updateError } = await client
+      .from(ROOMS_TABLE)
+      .update({
+        status: "ready",
+        guest_name: guestName,
+        room_state: mergedState
+      })
+      .eq("room_code", roomCode)
+      .select("room_code,status,host_name,guest_name,updated_at")
+      .single();
+
+    if(updateError) return { ok: false, error: updateError, reason: "join-room-failed" };
+    return { ok: true, data, roomCode };
+  }
+
   function getOnlineStatus(){
+    const cfg = getSupabaseConfig();
     return {
       version: CG_ONLINE_VERSION,
-      backendEnabled: CG_ONLINE_BACKEND_ENABLED,
-      mode: CG_ONLINE_BACKEND_ENABLED ? "backend" : "local-foundation-only"
+      backendEnabled: hasBackendConfig(),
+      configured: Boolean(cfg.enabled && cfg.url && cfg.anonKey),
+      mode: hasBackendConfig() ? "supabase-private-rooms" : "local-foundation-only"
     };
   }
 
@@ -105,7 +216,10 @@ Importante:
     const codeInput = document.getElementById("cg-online-code-input");
     const roomCodeEl = document.getElementById("cg-online-room-code");
     const status = document.getElementById("cg-online-status");
-    if(status) status.textContent = "V2.0.3: sala local preparada · online real pendiente.";
+    const backendReady = hasBackendConfig();
+
+    function setStatus(message){ if(status) status.textContent = message; }
+    setStatus(backendReady ? "Supabase listo · puedes crear o unirte a una sala real." : "V2.1.0: backend Supabase pendiente · modo borrador local activo.");
 
     function currentRoomCode(){
       const value = roomCodeEl ? roomCodeEl.textContent : "";
@@ -124,11 +238,12 @@ Importante:
       const existingDraft = JSON.parse(localStorage.getItem("cronogol_online_room_draft") || "null");
       if(existingDraft && existingDraft.roomCode){
         showRoomCode(existingDraft.roomCode);
-        if(status) status.textContent = `Sala ${normalizeRoomCode(existingDraft.roomCode)} guardada localmente · todavía no sincroniza online.`;
+        setStatus(backendReady
+          ? `Sala ${normalizeRoomCode(existingDraft.roomCode)} guardada en este dispositivo · crea nueva sala para sincronizar.`
+          : `Sala ${normalizeRoomCode(existingDraft.roomCode)} guardada localmente · configura Supabase para sincronizar.`);
       }else{
         showRoomCode("");
       }
-      // El campo de unión queda vacío por claridad: no rellenar con la sala propia.
       if(codeInput) codeInput.value = "";
     }catch(e){ showRoomCode(""); }
 
@@ -142,18 +257,40 @@ Importante:
     }
 
     if(createBtn){
-      createBtn.addEventListener("click", () => {
-        const draft = createRoomDraft({
+      createBtn.addEventListener("click", async () => {
+        createBtn.disabled = true;
+        const options = {
           hostName: document.getElementById("player1-name")?.value,
           guestName: document.getElementById("player2-name")?.value,
           matchMode: document.getElementById("match-mode")?.value,
           gameMode: document.getElementById("game-mode")?.value
-        });
-        try{ localStorage.setItem("cronogol_online_room_draft", JSON.stringify(draft)); }catch(e){}
-        showRoomCode(draft.roomCode);
-        if(codeInput) codeInput.value = "";
-        safeToast(`Sala ${draft.roomCode} creada localmente. Online real pendiente.`);
-        if(status) status.textContent = `Sala ${draft.roomCode} creada localmente · todavía no sincroniza online.`;
+        };
+
+        try{
+          if(hasBackendConfig()){
+            setStatus("Creando sala en Supabase...");
+            const result = await createRoomBackend(options);
+            if(result.ok){
+              try{ localStorage.setItem("cronogol_online_room_draft", JSON.stringify(result.draft)); }catch(e){}
+              showRoomCode(result.roomCode);
+              if(codeInput) codeInput.value = "";
+              safeToast(`Sala ${result.roomCode} creada online.`);
+              setStatus(`Sala ${result.roomCode} creada online · esperando rival.`);
+              return;
+            }
+            console.warn("CronoGol Supabase create room failed", result.error || result.reason);
+            safeToast("No se pudo crear sala online. Se crea borrador local.");
+          }
+
+          const draft = createRoomDraft(options);
+          try{ localStorage.setItem("cronogol_online_room_draft", JSON.stringify(draft)); }catch(e){}
+          showRoomCode(draft.roomCode);
+          if(codeInput) codeInput.value = "";
+          safeToast(`Sala ${draft.roomCode} creada localmente. Supabase pendiente.`);
+          setStatus(`Sala ${draft.roomCode} creada localmente · todavía no sincroniza online.`);
+        }finally{
+          createBtn.disabled = false;
+        }
       });
     }
 
@@ -179,7 +316,7 @@ Importante:
             tmp.remove();
           }
           safeToast(`Código ${code} copiado.`);
-          if(status) status.textContent = `Código ${code} copiado · compártelo cuando el backend esté activo.`;
+          setStatus(`Código ${code} copiado · compártelo con tu rival.`);
         }catch(e){
           safeToast(`Código de sala: ${code}`);
         }
@@ -187,7 +324,7 @@ Importante:
     }
 
     if(joinBtn){
-      joinBtn.addEventListener("click", () => {
+      joinBtn.addEventListener("click", async () => {
         const code = normalizeRoomCode(codeInput ? codeInput.value : "");
         if(!code){
           safeToast("Escribe un código de sala.");
@@ -196,14 +333,42 @@ Importante:
         }
         if(!isValidRoomCode(code)){
           safeToast("Código de sala no válido.");
-          if(status) status.textContent = "El código debe tener entre 4 y 8 caracteres.";
+          setStatus("El código debe tener entre 4 y 8 caracteres.");
           if(codeInput) codeInput.focus();
           return;
         }
-        try{ localStorage.setItem("cronogol_online_join_code_draft", code); }catch(e){}
-        safeToast(`Código ${code} guardado. Conexión online pendiente.`);
-        if(status) status.textContent = `Código ${code} guardado localmente · backend pendiente.`;
-        if(codeInput) codeInput.value = "";
+
+        joinBtn.disabled = true;
+        try{
+          if(hasBackendConfig()){
+            setStatus(`Buscando sala ${code}...`);
+            const result = await joinRoomBackend(code, {
+              guestName: document.getElementById("player2-name")?.value || document.getElementById("player1-name")?.value
+            });
+            if(result.ok){
+              try{ localStorage.setItem("cronogol_online_join_code_draft", code); }catch(e){}
+              safeToast(`Unido a sala ${code}.`);
+              setStatus(`Unido a sala ${code} · sincronización de marcador llegará en v2.1.1.`);
+              if(codeInput) codeInput.value = "";
+              showRoomCode(code);
+              return;
+            }
+            if(result.reason === "room-not-found"){
+              safeToast("Sala no encontrada.");
+              setStatus(`No existe ninguna sala con código ${code}.`);
+              return;
+            }
+            console.warn("CronoGol Supabase join room failed", result.error || result.reason);
+            safeToast("No se pudo unir online. Código guardado localmente.");
+          }
+
+          try{ localStorage.setItem("cronogol_online_join_code_draft", code); }catch(e){}
+          safeToast(`Código ${code} guardado. Supabase pendiente.`);
+          setStatus(`Código ${code} guardado localmente · backend pendiente.`);
+          if(codeInput) codeInput.value = "";
+        }finally{
+          joinBtn.disabled = false;
+        }
       });
     }
 
@@ -220,12 +385,14 @@ Importante:
 
   window.CronoGolOnline = Object.freeze({
     version: CG_ONLINE_VERSION,
-    backendEnabled: CG_ONLINE_BACKEND_ENABLED,
+    backendEnabled: hasBackendConfig,
     randomRoomCode,
     normalizeRoomCode,
     isValidRoomCode,
     createRoomDraft,
     createMatchSnapshot,
+    createRoomBackend,
+    joinRoomBackend,
     getOnlineStatus,
     refreshOnlinePanelVisibility
   });
