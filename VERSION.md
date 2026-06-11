@@ -1,1 +1,1 @@
-CronoGol v2.1.1 — Supabase Realtime Room Status
+CronoGol v2.1.2 — Basic Match State Sync

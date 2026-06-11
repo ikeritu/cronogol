@@ -1,4 +1,14 @@
-## v2.1.1 — Online Mode Visibility
+## CronoGol v2.1.2 — Basic Match State Sync
+
+Primera sincronización básica de estado de partido para salas privadas Supabase.
+
+- Mantiene el juego local intacto.
+- Permite empezar partida en modo Online si existe una sala activa creada o unida.
+- Publica en `room_state.matchSnapshot` el marcador, turno, parte, modo, total de tiradas y estado finalizado.
+- Realtime muestra el resumen de marcador en el panel online cuando cambia la sala.
+- Todavía no implementa control autoritativo de turnos, bloqueo remoto ni tiradas sincronizadas completas.
+
+## v2.1.1 — Supabase Realtime Room Status
 
 - El bloque V2 Online queda oculto al entrar.
 - Se añade el modo `Online` al selector de modo.

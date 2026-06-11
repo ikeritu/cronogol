@@ -1165,7 +1165,7 @@ function maybeMachineTurn(){
 function getMachineStopDelay(){ return gameState.machineLevel==="easy"?randomInt(600,1800):gameState.machineLevel==="hard"?randomInt(900,3200):randomInt(800,2500); }
 function getMachineForcedValue(){ if(isFastMode()) return null; if(gameState.forceEvents){ if(gameState.half===1&&gameState.firstHalfTurns>=gameState.machineForceHalfAt) return 45; if(gameState.half===2&&gameState.secondHalfTurns>=gameState.machineForceEndAt) return 90; } if(gameState.machineLevel==="hard"){ const r=Math.random(); if(r<.025)return 0; if(r<.055)return [96,97,98,99][randomInt(0,3)]; } return null; }
 function startMatchClock(){ clearInterval(matchClockInterval); matchClockInterval=setInterval(()=>{ const sec=Math.floor((Date.now()-matchStartTime)/1000); matchClockLabel.textContent=`${pad(Math.floor(sec/60))}:${pad(sec%60)}`; /* En modo rápido v1.6.1 no hay límite de 5 minutos: gana quien llega a 6 con 2 de ventaja. */ },1000); }
-function updateUI(){ p1Label.textContent=gameState.players[0].name.toUpperCase(); p2Label.textContent=gameState.players[1].name.toUpperCase(); p1Score.textContent=gameState.players[0].goals; p2Score.textContent=gameState.players[1].goals; p1Sanction.textContent=gameState.players[0].skipTurns?`Sanción: ${gameState.players[0].skipTurns}`:""; p2Sanction.textContent=gameState.players[1].skipTurns?`Sanción: ${gameState.players[1].skipTurns}`:""; halfLabel.textContent=isFastMode()?"MODO RÁPIDO":(gameState.half===1?"1ª PARTE":"2ª PARTE"); turnLabel.textContent=currentPlayer().name; team0.classList.toggle("active",gameState.currentPlayerIndex===0); team1.classList.toggle("active",gameState.currentPlayerIndex===1); statTurns.textContent=gameState.totalTurns; statGoals.textContent=gameState.stats.goals; statWoodwork.textContent=gameState.stats.woodwork; statCards.textContent=gameState.stats.cards; statSpecials.textContent=gameState.stats.specials; updateShootoutUI(); renderLog(); }
+function updateUI(){ p1Label.textContent=gameState.players[0].name.toUpperCase(); p2Label.textContent=gameState.players[1].name.toUpperCase(); p1Score.textContent=gameState.players[0].goals; p2Score.textContent=gameState.players[1].goals; p1Sanction.textContent=gameState.players[0].skipTurns?`Sanción: ${gameState.players[0].skipTurns}`:""; p2Sanction.textContent=gameState.players[1].skipTurns?`Sanción: ${gameState.players[1].skipTurns}`:""; halfLabel.textContent=isFastMode()?"MODO RÁPIDO":(gameState.half===1?"1ª PARTE":"2ª PARTE"); turnLabel.textContent=currentPlayer().name; team0.classList.toggle("active",gameState.currentPlayerIndex===0); team1.classList.toggle("active",gameState.currentPlayerIndex===1); statTurns.textContent=gameState.totalTurns; statGoals.textContent=gameState.stats.goals; statWoodwork.textContent=gameState.stats.woodwork; statCards.textContent=gameState.stats.cards; statSpecials.textContent=gameState.stats.specials; updateShootoutUI(); renderLog(); if(window.CronoGolOnline && typeof window.CronoGolOnline.publishLocalMatchState === "function"){ window.CronoGolOnline.publishLocalMatchState(gameState); } }
 function updateShootoutUI(){ if(!penaltyShootout){shootoutPanel.classList.add("hidden");return;} shootoutPanel.classList.remove("hidden"); shootoutP1Name.textContent=gameState.players[0].name; shootoutP2Name.textContent=gameState.players[1].name; shootoutP1.textContent=icons(penaltyShootout.shots[0]); shootoutP2.textContent=icons(penaltyShootout.shots[1]); }
 function icons(shots){ const i=shots.map(s=>s?"✅":"❌"); while(i.length<5)i.push("⬜"); return i.join(" "); }
 function setEvent(title,msg,cls){ eventTitle.textContent=title; messageLabel.textContent=msg; eventCard.className=`event-card event-${cls}`; }
@@ -2137,8 +2137,11 @@ function startMatch(){
   clearMachineTimers();
 
   if(isOnlineSetupMode()){
-    showToast(currentLang === "en" ? "Online rooms are being prepared. Create or join a room below." : "Modo online en preparación. Crea o únete a una sala abajo.");
-    return;
+    const canStartOnline = Boolean(window.CronoGolOnline && typeof window.CronoGolOnline.canStartOnlineMatch === "function" && window.CronoGolOnline.canStartOnlineMatch());
+    if(!canStartOnline){
+      showToast(currentLang === "en" ? "Create or join a private room before starting online." : "Crea o únete a una sala privada antes de empezar online.");
+      return;
+    }
   }
 
   const p1 = safePlayerName(player1Input.value, "Jugador 1");
@@ -2189,6 +2192,9 @@ function startMatch(){
   startMatchClock();
   updateUI();
   syncActionControls();
+  if(window.CronoGolOnline && typeof window.CronoGolOnline.publishLocalMatchState === "function"){
+    window.CronoGolOnline.publishLocalMatchState(gameState, { phase: "match_started", force: true });
+  }
   lockActionTemporarily(180);
   maybeMachineTurn();
 }
@@ -2249,6 +2255,10 @@ function showFinal(pens){
   if(pens) text += currentLang === "en" ? " Decided on penalties." : " Resuelto en penaltis.";
 
   gameState.lastFinalText = formattedFinalResult();
+
+  if(window.CronoGolOnline && typeof window.CronoGolOnline.publishLocalMatchState === "function"){
+    window.CronoGolOnline.publishLocalMatchState(gameState, { phase: "match_finished", force: true });
+  }
 
   showModal(
     currentLang === "en" ? "FULL TIME" : "FINAL DEL PARTIDO",
@@ -2558,6 +2568,10 @@ showFinal = function(pens){
   if(pens) text += currentLang === "en" ? " Decided on penalties." : " Resuelto en penaltis.";
 
   gameState.lastFinalText = formattedFinalResult();
+
+  if(window.CronoGolOnline && typeof window.CronoGolOnline.publishLocalMatchState === "function"){
+    window.CronoGolOnline.publishLocalMatchState(gameState, { phase: "match_finished", force: true });
+  }
 
   showModal(
     currentLang === "en" ? "FULL TIME" : "FINAL DEL PARTIDO",

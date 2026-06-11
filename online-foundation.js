@@ -1,26 +1,29 @@
 /*
 ===============================================================================
-CronoGol v2.1.1 — Supabase Private Rooms
+CronoGol v2.1.2 — Basic Match State Sync
 ===============================================================================
-Integración segura de salas privadas con Supabase y primera suscripción Realtime de estado de sala.
+Integración segura de salas privadas con Supabase y primera sincronización básica de estado de partido.
 
 Importante:
 - Si supabase-config.js tiene enabled:false, la app conserva el borrador local.
 - Si enabled:true y hay url/anonKey válidos, Crear sala / Unirse consultan Supabase.
 - Sincroniza estado básico de sala waiting/ready/playing/finished mediante Supabase Realtime.
-- No sincroniza todavía marcador completo ni turnos de partida.
-- No modifica reglas ni flujo de la partida local.
+- Publica snapshot básico del partido online: marcador, turno, parte, modo y finalizado.
+- No aplica todavía control autoritativo de turnos ni tiradas remotas.
+- Mantiene el juego local intacto.
 ===============================================================================
 */
 (function(){
   "use strict";
 
-  const CG_ONLINE_VERSION = "2.1.1";
+  const CG_ONLINE_VERSION = "2.1.2";
   const ROOM_CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   const ROOMS_TABLE = "cronogol_rooms";
   let supabaseClient = null;
   let roomRealtimeChannel = null;
   let activeRealtimeRoomCode = "";
+  let lastPublishedMatchSignature = "";
+  let lastPublishAt = 0;
 
   function randomRoomCode(length = 6){
     let code = "";
@@ -92,20 +95,26 @@ Importante:
 
   function createMatchSnapshot(gameState){
     if(!gameState || !Array.isArray(gameState.players)) return null;
+    const players = gameState.players.map((p, index) => ({
+      index,
+      name: p && p.name ? String(p.name).slice(0, 24) : `Jugador ${index + 1}`,
+      goals: Number(p && p.goals || 0),
+      skipTurns: Number(p && p.skipTurns || 0)
+    }));
     return {
-      schemaVersion: 1,
+      schemaVersion: 2,
       appVersion: CG_ONLINE_VERSION,
-      createdAt: new Date().toISOString(),
-      half: gameState.half,
-      currentPlayerIndex: gameState.currentPlayerIndex,
-      matchMode: gameState.matchMode,
+      updatedAt: new Date().toISOString(),
+      half: Number(gameState.half || 1),
+      currentPlayerIndex: Number(gameState.currentPlayerIndex || 0),
+      currentPlayerName: players[Number(gameState.currentPlayerIndex || 0)]?.name || players[0]?.name || "Jugador 1",
+      matchMode: gameState.matchMode || "classic",
+      gameMode: gameState.gameMode || "online",
       matchEnded: Boolean(gameState.matchEnded),
-      players: gameState.players.map((p, index) => ({
-        index,
-        name: p && p.name ? String(p.name).slice(0, 24) : `Jugador ${index + 1}`,
-        goals: Number(p && p.goals || 0),
-        skipTurns: Number(p && p.skipTurns || 0)
-      }))
+      totalTurns: Number(gameState.totalTurns || 0),
+      scoreText: players.length >= 2 ? `${players[0].name} ${players[0].goals} - ${players[1].goals} ${players[1].name}` : "",
+      stats: Object.assign({}, gameState.stats || {}),
+      players
     };
   }
 
@@ -189,14 +198,138 @@ Importante:
   }
 
 
+  function getActiveOnlineRoom(){
+    try{
+      const raw = localStorage.getItem("cronogol_online_active_room");
+      const data = raw ? JSON.parse(raw) : null;
+      if(data && isValidRoomCode(data.roomCode)){
+        return {
+          roomCode: normalizeRoomCode(data.roomCode),
+          role: data.role === "guest" ? "guest" : "host",
+          savedAt: data.savedAt || ""
+        };
+      }
+    }catch(e){}
+    return null;
+  }
+
+  function setActiveOnlineRoom(roomCode, role){
+    const clean = normalizeRoomCode(roomCode);
+    if(!isValidRoomCode(clean)) return null;
+    const active = {
+      roomCode: clean,
+      role: role === "guest" ? "guest" : "host",
+      savedAt: new Date().toISOString()
+    };
+    try{ localStorage.setItem("cronogol_online_active_room", JSON.stringify(active)); }catch(e){}
+    return active;
+  }
+
+  function clearActiveOnlineRoom(){
+    try{ localStorage.removeItem("cronogol_online_active_room"); }catch(e){}
+  }
+
+  function canStartOnlineMatch(){
+    const select = document.getElementById("game-mode");
+    if(select && select.value !== "online") return false;
+    return Boolean(getActiveOnlineRoom());
+  }
+
+  function roomStateWithMatch(roomState, snapshot, options = {}){
+    return Object.assign({}, roomState || {}, {
+      phase: snapshot && snapshot.matchEnded ? "match_finished" : (options.phase || "match_playing"),
+      matchSnapshot: snapshot,
+      lastPublisherRole: options.role || getActiveOnlineRoom()?.role || "host",
+      lastMatchSyncAt: new Date().toISOString()
+    });
+  }
+
+  async function updateRoomMatchState(roomCode, snapshot, options = {}){
+    const client = getSupabaseClient();
+    const clean = normalizeRoomCode(roomCode);
+    if(!client) return { ok: false, offline: true, reason: "backend-not-configured" };
+    if(!isValidRoomCode(clean)) return { ok: false, reason: "invalid-code" };
+    if(!snapshot) return { ok: false, reason: "empty-snapshot" };
+
+    const { data: room, error: selectError } = await client
+      .from(ROOMS_TABLE)
+      .select("room_code,status,room_state")
+      .eq("room_code", clean)
+      .maybeSingle();
+
+    if(selectError) return { ok: false, error: selectError, reason: "select-room-failed" };
+    if(!room) return { ok: false, reason: "room-not-found" };
+
+    const nextStatus = snapshot.matchEnded ? "finished" : "playing";
+    const nextState = roomStateWithMatch(room.room_state || {}, snapshot, options);
+
+    const { data, error } = await client
+      .from(ROOMS_TABLE)
+      .update({
+        status: nextStatus,
+        room_state: nextState
+      })
+      .eq("room_code", clean)
+      .select("room_code,status,room_state,updated_at")
+      .single();
+
+    if(error) return { ok: false, error, reason: "update-match-state-failed" };
+    return { ok: true, data, roomCode: clean };
+  }
+
+  function matchSignature(snapshot){
+    if(!snapshot || !Array.isArray(snapshot.players)) return "";
+    const p = snapshot.players.map(player => `${player.goals}:${player.skipTurns}`).join("|");
+    return [snapshot.matchEnded ? 1 : 0, snapshot.half, snapshot.currentPlayerIndex, snapshot.totalTurns, p].join("#");
+  }
+
+  function publishLocalMatchState(gameState, options = {}){
+    const active = getActiveOnlineRoom();
+    if(!active) return { ok: false, reason: "no-active-room" };
+    if(!gameState || gameState.gameMode !== "online") return { ok: false, reason: "not-online-match" };
+
+    const snapshot = createMatchSnapshot(gameState);
+    if(!snapshot) return { ok: false, reason: "empty-snapshot" };
+
+    const signature = matchSignature(snapshot);
+    const now = Date.now();
+    if(signature === lastPublishedMatchSignature && !options.force) return { ok: true, skipped: true, reason: "unchanged" };
+    if(now - lastPublishAt < 900 && !snapshot.matchEnded && !options.force) return { ok: true, skipped: true, reason: "throttled" };
+
+    lastPublishedMatchSignature = signature;
+    lastPublishAt = now;
+
+    if(!hasBackendConfig()){
+      try{
+        localStorage.setItem("cronogol_online_last_match_snapshot", JSON.stringify({ roomCode: active.roomCode, snapshot }));
+      }catch(e){}
+      return { ok: true, offline: true, roomCode: active.roomCode, snapshot };
+    }
+
+    updateRoomMatchState(active.roomCode, snapshot, { role: active.role, phase: options.phase })
+      .catch((error) => console.warn("CronoGol match state sync failed", error));
+
+    return { ok: true, pending: true, roomCode: active.roomCode, snapshot };
+  }
+
+  function summarizeMatchSnapshot(snapshot){
+    if(!snapshot || !Array.isArray(snapshot.players) || snapshot.players.length < 2) return "";
+    const turnName = snapshot.currentPlayerName || snapshot.players[snapshot.currentPlayerIndex || 0]?.name || "Jugador";
+    const phase = snapshot.matchEnded ? "finalizada" : `turno de ${turnName}`;
+    return `${snapshot.scoreText || `${snapshot.players[0].goals}-${snapshot.players[1].goals}`} · ${phase}`;
+  }
+
+
   function describeRoomStatus(room){
     const code = normalizeRoomCode(room && room.room_code || activeRealtimeRoomCode || "");
     const host = String(room && room.host_name || "Jugador 1").slice(0, 24);
     const guest = String(room && room.guest_name || "").slice(0, 24);
     const status = String(room && room.status || "waiting");
+    const snapshot = room && room.room_state && room.room_state.matchSnapshot;
+    const matchSummary = summarizeMatchSnapshot(snapshot);
     if(status === "ready") return `Sala ${code} lista · ${host} vs ${guest || "Jugador 2"}.`;
-    if(status === "playing") return `Sala ${code} en juego · sincronización básica activa.`;
-    if(status === "finished") return `Sala ${code} finalizada.`;
+    if(status === "playing") return matchSummary ? `Sala ${code} en juego · ${matchSummary}.` : `Sala ${code} en juego · sincronización básica activa.`;
+    if(status === "finished") return matchSummary ? `Sala ${code} finalizada · ${matchSummary}.` : `Sala ${code} finalizada.`;
     if(status === "closed") return `Sala ${code} cerrada.`;
     return `Sala ${code} online · esperando rival.`;
   }
@@ -276,7 +409,7 @@ Importante:
     const backendReady = hasBackendConfig();
 
     function setStatus(message){ if(status) status.textContent = message; }
-    setStatus(backendReady ? "Supabase listo · salas privadas con estado Realtime básico." : "V2.1.1: backend Supabase pendiente · modo borrador local activo.");
+    setStatus(backendReady ? "Supabase listo · salas privadas con sincronización básica de marcador." : "V2.1.2: backend Supabase pendiente · modo borrador local activo.");
 
     function currentRoomCode(){
       const value = roomCodeEl ? roomCodeEl.textContent : "";
@@ -305,6 +438,9 @@ Importante:
         onRoomChange(room){
           setStatus(describeRoomStatus(room));
           if(room && room.status === "ready") safeToast("Rival conectado a la sala.");
+          if(room && room.status === "playing" && room.room_state && room.room_state.matchSnapshot){
+            try{ localStorage.setItem("cronogol_online_remote_match_snapshot", JSON.stringify(room.room_state.matchSnapshot)); }catch(e){}
+          }
         },
         onRoomClosed(){
           setStatus(`Sala ${clean} cerrada.`);
@@ -352,6 +488,7 @@ Importante:
             if(result.ok){
               try{ localStorage.setItem("cronogol_online_room_draft", JSON.stringify(result.draft)); }catch(e){}
               showRoomCode(result.roomCode);
+              setActiveOnlineRoom(result.roomCode, "host");
               if(codeInput) codeInput.value = "";
               safeToast(`Sala ${result.roomCode} creada online.`);
               setStatus(`Sala ${result.roomCode} creada online · esperando rival.`);
@@ -365,6 +502,7 @@ Importante:
           const draft = createRoomDraft(options);
           try{ localStorage.setItem("cronogol_online_room_draft", JSON.stringify(draft)); }catch(e){}
           showRoomCode(draft.roomCode);
+          setActiveOnlineRoom(draft.roomCode, "host");
           if(codeInput) codeInput.value = "";
           stopRoomRealtime();
           safeToast(`Sala ${draft.roomCode} creada localmente. Supabase pendiente.`);
@@ -428,8 +566,9 @@ Importante:
             });
             if(result.ok){
               try{ localStorage.setItem("cronogol_online_join_code_draft", code); }catch(e){}
+              setActiveOnlineRoom(code, "guest");
               safeToast(`Unido a sala ${code}.`);
-              setStatus(`Unido a sala ${code} · sala lista con Realtime básico.`);
+              setStatus(`Unido a sala ${code} · sala lista para sincronización básica.`);
               if(codeInput) codeInput.value = "";
               showRoomCode(code);
               startRealtimeFor(code);
@@ -445,6 +584,7 @@ Importante:
           }
 
           try{ localStorage.setItem("cronogol_online_join_code_draft", code); }catch(e){}
+          setActiveOnlineRoom(code, "guest");
           stopRoomRealtime();
           safeToast(`Código ${code} guardado. Supabase pendiente.`);
           setStatus(`Código ${code} guardado localmente · backend pendiente.`);
@@ -474,6 +614,12 @@ Importante:
     isValidRoomCode,
     createRoomDraft,
     createMatchSnapshot,
+    getActiveOnlineRoom,
+    setActiveOnlineRoom,
+    clearActiveOnlineRoom,
+    canStartOnlineMatch,
+    updateRoomMatchState,
+    publishLocalMatchState,
     createRoomBackend,
     joinRoomBackend,
     describeRoomStatus,

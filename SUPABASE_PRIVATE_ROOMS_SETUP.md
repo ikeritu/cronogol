@@ -57,3 +57,9 @@ Con `enabled:true`:
 - Sincronización básica de marcador.
 - Preparar sincronización de turnos.
 - Mantener fallback local.
+
+## Nota v2.1.2 — Basic Match State Sync
+
+No hace falta crear columnas nuevas. La sincronización básica del partido usa el campo JSONB existente `room_state` y guarda el marcador dentro de `room_state.matchSnapshot`.
+
+Si ya ejecutaste el SQL de v2.1.1, no necesitas rehacer la tabla; solo confirma que la tabla `cronogol_rooms` está incluida en la publicación `supabase_realtime`.

@@ -1,0 +1,23 @@
+{
+  "version": "v2.1.2",
+  "name": "Basic Match State Sync",
+  "base": "v2.1.1 Supabase Realtime Room Status",
+  "date": "2026-06-11",
+  "summary": "Primera sincronización básica de estado de partido online mediante Supabase room_state.matchSnapshot.",
+  "changes": [
+    "Añadido publishLocalMatchState para publicar snapshots básicos del partido online.",
+    "Añadido updateRoomMatchState para guardar marcador, turno, parte, estadísticas y estado finalizado en Supabase.",
+    "Modo Online permite empezar partido si existe sala activa creada o unida.",
+    "Realtime muestra resumen de marcador en el estado de la sala.",
+    "Fallback localStorage si Supabase no está configurado."
+  ],
+  "not_changed": [
+    "Reglas del juego",
+    "Modo clásico",
+    "Modo rápido",
+    "Penalti acabado en 9",
+    "Estadísticas locales",
+    "Sonidos y vibración",
+    "Cloudflare Analytics"
+  ]
+}

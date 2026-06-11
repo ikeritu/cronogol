@@ -1,4 +1,4 @@
--- CronoGol v2.1.1 — Supabase Private Rooms
+-- CronoGol v2.1.2 — Supabase Private Rooms
 -- Ejecutar en Supabase SQL Editor.
 -- No pegues aquí claves privadas. La web solo debe usar anon/public key.
 
@@ -66,7 +66,7 @@ create index if not exists idx_cronogol_rooms_created_at on public.cronogol_room
 -- delete from public.cronogol_rooms where created_at < now() - interval '24 hours';
 
 
--- Realtime para v2.1.1: permite que ambos navegadores reciban cambios de estado de sala.
+-- Realtime para v2.1.2: permite que ambos navegadores reciban cambios de estado de sala.
 -- En Supabase también puedes activarlo desde Database > Publications > supabase_realtime.
 do $$
 begin
@@ -80,3 +80,7 @@ begin
     alter publication supabase_realtime add table public.cronogol_rooms;
   end if;
 end $$;
+
+
+-- v2.1.2: el marcador básico se guarda dentro de room_state.matchSnapshot (jsonb).
+-- No hace falta crear columnas nuevas para esta fase.
