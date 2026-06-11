@@ -640,6 +640,20 @@ function bindAudioUnlockOnce(){
 }
 
 
+function updateCronoGolSetupButtonState(){
+  if(!startMatchBtn || !gameModeSelect) return;
+  const isOnline = gameModeSelect.value === "online";
+  const backendReady = Boolean(window.CronoGolOnline && typeof window.CronoGolOnline.backendEnabled === "function" && window.CronoGolOnline.backendEnabled());
+  if(isOnline && !backendReady){
+    startMatchBtn.textContent = currentLang === "en" ? "ONLINE IN PREPARATION" : "ONLINE EN PREPARACIÓN";
+    startMatchBtn.classList.add("online-pending");
+  }else{
+    startMatchBtn.textContent = currentLang === "en" ? "START MATCH" : "EMPEZAR PARTIDO";
+    startMatchBtn.classList.remove("online-pending");
+  }
+}
+window.updateCronoGolSetupButtonState = updateCronoGolSetupButtonState;
+
 function updateSetupVisibility(){
   const mode = gameModeSelect ? gameModeSelect.value : "local";
   machineLevelLabel.classList.toggle("is-hidden", mode !== "machine");
@@ -648,6 +662,7 @@ function updateSetupVisibility(){
   if(onlinePanel){
     onlinePanel.classList.toggle("is-online-hidden", mode !== "online");
   }
+  updateCronoGolSetupButtonState();
 }
 
 function isOnlineSetupMode(){
@@ -2170,7 +2185,12 @@ function startMatch(){
   clearMachineTimers();
 
   if(isOnlineSetupMode()){
+    const backendReady = Boolean(window.CronoGolOnline && typeof window.CronoGolOnline.backendEnabled === "function" && window.CronoGolOnline.backendEnabled());
     const canStartOnline = Boolean(window.CronoGolOnline && typeof window.CronoGolOnline.canStartOnlineMatch === "function" && window.CronoGolOnline.canStartOnlineMatch());
+    if(!backendReady){
+      showToast(currentLang === "en" ? "Online is in preparation. Configure Supabase to enable private rooms." : "Online en preparación: configura Supabase para activar salas privadas.");
+      return;
+    }
     if(!canStartOnline){
       showToast(currentLang === "en" ? "Create or join a private room before starting online." : "Crea o únete a una sala privada antes de empezar online.");
       return;

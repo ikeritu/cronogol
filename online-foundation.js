@@ -1,11 +1,11 @@
 /*
 ===============================================================================
-CronoGol v2.1.3 — Online Turn Authority Draft
+CronoGol v2.1.4 — Online Setup State Clarity
 ===============================================================================
 Integración segura de salas privadas con Supabase y primera sincronización básica de estado de partido.
 
 Importante:
-- Si supabase-config.js tiene enabled:false, la app conserva el borrador local.
+- Si supabase-config.js tiene enabled:false, la UI comunica modo demo local y no permite iniciar online real.
 - Si enabled:true y hay url/anonKey válidos, Crear sala / Unirse consultan Supabase.
 - Sincroniza estado básico de sala waiting/ready/playing/finished mediante Supabase Realtime.
 - Publica snapshot básico del partido online: marcador, turno, parte, modo y finalizado.
@@ -17,7 +17,7 @@ Importante:
 (function(){
   "use strict";
 
-  const CG_ONLINE_VERSION = "2.1.3";
+  const CG_ONLINE_VERSION = "2.1.4";
   const ROOM_CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   const ROOMS_TABLE = "cronogol_rooms";
   let supabaseClient = null;
@@ -286,6 +286,7 @@ Importante:
   function canStartOnlineMatch(){
     const select = document.getElementById("game-mode");
     if(select && select.value !== "online") return false;
+    if(!hasBackendConfig()) return false;
     return Boolean(getActiveOnlineRoom());
   }
 
@@ -459,11 +460,36 @@ Importante:
     const joinBtn = document.getElementById("cg-online-join-btn");
     const codeInput = document.getElementById("cg-online-code-input");
     const roomCodeEl = document.getElementById("cg-online-room-code");
+    const roomLabel = document.getElementById("cg-online-room-label");
+    const modeDescription = document.getElementById("cg-online-mode-description");
+    const panel = document.getElementById("cg-online-foundation-panel");
     const status = document.getElementById("cg-online-status");
     const backendReady = hasBackendConfig();
 
+    if(panel){
+      panel.classList.toggle("is-backend-off", !backendReady);
+      panel.classList.toggle("is-backend-on", backendReady);
+    }
+    if(roomLabel){
+      roomLabel.textContent = backendReady ? "Código de sala" : "Código local de prueba";
+    }
+    if(modeDescription){
+      modeDescription.textContent = backendReady
+        ? "Supabase activo. Puedes crear o unirte a una sala privada real."
+        : "Modo demo local. Para jugar online real, configura Supabase.";
+    }
+    if(codeInput){
+      codeInput.disabled = !backendReady;
+      codeInput.placeholder = backendReady ? "Introduce código" : "Supabase pendiente";
+      codeInput.title = backendReady ? "Código de sala" : "Configura Supabase para unirte a salas reales";
+    }
+    if(joinBtn){
+      joinBtn.disabled = !backendReady;
+      joinBtn.title = backendReady ? "Unirse a sala" : "Configura Supabase para unirte a salas reales";
+    }
+
     function setStatus(message){ if(status) status.textContent = message; }
-    setStatus(backendReady ? "Supabase listo · salas privadas con sincronización básica y autoridad de turnos." : "V2.1.3: autoridad de turnos preparada · backend Supabase pendiente.");
+    setStatus(backendReady ? "Supabase listo · salas privadas con sincronización básica y autoridad de turnos." : "Modo demo local · Supabase no configurado.");
 
     function currentRoomCode(){
       const value = roomCodeEl ? roomCodeEl.textContent : "";
@@ -475,7 +501,9 @@ Importante:
       const clean = normalizeRoomCode(code || "");
       if(roomCodeEl) roomCodeEl.textContent = clean || "— — — — — —";
       if(copyBtn) copyBtn.disabled = !clean;
-      if(createBtn) createBtn.textContent = clean ? "Nueva sala" : "Crear sala";
+      if(createBtn) createBtn.textContent = clean
+        ? (backendReady ? "Nueva sala" : "Nueva sala demo")
+        : (backendReady ? "Crear sala" : "Crear sala demo");
     }
 
 
@@ -509,7 +537,7 @@ Importante:
         showRoomCode(existingDraft.roomCode);
         setStatus(backendReady
           ? `Sala ${normalizeRoomCode(existingDraft.roomCode)} guardada en este dispositivo · Realtime listo al crear nueva sala.`
-          : `Sala ${normalizeRoomCode(existingDraft.roomCode)} guardada localmente · configura Supabase para sincronizar.`);
+          : `Código local ${normalizeRoomCode(existingDraft.roomCode)} · configura Supabase para sincronizar online.`);
       }else{
         showRoomCode("");
       }
@@ -559,8 +587,8 @@ Importante:
           setActiveOnlineRoom(draft.roomCode, "host");
           if(codeInput) codeInput.value = "";
           stopRoomRealtime();
-          safeToast(`Sala ${draft.roomCode} creada localmente. Supabase pendiente.`);
-          setStatus(`Sala ${draft.roomCode} creada localmente · todavía no sincroniza online.`);
+          safeToast(`Código local ${draft.roomCode} creado. Supabase pendiente.`);
+          setStatus(`Código local ${draft.roomCode} creado · no sincroniza online hasta configurar Supabase.`);
         }finally{
           createBtn.disabled = false;
         }
@@ -640,8 +668,8 @@ Importante:
           try{ localStorage.setItem("cronogol_online_join_code_draft", code); }catch(e){}
           setActiveOnlineRoom(code, "guest");
           stopRoomRealtime();
-          safeToast(`Código ${code} guardado. Supabase pendiente.`);
-          setStatus(`Código ${code} guardado localmente · backend pendiente.`);
+          safeToast(`Supabase pendiente. No se puede unir online todavía.`);
+          setStatus(`Configura Supabase para unirte a una sala real.`);
           if(codeInput) codeInput.value = "";
         }finally{
           joinBtn.disabled = false;
@@ -650,6 +678,7 @@ Importante:
     }
 
     refreshOnlinePanelVisibility();
+    if(typeof window.updateCronoGolSetupButtonState === "function") window.updateCronoGolSetupButtonState();
   }
 
   function refreshOnlinePanelVisibility(){

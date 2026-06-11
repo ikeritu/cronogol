@@ -1,1 +1,1 @@
-CronoGol v2.1.3 — Online Turn Authority Draft
+CronoGol v2.1.4 — Online Setup State Clarity

@@ -2796,3 +2796,29 @@ nav.setup-links {
     grid-template-columns:1fr;
   }
 }
+
+
+/* CronoGol v2.1.4 — Online setup state clarity */
+.online-foundation-panel.is-backend-off{
+  border-color:rgba(230,139,29,.55);
+  background:linear-gradient(180deg,rgba(230,139,29,.045),rgba(7,12,14,.92));
+}
+.online-foundation-panel.is-backend-on{
+  border-color:rgba(96,190,210,.7);
+}
+.online-foundation-panel input:disabled,
+.online-foundation-panel button:disabled{
+  opacity:.58;
+  cursor:not-allowed;
+}
+.online-foundation-panel input:disabled{
+  background:#1a201e;
+  color:#b9bca9;
+  border-color:rgba(230,139,29,.42);
+}
+.main-start-btn.online-pending{
+  background:linear-gradient(180deg,#5b4522,#2a2218);
+  color:#f0b35a;
+  border-color:#0b0d0d;
+  box-shadow:0 5px 0 #020303, inset 0 0 0 2px rgba(230,139,29,.4);
+}

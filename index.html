@@ -11,8 +11,8 @@
   <meta property="og:image" content="https://cronogol.es/og-cronogol.png" />
   <link rel="icon" href="favicon.png" type="image/png" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-  <title>CronoGol v2.1.3</title>
-  <link rel="stylesheet" href="style.css?v=2.1.3" />
+  <title>CronoGol v2.1.4</title>
+  <link rel="stylesheet" href="style.css?v=2.1.4" />
   <link rel="manifest" href="site.webmanifest" />
 </head>
 <body>
@@ -98,11 +98,11 @@
         <section id="cg-online-foundation-panel" class="online-foundation-panel is-online-hidden" aria-label="Base online CronoGol V2">
           <div class="online-foundation-header">
             <span class="tag">V2 ONLINE</span>
-            <strong>Salas privadas en preparación</strong>
+            <strong>Salas privadas</strong>
           </div>
-          <p>Base técnica activa para el futuro modo online. El juego local sigue siendo la versión estable.</p>
+          <p id="cg-online-mode-description">Modo online pendiente de configurar. El juego local sigue siendo la versión estable.</p>
           <div class="online-room-created" aria-live="polite">
-            <span>Código de sala</span>
+            <span id="cg-online-room-label">Código local de prueba</span>
             <strong id="cg-online-room-code">— — — — — —</strong>
           </div>
           <div class="online-foundation-actions online-room-actions">
@@ -116,7 +116,7 @@
               <button id="cg-online-join-btn" type="button">Unirse</button>
             </div>
           </div>
-          <small id="cg-online-status">Sala local preparada · online real pendiente.</small>
+          <small id="cg-online-status">Modo demo local · Supabase no configurado.</small>
         </section>
 
         <nav class="setup-links secondary-actions-final setup-actions-polished" aria-label="Acciones secundarias">
@@ -151,7 +151,7 @@
           <span>WATER RESIST</span>
           <span>FOOTBALL CHRONO</span>
         </div>
-        <footer class="version-footer">CronoGol v2.1.3 · Partidas en este dispositivo: <strong id="local-matches-count">0</strong><br><span class="copyright-footer">© 2026 CronoGol. Juego original creado por Iker Ituarte. Todos los derechos reservados.</span></footer>
+        <footer class="version-footer">CronoGol v2.1.4 · Partidas en este dispositivo: <strong id="local-matches-count">0</strong><br><span class="copyright-footer">© 2026 CronoGol. Juego original creado por Iker Ituarte. Todos los derechos reservados.</span></footer>
       </div>
     </section>
 
@@ -285,9 +285,9 @@
   </main>
 <!-- Supabase se carga de forma segura: si no hay configuración, la V2 online funciona como borrador local. -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-config.js?v=2.1.3"></script>
-<script src="online-foundation.js?v=2.1.3"></script>
-<script src="game.js?v=2.1.3"></script>
+<script src="supabase-config.js?v=2.1.4"></script>
+<script src="online-foundation.js?v=2.1.4"></script>
+<script src="game.js?v=2.1.4"></script>
 <!-- Cloudflare Web Analytics -->
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7ee638b73aa24300b417a555e67fd1ae"}'></script>
 <!-- End Cloudflare Web Analytics -->

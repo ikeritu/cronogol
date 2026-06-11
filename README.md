@@ -1,4 +1,9 @@
-## CronoGol v2.1.3 — Online Turn Authority Draft
+## CronoGol
+
+## v2.1.4 — Online Setup State Clarity
+
+Pulido de claridad del modo online: si Supabase no está configurado, el botón principal muestra **ONLINE EN PREPARACIÓN**, el código se identifica como local de prueba y el flujo de unirse queda desactivado hasta configurar backend. No modifica juego local, reglas, estadísticas, sonidos ni analítica.
+ v2.1.4 — Online Turn Authority Draft
 
 Primera sincronización básica de estado de partido para salas privadas Supabase.
 
