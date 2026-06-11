@@ -2649,7 +2649,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.1.0: Online Panel Clarity Panel ===== */
+/* ===== CronoGol v2.1.1: Online Panel Clarity Panel ===== */
 .online-foundation-panel{
   margin-top:12px;
   background:rgba(0,0,0,.38);
@@ -2691,7 +2691,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.1.0: Online Panel Clarity ===== */
+/* ===== CronoGol v2.1.1: Online Panel Clarity ===== */
 .online-room-created{
   display:grid;
   gap:4px;
@@ -2764,7 +2764,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.1.0: Online Panel Clarity ===== */
+/* ===== CronoGol v2.1.1: Online Panel Clarity ===== */
 .online-room-actions{
   grid-template-columns:1fr 1fr;
   max-width:300px;
@@ -2784,7 +2784,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.1.0: Online Mode Visibility ===== */
+/* ===== CronoGol v2.1.1: Online Mode Visibility ===== */
 .online-foundation-panel.is-online-hidden{
   display:none !important;
 }

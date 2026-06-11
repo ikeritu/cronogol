@@ -1,1 +1,1 @@
-CronoGol v2.1.0 — Supabase Private Rooms
+CronoGol v2.1.1 — Supabase Realtime Room Status

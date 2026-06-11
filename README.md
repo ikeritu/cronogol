@@ -1,4 +1,4 @@
-## v2.1.0 — Online Mode Visibility
+## v2.1.1 — Online Mode Visibility
 
 - El bloque V2 Online queda oculto al entrar.
 - Se añade el modo `Online` al selector de modo.
@@ -6,7 +6,7 @@
 - El panel se mueve debajo de `EMPEZAR PARTIDO` y antes de reglas/modos/historia.
 - No se conecta todavía backend real ni se modifica la lógica local.
 
-# CronoGol v2.1.0 — Online Mode Visibility
+# CronoGol v2.1.1 — Online Mode Visibility
 
 ## v2.0.2 — Online Panel Clarity
 
@@ -662,7 +662,7 @@ No incluye todavía:
 - anuncios nuevos;
 - automatización de contenidos.
 
-## CronoGol v2.1.0 — Supabase Private Rooms
+## CronoGol v2.1.1 — Supabase Private Rooms
 
 Primera fase de backend para salas privadas.
 
@@ -673,3 +673,15 @@ Primera fase de backend para salas privadas.
 - Si Supabase no está configurado, se mantiene el modo borrador local sin romper la web.
 
 No incluye todavía sincronización de marcador ni partida online real completa.
+
+
+## CronoGol v2.1.1 — Supabase Realtime Room Status
+
+Primera capa Realtime segura para salas privadas:
+
+- Mantiene crear/unirse a sala con Supabase.
+- Añade suscripción Realtime al estado de la sala.
+- El anfitrión puede ver cuando entra el rival sin recargar.
+- No sincroniza todavía marcador completo, turnos ni tiradas.
+- Mantiene fallback local si Supabase no está configurado.
+

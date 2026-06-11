@@ -1,4 +1,4 @@
--- CronoGol v2.1.0 — Supabase Private Rooms
+-- CronoGol v2.1.1 — Supabase Private Rooms
 -- Ejecutar en Supabase SQL Editor.
 -- No pegues aquí claves privadas. La web solo debe usar anon/public key.
 
@@ -64,3 +64,19 @@ create index if not exists idx_cronogol_rooms_created_at on public.cronogol_room
 
 -- Limpieza manual opcional de salas antiguas:
 -- delete from public.cronogol_rooms where created_at < now() - interval '24 hours';
+
+
+-- Realtime para v2.1.1: permite que ambos navegadores reciban cambios de estado de sala.
+-- En Supabase también puedes activarlo desde Database > Publications > supabase_realtime.
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_publication_tables
+    where pubname = 'supabase_realtime'
+      and schemaname = 'public'
+      and tablename = 'cronogol_rooms'
+  ) then
+    alter publication supabase_realtime add table public.cronogol_rooms;
+  end if;
+end $$;

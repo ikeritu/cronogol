@@ -1,5 +1,5 @@
 {
-  "version": "v2.1.0",
+  "version": "v2.1.1",
   "name": "Supabase Private Rooms",
   "base": "v2.0.3 Online Mode Visibility",
   "changes": [

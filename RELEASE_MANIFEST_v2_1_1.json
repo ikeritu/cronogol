@@ -1,0 +1,26 @@
+{
+  "version": "v2.1.1",
+  "name": "Supabase Realtime Room Status",
+  "base": "v2.1.0 Supabase Private Rooms",
+  "date": "2026-06-11",
+  "changes": [
+    "Añadida suscripción Realtime al estado de sala por room_code",
+    "El anfitrión recibe cambios cuando un rival se une",
+    "Añadida función stopRoomRealtime y gestión segura de canal activo",
+    "Actualizado SQL para incluir cronogol_rooms en supabase_realtime",
+    "Actualizada documentación de configuración Supabase"
+  ],
+  "not_changed": [
+    "Reglas del juego",
+    "Modo rápido y penalti acabado en 9",
+    "Estadísticas locales",
+    "Sonidos y vibración",
+    "Marcador/turnos online completos"
+  ],
+  "validation": [
+    "node --check game.js OK",
+    "node --check online-foundation.js OK",
+    "node --check supabase-config.js OK",
+    "node --check sw.js OK"
+  ]
+}

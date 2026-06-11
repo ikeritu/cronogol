@@ -21,7 +21,7 @@ Preparar el modelo mínimo para futuras salas privadas manteniendo intacto el ju
 
 ## Siguiente fase recomendada
 
-`v2.1.0 — Private Rooms Backend Draft`
+`v2.1.1 — Private Rooms Backend Draft`
 
 - Elegir backend: Supabase o Cloudflare Workers + Durable Objects.
 - Crear esquema de sala.

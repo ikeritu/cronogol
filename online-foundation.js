@@ -1,23 +1,26 @@
 /*
 ===============================================================================
-CronoGol v2.1.0 — Supabase Private Rooms
+CronoGol v2.1.1 — Supabase Private Rooms
 ===============================================================================
-Primera integración segura para salas privadas con Supabase.
+Integración segura de salas privadas con Supabase y primera suscripción Realtime de estado de sala.
 
 Importante:
 - Si supabase-config.js tiene enabled:false, la app conserva el borrador local.
 - Si enabled:true y hay url/anonKey válidos, Crear sala / Unirse consultan Supabase.
-- No sincroniza todavía el marcador completo ni turnos en tiempo real.
+- Sincroniza estado básico de sala waiting/ready/playing/finished mediante Supabase Realtime.
+- No sincroniza todavía marcador completo ni turnos de partida.
 - No modifica reglas ni flujo de la partida local.
 ===============================================================================
 */
 (function(){
   "use strict";
 
-  const CG_ONLINE_VERSION = "2.1.0";
+  const CG_ONLINE_VERSION = "2.1.1";
   const ROOM_CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   const ROOMS_TABLE = "cronogol_rooms";
   let supabaseClient = null;
+  let roomRealtimeChannel = null;
+  let activeRealtimeRoomCode = "";
 
   function randomRoomCode(length = 6){
     let code = "";
@@ -185,6 +188,60 @@ Importante:
     return { ok: true, data, roomCode };
   }
 
+
+  function describeRoomStatus(room){
+    const code = normalizeRoomCode(room && room.room_code || activeRealtimeRoomCode || "");
+    const host = String(room && room.host_name || "Jugador 1").slice(0, 24);
+    const guest = String(room && room.guest_name || "").slice(0, 24);
+    const status = String(room && room.status || "waiting");
+    if(status === "ready") return `Sala ${code} lista · ${host} vs ${guest || "Jugador 2"}.`;
+    if(status === "playing") return `Sala ${code} en juego · sincronización básica activa.`;
+    if(status === "finished") return `Sala ${code} finalizada.`;
+    if(status === "closed") return `Sala ${code} cerrada.`;
+    return `Sala ${code} online · esperando rival.`;
+  }
+
+  function stopRoomRealtime(){
+    const client = getSupabaseClient();
+    if(client && roomRealtimeChannel){
+      try{ client.removeChannel(roomRealtimeChannel); }catch(e){}
+    }
+    roomRealtimeChannel = null;
+    activeRealtimeRoomCode = "";
+  }
+
+  function subscribeRoomRealtime(roomCode, callbacks = {}){
+    const client = getSupabaseClient();
+    const clean = normalizeRoomCode(roomCode);
+    if(!client) return { ok: false, reason: "backend-not-configured" };
+    if(!isValidRoomCode(clean)) return { ok: false, reason: "invalid-code" };
+
+    stopRoomRealtime();
+    activeRealtimeRoomCode = clean;
+
+    roomRealtimeChannel = client
+      .channel(`cronogol-room-${clean}`)
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: ROOMS_TABLE, filter: `room_code=eq.${clean}` },
+        (payload) => {
+          if(callbacks.onRoomChange) callbacks.onRoomChange(payload.new, payload);
+        }
+      )
+      .on(
+        "postgres_changes",
+        { event: "DELETE", schema: "public", table: ROOMS_TABLE, filter: `room_code=eq.${clean}` },
+        (payload) => {
+          if(callbacks.onRoomClosed) callbacks.onRoomClosed(payload.old, payload);
+        }
+      )
+      .subscribe((status) => {
+        if(callbacks.onSubscribeStatus) callbacks.onSubscribeStatus(status);
+      });
+
+    return { ok: true, roomCode: clean };
+  }
+
   function getOnlineStatus(){
     const cfg = getSupabaseConfig();
     return {
@@ -219,7 +276,7 @@ Importante:
     const backendReady = hasBackendConfig();
 
     function setStatus(message){ if(status) status.textContent = message; }
-    setStatus(backendReady ? "Supabase listo · puedes crear o unirte a una sala real." : "V2.1.0: backend Supabase pendiente · modo borrador local activo.");
+    setStatus(backendReady ? "Supabase listo · salas privadas con estado Realtime básico." : "V2.1.1: backend Supabase pendiente · modo borrador local activo.");
 
     function currentRoomCode(){
       const value = roomCodeEl ? roomCodeEl.textContent : "";
@@ -234,12 +291,34 @@ Importante:
       if(createBtn) createBtn.textContent = clean ? "Nueva sala" : "Crear sala";
     }
 
+
+    function startRealtimeFor(code){
+      if(!hasBackendConfig()) return;
+      const clean = normalizeRoomCode(code);
+      if(!isValidRoomCode(clean)) return;
+      const result = subscribeRoomRealtime(clean, {
+        onSubscribeStatus(statusValue){
+          if(statusValue === "SUBSCRIBED") setStatus(`Sala ${clean} conectada en Realtime · esperando cambios.`);
+          if(statusValue === "CHANNEL_ERROR") setStatus(`Sala ${clean} creada, pero Realtime no está activo. Revisa la publicación en Supabase.`);
+          if(statusValue === "TIMED_OUT") setStatus(`Sala ${clean} creada, pero Realtime tarda en responder.`);
+        },
+        onRoomChange(room){
+          setStatus(describeRoomStatus(room));
+          if(room && room.status === "ready") safeToast("Rival conectado a la sala.");
+        },
+        onRoomClosed(){
+          setStatus(`Sala ${clean} cerrada.`);
+        }
+      });
+      if(!result.ok) console.warn("CronoGol realtime subscription skipped", result.reason);
+    }
+
     try{
       const existingDraft = JSON.parse(localStorage.getItem("cronogol_online_room_draft") || "null");
       if(existingDraft && existingDraft.roomCode){
         showRoomCode(existingDraft.roomCode);
         setStatus(backendReady
-          ? `Sala ${normalizeRoomCode(existingDraft.roomCode)} guardada en este dispositivo · crea nueva sala para sincronizar.`
+          ? `Sala ${normalizeRoomCode(existingDraft.roomCode)} guardada en este dispositivo · Realtime listo al crear nueva sala.`
           : `Sala ${normalizeRoomCode(existingDraft.roomCode)} guardada localmente · configura Supabase para sincronizar.`);
       }else{
         showRoomCode("");
@@ -276,6 +355,7 @@ Importante:
               if(codeInput) codeInput.value = "";
               safeToast(`Sala ${result.roomCode} creada online.`);
               setStatus(`Sala ${result.roomCode} creada online · esperando rival.`);
+              startRealtimeFor(result.roomCode);
               return;
             }
             console.warn("CronoGol Supabase create room failed", result.error || result.reason);
@@ -286,6 +366,7 @@ Importante:
           try{ localStorage.setItem("cronogol_online_room_draft", JSON.stringify(draft)); }catch(e){}
           showRoomCode(draft.roomCode);
           if(codeInput) codeInput.value = "";
+          stopRoomRealtime();
           safeToast(`Sala ${draft.roomCode} creada localmente. Supabase pendiente.`);
           setStatus(`Sala ${draft.roomCode} creada localmente · todavía no sincroniza online.`);
         }finally{
@@ -348,9 +429,10 @@ Importante:
             if(result.ok){
               try{ localStorage.setItem("cronogol_online_join_code_draft", code); }catch(e){}
               safeToast(`Unido a sala ${code}.`);
-              setStatus(`Unido a sala ${code} · sincronización de marcador llegará en v2.1.1.`);
+              setStatus(`Unido a sala ${code} · sala lista con Realtime básico.`);
               if(codeInput) codeInput.value = "";
               showRoomCode(code);
+              startRealtimeFor(code);
               return;
             }
             if(result.reason === "room-not-found"){
@@ -363,6 +445,7 @@ Importante:
           }
 
           try{ localStorage.setItem("cronogol_online_join_code_draft", code); }catch(e){}
+          stopRoomRealtime();
           safeToast(`Código ${code} guardado. Supabase pendiente.`);
           setStatus(`Código ${code} guardado localmente · backend pendiente.`);
           if(codeInput) codeInput.value = "";
@@ -393,6 +476,9 @@ Importante:
     createMatchSnapshot,
     createRoomBackend,
     joinRoomBackend,
+    describeRoomStatus,
+    subscribeRoomRealtime,
+    stopRoomRealtime,
     getOnlineStatus,
     refreshOnlinePanelVisibility
   });
