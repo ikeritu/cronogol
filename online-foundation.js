@@ -1,6 +1,6 @@
 /*
 ===============================================================================
-CronoGol v2.1.2 — Basic Match State Sync
+CronoGol v2.1.3 — Online Turn Authority Draft
 ===============================================================================
 Integración segura de salas privadas con Supabase y primera sincronización básica de estado de partido.
 
@@ -9,14 +9,15 @@ Importante:
 - Si enabled:true y hay url/anonKey válidos, Crear sala / Unirse consultan Supabase.
 - Sincroniza estado básico de sala waiting/ready/playing/finished mediante Supabase Realtime.
 - Publica snapshot básico del partido online: marcador, turno, parte, modo y finalizado.
-- No aplica todavía control autoritativo de turnos ni tiradas remotas.
+- Define autoridad de turno por rol: anfitrión controla Jugador 1 y rival controla Jugador 2.
+- Todavía no replica tiradas remotas completas ni aplica snapshots en pantalla.
 - Mantiene el juego local intacto.
 ===============================================================================
 */
 (function(){
   "use strict";
 
-  const CG_ONLINE_VERSION = "2.1.2";
+  const CG_ONLINE_VERSION = "2.1.3";
   const ROOM_CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   const ROOMS_TABLE = "cronogol_rooms";
   let supabaseClient = null;
@@ -110,6 +111,7 @@ Importante:
       currentPlayerName: players[Number(gameState.currentPlayerIndex || 0)]?.name || players[0]?.name || "Jugador 1",
       matchMode: gameState.matchMode || "classic",
       gameMode: gameState.gameMode || "online",
+      turnAuthority: getTurnAuthoritySnapshot(gameState),
       matchEnded: Boolean(gameState.matchEnded),
       totalTurns: Number(gameState.totalTurns || 0),
       scoreText: players.length >= 2 ? `${players[0].name} ${players[0].goals} - ${players[1].goals} ${players[1].name}` : "",
@@ -229,6 +231,58 @@ Importante:
     try{ localStorage.removeItem("cronogol_online_active_room"); }catch(e){}
   }
 
+  function onlinePlayerIndexForRole(role){
+    return role === "guest" ? 1 : 0;
+  }
+
+  function onlineRoleForPlayerIndex(index){
+    return Number(index || 0) === 1 ? "guest" : "host";
+  }
+
+  function getCurrentTurnRole(gameState){
+    return onlineRoleForPlayerIndex(gameState && gameState.currentPlayerIndex);
+  }
+
+  function isCurrentDeviceTurn(gameState){
+    const active = getActiveOnlineRoom();
+    if(!active) return false;
+    if(!gameState || gameState.gameMode !== "online" || gameState.matchEnded) return false;
+    return onlinePlayerIndexForRole(active.role) === Number(gameState.currentPlayerIndex || 0);
+  }
+
+  function getTurnAuthoritySnapshot(gameState){
+    const active = getActiveOnlineRoom();
+    const currentRole = getCurrentTurnRole(gameState);
+    return {
+      schemaVersion: 1,
+      mode: "host-player-1-guest-player-2",
+      localRole: active ? active.role : "none",
+      localPlayerIndex: active ? onlinePlayerIndexForRole(active.role) : null,
+      currentRole,
+      currentPlayerIndex: Number(gameState && gameState.currentPlayerIndex || 0),
+      canLocalDevicePlay: Boolean(gameState && gameState.gameMode === "online" && isCurrentDeviceTurn(gameState))
+    };
+  }
+
+  function turnAuthorityMessage(gameState){
+    const active = getActiveOnlineRoom();
+    if(!gameState || gameState.gameMode !== "online") return "";
+    if(!active) return "Sala online no seleccionada.";
+    const role = active.role === "guest" ? "rival" : "anfitrión";
+    const expected = isCurrentDeviceTurn(gameState);
+    const turnName = gameState.players && gameState.players[gameState.currentPlayerIndex] ? gameState.players[gameState.currentPlayerIndex].name : "jugador";
+    return expected
+      ? `Tu turno (${role}) · ${turnName}.`
+      : `Turno del rival · esperando tirada de ${turnName}.`;
+  }
+
+  function updateTurnAuthorityUi(gameState){
+    const status = document.getElementById("cg-online-status");
+    if(!status || !gameState || gameState.gameMode !== "online") return;
+    const message = turnAuthorityMessage(gameState);
+    if(message) status.textContent = message;
+  }
+
   function canStartOnlineMatch(){
     const select = document.getElementById("game-mode");
     if(select && select.value !== "online") return false;
@@ -328,7 +382,7 @@ Importante:
     const snapshot = room && room.room_state && room.room_state.matchSnapshot;
     const matchSummary = summarizeMatchSnapshot(snapshot);
     if(status === "ready") return `Sala ${code} lista · ${host} vs ${guest || "Jugador 2"}.`;
-    if(status === "playing") return matchSummary ? `Sala ${code} en juego · ${matchSummary}.` : `Sala ${code} en juego · sincronización básica activa.`;
+    if(status === "playing") return matchSummary ? `Sala ${code} en juego · ${matchSummary}.` : `Sala ${code} en juego · autoridad de turnos preparada.`;
     if(status === "finished") return matchSummary ? `Sala ${code} finalizada · ${matchSummary}.` : `Sala ${code} finalizada.`;
     if(status === "closed") return `Sala ${code} cerrada.`;
     return `Sala ${code} online · esperando rival.`;
@@ -409,7 +463,7 @@ Importante:
     const backendReady = hasBackendConfig();
 
     function setStatus(message){ if(status) status.textContent = message; }
-    setStatus(backendReady ? "Supabase listo · salas privadas con sincronización básica de marcador." : "V2.1.2: backend Supabase pendiente · modo borrador local activo.");
+    setStatus(backendReady ? "Supabase listo · salas privadas con sincronización básica y autoridad de turnos." : "V2.1.3: autoridad de turnos preparada · backend Supabase pendiente.");
 
     function currentRoomCode(){
       const value = roomCodeEl ? roomCodeEl.textContent : "";
@@ -617,6 +671,13 @@ Importante:
     getActiveOnlineRoom,
     setActiveOnlineRoom,
     clearActiveOnlineRoom,
+    onlinePlayerIndexForRole,
+    onlineRoleForPlayerIndex,
+    getCurrentTurnRole,
+    isCurrentDeviceTurn,
+    getTurnAuthoritySnapshot,
+    turnAuthorityMessage,
+    updateTurnAuthorityUi,
     canStartOnlineMatch,
     updateRoomMatchState,
     publishLocalMatchState,
