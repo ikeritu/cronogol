@@ -68,6 +68,7 @@ const I18N = {
     labelPlayer2:"Jugador 2 / Máquina",
     modeLocal:"1 vs 1",
     modeMachine:"1 vs Máquina",
+    modeOnline:"Online",
     durationClassic:"Clásico",
     durationFast:"Rápido",
     startMatch:"EMPEZAR PARTIDO",
@@ -103,6 +104,7 @@ const I18N = {
     labelPlayer2:"Player 2 / Machine",
     modeLocal:"1 vs 1",
     modeMachine:"1 vs Machine",
+    modeOnline:"Online",
     durationClassic:"Classic",
     durationFast:"Fast",
     startMatch:"START MATCH",
@@ -486,7 +488,7 @@ specialStartBtn.onclick = handleSpecialButton;
 debugThrowBtn.onclick = forceDebugThrow;
 gameModeSelect.onchange = () => {
   if(gameModeSelect.value==="machine" && player2Input.value==="Jugador 2") player2Input.value="Máquina";
-  if(gameModeSelect.value==="local" && player2Input.value==="Máquina") player2Input.value="Jugador 2";
+  if((gameModeSelect.value==="local" || gameModeSelect.value==="online") && player2Input.value==="Máquina") player2Input.value="Jugador 2";
   updateSetupVisibility();
 };
 rulesBtn.onclick = showRulesModal; menuRulesBtn.onclick = () => { sideMenu.classList.add("hidden"); showRulesModal(); };
@@ -639,7 +641,17 @@ function bindAudioUnlockOnce(){
 
 
 function updateSetupVisibility(){
-  machineLevelLabel.classList.toggle("is-hidden", gameModeSelect.value !== "machine");
+  const mode = gameModeSelect ? gameModeSelect.value : "local";
+  machineLevelLabel.classList.toggle("is-hidden", mode !== "machine");
+
+  const onlinePanel = document.getElementById("cg-online-foundation-panel");
+  if(onlinePanel){
+    onlinePanel.classList.toggle("is-online-hidden", mode !== "online");
+  }
+}
+
+function isOnlineSetupMode(){
+  return gameModeSelect && gameModeSelect.value === "online";
 }
 function loadLocal(){ try{ player1Input.value = localStorage.getItem("cronogol_player1") || player1Input.value; player2Input.value = localStorage.getItem("cronogol_player2") || player2Input.value; localMatchesCount.textContent = localStorage.getItem("cronogol_matches_played") || "0"; }catch(e){} }
 function saveLocal(p1,p2){ try{ localStorage.setItem("cronogol_player1",p1); localStorage.setItem("cronogol_player2",p2); }catch(e){} }
@@ -1708,7 +1720,7 @@ function bootCronoGol(){
     if(gameModeSelect){
       gameModeSelect.onchange = () => {
         if(gameModeSelect.value==="machine" && player2Input.value==="Jugador 2") player2Input.value="Máquina";
-        if(gameModeSelect.value==="local" && player2Input.value==="Máquina") player2Input.value="Jugador 2";
+        if((gameModeSelect.value==="local" || gameModeSelect.value==="online") && player2Input.value==="Máquina") player2Input.value="Jugador 2";
         updateSetupVisibility();
       };
     }
@@ -2123,6 +2135,11 @@ function resetToSetup(){
 
 function startMatch(){
   clearMachineTimers();
+
+  if(isOnlineSetupMode()){
+    showToast(currentLang === "en" ? "Online rooms are being prepared. Create or join a room below." : "Modo online en preparación. Crea o únete a una sala abajo.");
+    return;
+  }
 
   const p1 = safePlayerName(player1Input.value, "Jugador 1");
   const p2Default = gameModeSelect.value === "machine" ? "Máquina" : "Jugador 2";

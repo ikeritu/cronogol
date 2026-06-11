@@ -1,6 +1,6 @@
 /*
 ===============================================================================
-CronoGol v2.0.2 — Online Panel Clarity
+CronoGol v2.0.3 — Online Mode Visibility
 ===============================================================================
 Primera base técnica para el futuro modo online.
 
@@ -13,7 +13,7 @@ Importante:
 (function(){
   "use strict";
 
-  const CG_ONLINE_VERSION = "2.0.2";
+  const CG_ONLINE_VERSION = "2.0.3";
   const CG_ONLINE_BACKEND_ENABLED = false;
   const ROOM_CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
@@ -53,7 +53,7 @@ Importante:
       hostName: String(options.hostName || "Jugador 1").slice(0, 24),
       guestName: String(options.guestName || "Jugador 2").slice(0, 24),
       matchMode: options.matchMode === "five" ? "five" : "classic",
-      gameMode: options.gameMode === "machine" ? "machine" : "local"
+      gameMode: options.gameMode === "online" ? "online" : (options.gameMode === "machine" ? "machine" : "local")
     };
   }
 
@@ -105,7 +105,7 @@ Importante:
     const codeInput = document.getElementById("cg-online-code-input");
     const roomCodeEl = document.getElementById("cg-online-room-code");
     const status = document.getElementById("cg-online-status");
-    if(status) status.textContent = "V2.0.2: sala local preparada · online real pendiente.";
+    if(status) status.textContent = "V2.0.3: sala local preparada · online real pendiente.";
 
     function currentRoomCode(){
       const value = roomCodeEl ? roomCodeEl.textContent : "";
@@ -206,6 +206,16 @@ Importante:
         if(codeInput) codeInput.value = "";
       });
     }
+
+    refreshOnlinePanelVisibility();
+  }
+
+  function refreshOnlinePanelVisibility(){
+    const panel = document.getElementById("cg-online-foundation-panel");
+    const select = document.getElementById("game-mode");
+    if(panel && select){
+      panel.classList.toggle("is-online-hidden", select.value !== "online");
+    }
   }
 
   window.CronoGolOnline = Object.freeze({
@@ -216,7 +226,8 @@ Importante:
     isValidRoomCode,
     createRoomDraft,
     createMatchSnapshot,
-    getOnlineStatus
+    getOnlineStatus,
+    refreshOnlinePanelVisibility
   });
 
   if(document.readyState === "loading"){

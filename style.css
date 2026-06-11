@@ -2649,7 +2649,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.0.2: Online Panel Clarity Panel ===== */
+/* ===== CronoGol v2.0.3: Online Panel Clarity Panel ===== */
 .online-foundation-panel{
   margin-top:12px;
   background:rgba(0,0,0,.38);
@@ -2691,7 +2691,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.0.2: Online Panel Clarity ===== */
+/* ===== CronoGol v2.0.3: Online Panel Clarity ===== */
 .online-room-created{
   display:grid;
   gap:4px;
@@ -2764,7 +2764,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.0.2: Online Panel Clarity ===== */
+/* ===== CronoGol v2.0.3: Online Panel Clarity ===== */
 .online-room-actions{
   grid-template-columns:1fr 1fr;
   max-width:300px;
@@ -2781,4 +2781,18 @@ nav.setup-links {
 }
 @media(max-width:430px){
   .online-room-actions{grid-template-columns:1fr;max-width:100%}
+}
+
+
+/* ===== CronoGol v2.0.3: Online Mode Visibility ===== */
+.online-foundation-panel.is-online-hidden{
+  display:none !important;
+}
+.segmented-control[aria-label="Modo de juego"]{
+  grid-template-columns:1fr 1fr 1fr;
+}
+@media(max-width:560px){
+  .segmented-control[aria-label="Modo de juego"]{
+    grid-template-columns:1fr;
+  }
 }

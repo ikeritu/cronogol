@@ -1,0 +1,18 @@
+{
+  "version": "2.0.3",
+  "name": "CronoGol v2.0.3 — Online Mode Visibility",
+  "base": "v2.0.2 — Online Panel Clarity",
+  "created_at": "2026-06-11T09:30:00Z",
+  "changes": [
+    "hide V2 online panel by default",
+    "add Online option to the game mode selector",
+    "show private room panel only when Online is selected",
+    "move online panel below start match and above secondary navigation",
+    "keep local game, fast rules, stats and backend untouched"
+  ],
+  "validation": [
+    "node --check game.js",
+    "node --check online-foundation.js",
+    "node --check sw.js"
+  ]
+}

@@ -1,4 +1,12 @@
-# CronoGol v2.0.2 — Online Panel Clarity
+## v2.0.3 — Online Mode Visibility
+
+- El bloque V2 Online queda oculto al entrar.
+- Se añade el modo `Online` al selector de modo.
+- El panel de salas privadas aparece solo al seleccionar `Online`.
+- El panel se mueve debajo de `EMPEZAR PARTIDO` y antes de reglas/modos/historia.
+- No se conecta todavía backend real ni se modifica la lógica local.
+
+# CronoGol v2.0.3 — Online Mode Visibility
 
 ## v2.0.2 — Online Panel Clarity
 

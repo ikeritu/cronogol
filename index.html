@@ -11,8 +11,8 @@
   <meta property="og:image" content="https://cronogol.es/og-cronogol.png" />
   <link rel="icon" href="favicon.png" type="image/png" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-  <title>CronoGol v2.0.2</title>
-  <link rel="stylesheet" href="style.css?v=2.0.2" />
+  <title>CronoGol v2.0.3</title>
+  <link rel="stylesheet" href="style.css?v=2.0.3" />
   <link rel="manifest" href="site.webmanifest" />
 </head>
 <body>
@@ -49,10 +49,12 @@
             <div class="segmented-control" role="group" aria-label="Modo de juego">
               <button type="button" class="segment-btn active" data-target="game-mode" data-value="local" data-i18n="modeLocal"> 1 vs 1</button>
               <button type="button" class="segment-btn" data-target="game-mode" data-value="machine" data-i18n="modeMachine"> 1 vs Máquina</button>
+              <button type="button" class="segment-btn" data-target="game-mode" data-value="online" data-i18n="modeOnline"> Online</button>
             </div>
             <select id="game-mode" class="native-select-hidden" aria-hidden="true" tabindex="-1">
               <option value="local">1 vs 1 local</option>
               <option value="machine">1 vs Máquina</option>
+              <option value="online">Online / Sala privada</option>
             </select>
           </div>
 
@@ -93,17 +95,7 @@
           <button id="start-match-btn" class="main-start-btn" data-i18n="startMatch"> EMPEZAR PARTIDO</button>
         </section>
 
-        <nav class="setup-links secondary-actions-final setup-actions-polished" aria-label="Acciones secundarias">
-          <button id="rules-btn" data-slot="rules" type="button" data-i18n="rules">Reglas</button>
-          <a data-slot="modes" href="modos.html" data-i18n="modes">Modos</a>
-          <a data-slot="history" href="historia.html" data-i18n="history">Historia</a>
-          <button id="share-btn" data-slot="share" type="button" data-i18n="share">Compartir</button>
-          <button id="copy-link-btn" data-slot="copy" type="button" data-i18n="copyLink">Copiar enlace</button>
-          <a data-slot="feedback" href="feedback.html?lang=es" data-i18n="feedback">Feedback</a>
-          <button id="support-btn" data-slot="support" class="support-wide-btn support-soft-btn" type="button" data-i18n="supportFull">☕ Apoya CronoGol</button>
-        </nav>
-
-        <section class="online-foundation-panel" aria-label="Base online CronoGol V2">
+        <section id="cg-online-foundation-panel" class="online-foundation-panel is-online-hidden" aria-label="Base online CronoGol V2">
           <div class="online-foundation-header">
             <span class="tag">V2 ONLINE</span>
             <strong>Salas privadas en preparación</strong>
@@ -127,6 +119,16 @@
           <small id="cg-online-status">Sala local preparada · online real pendiente.</small>
         </section>
 
+        <nav class="setup-links secondary-actions-final setup-actions-polished" aria-label="Acciones secundarias">
+          <button id="rules-btn" data-slot="rules" type="button" data-i18n="rules">Reglas</button>
+          <a data-slot="modes" href="modos.html" data-i18n="modes">Modos</a>
+          <a data-slot="history" href="historia.html" data-i18n="history">Historia</a>
+          <button id="share-btn" data-slot="share" type="button" data-i18n="share">Compartir</button>
+          <button id="copy-link-btn" data-slot="copy" type="button" data-i18n="copyLink">Copiar enlace</button>
+          <a data-slot="feedback" href="feedback.html?lang=es" data-i18n="feedback">Feedback</a>
+          <button id="support-btn" data-slot="support" class="support-wide-btn support-soft-btn" type="button" data-i18n="supportFull">☕ Apoya CronoGol</button>
+        </nav>
+
         <section class="local-stats-panel" aria-label="Estadísticas locales de CronoGol">
           <div class="local-stats-header">
             <span class="tag">LOCAL</span>
@@ -149,7 +151,7 @@
           <span>WATER RESIST</span>
           <span>FOOTBALL CHRONO</span>
         </div>
-        <footer class="version-footer">CronoGol v2.0.2 · Partidas en este dispositivo: <strong id="local-matches-count">0</strong><br><span class="copyright-footer">© 2026 CronoGol. Juego original creado por Iker Ituarte. Todos los derechos reservados.</span></footer>
+        <footer class="version-footer">CronoGol v2.0.3 · Partidas en este dispositivo: <strong id="local-matches-count">0</strong><br><span class="copyright-footer">© 2026 CronoGol. Juego original creado por Iker Ituarte. Todos los derechos reservados.</span></footer>
       </div>
     </section>
 
@@ -281,8 +283,8 @@
       </div>
     </section>
   </main>
-<script src="online-foundation.js?v=2.0.2"></script>
-<script src="game.js?v=2.0.2"></script>
+<script src="online-foundation.js?v=2.0.3"></script>
+<script src="game.js?v=2.0.3"></script>
 <!-- Cloudflare Web Analytics -->
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7ee638b73aa24300b417a555e67fd1ae"}'></script>
 <!-- End Cloudflare Web Analytics -->

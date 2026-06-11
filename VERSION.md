@@ -1,3 +1,4 @@
-CronoGol
-Current version: v2.0.2
-Codename: Online Panel Clarity
+# CronoGol
+
+Current version: v2.0.3
+Release: Online Mode Visibility

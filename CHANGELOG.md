@@ -1,3 +1,11 @@
+## v2.0.3 — Online Mode Visibility
+
+- Oculta el panel V2 Online por defecto.
+- Añade opción `Online` al selector de modo.
+- Muestra el panel de salas privadas solo cuando se selecciona modo online.
+- Reubica el panel debajo de `EMPEZAR PARTIDO` y encima de la navegación secundaria.
+- Mantiene intactos juego local, estadísticas, reglas rápidas y backend pendiente.
+
 ## v2.0.2 — Online Panel Clarity
 
 - Sustituido el `prompt()` nativo del navegador por una UI integrada en el panel V2.
