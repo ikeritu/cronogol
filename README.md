@@ -1,10 +1,12 @@
-## v2.1.5 — Remote Snapshot Apply Draft
+## v2.1.6 — Online Last Action Sync
 
 - Aplica snapshots remotos básicos recibidos por Supabase Realtime.
 - El segundo dispositivo puede reflejar marcador, turno, parte, nombres, sanciones y estado finalizado.
-- Evita re-aplicar el snapshot publicado por el propio dispositivo.
+- Añade `lastOnlineEvent` para mostrar también la última acción: jugador, número y resultado.
+- El panel online incluye la línea `Última acción online`.
+- Evita re-aplicar el snapshot o evento publicado por el propio dispositivo.
 - Mantiene intacto el juego local y el modo demo sin Supabase.
-- Todavía no replica la animación completa de cada tirada ni incluye resolución avanzada de conflictos.
+- Todavía no replica el cronómetro corriendo en vivo ni incluye resolución avanzada de conflictos.
 
 ## CronoGol
 

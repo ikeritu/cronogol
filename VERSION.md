@@ -1,1 +1,1 @@
-CronoGol v2.1.5 — Remote Snapshot Apply Draft
+CronoGol v2.1.6 — Online Last Action Sync

@@ -1,6 +1,6 @@
 /*
 ===============================================================================
-CronoGol v2.1.5 — Remote Snapshot Apply Draft
+CronoGol v2.1.6 — Online Last Action Sync
 ===============================================================================
 Integración segura de salas privadas con Supabase y primera sincronización básica de estado de partido.
 
@@ -11,14 +11,15 @@ Importante:
 - Publica snapshot básico del partido online: marcador, turno, parte, modo y finalizado.
 - Define autoridad de turno por rol: anfitrión controla Jugador 1 y rival controla Jugador 2.
 - Aplica snapshots remotos básicos en pantalla: marcador, turno, parte, estado y nombres.
-- Todavía no replica la animación completa de cada tirada ni resuelve conflictos avanzados.
+- Sincroniza la última acción de partido para que el rival vea qué tirada produjo el cambio.
+- Todavía no replica el cronómetro corriendo en vivo ni resuelve conflictos avanzados.
 - Mantiene el juego local intacto.
 ===============================================================================
 */
 (function(){
   "use strict";
 
-  const CG_ONLINE_VERSION = "2.1.5";
+  const CG_ONLINE_VERSION = "2.1.6";
   const ROOM_CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   const ROOMS_TABLE = "cronogol_rooms";
   let supabaseClient = null;
@@ -117,6 +118,7 @@ Importante:
       totalTurns: Number(gameState.totalTurns || 0),
       scoreText: players.length >= 2 ? `${players[0].name} ${players[0].goals} - ${players[1].goals} ${players[1].name}` : "",
       stats: Object.assign({}, gameState.stats || {}),
+      lastEvent: gameState.lastOnlineEvent ? Object.assign({}, gameState.lastOnlineEvent) : null,
       players
     };
   }
@@ -336,7 +338,8 @@ Importante:
   function matchSignature(snapshot){
     if(!snapshot || !Array.isArray(snapshot.players)) return "";
     const p = snapshot.players.map(player => `${player.goals}:${player.skipTurns}`).join("|");
-    return [snapshot.matchEnded ? 1 : 0, snapshot.half, snapshot.currentPlayerIndex, snapshot.totalTurns, p].join("#");
+    const e = snapshot.lastEvent ? `${snapshot.lastEvent.id || ""}:${snapshot.lastEvent.value ?? ""}:${snapshot.lastEvent.resultType || ""}` : "";
+    return [snapshot.matchEnded ? 1 : 0, snapshot.half, snapshot.currentPlayerIndex, snapshot.totalTurns, p, e].join("#");
   }
 
   function publishLocalMatchState(gameState, options = {}){
@@ -354,6 +357,8 @@ Importante:
 
     lastPublishedMatchSignature = signature;
     lastPublishAt = now;
+
+    updateLastEventUi(snapshot.lastEvent, "Última acción local");
 
     if(!hasBackendConfig()){
       try{
@@ -375,6 +380,22 @@ Importante:
     return `${snapshot.scoreText || `${snapshot.players[0].goals}-${snapshot.players[1].goals}`} · ${phase}`;
   }
 
+
+  function summarizeLastEvent(event){
+    if(!event) return "";
+    const player = event.playerName || "Jugador";
+    const value = typeof event.value === "number" ? String(event.value).padStart(2, "0") : "--";
+    const label = event.resultLabel || event.resultType || "acción";
+    return `${player} sacó ${value} → ${label}`;
+  }
+
+  function updateLastEventUi(event, prefix){
+    const el = document.getElementById("cg-online-last-event");
+    if(!el) return;
+    const summary = summarizeLastEvent(event);
+    el.textContent = summary ? `${prefix || "Última acción online"}: ${summary}` : "Última acción online: —";
+    el.classList.toggle("has-online-event", Boolean(summary));
+  }
 
   function remoteSnapshotPublisherRole(room){
     return room && room.room_state ? String(room.room_state.lastPublisherRole || "") : "";
@@ -399,6 +420,8 @@ Importante:
         snapshot
       }));
     }catch(e){}
+
+    updateLastEventUi(snapshot.lastEvent, "Última acción recibida");
 
     if(typeof window.CronoGolApplyRemoteSnapshot === "function"){
       return window.CronoGolApplyRemoteSnapshot(snapshot, {
@@ -525,6 +548,7 @@ Importante:
 
     function setStatus(message){ if(status) status.textContent = message; }
     setStatus(backendReady ? "Supabase listo · salas privadas con sincronización básica y autoridad de turnos." : "Modo demo local · Supabase no configurado.");
+    updateLastEventUi(null);
 
     function currentRoomCode(){
       const value = roomCodeEl ? roomCodeEl.textContent : "";
@@ -748,6 +772,8 @@ Importante:
     canStartOnlineMatch,
     updateRoomMatchState,
     publishLocalMatchState,
+    summarizeLastEvent,
+    updateLastEventUi,
     createRoomBackend,
     joinRoomBackend,
     describeRoomStatus,

@@ -257,14 +257,15 @@ function setupLanguageSelector(){
 let timerInterval = null, matchClockInterval = null, timerStartTime = 0, currentElapsedMs = 0, stopwatchBaseMs = 0, matchStartTime = 0;
 let machineTurnTimeout = null, machineStopTimeout = null, machineSpecialTurnTimeout = null, machineSpecialStopTimeout = null;
 let pendingSpecial = null, penaltyShootout = null, audioCtx = null, versionTaps = 0;
-let suppressOnlinePublish = false, lastAppliedRemoteSnapshotSignature = "";
+let suppressOnlinePublish = false, lastAppliedRemoteSnapshotSignature = "", lastAppliedRemoteEventId = "";
 
 const gameState = {
   players: [{name:"Jugador 1",goals:0,skipTurns:0},{name:"Jugador 2",goals:0,skipTurns:0}],
   currentPlayerIndex:0, half:1, isRunning:false, gameMode:"local", machineLevel:"normal", matchMode:"classic", forceEvents:true, soundEnabled:true, matchEnded:false,
   totalTurns:0, firstHalfTurns:0, secondHalfTurns:0, machineForceHalfAt:null, machineForceEndAt:null, log:[],
   stats:{goals:0,woodwork:0,cards:0,specials:0,penalties:0,freeKicks:0,misses:0},
-  lastFinalText:""
+  lastFinalText:"",
+  lastOnlineEvent:null
 };
 
 
@@ -684,7 +685,7 @@ function startMatch(){
     players:[{name:p1,goals:0,skipTurns:0},{name:p2,goals:0,skipTurns:0}],
     currentPlayerIndex:0, half:1, isRunning:false, gameMode:gameModeSelect.value, machineLevel:machineLevelSelect.value, matchMode:matchModeSelect.value,
     forceEvents:forceEventsInput.checked, soundEnabled:soundEnabledInput.checked, matchEnded:false,totalTurns:0,firstHalfTurns:0,secondHalfTurns:0,
-    machineForceHalfAt:randomInt(20,30),machineForceEndAt:randomInt(20,30),log:[],stats:{goals:0,woodwork:0,cards:0,specials:0,penalties:0,freeKicks:0,misses:0},lastFinalText:""
+    machineForceHalfAt:randomInt(20,30),machineForceEndAt:randomInt(20,30),log:[],stats:{goals:0,woodwork:0,cards:0,specials:0,penalties:0,freeKicks:0,misses:0},lastFinalText:"",lastOnlineEvent:null
   });
   pendingSpecial=null; penaltyShootout=null; currentElapsedMs=0; stopwatchBaseMs=0; matchStartTime=Date.now();
   setupScreen.classList.remove("active"); gameScreen.classList.add("active"); closeModal(); sideMenu.classList.add("hidden");
@@ -752,8 +753,41 @@ function evaluateThrow(v){
   if(v===98||v===99) return {type:"penalty",msg:"PENALTI",cls:"special",special:"penalty"};
   return {type:"miss",msg:"FALLO",cls:"neutral"};
 }
+function registerOnlineLastAction(kind, value, resultType, resultLabel, playerIndex, playerName){
+  if(gameState.gameMode !== "online") return;
+  gameState.lastOnlineEvent = {
+    schemaVersion: 1,
+    id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    kind: kind || "normal",
+    value: Number(value || 0),
+    resultType: String(resultType || "event"),
+    resultLabel: String(resultLabel || resultType || "acción").replace(/^⚽\s*/, "").slice(0, 32),
+    playerIndex: Number(playerIndex || 0),
+    playerName: String(playerName || "Jugador").slice(0, 24),
+    createdAt: new Date().toISOString()
+  };
+}
+
+function applyRemoteOnlineLastEvent(event){
+  if(!event || !event.id || event.id === lastAppliedRemoteEventId) return false;
+  lastAppliedRemoteEventId = event.id;
+  const value = Number(event.value || 0);
+  const label = String(event.resultLabel || event.resultType || "ACCIÓN");
+  const player = String(event.playerName || "Rival");
+  lastTwoDisplay.textContent = pad(value);
+  if(event.kind === "special"){
+    timerDisplay.textContent = `00:00:${pad(value)}`;
+  }
+  setEvent(label, `${player} sacó ${pad(value)} → ${label}`, event.resultType === "goal" ? "goal" : (event.resultType === "yellow" ? "yellow" : (event.resultType === "red" ? "red" : "special")));
+  addLog(`${clockSec()}  ONLINE — ${player} — ${pad(value)} — ${label}`);
+  playSound(event.resultType || "beep");
+  triggerScreenFeedback(event.resultType || "free_kick");
+  return true;
+}
+
 function applyNormalResult(v,r){
   const p = currentPlayer();
+  registerOnlineLastAction("normal", v, r.type, r.msg, gameState.currentPlayerIndex, p.name);
   setEvent(r.msg, `${p.name} sacó ${pad(v)} → ${r.msg}`, r.cls);
   addLog(`${clockSec()}  ${p.name} — ${pad(v)} — ${r.msg}`);
   playSound(r.type);
@@ -848,6 +882,8 @@ function evaluateSpecialThrow(v){
     msg = goal ? "GOL DE PENALTI" : "PENALTI FALLADO";
   }
 
+  registerOnlineLastAction("special", v, goal ? "goal" : (specialType === "penalty" ? "penalty_fail" : "miss"), msg, gameState.currentPlayerIndex, p.name);
+
   if(goal){
     p.goals++;
     gameState.stats.goals++;
@@ -918,6 +954,7 @@ function startPenaltyShootout(){
 function evaluateShootoutPenalty(v){
   const idx = penaltyShootout.currentPlayerIndex;
   const goal = v % 2 === 0;
+  registerOnlineLastAction("shootout", v, goal ? "goal" : "penalty_fail", goal ? "Gol penalti" : "Penalti fallado", idx, gameState.players[idx].name);
 
   penaltyShootout.shots[idx].push(goal);
 
@@ -1269,6 +1306,7 @@ function applyRemoteOnlineSnapshot(snapshot, meta = {}){
     gameState.matchEnded = Boolean(snapshot.matchEnded);
     gameState.totalTurns = Number(snapshot.totalTurns || 0);
     gameState.stats = Object.assign({}, gameState.stats || {}, snapshot.stats || {});
+    gameState.lastOnlineEvent = snapshot.lastEvent ? Object.assign({}, snapshot.lastEvent) : null;
 
     pendingSpecial = null;
     penaltyShootout = null;
@@ -1282,12 +1320,15 @@ function applyRemoteOnlineSnapshot(snapshot, meta = {}){
     closeModal();
     closeSideMenu();
 
-    const title = gameState.matchEnded ? "FINAL ONLINE" : "ONLINE";
-    const msg = gameState.matchEnded
-      ? "Partida sincronizada desde la sala."
-      : `Estado recibido · turno de ${currentPlayer().name}.`;
-    setEvent(title, msg, gameState.matchEnded ? "goal" : "neutral");
-    addLog(gameState.matchEnded ? "Estado online final recibido." : `Estado online recibido: turno de ${currentPlayer().name}.`);
+    const remoteEventShown = applyRemoteOnlineLastEvent(snapshot.lastEvent);
+    if(!remoteEventShown){
+      const title = gameState.matchEnded ? "FINAL ONLINE" : "ONLINE";
+      const msg = gameState.matchEnded
+        ? "Partida sincronizada desde la sala."
+        : `Estado recibido · turno de ${currentPlayer().name}.`;
+      setEvent(title, msg, gameState.matchEnded ? "goal" : "neutral");
+      addLog(gameState.matchEnded ? "Estado online final recibido." : `Estado online recibido: turno de ${currentPlayer().name}.`);
+    }
     updateUI();
     syncActionControls();
     return { ok:true, applied:true };

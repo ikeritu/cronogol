@@ -1,0 +1,28 @@
+{
+  "version": "2.1.6",
+  "name": "CronoGol v2.1.6 — Online Last Action Sync",
+  "base": "CronoGol v2.1.5 — Remote Snapshot Apply Draft",
+  "date": "2026-06-12",
+  "changes": [
+    "Añade lastOnlineEvent al estado del partido online",
+    "Incluye lastEvent en el snapshot publicado a Supabase",
+    "Muestra la última acción recibida en el dispositivo rival",
+    "Añade línea Última acción online al panel V2",
+    "Evita duplicar eventos remotos ya aplicados"
+  ],
+  "untouched": [
+    "Juego local",
+    "Modo máquina",
+    "Reglas rápidas",
+    "Penalti acabado en 9",
+    "Estadísticas locales",
+    "Cloudflare / Analytics"
+  ],
+  "validation": [
+    "node --check game.js OK",
+    "node --check online-foundation.js OK",
+    "node --check supabase-config.js OK",
+    "node --check sw.js OK",
+    "ZIP comprobado OK"
+  ]
+}

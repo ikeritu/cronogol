@@ -2798,7 +2798,7 @@ nav.setup-links {
 }
 
 
-/* CronoGol v2.1.5 — Remote snapshot apply draft */
+/* CronoGol v2.1.6 — Remote snapshot apply draft */
 .online-foundation-panel.is-backend-off{
   border-color:rgba(230,139,29,.55);
   background:linear-gradient(180deg,rgba(230,139,29,.045),rgba(7,12,14,.92));
@@ -2821,4 +2821,18 @@ nav.setup-links {
   color:#f0b35a;
   border-color:#0b0d0d;
   box-shadow:0 5px 0 #020303, inset 0 0 0 2px rgba(230,139,29,.4);
+}
+
+/* CronoGol v2.1.6 — Online last action sync */
+.online-last-event{
+  display:block;
+  margin-top:8px;
+  color:var(--cg-lcd, #dfe8c8);
+  opacity:.86;
+  line-height:1.45;
+  text-align:center;
+}
+.online-last-event.has-online-event{
+  color:var(--cg-orange, #e58a10);
+  opacity:1;
 }
