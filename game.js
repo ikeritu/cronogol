@@ -768,6 +768,45 @@ function registerOnlineLastAction(kind, value, resultType, resultLabel, playerIn
   };
 }
 
+
+function showRemoteOnlineActionUX(event){
+  try{
+    if(!event || !event.id) return;
+    const value = Number(event.value || 0);
+    const label = String(event.resultLabel || event.resultType || "ACCIÓN").toUpperCase();
+    const player = String(event.playerName || "Rival").slice(0, 24);
+    const resultType = String(event.resultType || "special");
+    const turnName = gameState && gameState.players && gameState.players[gameState.currentPlayerIndex]
+      ? gameState.players[gameState.currentPlayerIndex].name
+      : "Jugador";
+
+    const old = document.querySelector(".online-remote-action-toast");
+    if(old) old.remove();
+
+    const box = document.createElement("div");
+    box.className = `online-remote-action-toast online-remote-${resultType}`;
+    box.setAttribute("role", "status");
+    box.setAttribute("aria-live", "polite");
+    box.innerHTML = `
+      <span class="online-remote-kicker">Acción del rival</span>
+      <strong>${player} · ${pad(value)}</strong>
+      <em>${label}</em>
+      <small>Turno: ${turnName}</small>
+    `;
+    document.body.appendChild(box);
+
+    const onlinePanel = document.getElementById("cg-online-foundation-panel");
+    if(onlinePanel){
+      onlinePanel.classList.add("has-remote-action-pulse");
+      setTimeout(() => onlinePanel.classList.remove("has-remote-action-pulse"), 1300);
+    }
+
+    setTimeout(() => {
+      if(box && box.parentNode) box.remove();
+    }, 3200);
+  }catch(e){}
+}
+
 function applyRemoteOnlineLastEvent(event){
   if(!event || !event.id || event.id === lastAppliedRemoteEventId) return false;
   lastAppliedRemoteEventId = event.id;
@@ -778,8 +817,10 @@ function applyRemoteOnlineLastEvent(event){
   if(event.kind === "special"){
     timerDisplay.textContent = `00:00:${pad(value)}`;
   }
-  setEvent(label, `${player} sacó ${pad(value)} → ${label}`, event.resultType === "goal" ? "goal" : (event.resultType === "yellow" ? "yellow" : (event.resultType === "red" ? "red" : "special")));
+  const eventClass = event.resultType === "goal" ? "goal" : (event.resultType === "yellow" ? "yellow" : (event.resultType === "red" ? "red" : "special"));
+  setEvent(label, `${player} sacó ${pad(value)} → ${label}`, eventClass);
   addLog(`${clockSec()}  ONLINE — ${player} — ${pad(value)} — ${label}`);
+  showRemoteOnlineActionUX(event);
   playSound(event.resultType || "beep");
   triggerScreenFeedback(event.resultType || "free_kick");
   return true;

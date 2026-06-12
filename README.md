@@ -1,4 +1,4 @@
-## v2.1.6 — Online Last Action Sync
+## v2.1.7 — Online Remote Action UX
 
 - Aplica snapshots remotos básicos recibidos por Supabase Realtime.
 - El segundo dispositivo puede reflejar marcador, turno, parte, nombres, sanciones y estado finalizado.

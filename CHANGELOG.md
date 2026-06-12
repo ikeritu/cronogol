@@ -1,3 +1,11 @@
+
+## v2.1.7 — Online Remote Action UX
+
+- Añadido aviso visual flotante para acciones remotas online.
+- Añadido pulso suave en el panel V2 Online al recibir acción del rival.
+- La acción remota muestra jugador, número, resultado y próximo turno.
+- Sin cambios en reglas, juego local, modo máquina ni Supabase.
+
 ## v2.0.3 — Online Mode Visibility
 
 - Oculta el panel V2 Online por defecto.

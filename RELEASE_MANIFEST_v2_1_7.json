@@ -1,0 +1,20 @@
+{
+  "version": "2.1.7",
+  "name": "CronoGol v2.1.7 — Online Remote Action UX",
+  "date": "2026-06-12",
+  "base": "CronoGol v2.1.6 — Online Last Action Sync",
+  "changes": [
+    "Remote online action floating toast",
+    "Remote event visual pulse on online panel",
+    "Remote action shows player, value, result and next turn",
+    "prefers-reduced-motion support",
+    "No gameplay rule changes"
+  ],
+  "validation": [
+    "node --check game.js",
+    "node --check online-foundation.js",
+    "node --check supabase-config.js",
+    "node --check sw.js",
+    "zip integrity"
+  ]
+}

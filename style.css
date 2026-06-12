@@ -2798,7 +2798,7 @@ nav.setup-links {
 }
 
 
-/* CronoGol v2.1.6 — Remote snapshot apply draft */
+/* CronoGol v2.1.7 — Remote snapshot apply draft */
 .online-foundation-panel.is-backend-off{
   border-color:rgba(230,139,29,.55);
   background:linear-gradient(180deg,rgba(230,139,29,.045),rgba(7,12,14,.92));
@@ -2823,7 +2823,7 @@ nav.setup-links {
   box-shadow:0 5px 0 #020303, inset 0 0 0 2px rgba(230,139,29,.4);
 }
 
-/* CronoGol v2.1.6 — Online last action sync */
+/* CronoGol v2.1.7 — Online last action sync */
 .online-last-event{
   display:block;
   margin-top:8px;
@@ -2835,4 +2835,86 @@ nav.setup-links {
 .online-last-event.has-online-event{
   color:var(--cg-orange, #e58a10);
   opacity:1;
+}
+
+/* CronoGol v2.1.7 — Online Remote Action UX */
+.online-remote-action-toast{
+  position:fixed;
+  left:50%;
+  top:18px;
+  transform:translateX(-50%);
+  z-index:120;
+  min-width:min(360px, calc(100vw - 32px));
+  max-width:420px;
+  padding:12px 16px;
+  border:3px solid var(--line);
+  background:linear-gradient(180deg,rgba(8,14,16,.98),rgba(2,4,5,.98));
+  box-shadow:0 12px 30px rgba(0,0,0,.48), inset 0 0 0 1px rgba(230,139,29,.18);
+  text-align:center;
+  animation:cgRemoteActionIn .22s ease-out both;
+}
+.online-remote-action-toast .online-remote-kicker{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+  letter-spacing:1.6px;
+  text-transform:uppercase;
+  margin-bottom:5px;
+}
+.online-remote-action-toast strong{
+  display:block;
+  color:var(--orange);
+  font-size:17px;
+  letter-spacing:1.4px;
+}
+.online-remote-action-toast em{
+  display:block;
+  color:var(--lcd);
+  font-style:normal;
+  font-size:22px;
+  letter-spacing:2px;
+  margin-top:4px;
+}
+.online-remote-action-toast small{
+  display:block;
+  color:var(--text);
+  margin-top:6px;
+  opacity:.9;
+}
+.online-remote-goal{
+  border-color:rgba(41,185,110,.9);
+  box-shadow:0 12px 30px rgba(0,0,0,.5), 0 0 18px rgba(41,185,110,.22);
+}
+.online-remote-yellow{
+  border-color:rgba(230,185,60,.9);
+}
+.online-remote-red{
+  border-color:rgba(205,64,64,.95);
+}
+.online-foundation-panel.has-remote-action-pulse{
+  animation:cgOnlinePanelPulse 1.3s ease-out both;
+}
+@keyframes cgRemoteActionIn{
+  0%{opacity:0; transform:translate(-50%,-14px) scale(.98);}
+  100%{opacity:1; transform:translate(-50%,0) scale(1);}
+}
+@keyframes cgOnlinePanelPulse{
+  0%{box-shadow:0 0 0 rgba(230,139,29,0);}
+  35%{box-shadow:0 0 18px rgba(230,139,29,.32);}
+  100%{box-shadow:0 0 0 rgba(230,139,29,0);}
+}
+@media (max-width:520px){
+  .online-remote-action-toast{
+    top:12px;
+    padding:10px 12px;
+  }
+  .online-remote-action-toast em{
+    font-size:18px;
+  }
+}
+@media (prefers-reduced-motion: reduce){
+  .online-remote-action-toast,
+  .online-foundation-panel.has-remote-action-pulse{
+    animation:none !important;
+  }
 }

@@ -1,1 +1,1 @@
-CronoGol v2.1.6 — Online Last Action Sync
+CronoGol v2.1.7 — Online Remote Action UX
