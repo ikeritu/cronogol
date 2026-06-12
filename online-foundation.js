@@ -1,12 +1,13 @@
 /*
 ===============================================================================
-CronoGol v2.1.8 — Online Toast UX Fix
+CronoGol v2.1.9 — Online Room Lifecycle UX
 ===============================================================================
 Integración segura de salas privadas con Supabase y primera sincronización básica de estado de partido.
 
 Importante:
 - Si supabase-config.js tiene enabled:false, la UI comunica modo demo local y no permite iniciar online real.
 - Si enabled:true y hay url/anonKey válidos, Crear sala / Unirse consultan Supabase.
+- Añade ciclo de vida de sala: salir/cerrar sala, limpiar sala local activa y evitar salas demo colgadas.
 - Sincroniza estado básico de sala waiting/ready/playing/finished mediante Supabase Realtime.
 - Publica snapshot básico del partido online: marcador, turno, parte, modo y finalizado.
 - Define autoridad de turno por rol: anfitrión controla Jugador 1 y rival controla Jugador 2.
@@ -19,7 +20,7 @@ Importante:
 (function(){
   "use strict";
 
-  const CG_ONLINE_VERSION = "2.1.8";
+  const CG_ONLINE_VERSION = "2.1.9";
   const ROOM_CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   const ROOMS_TABLE = "cronogol_rooms";
   let supabaseClient = null;
@@ -335,6 +336,41 @@ Importante:
     return { ok: true, data, roomCode: clean };
   }
 
+  async function closeRoomBackend(roomCode, options = {}){
+    const client = getSupabaseClient();
+    const clean = normalizeRoomCode(roomCode);
+    if(!client) return { ok: false, offline: true, reason: "backend-not-configured" };
+    if(!isValidRoomCode(clean)) return { ok: false, reason: "invalid-code" };
+
+    const { data: room, error: selectError } = await client
+      .from(ROOMS_TABLE)
+      .select("room_code,status,room_state")
+      .eq("room_code", clean)
+      .maybeSingle();
+
+    if(selectError) return { ok: false, error: selectError, reason: "select-room-failed" };
+    if(!room) return { ok: false, reason: "room-not-found" };
+
+    const nextState = Object.assign({}, room.room_state || {}, {
+      phase: "room_closed",
+      closedBy: options.role || getActiveOnlineRoom()?.role || "local",
+      closedAt: new Date().toISOString()
+    });
+
+    const { data, error } = await client
+      .from(ROOMS_TABLE)
+      .update({
+        status: "closed",
+        room_state: nextState
+      })
+      .eq("room_code", clean)
+      .select("room_code,status,room_state,updated_at")
+      .single();
+
+    if(error) return { ok: false, error, reason: "close-room-failed" };
+    return { ok: true, data, roomCode: clean };
+  }
+
   function matchSignature(snapshot){
     if(!snapshot || !Array.isArray(snapshot.players)) return "";
     const p = snapshot.players.map(player => `${player.goals}:${player.skipTurns}`).join("|");
@@ -516,6 +552,7 @@ Importante:
     const createBtn = document.getElementById("cg-online-create-btn");
     const copyBtn = document.getElementById("cg-online-copy-btn");
     const joinBtn = document.getElementById("cg-online-join-btn");
+    const leaveBtn = document.getElementById("cg-online-leave-btn");
     const codeInput = document.getElementById("cg-online-code-input");
     const roomCodeEl = document.getElementById("cg-online-room-code");
     const roomLabel = document.getElementById("cg-online-room-label");
@@ -550,6 +587,24 @@ Importante:
     setStatus(backendReady ? "Supabase listo · salas privadas con sincronización básica y autoridad de turnos." : "Modo demo local · Supabase no configurado.");
     updateLastEventUi(null);
 
+    function clearRoomLocalCache(){
+      try{ localStorage.removeItem("cronogol_online_room_draft"); }catch(e){}
+      try{ localStorage.removeItem("cronogol_online_join_code_draft"); }catch(e){}
+      try{ localStorage.removeItem("cronogol_online_last_match_snapshot"); }catch(e){}
+      try{ localStorage.removeItem("cronogol_online_remote_match_snapshot"); }catch(e){}
+      clearActiveOnlineRoom();
+      stopRoomRealtime();
+      lastPublishedMatchSignature = "";
+      lastPublishAt = 0;
+    }
+
+    function resetRoomUi(message){
+      showRoomCode("");
+      updateLastEventUi(null);
+      if(codeInput) codeInput.value = "";
+      setStatus(message || (backendReady ? "Supabase listo · crea o únete a una sala privada." : "Modo demo local · Supabase no configurado."));
+    }
+
     function currentRoomCode(){
       const value = roomCodeEl ? roomCodeEl.textContent : "";
       const code = normalizeRoomCode(value || "");
@@ -560,6 +615,7 @@ Importante:
       const clean = normalizeRoomCode(code || "");
       if(roomCodeEl) roomCodeEl.textContent = clean || "— — — — — —";
       if(copyBtn) copyBtn.disabled = !clean;
+      if(leaveBtn) leaveBtn.disabled = !clean;
       if(createBtn) createBtn.textContent = clean
         ? (backendReady ? "Nueva sala" : "Nueva sala demo")
         : (backendReady ? "Crear sala" : "Crear sala demo");
@@ -587,7 +643,8 @@ Importante:
           if(applyResult && applyResult.applied) safeToast("Estado online recibido.");
         },
         onRoomClosed(){
-          setStatus(`Sala ${clean} cerrada.`);
+          clearRoomLocalCache();
+          resetRoomUi(`Sala ${clean} cerrada.`);
         }
       });
       if(!result.ok) console.warn("CronoGol realtime subscription skipped", result.reason);
@@ -598,8 +655,9 @@ Importante:
       if(existingDraft && existingDraft.roomCode){
         showRoomCode(existingDraft.roomCode);
         setStatus(backendReady
-          ? `Sala ${normalizeRoomCode(existingDraft.roomCode)} guardada en este dispositivo · Realtime listo al crear nueva sala.`
+          ? `Sala ${normalizeRoomCode(existingDraft.roomCode)} guardada en este dispositivo · Realtime listo.`
           : `Código local ${normalizeRoomCode(existingDraft.roomCode)} · configura Supabase para sincronizar online.`);
+        if(backendReady && getActiveOnlineRoom()) startRealtimeFor(existingDraft.roomCode);
       }else{
         showRoomCode("");
       }
@@ -682,6 +740,38 @@ Importante:
           setStatus(`Código ${code} copiado · compártelo con tu rival.`);
         }catch(e){
           safeToast(`Código de sala: ${code}`);
+        }
+      });
+    }
+
+    if(leaveBtn){
+      leaveBtn.addEventListener("click", async () => {
+        const active = getActiveOnlineRoom();
+        const code = active ? active.roomCode : currentRoomCode();
+        if(!code){
+          safeToast("No hay sala activa.");
+          return;
+        }
+        leaveBtn.disabled = true;
+        try{
+          if(hasBackendConfig() && active){
+            setStatus(`Cerrando sala ${code}...`);
+            const result = await closeRoomBackend(code, { role: active.role });
+            if(result.ok){
+              safeToast(`Sala ${code} cerrada.`);
+              clearRoomLocalCache();
+              resetRoomUi("Sala cerrada · puedes crear o unirte a otra sala.");
+              return;
+            }
+            console.warn("CronoGol close room failed", result.error || result.reason);
+            safeToast("No se pudo cerrar online. Se limpia en este dispositivo.");
+          }else{
+            safeToast(`Sala local ${code} eliminada.`);
+          }
+          clearRoomLocalCache();
+          resetRoomUi(backendReady ? "Sala eliminada de este dispositivo." : "Sala demo eliminada · Supabase no configurado.");
+        }finally{
+          leaveBtn.disabled = !currentRoomCode();
         }
       });
     }
@@ -771,6 +861,7 @@ Importante:
     updateTurnAuthorityUi,
     canStartOnlineMatch,
     updateRoomMatchState,
+    closeRoomBackend,
     publishLocalMatchState,
     summarizeLastEvent,
     updateLastEventUi,

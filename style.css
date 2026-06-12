@@ -2921,7 +2921,7 @@ nav.setup-links {
 }
 
 
-/* CronoGol v2.1.8 — Online Toast UX Fix */
+/* CronoGol v2.1.9 — Online Room Lifecycle UX */
 @media (max-width:520px){
   .toast{
     max-width:calc(100vw - 28px);
@@ -2931,4 +2931,22 @@ nav.setup-links {
   .toast.cg-online-temp-toast{
     font-size:11px;
   }
+}
+
+
+/* CronoGol v2.1.9 — Online Room Lifecycle UX */
+.online-room-actions{
+  max-width:360px;
+}
+#cg-online-leave-btn{
+  grid-column:1 / -1;
+  border-color:rgba(255,125,125,.75);
+  color:#ffb1b1;
+}
+#cg-online-leave-btn:not(:disabled):hover{
+  background:rgba(180,45,45,.15);
+  border-color:#ff8f8f;
+}
+@media(max-width:520px){
+  #cg-online-leave-btn{grid-column:auto}
 }

@@ -1,4 +1,4 @@
-## v2.1.8 — Online Toast UX Fix
+## v2.1.9 — Online Room Lifecycle UX
 
 - Aplica snapshots remotos básicos recibidos por Supabase Realtime.
 - El segundo dispositivo puede reflejar marcador, turno, parte, nombres, sanciones y estado finalizado.
@@ -710,3 +710,11 @@ Primera capa Realtime segura para salas privadas:
 - No sincroniza todavía marcador completo, turnos ni tiradas.
 - Mantiene fallback local si Supabase no está configurado.
 
+
+
+## CronoGol v2.1.9 — Online Room Lifecycle UX
+
+- Añade botón **Salir de sala** en el panel online.
+- Permite cerrar salas reales en Supabase marcándolas como `closed`.
+- Limpia sala activa, borradores locales y snapshots al salir.
+- Mantiene el juego local intacto.

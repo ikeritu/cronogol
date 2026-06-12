@@ -1,4 +1,4 @@
-## v2.1.8 — Online Toast UX Fix
+## v2.1.9 — Online Room Lifecycle UX
 
 - Ajustado el aviso flotante para que no se salga del ancho en móvil.
 - Acortado el mensaje de online pendiente.
@@ -6,7 +6,7 @@
 - Sin cambios en reglas, lógica local ni configuración Supabase.
 
 
-## v2.1.8 — Online Toast UX Fix
+## v2.1.9 — Online Room Lifecycle UX
 
 - Añadido aviso visual flotante para acciones remotas online.
 - Añadido pulso suave en el panel V2 Online al recibir acción del rival.
@@ -620,3 +620,10 @@ Se ha mantenido el orden de la cascada CSS para evitar regresiones visuales.
 - Máquina.
 - Modo rápido.
 - Monetización funcional.
+
+## CronoGol v2.1.9 — Online Room Lifecycle UX
+
+- Añade botón **Salir de sala** en el panel online.
+- Permite cerrar salas reales en Supabase marcándolas como `closed`.
+- Limpia sala activa, borradores locales y snapshots al salir.
+- Mantiene el juego local intacto.
