@@ -1,3 +1,11 @@
+## v2.1.5 — Remote Snapshot Apply Draft
+
+- Aplica snapshots remotos básicos recibidos por Supabase Realtime.
+- El segundo dispositivo puede reflejar marcador, turno, parte, nombres, sanciones y estado finalizado.
+- Evita re-aplicar el snapshot publicado por el propio dispositivo.
+- Mantiene intacto el juego local y el modo demo sin Supabase.
+- Todavía no replica la animación completa de cada tirada ni incluye resolución avanzada de conflictos.
+
 ## CronoGol
 
 ## v2.1.4 — Online Setup State Clarity

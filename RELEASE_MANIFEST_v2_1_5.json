@@ -1,0 +1,19 @@
+{
+  "version": "2.1.5",
+  "name": "CronoGol v2.1.5 — Remote Snapshot Apply Draft",
+  "base": "v2.1.4 — Online Setup State Clarity",
+  "date": "2026-06-12",
+  "changes": [
+    "Adds remote snapshot application from Supabase Realtime room updates.",
+    "Reflects remote score, turn, half, player names, sanctions and finished state.",
+    "Ignores own-published snapshots to avoid echo loops.",
+    "Keeps local game and Supabase-disabled demo mode unchanged."
+  ],
+  "validation": [
+    "node --check game.js",
+    "node --check online-foundation.js",
+    "node --check supabase-config.js",
+    "node --check sw.js",
+    "zip integrity checked"
+  ]
+}

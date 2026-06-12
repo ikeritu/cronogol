@@ -257,6 +257,7 @@ function setupLanguageSelector(){
 let timerInterval = null, matchClockInterval = null, timerStartTime = 0, currentElapsedMs = 0, stopwatchBaseMs = 0, matchStartTime = 0;
 let machineTurnTimeout = null, machineStopTimeout = null, machineSpecialTurnTimeout = null, machineSpecialStopTimeout = null;
 let pendingSpecial = null, penaltyShootout = null, audioCtx = null, versionTaps = 0;
+let suppressOnlinePublish = false, lastAppliedRemoteSnapshotSignature = "";
 
 const gameState = {
   players: [{name:"Jugador 1",goals:0,skipTurns:0},{name:"Jugador 2",goals:0,skipTurns:0}],
@@ -1213,12 +1214,92 @@ function maybeMachineTurn(){
 function getMachineStopDelay(){ return gameState.machineLevel==="easy"?randomInt(600,1800):gameState.machineLevel==="hard"?randomInt(900,3200):randomInt(800,2500); }
 function getMachineForcedValue(){ if(isFastMode()) return null; if(gameState.forceEvents){ if(gameState.half===1&&gameState.firstHalfTurns>=gameState.machineForceHalfAt) return 45; if(gameState.half===2&&gameState.secondHalfTurns>=gameState.machineForceEndAt) return 90; } if(gameState.machineLevel==="hard"){ const r=Math.random(); if(r<.025)return 0; if(r<.055)return [96,97,98,99][randomInt(0,3)]; } return null; }
 function startMatchClock(){ clearInterval(matchClockInterval); matchClockInterval=setInterval(()=>{ const sec=Math.floor((Date.now()-matchStartTime)/1000); matchClockLabel.textContent=`${pad(Math.floor(sec/60))}:${pad(sec%60)}`; /* En modo rápido v1.6.1 no hay límite de 5 minutos: gana quien llega a 6 con 2 de ventaja. */ },1000); }
-function updateUI(){ p1Label.textContent=gameState.players[0].name.toUpperCase(); p2Label.textContent=gameState.players[1].name.toUpperCase(); p1Score.textContent=gameState.players[0].goals; p2Score.textContent=gameState.players[1].goals; p1Sanction.textContent=gameState.players[0].skipTurns?`Sanción: ${gameState.players[0].skipTurns}`:""; p2Sanction.textContent=gameState.players[1].skipTurns?`Sanción: ${gameState.players[1].skipTurns}`:""; halfLabel.textContent=isFastMode()?"MODO RÁPIDO":(gameState.half===1?"1ª PARTE":"2ª PARTE"); turnLabel.textContent=currentPlayer().name; team0.classList.toggle("active",gameState.currentPlayerIndex===0); team1.classList.toggle("active",gameState.currentPlayerIndex===1); statTurns.textContent=gameState.totalTurns; statGoals.textContent=gameState.stats.goals; statWoodwork.textContent=gameState.stats.woodwork; statCards.textContent=gameState.stats.cards; statSpecials.textContent=gameState.stats.specials; updateShootoutUI(); renderLog(); if(window.CronoGolOnline && typeof window.CronoGolOnline.publishLocalMatchState === "function"){ window.CronoGolOnline.publishLocalMatchState(gameState); } refreshOnlineTurnAuthority(); }
+function updateUI(){ p1Label.textContent=gameState.players[0].name.toUpperCase(); p2Label.textContent=gameState.players[1].name.toUpperCase(); p1Score.textContent=gameState.players[0].goals; p2Score.textContent=gameState.players[1].goals; p1Sanction.textContent=gameState.players[0].skipTurns?`Sanción: ${gameState.players[0].skipTurns}`:""; p2Sanction.textContent=gameState.players[1].skipTurns?`Sanción: ${gameState.players[1].skipTurns}`:""; halfLabel.textContent=isFastMode()?"MODO RÁPIDO":(gameState.half===1?"1ª PARTE":"2ª PARTE"); turnLabel.textContent=currentPlayer().name; team0.classList.toggle("active",gameState.currentPlayerIndex===0); team1.classList.toggle("active",gameState.currentPlayerIndex===1); statTurns.textContent=gameState.totalTurns; statGoals.textContent=gameState.stats.goals; statWoodwork.textContent=gameState.stats.woodwork; statCards.textContent=gameState.stats.cards; statSpecials.textContent=gameState.stats.specials; updateShootoutUI(); renderLog(); if(!suppressOnlinePublish && window.CronoGolOnline && typeof window.CronoGolOnline.publishLocalMatchState === "function"){ window.CronoGolOnline.publishLocalMatchState(gameState); } refreshOnlineTurnAuthority(); }
 function updateShootoutUI(){ if(!penaltyShootout){shootoutPanel.classList.add("hidden");return;} shootoutPanel.classList.remove("hidden"); shootoutP1Name.textContent=gameState.players[0].name; shootoutP2Name.textContent=gameState.players[1].name; shootoutP1.textContent=icons(penaltyShootout.shots[0]); shootoutP2.textContent=icons(penaltyShootout.shots[1]); }
 function icons(shots){ const i=shots.map(s=>s?"✅":"❌"); while(i.length<5)i.push("⬜"); return i.join(" "); }
 function setEvent(title,msg,cls){ eventTitle.textContent=title; messageLabel.textContent=msg; eventCard.className=`event-card event-${cls}`; }
 function addLog(t){ gameState.log.unshift(t); if(gameState.log.length>50) gameState.log.pop(); renderLog(); }
 function renderLog(){ gameLog.innerHTML=""; gameState.log.forEach(x=>{ const li=document.createElement("li"); li.textContent=x; gameLog.appendChild(li); }); }
+
+function remoteSnapshotSignature(snapshot){
+  try{
+    if(!snapshot || !Array.isArray(snapshot.players)) return "";
+    const players = snapshot.players.map(p => `${Number(p.goals || 0)}:${Number(p.skipTurns || 0)}`).join("|");
+    return [snapshot.matchEnded ? 1 : 0, snapshot.half || 1, snapshot.currentPlayerIndex || 0, snapshot.totalTurns || 0, players, snapshot.updatedAt || ""].join("#");
+  }catch(e){ return ""; }
+}
+
+function applyRemoteOnlineSnapshot(snapshot, meta = {}){
+  if(!snapshot || !Array.isArray(snapshot.players) || snapshot.players.length < 2) return { ok:false, reason:"invalid-snapshot" };
+  if(snapshot.gameMode && snapshot.gameMode !== "online") return { ok:false, reason:"not-online-snapshot" };
+
+  const active = window.CronoGolOnline && typeof window.CronoGolOnline.getActiveOnlineRoom === "function"
+    ? window.CronoGolOnline.getActiveOnlineRoom()
+    : null;
+  if(active && meta.publisherRole && active.role === meta.publisherRole){
+    return { ok:true, skipped:true, reason:"own-snapshot" };
+  }
+
+  const signature = remoteSnapshotSignature(snapshot);
+  if(signature && signature === lastAppliedRemoteSnapshotSignature){
+    return { ok:true, skipped:true, reason:"unchanged" };
+  }
+  lastAppliedRemoteSnapshotSignature = signature;
+
+  suppressOnlinePublish = true;
+  try{
+    clearInterval(timerInterval);
+    timerInterval = null;
+    gameState.isRunning = false;
+    if(mainActionBtn){
+      mainActionBtn.textContent = safeCgText("start", "START");
+      mainActionBtn.classList.remove("stop");
+    }
+
+    const p0 = snapshot.players[0] || {};
+    const p1 = snapshot.players[1] || {};
+    gameState.players = [
+      { name: String(p0.name || "Jugador 1").slice(0,24), goals: Number(p0.goals || 0), skipTurns: Number(p0.skipTurns || 0) },
+      { name: String(p1.name || "Jugador 2").slice(0,24), goals: Number(p1.goals || 0), skipTurns: Number(p1.skipTurns || 0) }
+    ];
+    gameState.currentPlayerIndex = Number(snapshot.currentPlayerIndex || 0) === 1 ? 1 : 0;
+    gameState.half = Number(snapshot.half || 1) === 2 ? 2 : 1;
+    gameState.matchMode = snapshot.matchMode || gameState.matchMode || "classic";
+    gameState.gameMode = "online";
+    gameState.matchEnded = Boolean(snapshot.matchEnded);
+    gameState.totalTurns = Number(snapshot.totalTurns || 0);
+    gameState.stats = Object.assign({}, gameState.stats || {}, snapshot.stats || {});
+
+    pendingSpecial = null;
+    penaltyShootout = null;
+    currentElapsedMs = 0;
+    stopwatchBaseMs = 0;
+    timerDisplay.textContent = "00:00:00";
+    lastTwoDisplay.textContent = "--";
+
+    setupScreen.classList.remove("active");
+    gameScreen.classList.add("active");
+    closeModal();
+    closeSideMenu();
+
+    const title = gameState.matchEnded ? "FINAL ONLINE" : "ONLINE";
+    const msg = gameState.matchEnded
+      ? "Partida sincronizada desde la sala."
+      : `Estado recibido · turno de ${currentPlayer().name}.`;
+    setEvent(title, msg, gameState.matchEnded ? "goal" : "neutral");
+    addLog(gameState.matchEnded ? "Estado online final recibido." : `Estado online recibido: turno de ${currentPlayer().name}.`);
+    updateUI();
+    syncActionControls();
+    return { ok:true, applied:true };
+  }catch(error){
+    console.warn("CronoGol remote snapshot apply failed", error);
+    return { ok:false, reason:"apply-failed", error };
+  }finally{
+    suppressOnlinePublish = false;
+  }
+}
+
+window.CronoGolApplyRemoteSnapshot = applyRemoteOnlineSnapshot;
 function confirmReset(){ showModal("Reiniciar partido","¿Seguro que quieres reiniciar?", "", [{text:"SÍ, REINICIAR",action:resetToSetup},{text:"CANCELAR",action:closeModal}]); }
 function resetToSetup(){ clearInterval(timerInterval); clearInterval(matchClockInterval); currentElapsedMs=0; stopwatchBaseMs=0; setupScreen.classList.add("active"); gameScreen.classList.remove("active"); closeModal(); sideMenu.classList.add("hidden"); }
 function showModal(t,txt,html,actions){ modalTitle.textContent=t; modalText.textContent=txt; modalExtra.innerHTML=html||""; modalActions.innerHTML=""; actions.forEach(a=>{ const b=document.createElement("button"); b.textContent=a.text; b.onclick=a.action; modalActions.appendChild(b); }); modalScreen.classList.remove("hidden"); }

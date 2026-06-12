@@ -1,6 +1,6 @@
 /*
 ===============================================================================
-CronoGol v2.1.4 — Online Setup State Clarity
+CronoGol v2.1.5 — Remote Snapshot Apply Draft
 ===============================================================================
 Integración segura de salas privadas con Supabase y primera sincronización básica de estado de partido.
 
@@ -10,14 +10,15 @@ Importante:
 - Sincroniza estado básico de sala waiting/ready/playing/finished mediante Supabase Realtime.
 - Publica snapshot básico del partido online: marcador, turno, parte, modo y finalizado.
 - Define autoridad de turno por rol: anfitrión controla Jugador 1 y rival controla Jugador 2.
-- Todavía no replica tiradas remotas completas ni aplica snapshots en pantalla.
+- Aplica snapshots remotos básicos en pantalla: marcador, turno, parte, estado y nombres.
+- Todavía no replica la animación completa de cada tirada ni resuelve conflictos avanzados.
 - Mantiene el juego local intacto.
 ===============================================================================
 */
 (function(){
   "use strict";
 
-  const CG_ONLINE_VERSION = "2.1.4";
+  const CG_ONLINE_VERSION = "2.1.5";
   const ROOM_CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   const ROOMS_TABLE = "cronogol_rooms";
   let supabaseClient = null;
@@ -375,6 +376,40 @@ Importante:
   }
 
 
+  function remoteSnapshotPublisherRole(room){
+    return room && room.room_state ? String(room.room_state.lastPublisherRole || "") : "";
+  }
+
+  function applyRemoteSnapshotFromRoom(room){
+    const snapshot = room && room.room_state && room.room_state.matchSnapshot;
+    if(!snapshot) return { ok: false, reason: "no-snapshot" };
+    const active = getActiveOnlineRoom();
+    const publisherRole = remoteSnapshotPublisherRole(room);
+
+    // Evita re-aplicar al mismo dispositivo el estado que acaba de publicar.
+    if(active && publisherRole && publisherRole === active.role){
+      return { ok: true, skipped: true, reason: "own-snapshot" };
+    }
+
+    try{
+      localStorage.setItem("cronogol_online_remote_match_snapshot", JSON.stringify({
+        roomCode: normalizeRoomCode(room && room.room_code || activeRealtimeRoomCode || ""),
+        publisherRole,
+        receivedAt: new Date().toISOString(),
+        snapshot
+      }));
+    }catch(e){}
+
+    if(typeof window.CronoGolApplyRemoteSnapshot === "function"){
+      return window.CronoGolApplyRemoteSnapshot(snapshot, {
+        roomCode: normalizeRoomCode(room && room.room_code || activeRealtimeRoomCode || ""),
+        publisherRole,
+        roomStatus: room && room.status
+      }) || { ok: true, applied: true };
+    }
+    return { ok: false, reason: "apply-function-missing" };
+  }
+
   function describeRoomStatus(room){
     const code = normalizeRoomCode(room && room.room_code || activeRealtimeRoomCode || "");
     const host = String(room && room.host_name || "Jugador 1").slice(0, 24);
@@ -518,11 +553,14 @@ Importante:
           if(statusValue === "TIMED_OUT") setStatus(`Sala ${clean} creada, pero Realtime tarda en responder.`);
         },
         onRoomChange(room){
-          setStatus(describeRoomStatus(room));
-          if(room && room.status === "ready") safeToast("Rival conectado a la sala.");
-          if(room && room.status === "playing" && room.room_state && room.room_state.matchSnapshot){
-            try{ localStorage.setItem("cronogol_online_remote_match_snapshot", JSON.stringify(room.room_state.matchSnapshot)); }catch(e){}
+          const description = describeRoomStatus(room);
+          let applyResult = null;
+          if(room && (room.status === "playing" || room.status === "finished") && room.room_state && room.room_state.matchSnapshot){
+            applyResult = applyRemoteSnapshotFromRoom(room);
           }
+          setStatus(applyResult && applyResult.applied ? `${description} · pantalla sincronizada.` : description);
+          if(room && room.status === "ready") safeToast("Rival conectado a la sala.");
+          if(applyResult && applyResult.applied) safeToast("Estado online recibido.");
         },
         onRoomClosed(){
           setStatus(`Sala ${clean} cerrada.`);
@@ -713,6 +751,7 @@ Importante:
     createRoomBackend,
     joinRoomBackend,
     describeRoomStatus,
+    applyRemoteSnapshotFromRoom,
     subscribeRoomRealtime,
     stopRoomRealtime,
     getOnlineStatus,

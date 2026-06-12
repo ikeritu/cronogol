@@ -1,1 +1,1 @@
-CronoGol v2.1.4 — Online Setup State Clarity
+CronoGol v2.1.5 — Remote Snapshot Apply Draft
