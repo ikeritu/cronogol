@@ -1,6 +1,6 @@
 /*
 ===============================================================================
-CronoGol v2.1.7 — Online Remote Action UX
+CronoGol v2.1.8 — Online Toast UX Fix
 ===============================================================================
 Integración segura de salas privadas con Supabase y primera sincronización básica de estado de partido.
 
@@ -19,7 +19,7 @@ Importante:
 (function(){
   "use strict";
 
-  const CG_ONLINE_VERSION = "2.1.7";
+  const CG_ONLINE_VERSION = "2.1.8";
   const ROOM_CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   const ROOMS_TABLE = "cronogol_rooms";
   let supabaseClient = null;

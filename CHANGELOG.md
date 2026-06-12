@@ -1,5 +1,12 @@
+## v2.1.8 — Online Toast UX Fix
 
-## v2.1.7 — Online Remote Action UX
+- Ajustado el aviso flotante para que no se salga del ancho en móvil.
+- Acortado el mensaje de online pendiente.
+- Añadido estilo discreto para avisos temporales de online.
+- Sin cambios en reglas, lógica local ni configuración Supabase.
+
+
+## v2.1.8 — Online Toast UX Fix
 
 - Añadido aviso visual flotante para acciones remotas online.
 - Añadido pulso suave en el panel V2 Online al recibir acción del rival.

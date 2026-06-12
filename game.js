@@ -2351,7 +2351,7 @@ function startMatch(){
     const backendReady = Boolean(window.CronoGolOnline && typeof window.CronoGolOnline.backendEnabled === "function" && window.CronoGolOnline.backendEnabled());
     const canStartOnline = Boolean(window.CronoGolOnline && typeof window.CronoGolOnline.canStartOnlineMatch === "function" && window.CronoGolOnline.canStartOnlineMatch());
     if(!backendReady){
-      showToast(currentLang === "en" ? "Online is in preparation. Configure Supabase to enable private rooms." : "Online en preparación: configura Supabase para activar salas privadas.");
+      showToast(currentLang === "en" ? "Online pending · Configure Supabase" : "Online pendiente · Configura Supabase");
       return;
     }
     if(!canStartOnline){
