@@ -11,8 +11,8 @@
   <meta property="og:image" content="https://cronogol.es/og-cronogol.png" />
   <link rel="icon" href="favicon.png" type="image/png" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-  <title>CronoGol v2.1.1</title>
-  <link rel="stylesheet" href="style.css?v=2.1.1" />
+  <title>CronoGol v2.1.2</title>
+  <link rel="stylesheet" href="style.css?v=2.1.2" />
   <link rel="manifest" href="site.webmanifest" />
 </head>
 <body>
@@ -108,7 +108,13 @@
             <span class="tag">V2 ONLINE</span>
             <strong>Lobby de sala privada</strong>
           </div>
-          <p>Lobby sincronizado con Supabase. Crea una sala, comparte el código y espera rival. No puedes unirte a tu propia sala desde el mismo dispositivo.</p>
+
+          <div class="online-foundation-actions online-primary-actions">
+            <button id="cg-online-create-btn" type="button">Crear sala</button>
+            <button id="cg-online-refresh-btn" type="button">Actualizar lobby</button>
+          </div>
+
+          <p>Online en pruebas: crea una sala, comparte el código y espera rival.</p>
 
           <div class="online-room-display" aria-live="polite">
             <span>Código de sala</span>
@@ -116,14 +122,18 @@
           </div>
 
           <div class="online-lobby-card" id="cg-online-lobby-card" aria-live="polite">
-            <div class="online-lobby-row"><span>Anfitrión</span><strong id="cg-online-host-name">—</strong></div>
-            <div class="online-lobby-row"><span>Invitado</span><strong id="cg-online-guest-name">Esperando rival</strong></div>
-            <div class="online-lobby-row"><span>Estado</span><strong id="cg-online-room-state">Sin sala</strong></div>
-          </div>
-
-          <div class="online-foundation-actions">
-            <button id="cg-online-create-btn" type="button">Crear sala</button>
-            <button id="cg-online-refresh-btn" type="button">Actualizar lobby</button>
+            <div class="online-lobby-row">
+              <span>Anfitrión</span>
+              <strong id="cg-online-host-name">—</strong>
+            </div>
+            <div class="online-lobby-row">
+              <span>Invitado</span>
+              <strong id="cg-online-guest-name">Esperando rival</strong>
+            </div>
+            <div class="online-lobby-row">
+              <span>Estado</span>
+              <strong id="cg-online-room-state">Sin sala</strong>
+            </div>
           </div>
 
           <label class="online-join-label" for="cg-online-join-code">Unirse a una sala</label>
@@ -132,7 +142,9 @@
             <button id="cg-online-join-btn" type="button">Unirse</button>
           </div>
 
-          <small id="cg-online-status">Lobby online listo · protegido contra auto-unirse a la propia sala.</small>
+          <button id="cg-online-clear-btn" class="online-clear-btn" type="button">Limpiar sala local</button>
+
+          <small id="cg-online-status">Lobby online listo · crea una sala o únete con código.</small>
         </section>
 
         <section class="local-stats-panel" aria-label="Estadísticas locales de CronoGol">
@@ -157,7 +169,7 @@
           <span>WATER RESIST</span>
           <span>FOOTBALL CHRONO</span>
         </div>
-        <footer class="version-footer">CronoGol v2.1.1 · Partidas en este dispositivo: <strong id="local-matches-count">0</strong><br><span class="copyright-footer">© 2026 CronoGol. Juego original creado por Iker Ituarte. Todos los derechos reservados.</span></footer>
+        <footer class="version-footer">CronoGol v2.1.2 · Partidas en este dispositivo: <strong id="local-matches-count">0</strong><br><span class="copyright-footer">© 2026 CronoGol. Juego original creado por Iker Ituarte. Todos los derechos reservados.</span></footer>
       </div>
     </section>
 
@@ -289,8 +301,8 @@
       </div>
     </section>
   </main>
-<script src="online-foundation.js?v=2.1.1"></script>
-<script src="game.js?v=2.1.1"></script>
+<script src="online-foundation.js?v=2.1.2"></script>
+<script src="game.js?v=2.1.2"></script>
 <!-- Cloudflare Web Analytics -->
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7ee638b73aa24300b417a555e67fd1ae"}'></script>
 <!-- End Cloudflare Web Analytics -->

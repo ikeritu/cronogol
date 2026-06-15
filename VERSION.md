@@ -1,1 +1,1 @@
-CronoGol v2.1.1 — Lobby Guardrails
+CronoGol v2.1.2 — Lobby Placeholder & Controls Fix
