@@ -1,4 +1,4 @@
-# CronoGol v2.0.1 — Supabase Private Rooms Draft
+# CronoGol v2.1.0 — Room Lobby Sync
 
 
 ## v2.0.1 — Supabase Private Rooms Draft
@@ -654,3 +654,7 @@ No incluye todavía:
 - partida online;
 - anuncios nuevos;
 - automatización de contenidos.
+
+## v2.1.0 — Room Lobby Sync
+
+Añade lobby sincronizado: anfitrión, invitado, estado, refresco manual y polling suave. El partido completo aún no se sincroniza.
