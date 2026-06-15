@@ -11,8 +11,8 @@
   <meta property="og:image" content="https://cronogol.es/og-cronogol.png" />
   <link rel="icon" href="favicon.png" type="image/png" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-  <title>CronoGol v2.1.9</title>
-  <link rel="stylesheet" href="style.css?v=2.1.9" />
+  <title>CronoGol v2.0.1</title>
+  <link rel="stylesheet" href="style.css?v=2.0.1" />
   <link rel="manifest" href="site.webmanifest" />
 </head>
 <body>
@@ -49,12 +49,10 @@
             <div class="segmented-control" role="group" aria-label="Modo de juego">
               <button type="button" class="segment-btn active" data-target="game-mode" data-value="local" data-i18n="modeLocal"> 1 vs 1</button>
               <button type="button" class="segment-btn" data-target="game-mode" data-value="machine" data-i18n="modeMachine"> 1 vs Máquina</button>
-              <button type="button" class="segment-btn" data-target="game-mode" data-value="online" data-i18n="modeOnline"> Online</button>
             </div>
             <select id="game-mode" class="native-select-hidden" aria-hidden="true" tabindex="-1">
               <option value="local">1 vs 1 local</option>
               <option value="machine">1 vs Máquina</option>
-              <option value="online">Online / Sala privada</option>
             </select>
           </div>
 
@@ -95,32 +93,6 @@
           <button id="start-match-btn" class="main-start-btn" data-i18n="startMatch"> EMPEZAR PARTIDO</button>
         </section>
 
-        <section id="cg-online-foundation-panel" class="online-foundation-panel is-online-hidden" aria-label="Base online CronoGol V2">
-          <div class="online-foundation-header">
-            <span class="tag">V2 ONLINE</span>
-            <strong>Salas privadas</strong>
-          </div>
-          <p id="cg-online-mode-description">Modo online pendiente de configurar. El juego local sigue siendo la versión estable.</p>
-          <div class="online-room-created" aria-live="polite">
-            <span id="cg-online-room-label">Código local de prueba</span>
-            <strong id="cg-online-room-code">— — — — — —</strong>
-          </div>
-          <div class="online-foundation-actions online-room-actions">
-            <button id="cg-online-create-btn" type="button">Crear sala</button>
-            <button id="cg-online-copy-btn" type="button" disabled>Copiar código</button>
-            <button id="cg-online-leave-btn" type="button" disabled>Salir de sala</button>
-          </div>
-          <div class="online-join-box">
-            <label for="cg-online-code-input">Unirse a una sala</label>
-            <div class="online-join-row">
-              <input id="cg-online-code-input" type="text" maxlength="8" inputmode="text" autocomplete="off" spellcheck="false" placeholder="Introduce código" aria-label="Código de sala para unirse">
-              <button id="cg-online-join-btn" type="button">Unirse</button>
-            </div>
-          </div>
-          <small id="cg-online-last-event" class="online-last-event">Última acción online: —</small>
-          <small id="cg-online-status">Modo demo local · Supabase no configurado.</small>
-        </section>
-
         <nav class="setup-links secondary-actions-final setup-actions-polished" aria-label="Acciones secundarias">
           <button id="rules-btn" data-slot="rules" type="button" data-i18n="rules">Reglas</button>
           <a data-slot="modes" href="modos.html" data-i18n="modes">Modos</a>
@@ -130,6 +102,31 @@
           <a data-slot="feedback" href="feedback.html?lang=es" data-i18n="feedback">Feedback</a>
           <button id="support-btn" data-slot="support" class="support-wide-btn support-soft-btn" type="button" data-i18n="supportFull">☕ Apoya CronoGol</button>
         </nav>
+
+        <section class="online-foundation-panel" aria-label="Salas privadas CronoGol V2">
+          <div class="online-foundation-header">
+            <span class="tag">V2 ONLINE</span>
+            <strong>Salas privadas en borrador</strong>
+          </div>
+          <p>Supabase configurado. Primero probamos crear/unirse a sala; la sincronización del partido llegará después.</p>
+
+          <div class="online-room-display" aria-live="polite">
+            <span>Código de sala</span>
+            <strong id="cg-online-room-code">------</strong>
+          </div>
+
+          <div class="online-foundation-actions">
+            <button id="cg-online-create-btn" type="button">Crear sala</button>
+          </div>
+
+          <label class="online-join-label" for="cg-online-join-code">Unirse a una sala</label>
+          <div class="online-join-row">
+            <input id="cg-online-join-code" type="text" inputmode="latin" autocomplete="off" maxlength="8" placeholder="Código" />
+            <button id="cg-online-join-btn" type="button">Unirse</button>
+          </div>
+
+          <small id="cg-online-status">Backend Supabase configurado · pendiente crear tabla SQL.</small>
+        </section>
 
         <section class="local-stats-panel" aria-label="Estadísticas locales de CronoGol">
           <div class="local-stats-header">
@@ -153,7 +150,7 @@
           <span>WATER RESIST</span>
           <span>FOOTBALL CHRONO</span>
         </div>
-        <footer class="version-footer">CronoGol v2.1.9 · Partidas en este dispositivo: <strong id="local-matches-count">0</strong><br><span class="copyright-footer">© 2026 CronoGol. Juego original creado por Iker Ituarte. Todos los derechos reservados.</span></footer>
+        <footer class="version-footer">CronoGol v2.0.1 · Partidas en este dispositivo: <strong id="local-matches-count">0</strong><br><span class="copyright-footer">© 2026 CronoGol. Juego original creado por Iker Ituarte. Todos los derechos reservados.</span></footer>
       </div>
     </section>
 
@@ -285,11 +282,8 @@
       </div>
     </section>
   </main>
-<!-- Supabase se carga de forma segura: si no hay configuración, la V2 online funciona como borrador local. -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-config.js?v=2.1.9"></script>
-<script src="online-foundation.js?v=2.1.9"></script>
-<script src="game.js?v=2.1.9"></script>
+<script src="online-foundation.js?v=2.0.1"></script>
+<script src="game.js?v=2.0.1"></script>
 <!-- Cloudflare Web Analytics -->
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7ee638b73aa24300b417a555e67fd1ae"}'></script>
 <!-- End Cloudflare Web Analytics -->

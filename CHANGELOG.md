@@ -1,42 +1,10 @@
-## v2.1.9 — Online Room Lifecycle UX
-
-- Ajustado el aviso flotante para que no se salga del ancho en móvil.
-- Acortado el mensaje de online pendiente.
-- Añadido estilo discreto para avisos temporales de online.
-- Sin cambios en reglas, lógica local ni configuración Supabase.
-
-
-## v2.1.9 — Online Room Lifecycle UX
-
-- Añadido aviso visual flotante para acciones remotas online.
-- Añadido pulso suave en el panel V2 Online al recibir acción del rival.
-- La acción remota muestra jugador, número, resultado y próximo turno.
-- Sin cambios en reglas, juego local, modo máquina ni Supabase.
-
-## v2.0.3 — Online Mode Visibility
-
-- Oculta el panel V2 Online por defecto.
-- Añade opción `Online` al selector de modo.
-- Muestra el panel de salas privadas solo cuando se selecciona modo online.
-- Reubica el panel debajo de `EMPEZAR PARTIDO` y encima de la navegación secundaria.
-- Mantiene intactos juego local, estadísticas, reglas rápidas y backend pendiente.
-
-## v2.0.2 — Online Panel Clarity
-
-- Sustituido el `prompt()` nativo del navegador por una UI integrada en el panel V2.
-- Añadido campo visual para introducir código de sala.
-- Añadido visor del código creado localmente.
-- Mantiene el backend online desactivado: no sincroniza todavía entre dispositivos.
-- No toca reglas, estadísticas, sonidos ni flujo local.
-- Actualizado cache/versionado a `v2.0.2`.
-
-## v2.0.2 — Online Panel Clarity
+## v2.0.0 — Online Foundation
 
 - Inicio de la rama V2.
 - Añadido `online-foundation.js` con helpers seguros para futura sala online.
 - Añadido panel V2 online en la pantalla inicial.
 - Botones de crear/unirse generan borradores locales, sin backend ni sincronización real.
-- Actualizado cache/versionado a `v2.0.2`.
+- Actualizado cache/versionado a `v2.0.0`.
 - No se modifica la lógica jugable estable de v1.12.3.
 
 ## v1.12.3 — Stats UI Final Polish
@@ -620,10 +588,3 @@ Se ha mantenido el orden de la cascada CSS para evitar regresiones visuales.
 - Máquina.
 - Modo rápido.
 - Monetización funcional.
-
-## CronoGol v2.1.9 — Online Room Lifecycle UX
-
-- Añade botón **Salir de sala** en el panel online.
-- Permite cerrar salas reales en Supabase marcándolas como `closed`.
-- Limpia sala activa, borradores locales y snapshots al salir.
-- Mantiene el juego local intacto.

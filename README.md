@@ -1,59 +1,27 @@
-## v2.1.9 — Online Room Lifecycle UX
-
-- Aplica snapshots remotos básicos recibidos por Supabase Realtime.
-- El segundo dispositivo puede reflejar marcador, turno, parte, nombres, sanciones y estado finalizado.
-- Añade `lastOnlineEvent` para mostrar también la última acción: jugador, número y resultado.
-- El panel online incluye la línea `Última acción online`.
-- Evita re-aplicar el snapshot o evento publicado por el propio dispositivo.
-- Mantiene intacto el juego local y el modo demo sin Supabase.
-- Todavía no replica el cronómetro corriendo en vivo ni incluye resolución avanzada de conflictos.
-
-## CronoGol
-
-## v2.1.4 — Online Setup State Clarity
-
-Pulido de claridad del modo online: si Supabase no está configurado, el botón principal muestra **ONLINE EN PREPARACIÓN**, el código se identifica como local de prueba y el flujo de unirse queda desactivado hasta configurar backend. No modifica juego local, reglas, estadísticas, sonidos ni analítica.
- v2.1.4 — Online Turn Authority Draft
-
-Primera sincronización básica de estado de partido para salas privadas Supabase.
-
-- Mantiene el juego local intacto.
-- Permite empezar partida en modo Online si existe una sala activa creada o unida.
-- Publica en `room_state.matchSnapshot` el marcador, turno, parte, modo, total de tiradas y estado finalizado.
-- Realtime muestra el resumen de marcador en el panel online cuando cambia la sala.
-- Todavía no implementa control autoritativo de turnos, bloqueo remoto ni tiradas sincronizadas completas.
-
-## v2.1.1 — Supabase Realtime Room Status
-
-- El bloque V2 Online queda oculto al entrar.
-- Se añade el modo `Online` al selector de modo.
-- El panel de salas privadas aparece solo al seleccionar `Online`.
-- El panel se mueve debajo de `EMPEZAR PARTIDO` y antes de reglas/modos/historia.
-- No se conecta todavía backend real ni se modifica la lógica local.
-
-# CronoGol v2.1.1 — Online Mode Visibility
-
-## v2.0.2 — Online Panel Clarity
-
-Pulido del panel V2 online antes de conectar backend real.
-
-Cambios principales:
-- el campo “Unirse a una sala” queda vacío por defecto;
-- el placeholder pasa a “Introduce código”;
-- el código de sala creado se muestra separado de la unión a otra sala;
-- se añade botón “Copiar código”;
-- el botón “Crear sala” pasa a “Nueva sala” cuando ya existe una sala local;
-- se aclara el estado: sala local creada, todavía sin sincronización online.
-
-No modifica reglas, estadísticas, sonido, Cloudflare ni la lógica local del partido.
+# CronoGol v2.0.1 — Supabase Private Rooms Draft
 
 
-## v2.0.2 — Online Panel Clarity
+## v2.0.1 — Supabase Private Rooms Draft
 
-Pulido de la primera base V2: el acceso “Unirse con código” ya no usa una ventana nativa del navegador. Ahora el código de sala se introduce dentro del propio panel online, manteniendo la estética CronoGol.
+Esta versión configura Supabase como backend inicial de salas privadas.
 
-El online real sigue sin backend conectado: esta versión prepara la UI y conserva el juego local estable.
+Incluye:
+- URL de Supabase configurada.
+- anon/publishable key pública configurada.
+- Creación de salas en la tabla `cronogol_rooms`.
+- Unión a sala mediante input integrado, sin `prompt()` nativo del navegador.
+- Archivo SQL `SUPABASE_SCHEMA_v2_0_1.sql`.
+- El juego local continúa intacto.
+- La sincronización completa de partido aún no está activada.
 
+Primer paso tras subir:
+1. Abrir Supabase → SQL Editor.
+2. Ejecutar `SUPABASE_SCHEMA_v2_0_1.sql`.
+3. Subir esta versión a GitHub Pages.
+4. Probar `Crear sala`.
+5. Probar `Unirse` con ese código en otro navegador o pestaña.
+
+## v2.0.0 — Online Foundation
 
 Primera versión de la rama V2. Esta versión no activa todavía partidas online reales; prepara una base segura para salas privadas sin romper la V1 estable.
 
@@ -65,7 +33,7 @@ Incluye:
 - snapshot serializable del estado de partido para futura sincronización;
 - panel V2 online en la pantalla inicial;
 - botones de crear/unirse en modo local seguro, sin backend;
-- actualización de versión/cache a `v2.0.2`.
+- actualización de versión/cache a `v2.0.0`.
 
 No incluye todavía:
 
@@ -686,35 +654,3 @@ No incluye todavía:
 - partida online;
 - anuncios nuevos;
 - automatización de contenidos.
-
-## CronoGol v2.1.1 — Supabase Private Rooms
-
-Primera fase de backend para salas privadas.
-
-- Añade `supabase-config.js` como configuración pública segura.
-- Añade `SUPABASE_PRIVATE_ROOMS_SETUP.sql` para crear la tabla `cronogol_rooms`.
-- El botón `Crear sala` puede insertar una sala real en Supabase cuando `enabled:true`.
-- El botón `Unirse` puede buscar una sala existente por código.
-- Si Supabase no está configurado, se mantiene el modo borrador local sin romper la web.
-
-No incluye todavía sincronización de marcador ni partida online real completa.
-
-
-## CronoGol v2.1.1 — Supabase Realtime Room Status
-
-Primera capa Realtime segura para salas privadas:
-
-- Mantiene crear/unirse a sala con Supabase.
-- Añade suscripción Realtime al estado de la sala.
-- El anfitrión puede ver cuando entra el rival sin recargar.
-- No sincroniza todavía marcador completo, turnos ni tiradas.
-- Mantiene fallback local si Supabase no está configurado.
-
-
-
-## CronoGol v2.1.9 — Online Room Lifecycle UX
-
-- Añade botón **Salir de sala** en el panel online.
-- Permite cerrar salas reales en Supabase marcándolas como `closed`.
-- Limpia sala activa, borradores locales y snapshots al salir.
-- Mantiene el juego local intacto.

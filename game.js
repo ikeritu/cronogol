@@ -68,7 +68,6 @@ const I18N = {
     labelPlayer2:"Jugador 2 / Máquina",
     modeLocal:"1 vs 1",
     modeMachine:"1 vs Máquina",
-    modeOnline:"Online",
     durationClassic:"Clásico",
     durationFast:"Rápido",
     startMatch:"EMPEZAR PARTIDO",
@@ -104,7 +103,6 @@ const I18N = {
     labelPlayer2:"Player 2 / Machine",
     modeLocal:"1 vs 1",
     modeMachine:"1 vs Machine",
-    modeOnline:"Online",
     durationClassic:"Classic",
     durationFast:"Fast",
     startMatch:"START MATCH",
@@ -257,15 +255,13 @@ function setupLanguageSelector(){
 let timerInterval = null, matchClockInterval = null, timerStartTime = 0, currentElapsedMs = 0, stopwatchBaseMs = 0, matchStartTime = 0;
 let machineTurnTimeout = null, machineStopTimeout = null, machineSpecialTurnTimeout = null, machineSpecialStopTimeout = null;
 let pendingSpecial = null, penaltyShootout = null, audioCtx = null, versionTaps = 0;
-let suppressOnlinePublish = false, lastAppliedRemoteSnapshotSignature = "", lastAppliedRemoteEventId = "";
 
 const gameState = {
   players: [{name:"Jugador 1",goals:0,skipTurns:0},{name:"Jugador 2",goals:0,skipTurns:0}],
   currentPlayerIndex:0, half:1, isRunning:false, gameMode:"local", machineLevel:"normal", matchMode:"classic", forceEvents:true, soundEnabled:true, matchEnded:false,
   totalTurns:0, firstHalfTurns:0, secondHalfTurns:0, machineForceHalfAt:null, machineForceEndAt:null, log:[],
   stats:{goals:0,woodwork:0,cards:0,specials:0,penalties:0,freeKicks:0,misses:0},
-  lastFinalText:"",
-  lastOnlineEvent:null
+  lastFinalText:""
 };
 
 
@@ -490,7 +486,7 @@ specialStartBtn.onclick = handleSpecialButton;
 debugThrowBtn.onclick = forceDebugThrow;
 gameModeSelect.onchange = () => {
   if(gameModeSelect.value==="machine" && player2Input.value==="Jugador 2") player2Input.value="Máquina";
-  if((gameModeSelect.value==="local" || gameModeSelect.value==="online") && player2Input.value==="Máquina") player2Input.value="Jugador 2";
+  if(gameModeSelect.value==="local" && player2Input.value==="Máquina") player2Input.value="Jugador 2";
   updateSetupVisibility();
 };
 rulesBtn.onclick = showRulesModal; menuRulesBtn.onclick = () => { sideMenu.classList.add("hidden"); showRulesModal(); };
@@ -642,33 +638,8 @@ function bindAudioUnlockOnce(){
 }
 
 
-function updateCronoGolSetupButtonState(){
-  if(!startMatchBtn || !gameModeSelect) return;
-  const isOnline = gameModeSelect.value === "online";
-  const backendReady = Boolean(window.CronoGolOnline && typeof window.CronoGolOnline.backendEnabled === "function" && window.CronoGolOnline.backendEnabled());
-  if(isOnline && !backendReady){
-    startMatchBtn.textContent = currentLang === "en" ? "ONLINE IN PREPARATION" : "ONLINE EN PREPARACIÓN";
-    startMatchBtn.classList.add("online-pending");
-  }else{
-    startMatchBtn.textContent = currentLang === "en" ? "START MATCH" : "EMPEZAR PARTIDO";
-    startMatchBtn.classList.remove("online-pending");
-  }
-}
-window.updateCronoGolSetupButtonState = updateCronoGolSetupButtonState;
-
 function updateSetupVisibility(){
-  const mode = gameModeSelect ? gameModeSelect.value : "local";
-  machineLevelLabel.classList.toggle("is-hidden", mode !== "machine");
-
-  const onlinePanel = document.getElementById("cg-online-foundation-panel");
-  if(onlinePanel){
-    onlinePanel.classList.toggle("is-online-hidden", mode !== "online");
-  }
-  updateCronoGolSetupButtonState();
-}
-
-function isOnlineSetupMode(){
-  return gameModeSelect && gameModeSelect.value === "online";
+  machineLevelLabel.classList.toggle("is-hidden", gameModeSelect.value !== "machine");
 }
 function loadLocal(){ try{ player1Input.value = localStorage.getItem("cronogol_player1") || player1Input.value; player2Input.value = localStorage.getItem("cronogol_player2") || player2Input.value; localMatchesCount.textContent = localStorage.getItem("cronogol_matches_played") || "0"; }catch(e){} }
 function saveLocal(p1,p2){ try{ localStorage.setItem("cronogol_player1",p1); localStorage.setItem("cronogol_player2",p2); }catch(e){} }
@@ -685,7 +656,7 @@ function startMatch(){
     players:[{name:p1,goals:0,skipTurns:0},{name:p2,goals:0,skipTurns:0}],
     currentPlayerIndex:0, half:1, isRunning:false, gameMode:gameModeSelect.value, machineLevel:machineLevelSelect.value, matchMode:matchModeSelect.value,
     forceEvents:forceEventsInput.checked, soundEnabled:soundEnabledInput.checked, matchEnded:false,totalTurns:0,firstHalfTurns:0,secondHalfTurns:0,
-    machineForceHalfAt:randomInt(20,30),machineForceEndAt:randomInt(20,30),log:[],stats:{goals:0,woodwork:0,cards:0,specials:0,penalties:0,freeKicks:0,misses:0},lastFinalText:"",lastOnlineEvent:null
+    machineForceHalfAt:randomInt(20,30),machineForceEndAt:randomInt(20,30),log:[],stats:{goals:0,woodwork:0,cards:0,specials:0,penalties:0,freeKicks:0,misses:0},lastFinalText:""
   });
   pendingSpecial=null; penaltyShootout=null; currentElapsedMs=0; stopwatchBaseMs=0; matchStartTime=Date.now();
   setupScreen.classList.remove("active"); gameScreen.classList.add("active"); closeModal(); sideMenu.classList.add("hidden");
@@ -753,82 +724,8 @@ function evaluateThrow(v){
   if(v===98||v===99) return {type:"penalty",msg:"PENALTI",cls:"special",special:"penalty"};
   return {type:"miss",msg:"FALLO",cls:"neutral"};
 }
-function registerOnlineLastAction(kind, value, resultType, resultLabel, playerIndex, playerName){
-  if(gameState.gameMode !== "online") return;
-  gameState.lastOnlineEvent = {
-    schemaVersion: 1,
-    id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-    kind: kind || "normal",
-    value: Number(value || 0),
-    resultType: String(resultType || "event"),
-    resultLabel: String(resultLabel || resultType || "acción").replace(/^⚽\s*/, "").slice(0, 32),
-    playerIndex: Number(playerIndex || 0),
-    playerName: String(playerName || "Jugador").slice(0, 24),
-    createdAt: new Date().toISOString()
-  };
-}
-
-
-function showRemoteOnlineActionUX(event){
-  try{
-    if(!event || !event.id) return;
-    const value = Number(event.value || 0);
-    const label = String(event.resultLabel || event.resultType || "ACCIÓN").toUpperCase();
-    const player = String(event.playerName || "Rival").slice(0, 24);
-    const resultType = String(event.resultType || "special");
-    const turnName = gameState && gameState.players && gameState.players[gameState.currentPlayerIndex]
-      ? gameState.players[gameState.currentPlayerIndex].name
-      : "Jugador";
-
-    const old = document.querySelector(".online-remote-action-toast");
-    if(old) old.remove();
-
-    const box = document.createElement("div");
-    box.className = `online-remote-action-toast online-remote-${resultType}`;
-    box.setAttribute("role", "status");
-    box.setAttribute("aria-live", "polite");
-    box.innerHTML = `
-      <span class="online-remote-kicker">Acción del rival</span>
-      <strong>${player} · ${pad(value)}</strong>
-      <em>${label}</em>
-      <small>Turno: ${turnName}</small>
-    `;
-    document.body.appendChild(box);
-
-    const onlinePanel = document.getElementById("cg-online-foundation-panel");
-    if(onlinePanel){
-      onlinePanel.classList.add("has-remote-action-pulse");
-      setTimeout(() => onlinePanel.classList.remove("has-remote-action-pulse"), 1300);
-    }
-
-    setTimeout(() => {
-      if(box && box.parentNode) box.remove();
-    }, 3200);
-  }catch(e){}
-}
-
-function applyRemoteOnlineLastEvent(event){
-  if(!event || !event.id || event.id === lastAppliedRemoteEventId) return false;
-  lastAppliedRemoteEventId = event.id;
-  const value = Number(event.value || 0);
-  const label = String(event.resultLabel || event.resultType || "ACCIÓN");
-  const player = String(event.playerName || "Rival");
-  lastTwoDisplay.textContent = pad(value);
-  if(event.kind === "special"){
-    timerDisplay.textContent = `00:00:${pad(value)}`;
-  }
-  const eventClass = event.resultType === "goal" ? "goal" : (event.resultType === "yellow" ? "yellow" : (event.resultType === "red" ? "red" : "special"));
-  setEvent(label, `${player} sacó ${pad(value)} → ${label}`, eventClass);
-  addLog(`${clockSec()}  ONLINE — ${player} — ${pad(value)} — ${label}`);
-  showRemoteOnlineActionUX(event);
-  playSound(event.resultType || "beep");
-  triggerScreenFeedback(event.resultType || "free_kick");
-  return true;
-}
-
 function applyNormalResult(v,r){
   const p = currentPlayer();
-  registerOnlineLastAction("normal", v, r.type, r.msg, gameState.currentPlayerIndex, p.name);
   setEvent(r.msg, `${p.name} sacó ${pad(v)} → ${r.msg}`, r.cls);
   addLog(`${clockSec()}  ${p.name} — ${pad(v)} — ${r.msg}`);
   playSound(r.type);
@@ -923,8 +820,6 @@ function evaluateSpecialThrow(v){
     msg = goal ? "GOL DE PENALTI" : "PENALTI FALLADO";
   }
 
-  registerOnlineLastAction("special", v, goal ? "goal" : (specialType === "penalty" ? "penalty_fail" : "miss"), msg, gameState.currentPlayerIndex, p.name);
-
   if(goal){
     p.goals++;
     gameState.stats.goals++;
@@ -995,7 +890,6 @@ function startPenaltyShootout(){
 function evaluateShootoutPenalty(v){
   const idx = penaltyShootout.currentPlayerIndex;
   const goal = v % 2 === 0;
-  registerOnlineLastAction("shootout", v, goal ? "goal" : "penalty_fail", goal ? "Gol penalti" : "Penalti fallado", idx, gameState.players[idx].name);
 
   penaltyShootout.shots[idx].push(goal);
 
@@ -1159,30 +1053,6 @@ function maybeMachineSpecialTurn(){
   resolveMachineSpecialDirectly();
 }
 
-function isOnlineTurnBlocked(){
-  if(gameState.gameMode !== "online") return false;
-  if(gameState.matchEnded) return false;
-  if(!(window.CronoGolOnline && typeof window.CronoGolOnline.isCurrentDeviceTurn === "function")) return false;
-  return !window.CronoGolOnline.isCurrentDeviceTurn(gameState);
-}
-
-function explainOnlineTurnBlocked(){
-  try{
-    if(window.CronoGolOnline && typeof window.CronoGolOnline.turnAuthorityMessage === "function"){
-      return window.CronoGolOnline.turnAuthorityMessage(gameState);
-    }
-  }catch(e){}
-  return currentLang === "en" ? "Opponent turn." : "Turno del rival.";
-}
-
-function refreshOnlineTurnAuthority(){
-  try{
-    if(window.CronoGolOnline && typeof window.CronoGolOnline.updateTurnAuthorityUi === "function"){
-      window.CronoGolOnline.updateTurnAuthorityUi(gameState);
-    }
-  }catch(e){}
-}
-
 
 function syncActionControls(){
   const gameActive =
@@ -1196,32 +1066,23 @@ function syncActionControls(){
     !gameState.matchEnded &&
     gameActive;
 
-  const onlineBlocked =
-    gameState.gameMode === "online" &&
-    !gameState.matchEnded &&
-    gameActive &&
-    isOnlineTurnBlocked();
-
   const shouldDisableMain =
     gameState.matchEnded ||
     Boolean(pendingSpecial) ||
     Boolean(penaltyShootout) ||
     machineTurn ||
-    onlineBlocked ||
     !gameActive;
 
   const shouldDisableSpecial =
     gameState.matchEnded ||
     !Boolean(pendingSpecial) ||
     machineTurn ||
-    onlineBlocked ||
     !gameActive;
 
   mainActionBtn.disabled = shouldDisableMain;
   specialStartBtn.disabled = shouldDisableSpecial;
 
   restoreSpecialButtonLabel();
-  refreshOnlineTurnAuthority();
 }
 
 function maybeMachineTurn(){
@@ -1292,96 +1153,12 @@ function maybeMachineTurn(){
 function getMachineStopDelay(){ return gameState.machineLevel==="easy"?randomInt(600,1800):gameState.machineLevel==="hard"?randomInt(900,3200):randomInt(800,2500); }
 function getMachineForcedValue(){ if(isFastMode()) return null; if(gameState.forceEvents){ if(gameState.half===1&&gameState.firstHalfTurns>=gameState.machineForceHalfAt) return 45; if(gameState.half===2&&gameState.secondHalfTurns>=gameState.machineForceEndAt) return 90; } if(gameState.machineLevel==="hard"){ const r=Math.random(); if(r<.025)return 0; if(r<.055)return [96,97,98,99][randomInt(0,3)]; } return null; }
 function startMatchClock(){ clearInterval(matchClockInterval); matchClockInterval=setInterval(()=>{ const sec=Math.floor((Date.now()-matchStartTime)/1000); matchClockLabel.textContent=`${pad(Math.floor(sec/60))}:${pad(sec%60)}`; /* En modo rápido v1.6.1 no hay límite de 5 minutos: gana quien llega a 6 con 2 de ventaja. */ },1000); }
-function updateUI(){ p1Label.textContent=gameState.players[0].name.toUpperCase(); p2Label.textContent=gameState.players[1].name.toUpperCase(); p1Score.textContent=gameState.players[0].goals; p2Score.textContent=gameState.players[1].goals; p1Sanction.textContent=gameState.players[0].skipTurns?`Sanción: ${gameState.players[0].skipTurns}`:""; p2Sanction.textContent=gameState.players[1].skipTurns?`Sanción: ${gameState.players[1].skipTurns}`:""; halfLabel.textContent=isFastMode()?"MODO RÁPIDO":(gameState.half===1?"1ª PARTE":"2ª PARTE"); turnLabel.textContent=currentPlayer().name; team0.classList.toggle("active",gameState.currentPlayerIndex===0); team1.classList.toggle("active",gameState.currentPlayerIndex===1); statTurns.textContent=gameState.totalTurns; statGoals.textContent=gameState.stats.goals; statWoodwork.textContent=gameState.stats.woodwork; statCards.textContent=gameState.stats.cards; statSpecials.textContent=gameState.stats.specials; updateShootoutUI(); renderLog(); if(!suppressOnlinePublish && window.CronoGolOnline && typeof window.CronoGolOnline.publishLocalMatchState === "function"){ window.CronoGolOnline.publishLocalMatchState(gameState); } refreshOnlineTurnAuthority(); }
+function updateUI(){ p1Label.textContent=gameState.players[0].name.toUpperCase(); p2Label.textContent=gameState.players[1].name.toUpperCase(); p1Score.textContent=gameState.players[0].goals; p2Score.textContent=gameState.players[1].goals; p1Sanction.textContent=gameState.players[0].skipTurns?`Sanción: ${gameState.players[0].skipTurns}`:""; p2Sanction.textContent=gameState.players[1].skipTurns?`Sanción: ${gameState.players[1].skipTurns}`:""; halfLabel.textContent=isFastMode()?"MODO RÁPIDO":(gameState.half===1?"1ª PARTE":"2ª PARTE"); turnLabel.textContent=currentPlayer().name; team0.classList.toggle("active",gameState.currentPlayerIndex===0); team1.classList.toggle("active",gameState.currentPlayerIndex===1); statTurns.textContent=gameState.totalTurns; statGoals.textContent=gameState.stats.goals; statWoodwork.textContent=gameState.stats.woodwork; statCards.textContent=gameState.stats.cards; statSpecials.textContent=gameState.stats.specials; updateShootoutUI(); renderLog(); }
 function updateShootoutUI(){ if(!penaltyShootout){shootoutPanel.classList.add("hidden");return;} shootoutPanel.classList.remove("hidden"); shootoutP1Name.textContent=gameState.players[0].name; shootoutP2Name.textContent=gameState.players[1].name; shootoutP1.textContent=icons(penaltyShootout.shots[0]); shootoutP2.textContent=icons(penaltyShootout.shots[1]); }
 function icons(shots){ const i=shots.map(s=>s?"✅":"❌"); while(i.length<5)i.push("⬜"); return i.join(" "); }
 function setEvent(title,msg,cls){ eventTitle.textContent=title; messageLabel.textContent=msg; eventCard.className=`event-card event-${cls}`; }
 function addLog(t){ gameState.log.unshift(t); if(gameState.log.length>50) gameState.log.pop(); renderLog(); }
 function renderLog(){ gameLog.innerHTML=""; gameState.log.forEach(x=>{ const li=document.createElement("li"); li.textContent=x; gameLog.appendChild(li); }); }
-
-function remoteSnapshotSignature(snapshot){
-  try{
-    if(!snapshot || !Array.isArray(snapshot.players)) return "";
-    const players = snapshot.players.map(p => `${Number(p.goals || 0)}:${Number(p.skipTurns || 0)}`).join("|");
-    return [snapshot.matchEnded ? 1 : 0, snapshot.half || 1, snapshot.currentPlayerIndex || 0, snapshot.totalTurns || 0, players, snapshot.updatedAt || ""].join("#");
-  }catch(e){ return ""; }
-}
-
-function applyRemoteOnlineSnapshot(snapshot, meta = {}){
-  if(!snapshot || !Array.isArray(snapshot.players) || snapshot.players.length < 2) return { ok:false, reason:"invalid-snapshot" };
-  if(snapshot.gameMode && snapshot.gameMode !== "online") return { ok:false, reason:"not-online-snapshot" };
-
-  const active = window.CronoGolOnline && typeof window.CronoGolOnline.getActiveOnlineRoom === "function"
-    ? window.CronoGolOnline.getActiveOnlineRoom()
-    : null;
-  if(active && meta.publisherRole && active.role === meta.publisherRole){
-    return { ok:true, skipped:true, reason:"own-snapshot" };
-  }
-
-  const signature = remoteSnapshotSignature(snapshot);
-  if(signature && signature === lastAppliedRemoteSnapshotSignature){
-    return { ok:true, skipped:true, reason:"unchanged" };
-  }
-  lastAppliedRemoteSnapshotSignature = signature;
-
-  suppressOnlinePublish = true;
-  try{
-    clearInterval(timerInterval);
-    timerInterval = null;
-    gameState.isRunning = false;
-    if(mainActionBtn){
-      mainActionBtn.textContent = safeCgText("start", "START");
-      mainActionBtn.classList.remove("stop");
-    }
-
-    const p0 = snapshot.players[0] || {};
-    const p1 = snapshot.players[1] || {};
-    gameState.players = [
-      { name: String(p0.name || "Jugador 1").slice(0,24), goals: Number(p0.goals || 0), skipTurns: Number(p0.skipTurns || 0) },
-      { name: String(p1.name || "Jugador 2").slice(0,24), goals: Number(p1.goals || 0), skipTurns: Number(p1.skipTurns || 0) }
-    ];
-    gameState.currentPlayerIndex = Number(snapshot.currentPlayerIndex || 0) === 1 ? 1 : 0;
-    gameState.half = Number(snapshot.half || 1) === 2 ? 2 : 1;
-    gameState.matchMode = snapshot.matchMode || gameState.matchMode || "classic";
-    gameState.gameMode = "online";
-    gameState.matchEnded = Boolean(snapshot.matchEnded);
-    gameState.totalTurns = Number(snapshot.totalTurns || 0);
-    gameState.stats = Object.assign({}, gameState.stats || {}, snapshot.stats || {});
-    gameState.lastOnlineEvent = snapshot.lastEvent ? Object.assign({}, snapshot.lastEvent) : null;
-
-    pendingSpecial = null;
-    penaltyShootout = null;
-    currentElapsedMs = 0;
-    stopwatchBaseMs = 0;
-    timerDisplay.textContent = "00:00:00";
-    lastTwoDisplay.textContent = "--";
-
-    setupScreen.classList.remove("active");
-    gameScreen.classList.add("active");
-    closeModal();
-    closeSideMenu();
-
-    const remoteEventShown = applyRemoteOnlineLastEvent(snapshot.lastEvent);
-    if(!remoteEventShown){
-      const title = gameState.matchEnded ? "FINAL ONLINE" : "ONLINE";
-      const msg = gameState.matchEnded
-        ? "Partida sincronizada desde la sala."
-        : `Estado recibido · turno de ${currentPlayer().name}.`;
-      setEvent(title, msg, gameState.matchEnded ? "goal" : "neutral");
-      addLog(gameState.matchEnded ? "Estado online final recibido." : `Estado online recibido: turno de ${currentPlayer().name}.`);
-    }
-    updateUI();
-    syncActionControls();
-    return { ok:true, applied:true };
-  }catch(error){
-    console.warn("CronoGol remote snapshot apply failed", error);
-    return { ok:false, reason:"apply-failed", error };
-  }finally{
-    suppressOnlinePublish = false;
-  }
-}
-
-window.CronoGolApplyRemoteSnapshot = applyRemoteOnlineSnapshot;
 function confirmReset(){ showModal("Reiniciar partido","¿Seguro que quieres reiniciar?", "", [{text:"SÍ, REINICIAR",action:resetToSetup},{text:"CANCELAR",action:closeModal}]); }
 function resetToSetup(){ clearInterval(timerInterval); clearInterval(matchClockInterval); currentElapsedMs=0; stopwatchBaseMs=0; setupScreen.classList.add("active"); gameScreen.classList.remove("active"); closeModal(); sideMenu.classList.add("hidden"); }
 function showModal(t,txt,html,actions){ modalTitle.textContent=t; modalText.textContent=txt; modalExtra.innerHTML=html||""; modalActions.innerHTML=""; actions.forEach(a=>{ const b=document.createElement("button"); b.textContent=a.text; b.onclick=a.action; modalActions.appendChild(b); }); modalScreen.classList.remove("hidden"); }
@@ -1931,7 +1708,7 @@ function bootCronoGol(){
     if(gameModeSelect){
       gameModeSelect.onchange = () => {
         if(gameModeSelect.value==="machine" && player2Input.value==="Jugador 2") player2Input.value="Máquina";
-        if((gameModeSelect.value==="local" || gameModeSelect.value==="online") && player2Input.value==="Máquina") player2Input.value="Jugador 2";
+        if(gameModeSelect.value==="local" && player2Input.value==="Máquina") player2Input.value="Jugador 2";
         updateSetupVisibility();
       };
     }
@@ -2347,19 +2124,6 @@ function resetToSetup(){
 function startMatch(){
   clearMachineTimers();
 
-  if(isOnlineSetupMode()){
-    const backendReady = Boolean(window.CronoGolOnline && typeof window.CronoGolOnline.backendEnabled === "function" && window.CronoGolOnline.backendEnabled());
-    const canStartOnline = Boolean(window.CronoGolOnline && typeof window.CronoGolOnline.canStartOnlineMatch === "function" && window.CronoGolOnline.canStartOnlineMatch());
-    if(!backendReady){
-      showToast(currentLang === "en" ? "Online pending · Configure Supabase" : "Online pendiente · Configura Supabase");
-      return;
-    }
-    if(!canStartOnline){
-      showToast(currentLang === "en" ? "Create or join a private room before starting online." : "Crea o únete a una sala privada antes de empezar online.");
-      return;
-    }
-  }
-
   const p1 = safePlayerName(player1Input.value, "Jugador 1");
   const p2Default = gameModeSelect.value === "machine" ? "Máquina" : "Jugador 2";
   const p2 = safePlayerName(player2Input.value, p2Default);
@@ -2408,9 +2172,6 @@ function startMatch(){
   startMatchClock();
   updateUI();
   syncActionControls();
-  if(window.CronoGolOnline && typeof window.CronoGolOnline.publishLocalMatchState === "function"){
-    window.CronoGolOnline.publishLocalMatchState(gameState, { phase: "match_started", force: true });
-  }
   lockActionTemporarily(180);
   maybeMachineTurn();
 }
@@ -2420,12 +2181,6 @@ function handleMainAction(){
   lockActionTemporarily(150);
 
   if(gameState.matchEnded || pendingSpecial) return;
-
-  if(isOnlineTurnBlocked()){
-    showToast(explainOnlineTurnBlocked());
-    syncActionControls();
-    return;
-  }
 
   if(mainActionBtn){
     mainActionBtn.disabled = true;
@@ -2442,11 +2197,6 @@ function handleSpecialButton(){
 
   if(!pendingSpecial || gameState.matchEnded) return;
   if(gameState.gameMode === "machine" && gameState.currentPlayerIndex === 1) return;
-  if(isOnlineTurnBlocked()){
-    showToast(explainOnlineTurnBlocked());
-    syncActionControls();
-    return;
-  }
 
   if(gameState.isRunning){
     stopTimer();
@@ -2482,10 +2232,6 @@ function showFinal(pens){
   if(pens) text += currentLang === "en" ? " Decided on penalties." : " Resuelto en penaltis.";
 
   gameState.lastFinalText = formattedFinalResult();
-
-  if(window.CronoGolOnline && typeof window.CronoGolOnline.publishLocalMatchState === "function"){
-    window.CronoGolOnline.publishLocalMatchState(gameState, { phase: "match_finished", force: true });
-  }
 
   showModal(
     currentLang === "en" ? "FULL TIME" : "FINAL DEL PARTIDO",
@@ -2795,10 +2541,6 @@ showFinal = function(pens){
   if(pens) text += currentLang === "en" ? " Decided on penalties." : " Resuelto en penaltis.";
 
   gameState.lastFinalText = formattedFinalResult();
-
-  if(window.CronoGolOnline && typeof window.CronoGolOnline.publishLocalMatchState === "function"){
-    window.CronoGolOnline.publishLocalMatchState(gameState, { phase: "match_finished", force: true });
-  }
 
   showModal(
     currentLang === "en" ? "FULL TIME" : "FINAL DEL PARTIDO",

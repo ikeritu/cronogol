@@ -1,1 +1,1 @@
-CronoGol v2.1.7 — Online Remote Action UX
+CronoGol v2.0.1 — Supabase Private Rooms Draft
