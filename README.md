@@ -1,5 +1,17 @@
-# CronoGol v2.1.0 — Room Lobby Sync
+# CronoGol v2.1.1 — Lobby Guardrails
 
+
+
+## v2.1.1 — Lobby Guardrails
+
+Pulido del lobby privado:
+
+- Impide que el anfitrión se una a su propia sala desde el mismo dispositivo.
+- Si el invitado usa el mismo nombre que el anfitrión, pide cambiar nombre.
+- Si una sala ya tiene invitado distinto, bloquea una segunda unión.
+- Si ya hay una sala activa como anfitrión, pregunta antes de crear otra.
+- Mejora los mensajes: compartir código, sala lista, rival conectado.
+- No cambia la lógica del partido local ni sincroniza todavía el partido completo.
 
 ## v2.0.1 — Supabase Private Rooms Draft
 

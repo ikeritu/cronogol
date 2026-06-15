@@ -1,26 +1,20 @@
 {
-  "version": "v2.1.1",
-  "name": "Supabase Realtime Room Status",
-  "base": "v2.1.0 Supabase Private Rooms",
-  "date": "2026-06-11",
+  "version": "2.1.1",
+  "name": "Lobby Guardrails",
+  "base": "cronogol_v2_1_0_room_lobby_sync.zip",
+  "created_at": "2026-06-15T17:35:54.380203+00:00",
   "changes": [
-    "Añadida suscripción Realtime al estado de sala por room_code",
-    "El anfitrión recibe cambios cuando un rival se une",
-    "Añadida función stopRoomRealtime y gestión segura de canal activo",
-    "Actualizado SQL para incluir cronogol_rooms en supabase_realtime",
-    "Actualizada documentación de configuración Supabase"
+    "Blocks host joining own active room from the same device",
+    "Blocks guest name equal to host name",
+    "Blocks a second different guest if the room already has one",
+    "Asks before creating a new room while hosting another",
+    "Improves lobby status messages"
   ],
   "not_changed": [
-    "Reglas del juego",
-    "Modo rápido y penalti acabado en 9",
-    "Estadísticas locales",
-    "Sonidos y vibración",
-    "Marcador/turnos online completos"
-  ],
-  "validation": [
-    "node --check game.js OK",
-    "node --check online-foundation.js OK",
-    "node --check supabase-config.js OK",
-    "node --check sw.js OK"
+    "Local game logic",
+    "Fast mode rules",
+    "Stats",
+    "Sounds/vibration",
+    "Full online match sync"
   ]
 }

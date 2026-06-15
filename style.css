@@ -2771,3 +2771,12 @@ nav.setup-links {
 .online-lobby-row{display:grid;grid-template-columns:90px 1fr;align-items:center;gap:8px;border-bottom:1px dashed rgba(76,110,126,.45);padding:4px 0}
 .online-lobby-row:last-child{border-bottom:0}.online-lobby-row span{color:var(--muted);font-size:10px;letter-spacing:1px;text-transform:uppercase}.online-lobby-row strong{color:var(--orange);font-size:11px;text-align:right;overflow-wrap:anywhere}#cg-online-refresh-btn{background:rgba(0,0,0,.28);border:1px solid rgba(76,110,126,.9);color:var(--orange)}
 @media(max-width:430px){.online-foundation-actions{grid-template-columns:1fr}.online-lobby-row{grid-template-columns:1fr;text-align:center}.online-lobby-row strong{text-align:center}}
+
+
+/* ===== CronoGol v2.1.1: Lobby Guardrails ===== */
+#cg-online-status[data-state="ready"]{
+  color:var(--muted);
+}
+.online-foundation-panel .tag{
+  white-space:nowrap;
+}

@@ -1,1 +1,1 @@
-CronoGol v2.1.0 — Room Lobby Sync
+CronoGol v2.1.1 — Lobby Guardrails

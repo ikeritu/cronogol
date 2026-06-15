@@ -42,3 +42,19 @@ Estado:
 - Sincronización de marcador/turnos: pendiente de v2.1.x.
 - Login: no incluido.
 - Rankings públicos: no incluidos.
+
+
+## v2.1.1 — Lobby Guardrails
+
+Objetivo:
+Evitar pruebas engañosas donde el mismo navegador aparece como anfitrión e invitado.
+
+Cambios:
+- Bloquea auto-unirse a la sala activa del anfitrión.
+- Bloquea invitado con el mismo nombre que el anfitrión.
+- Bloquea un segundo invitado distinto si ya hay uno.
+- Mantiene polling y refresco manual.
+
+Pendiente:
+- Inicio de partida compartido.
+- Sincronización de turnos, tiradas, marcador y final.

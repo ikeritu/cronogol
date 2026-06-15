@@ -1,22 +1,19 @@
 {
-  "version": "v2.1.1",
-  "name": "Supabase Private Rooms",
-  "base": "v2.0.3 Online Mode Visibility",
+  "version": "2.1.0",
+  "name": "Room Lobby Sync",
+  "base": "v2.0.1 Supabase Private Rooms Draft",
+  "created_at": "2026-06-15T17:19:32.406752+00:00",
   "changes": [
-    "Añade supabase-config.js con configuración segura desactivada por defecto",
-    "Añade SUPABASE_PRIVATE_ROOMS_SETUP.sql para tabla cronogol_rooms",
-    "online-foundation.js crea salas reales si Supabase está configurado",
-    "online-foundation.js permite unirse a salas reales por código",
-    "Mantiene fallback local si el backend no está configurado",
-    "No sincroniza todavía marcador ni turnos"
+    "Host/guest lobby sync",
+    "Room status waiting/ready",
+    "Manual refresh",
+    "Soft polling",
+    "Lobby UI"
   ],
   "not_changed": [
-    "Reglas del juego",
-    "Modo rápido",
-    "Penalti acabado en 9",
-    "Estadísticas locales",
-    "Sonidos/vibración",
-    "Cloudflare Analytics"
-  ],
-  "generated_at": "2026-06-11T10:00:00Z"
+    "Local game logic",
+    "Fast mode rules",
+    "Stats",
+    "Analytics"
+  ]
 }
