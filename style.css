@@ -2782,10 +2782,53 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.1.2: Lobby Placeholder & Controls Fix ===== */
+/* ===== CronoGol v2.1.3: Lobby Placeholder & Controls Fix ===== */
 .online-foundation-panel{overflow:visible;}
 .online-primary-actions{margin:10px 0;}
 .online-clear-btn{width:100%;margin-top:8px;padding:8px;background:rgba(0,0,0,.24);border:1px dashed rgba(76,110,126,.85);color:var(--muted);font-family:inherit;font-weight:900;cursor:pointer;}
 .online-clear-btn:hover{color:var(--orange);border-color:var(--orange);}
 .online-foundation-panel p{margin-top:8px;}
 @media(max-width:430px){.online-foundation-panel{padding:12px 10px;}.online-foundation-panel p{font-size:11px;line-height:1.55;}.online-room-display{margin-top:8px;}}
+
+
+/* ===== CronoGol v2.1.3: Online Mode Layout Cleanup ===== */
+
+/* Tres modos en una fila adaptable */
+.game-mode-control{
+  grid-template-columns: repeat(3, 1fr);
+}
+.game-mode-control .segment-btn{
+  font-size: clamp(10px, 2vw, 13px);
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+/* El panel online solo aparece cuando se selecciona 1 vs 1 online */
+.online-foundation-panel{
+  display:none;
+}
+body.online-mode-active .online-foundation-panel{
+  display:block;
+}
+
+/* Sin estadísticas locales en la portada */
+.local-stats-panel{
+  display:none !important;
+}
+
+/* El bloque online queda como módulo principal antes de Reglas/Modos/Historia */
+body.online-mode-active .online-foundation-panel{
+  margin-top: 10px;
+  margin-bottom: 12px;
+  border-color: rgba(230,143,24,.85);
+  box-shadow: 0 0 0 1px rgba(230,143,24,.16) inset;
+}
+
+@media(max-width:520px){
+  .game-mode-control{
+    grid-template-columns: 1fr;
+  }
+  .game-mode-control .segment-btn{
+    min-height: 44px;
+  }
+}

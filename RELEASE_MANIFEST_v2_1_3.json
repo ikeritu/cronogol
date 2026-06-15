@@ -1,28 +1,19 @@
 {
-  "version": "v2.1.3",
-  "name": "Online Turn Authority Draft",
-  "base": "v2.1.2 Basic Match State Sync",
-  "created_at": "2026-06-11T21:07:24Z",
+  "version": "2.1.3",
+  "name": "Online Mode Layout Cleanup",
+  "created_at": "2026-06-15T21:41:46.037334+00:00",
+  "base": "v2.1.2",
   "changes": [
-    "Añadida autoridad de turnos para modo online: host controla Jugador 1 y guest controla Jugador 2.",
-    "Bloqueo del botón principal cuando el turno pertenece al rival.",
-    "Bloqueo de tirada especial si no corresponde al dispositivo.",
-    "Snapshot online ampliado con turnAuthority.",
-    "Estado del panel online muestra si es tu turno o turno rival."
+    "Adds three game modes: 1 vs 1 local, 1 vs 1 online, 1 vs Máquina",
+    "Shows the online lobby only when 1 vs 1 online is selected",
+    "Moves online lobby above Reglas/Modos/Historia actions",
+    "Removes the Local Stats panel from the setup screen",
+    "Keeps online room/lobby logic unchanged"
   ],
-  "untouched": [
-    "Juego local",
-    "Modo máquina",
-    "Reglas rápidas",
-    "Penalti acabado en 9",
-    "Estadísticas locales",
-    "Sonidos/vibración",
-    "Cloudflare/Analytics"
-  ],
-  "validation": [
-    "node --check game.js",
-    "node --check online-foundation.js",
-    "node --check supabase-config.js",
-    "node --check sw.js"
+  "not_changed": [
+    "Supabase room creation/joining",
+    "Game rules",
+    "Fast mode penalties",
+    "Sounds/vibration"
   ]
 }

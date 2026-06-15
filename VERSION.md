@@ -1,1 +1,1 @@
-CronoGol v2.1.2 — Lobby Placeholder & Controls Fix
+CronoGol v2.1.3 — Online Mode Layout Cleanup

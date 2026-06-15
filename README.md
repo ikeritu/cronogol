@@ -1,6 +1,15 @@
-# CronoGol v2.1.1 — Lobby Guardrails
+# CronoGol v2.1.3 — Online Mode Layout Cleanup
 
 
+
+
+## v2.1.3 — Online Mode Layout Cleanup
+
+- Añade tres modos: `1 vs 1 local`, `1 vs 1 online` y `1 vs Máquina`.
+- El panel online solo aparece al seleccionar `1 vs 1 online`.
+- El panel online queda por encima de `Reglas / Modos / Historia`.
+- Se elimina el apartado visual de `Estadísticas locales` de la portada.
+- No cambia la lógica de Supabase ni las reglas del juego.
 
 ## v2.1.1 — Lobby Guardrails
 

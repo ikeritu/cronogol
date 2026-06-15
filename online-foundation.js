@@ -1,5 +1,5 @@
 
-/* CronoGol v2.1.2 — Lobby Placeholder & Controls Fix */
+/* CronoGol v2.1.3 — Lobby Placeholder & Controls Fix */
 (function(){
   "use strict";
   const CG_ONLINE_VERSION="2.1.2";

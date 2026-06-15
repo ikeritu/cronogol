@@ -66,7 +66,8 @@ const I18N = {
     advancedOptions:"Opciones avanzadas",
     labelPlayer1:"Jugador 1",
     labelPlayer2:"Jugador 2 / Máquina",
-    modeLocal:"1 vs 1",
+    modeLocal:"1 vs 1 local",
+    modeOnline:"1 vs 1 online",
     modeMachine:"1 vs Máquina",
     durationClassic:"Clásico",
     durationFast:"Rápido",
@@ -101,7 +102,8 @@ const I18N = {
     advancedOptions:"Advanced options",
     labelPlayer1:"Player 1",
     labelPlayer2:"Player 2 / Machine",
-    modeLocal:"1 vs 1",
+    modeLocal:"1 vs 1 local",
+    modeOnline:"1 vs 1 online",
     modeMachine:"1 vs Machine",
     durationClassic:"Classic",
     durationFast:"Fast",
@@ -485,8 +487,9 @@ menuResetBtn.onclick = () => { sideMenu.classList.add("hidden"); confirmReset();
 specialStartBtn.onclick = handleSpecialButton;
 debugThrowBtn.onclick = forceDebugThrow;
 gameModeSelect.onchange = () => {
-  if(gameModeSelect.value==="machine" && player2Input.value==="Jugador 2") player2Input.value="Máquina";
-  if(gameModeSelect.value==="local" && player2Input.value==="Máquina") player2Input.value="Jugador 2";
+  if(gameModeSelect.value==="machine" && (player2Input.value==="Jugador 2" || player2Input.value==="Rival")) player2Input.value="Máquina";
+  if(gameModeSelect.value==="online" && (player2Input.value==="Jugador 2" || player2Input.value==="Máquina")) player2Input.value="Rival";
+  if(gameModeSelect.value==="local" && (player2Input.value==="Máquina" || player2Input.value==="Rival")) player2Input.value="Jugador 2";
   updateSetupVisibility();
 };
 rulesBtn.onclick = showRulesModal; menuRulesBtn.onclick = () => { sideMenu.classList.add("hidden"); showRulesModal(); };
@@ -639,11 +642,14 @@ function bindAudioUnlockOnce(){
 
 
 function updateSetupVisibility(){
-  machineLevelLabel.classList.toggle("is-hidden", gameModeSelect.value !== "machine");
+  const mode = gameModeSelect ? gameModeSelect.value : "local";
+  if(machineLevelLabel) machineLevelLabel.classList.toggle("is-hidden", mode !== "machine");
+  document.body.classList.toggle("online-mode-active", mode === "online");
+  document.body.classList.toggle("machine-mode-active", mode === "machine");
 }
-function loadLocal(){ try{ player1Input.value = localStorage.getItem("cronogol_player1") || player1Input.value; player2Input.value = localStorage.getItem("cronogol_player2") || player2Input.value; localMatchesCount.textContent = localStorage.getItem("cronogol_matches_played") || "0"; }catch(e){} }
+function loadLocal(){ try{ player1Input.value = localStorage.getItem("cronogol_player1") || player1Input.value; player2Input.value = localStorage.getItem("cronogol_player2") || player2Input.value; if(localMatchesCount) localMatchesCount.textContent = localStorage.getItem("cronogol_matches_played") || "0"; }catch(e){} }
 function saveLocal(p1,p2){ try{ localStorage.setItem("cronogol_player1",p1); localStorage.setItem("cronogol_player2",p2); }catch(e){} }
-function incrementMatches(){ try{ const n=Number(localStorage.getItem("cronogol_matches_played")||"0")+1; localStorage.setItem("cronogol_matches_played",String(n)); localMatchesCount.textContent=n; }catch(e){} }
+function incrementMatches(){ try{ const n=Number(localStorage.getItem("cronogol_matches_played")||"0")+1; localStorage.setItem("cronogol_matches_played",String(n)); if(localMatchesCount) localMatchesCount.textContent=n; }catch(e){} }
 
 function startMatch(){
   clearMachineTimers();
@@ -1707,8 +1713,9 @@ function bootCronoGol(){
 
     if(gameModeSelect){
       gameModeSelect.onchange = () => {
-        if(gameModeSelect.value==="machine" && player2Input.value==="Jugador 2") player2Input.value="Máquina";
-        if(gameModeSelect.value==="local" && player2Input.value==="Máquina") player2Input.value="Jugador 2";
+        if(gameModeSelect.value==="machine" && (player2Input.value==="Jugador 2" || player2Input.value==="Rival")) player2Input.value="Máquina";
+        if(gameModeSelect.value==="online" && (player2Input.value==="Jugador 2" || player2Input.value==="Máquina")) player2Input.value="Rival";
+        if(gameModeSelect.value==="local" && (player2Input.value==="Máquina" || player2Input.value==="Rival")) player2Input.value="Jugador 2";
         updateSetupVisibility();
       };
     }
