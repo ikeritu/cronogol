@@ -90,7 +90,7 @@ input,select,textarea{width:100%;background:var(--lcd);border:4px solid #050707;
 .modal-card h2,.side-menu-card h2{color:var(--orange);margin-top:0}.modal-actions{display:grid;gap:8px;margin-top:16px}.modal-actions button{background:var(--red);color:#fff;border:4px solid #050707;padding:13px;font-weight:900;cursor:pointer}
 .side-menu-card{display:grid;gap:10px}.close-btn{justify-self:end}.hidden{display:none!important}
 .donation-data{display:grid;gap:10px;margin-top:12px}.donation-item{border:2px solid var(--line);padding:10px;text-align:left}.donation-item strong{color:var(--orange)}
-.bizum-direct-btn{width:100%;margin-top:10px;background:var(--blue);color:#fff;padding:12px;border:3px solid #050707;font-weight:900;cursor:pointer}
+.kofi-direct-btn{width:100%;margin-top:10px;background:var(--blue);color:#fff;padding:12px;border:3px solid #050707;font-weight:900;cursor:pointer}
 .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#101719;border:3px solid var(--orange);padding:12px;z-index:40;font-weight:900}
 .static-page{width:100%;max-width:760px;margin:0 auto;padding:18px}.static-card{background:linear-gradient(145deg,#050909,#111b1d);border:8px solid #050707;border-radius:28px;padding:24px;box-shadow:inset 0 0 0 6px #263033,inset 0 0 0 12px #050707,inset 0 0 0 17px var(--blue)}
 .static-card h1,.static-card h2{color:var(--orange)}.static-card p,.static-card li{line-height:1.55}.callout{border:2px solid var(--orange);background:rgba(217,134,25,.12);padding:14px;margin:16px 0}
@@ -1280,7 +1280,7 @@ input,select,textarea{width:100%;background:var(--lcd);border:4px solid #050707;
 }
 
 .secondary-actions .support-wide-btn::after {
-  content: " · Bizum / PayPal";
+  content: " · Ko-fi / PayPal";
   color: var(--muted);
   font-size: 11px;
   margin-left: 6px;
@@ -1343,7 +1343,7 @@ input,select,textarea{width:100%;background:var(--lcd);border:4px solid #050707;
 }
 
 .setup-links.secondary-actions-v195 > .support-wide-btn::after {
-  content: " · Bizum / PayPal";
+  content: " · Ko-fi / PayPal";
   color: var(--muted);
   font-size: 11px;
   margin-left: 6px;
@@ -1407,7 +1407,7 @@ nav.setup-links.secondary-actions-v196 > .support-wide-btn {
 }
 
 nav.setup-links.secondary-actions-v196 > .support-wide-btn::after {
-  content: " · Bizum / PayPal";
+  content: " · Ko-fi / PayPal";
   color: var(--muted);
   font-size: 11px;
   margin-left: 6px;
@@ -1507,7 +1507,7 @@ nav.setup-links.secondary-actions-v196 > .support-wide-btn::after {
 }
 
 #setup-screen nav.setup-links.secondary-actions-final > [data-slot="support"]::after {
-  content: " · Bizum / PayPal";
+  content: " · Ko-fi / PayPal";
   color: var(--muted);
   font-size: 11px;
   margin-left: 6px;
@@ -2034,7 +2034,7 @@ body.cg-flash-red .game-device {
 }
 
 .setup-links > .support-wide-btn::after {
-  content: " · Bizum / PayPal";
+  content: " · Ko-fi / PayPal";
   color: var(--muted);
   font-size: 11px;
   margin-left: 6px;
@@ -2171,7 +2171,7 @@ nav.setup-links {
 
 .setup-links > .support-wide-btn::after,
 .setup-links .support-wide-btn::after {
-  content: " · Bizum / PayPal";
+  content: " · Ko-fi / PayPal";
   color: var(--muted);
   font-size: 11px;
   margin-left: 6px;
@@ -2267,7 +2267,7 @@ nav.setup-links {
 }
 
 #setup-screen nav.setup-links.secondary-actions-final > [data-slot="support"]::after {
-  content: " · Bizum / PayPal";
+  content: " · Ko-fi / PayPal";
   color: var(--muted);
   font-size: 11px;
   margin-left: 6px;
@@ -2782,7 +2782,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.1.3: Lobby Placeholder & Controls Fix ===== */
+/* ===== CronoGol v2.1.4: Lobby Placeholder & Controls Fix ===== */
 .online-foundation-panel{overflow:visible;}
 .online-primary-actions{margin:10px 0;}
 .online-clear-btn{width:100%;margin-top:8px;padding:8px;background:rgba(0,0,0,.24);border:1px dashed rgba(76,110,126,.85);color:var(--muted);font-family:inherit;font-weight:900;cursor:pointer;}
@@ -2791,7 +2791,7 @@ nav.setup-links {
 @media(max-width:430px){.online-foundation-panel{padding:12px 10px;}.online-foundation-panel p{font-size:11px;line-height:1.55;}.online-room-display{margin-top:8px;}}
 
 
-/* ===== CronoGol v2.1.3: Online Mode Layout Cleanup ===== */
+/* ===== CronoGol v2.1.4: Online Mode Layout Cleanup ===== */
 
 /* Tres modos en una fila adaptable */
 .game-mode-control{
@@ -2831,4 +2831,20 @@ body.online-mode-active .online-foundation-panel{
   .game-mode-control .segment-btn{
     min-height: 44px;
   }
+}
+
+
+/* ===== CronoGol v2.1.4: Ko-fi Support Update ===== */
+.kofi-direct-btn{
+  width:100%;
+  margin-top:10px;
+  background:var(--blue);
+  color:#fff;
+  padding:12px;
+  border:3px solid #050707;
+  font-weight:900;
+  cursor:pointer;
+}
+.kofi-link{
+  display:inline-block;
 }

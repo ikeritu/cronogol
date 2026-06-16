@@ -1,1 +1,1 @@
-CronoGol v2.1.3 — Online Mode Layout Cleanup
+CronoGol v2.1.4 — Ko-fi Support Update

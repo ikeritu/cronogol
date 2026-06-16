@@ -51,8 +51,7 @@ const CRONOGOL_CONFIG = {
   siteUrl:"https://cronogol.es/",
   whatsappText: "Estoy jugando a CronoGol, el juego del cronómetro Casio ⚽⌚\n\nPruébalo aquí:\nhttps://cronogol.es/",
   paypalUrl: "https://paypal.me/ikeritus",
-  bizumPhone: "+34615717190",
-  bizumConcept: "CronoGol",
+  kofiUrl: "https://ko-fi.com/ikeritus",
   contactEmail: "ikeritu@hotmail.com"
 };
 
@@ -195,7 +194,7 @@ const MODAL_TEXTS = {
     close: "CERRAR",
     supportTitle: "APOYA CRONOGOL",
     supportIntro: "CronoGol es gratis y lo seguirá siendo.",
-    bizumButton: "Abrir Bizum",
+    kofiButton: "Abrir Ko-fi",
     paypalButton: "Abrir PayPal",
     concept: "Concepto"
   },
@@ -230,7 +229,7 @@ const MODAL_TEXTS = {
     close: "CLOSE",
     supportTitle: "SUPPORT CRONOGOL",
     supportIntro: "CronoGol is free and will remain free.",
-    bizumButton: "Open Bizum",
+    kofiButton: "Open Ko-fi",
     paypalButton: "Open PayPal",
     concept: "Concept"
   }
@@ -928,7 +927,7 @@ function evaluateShootoutPenalty(v){
 }
 function isShootoutFinished(){ const a=penaltyShootout.shots[0],b=penaltyShootout.shots[1]; return a.length>=5&&b.length>=5&&a.length===b.length&&gameState.players[0].goals!==gameState.players[1].goals; }
 function showFinal(pens){ incrementMatches(); let text=scoreText(); if(gameState.players[0].goals>gameState.players[1].goals) text+=`. Gana ${gameState.players[0].name}.`; else if(gameState.players[1].goals>gameState.players[0].goals) text+=`. Gana ${gameState.players[1].name}.`; else text+=". Igualado antes de penaltis."; if(pens) text+=" Resuelto en penaltis."; gameState.lastFinalText=formattedFinalResult(); showModal("FINAL DEL PARTIDO",text,finalHtml(),[{text:"REVANCHA",action:restartSameMatch},{text:"COMPARTIR RESULTADO",action:shareResult},{text:"COPIAR RESULTADO",action:copyResult},{text:"NUEVA PARTIDA",action:resetToSetup}]); }
-function finalHtml(){ return `<div class="donation-item"><strong>Resumen</strong><br>Tiradas: ${gameState.totalTurns}<br>Goles: ${gameState.stats.goals}<br>Postes/Largueros: ${gameState.stats.woodwork}<br>Tarjetas: ${gameState.stats.cards}<br>Especiales: ${gameState.stats.specials}</div><div class="donation-item"><strong>☕ CronoGol es gratis</strong><br><button class="bizum-direct-btn" onclick="openBizum()">Abrir Bizum</button><a class="support-link" href="${CRONOGOL_CONFIG.paypalUrl}" target="_blank">PayPal</a></div>`; }
+function finalHtml(){ return `<div class="donation-item"><strong>Resumen</strong><br>Tiradas: ${gameState.totalTurns}<br>Goles: ${gameState.stats.goals}<br>Postes/Largueros: ${gameState.stats.woodwork}<br>Tarjetas: ${gameState.stats.cards}<br>Especiales: ${gameState.stats.specials}</div><div class="donation-item"><strong>☕ CronoGol es gratis</strong><br><button class="kofi-direct-btn" onclick="openKofi()">Abrir Ko-fi</button><a class="support-link" href="${CRONOGOL_CONFIG.paypalUrl}" target="_blank">PayPal</a></div>`; }
 function restartSameMatch(){ closeModal(); player1Input.value=gameState.players[0].name; player2Input.value=gameState.players[1].name; startMatch(); }
 function switchTurn(){ gameState.currentPlayerIndex=gameState.currentPlayerIndex===0?1:0; processSkippedTurns(); }
 function processSkippedTurns(){ let safe=0; while(currentPlayer().skipTurns>0&&safe<4){ const p=currentPlayer(); p.skipTurns--; addLog(`${clockSec()}  ${p.name} pierde turno por sanción`); gameState.currentPlayerIndex=gameState.currentPlayerIndex===0?1:0; safe++; } }
@@ -1243,10 +1242,8 @@ function showSupportModal(){
       <div class="support-highlight">☕ ${isEn ? "Voluntary support" : "Apoyo voluntario"}</div>
       <div class="donation-data">
         <div class="donation-item">
-          <strong>Bizum</strong><br>
-          ${CRONOGOL_CONFIG.bizumPhone}<br>
-          <small>${isEn ? "Concept" : "Concepto"}: ${CRONOGOL_CONFIG.bizumConcept}</small>
-          <button class="bizum-direct-btn" onclick="openBizum()">${isEn ? "Open Bizum" : "Abrir Bizum"}</button>
+          <strong>Ko-fi</strong><br>
+          <a class="support-link kofi-link" href="${CRONOGOL_CONFIG.kofiUrl}" target="_blank" rel="noopener">${isEn ? "Open Ko-fi" : "Abrir Ko-fi"}</a>
         </div>
         <div class="donation-item">
           <strong>PayPal</strong><br>
@@ -1313,7 +1310,7 @@ function showSupportModal(){
   showModal(
     t.supportTitle,
     t.supportIntro,
-    `<div class="donation-data"><div class="donation-item"><strong>Bizum</strong><br>${CRONOGOL_CONFIG.bizumPhone} · ${t.concept}: ${CRONOGOL_CONFIG.bizumConcept}<button class="bizum-direct-btn" onclick="openBizum()">${t.bizumButton}</button></div><div class="donation-item"><strong>PayPal</strong><br><a class="support-link" href="${CRONOGOL_CONFIG.paypalUrl}" target="_blank">${t.paypalButton}</a></div></div>`,
+    `<div class="donation-data"><div class="donation-item"><strong>Ko-fi</strong><br><a class="support-link kofi-link" href="${CRONOGOL_CONFIG.kofiUrl}" target="_blank" rel="noopener">${t.kofiButton || "Abrir Ko-fi"}</a></div><div class="donation-item"><strong>PayPal</strong><br><a class="support-link" href="${CRONOGOL_CONFIG.paypalUrl}" target="_blank">${t.paypalButton}</a></div></div>`,
     [{text:t.close, action:closeModal}]
   );
 }
@@ -1347,7 +1344,7 @@ function showSupportModal(){
   showModal(
     t.supportTitle,
     t.supportIntro,
-    `<div class="donation-data"><div class="donation-item"><strong>Bizum</strong><br>${CRONOGOL_CONFIG.bizumPhone} · ${t.concept}: ${CRONOGOL_CONFIG.bizumConcept}<button class="bizum-direct-btn" onclick="openBizum()">${t.bizumButton}</button></div><div class="donation-item"><strong>PayPal</strong><br><a class="support-link" href="${CRONOGOL_CONFIG.paypalUrl}" target="_blank">${t.paypalButton}</a></div></div>`,
+    `<div class="donation-data"><div class="donation-item"><strong>Ko-fi</strong><br><a class="support-link kofi-link" href="${CRONOGOL_CONFIG.kofiUrl}" target="_blank" rel="noopener">${t.kofiButton || "Abrir Ko-fi"}</a></div><div class="donation-item"><strong>PayPal</strong><br><a class="support-link" href="${CRONOGOL_CONFIG.paypalUrl}" target="_blank">${t.paypalButton}</a></div></div>`,
     [{text:t.close, action:closeModal}]
   );
 }
@@ -1386,7 +1383,7 @@ const CG_TEXT = {
     cards: "Tarjetas",
     specials: "Especiales",
     free: "☕ CronoGol es gratis",
-    openBizum: "Abrir Bizum",
+    openKofi: "Abrir Ko-fi",
     rematch: "REVANCHA",
     shareResult: "COMPARTIR RESULTADO",
     copyResult: "COPIAR RESULTADO",
@@ -1461,7 +1458,7 @@ const CG_TEXT = {
     cards: "Cards",
     specials: "Specials",
     free: "☕ CronoGol is free",
-    openBizum: "Open Bizum",
+    openKofi: "Open Ko-fi",
     rematch: "REMATCH",
     shareResult: "SHARE RESULT",
     copyResult: "COPY RESULT",
@@ -1642,7 +1639,7 @@ function cgPatchDynamicTranslations(){
       showModal(
         cgT("supportTitle"),
         cgT("supportIntro"),
-        `<div class="donation-data"><div class="donation-item"><strong>Bizum</strong><br>${CRONOGOL_CONFIG.bizumPhone} · ${cgT("concept")}: ${CRONOGOL_CONFIG.bizumConcept}<button class="bizum-direct-btn" onclick="openBizum()">${cgT("openBizum")}</button></div><div class="donation-item"><strong>PayPal</strong><br><a class="support-link" href="${CRONOGOL_CONFIG.paypalUrl}" target="_blank">${cgT("paypal")}</a></div></div>`,
+        `<div class="donation-data"><div class="donation-item"><strong>Ko-fi</strong><br><a class="support-link kofi-link" href="${CRONOGOL_CONFIG.kofiUrl}" target="_blank" rel="noopener">${cgT("openKofi")}</a></div><div class="donation-item"><strong>PayPal</strong><br><a class="support-link" href="${CRONOGOL_CONFIG.paypalUrl}" target="_blank">${cgT("paypal")}</a></div></div>`,
         [{text:cgT("close"), action:closeModal}]
       );
     };
@@ -1780,27 +1777,8 @@ if(document.readyState === "loading"){
 
 /* ===== CronoGol v1.9.6: support bugfix + clean share/support functions ===== */
 
-async function openBizum(){
-  const isEn = currentLang === "en";
-  const conceptLabel = isEn ? "Concept" : "Concepto";
-  const copiedMsg = isEn ? "Bizum details copied" : "Datos de Bizum copiados";
-  const fallbackMsg = isEn
-    ? "If your bank app does not open, use the copied details."
-    : "Si tu banco no se abre, usa los datos copiados.";
-
-  const text = `Bizum: ${CRONOGOL_CONFIG.bizumPhone} · ${conceptLabel}: ${CRONOGOL_CONFIG.bizumConcept}`;
-
-  try {
-    await copyText(text, copiedMsg);
-  } catch(e) {
-    showToast(text);
-  }
-
-  window.location.href = `bizum://send?phone=${encodeURIComponent(CRONOGOL_CONFIG.bizumPhone)}&concept=${encodeURIComponent(CRONOGOL_CONFIG.bizumConcept)}`;
-
-  setTimeout(() => {
-    showToast(fallbackMsg);
-  }, 1200);
+function openKofi(){
+  window.open(CRONOGOL_CONFIG.kofiUrl, "_blank", "noopener");
 }
 
 async function shareCronoGol(){
@@ -1839,10 +1817,8 @@ function showSupportModal(){
       <div class="support-highlight">☕ ${isEn ? "Voluntary support" : "Apoyo voluntario"}</div>
       <div class="donation-data">
         <div class="donation-item">
-          <strong>Bizum</strong><br>
-          ${CRONOGOL_CONFIG.bizumPhone}<br>
-          <small>${isEn ? "Concept" : "Concepto"}: ${CRONOGOL_CONFIG.bizumConcept}</small>
-          <button class="bizum-direct-btn" onclick="openBizum()">${isEn ? "Open Bizum" : "Abrir Bizum"}</button>
+          <strong>Ko-fi</strong><br>
+          <a class="support-link kofi-link" href="${CRONOGOL_CONFIG.kofiUrl}" target="_blank" rel="noopener">${isEn ? "Open Ko-fi" : "Abrir Ko-fi"}</a>
         </div>
         <div class="donation-item">
           <strong>PayPal</strong><br>
@@ -1966,7 +1942,7 @@ function finalHtml(pens=false){
   <div class="donation-item final-support-box">
     <strong>☕ ${isEn ? "CronoGol is free" : "CronoGol es gratis"}</strong><br>
     ${isEn ? "If this match made you smile, you can buy me a coffee." : "Si esta partida te ha divertido, puedes invitarme a un café."}
-    <button class="bizum-direct-btn" onclick="openBizum()">${isEn ? "Open Bizum" : "Abrir Bizum"}</button>
+    <button class="kofi-direct-btn" onclick="openKofi()">${isEn ? "Open Ko-fi" : "Abrir Ko-fi"}</button>
     <a class="support-link" href="${CRONOGOL_CONFIG.paypalUrl}" target="_blank" rel="noopener">${isEn ? "Open PayPal" : "Abrir PayPal"}</a>
   </div>`;
 }

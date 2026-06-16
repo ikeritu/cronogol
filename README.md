@@ -1,7 +1,16 @@
-# CronoGol v2.1.3 — Online Mode Layout Cleanup
+# CronoGol v2.1.4 — Ko-fi Support Update
 
 
 
+
+
+## v2.1.4 — Ko-fi Support Update
+
+- Se mantiene PayPal.
+- Se sustituye Bizum por Ko-fi en `Apoya CronoGol`.
+- Actualizado el texto de soporte a `Ko-fi / PayPal`.
+- Enlace Ko-fi configurado: `https://ko-fi.com/ikeritus`.
+- No se toca lógica de juego, online, Supabase ni reglas.
 
 ## v2.1.3 — Online Mode Layout Cleanup
 
@@ -154,7 +163,7 @@ Mejorar la sensación de juego sin modificar las reglas ni la lógica base.
 - Penalti/falta.
 - Historial.
 - Estadísticas.
-- Bizum/PayPal.
+- Ko-fi/PayPal.
 
 ## QA recomendado
 
