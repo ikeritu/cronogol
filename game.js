@@ -51,7 +51,7 @@ const CRONOGOL_CONFIG = {
   siteUrl:"https://cronogol.es/",
   whatsappText: "Estoy jugando a CronoGol, el juego del cronómetro Casio ⚽⌚\n\nPruébalo aquí:\nhttps://cronogol.es/",
   paypalUrl: "https://paypal.me/ikeritus",
-  kofiUrl: "https://ko-fi.com/ikeritus",
+  kofiUrl: "https://ko-fi.com/ikeritu",
   contactEmail: "ikeritu@hotmail.com"
 };
 

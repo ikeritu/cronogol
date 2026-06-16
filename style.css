@@ -2782,7 +2782,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.1.4: Lobby Placeholder & Controls Fix ===== */
+/* ===== CronoGol v2.1.5: Lobby Placeholder & Controls Fix ===== */
 .online-foundation-panel{overflow:visible;}
 .online-primary-actions{margin:10px 0;}
 .online-clear-btn{width:100%;margin-top:8px;padding:8px;background:rgba(0,0,0,.24);border:1px dashed rgba(76,110,126,.85);color:var(--muted);font-family:inherit;font-weight:900;cursor:pointer;}
@@ -2791,7 +2791,7 @@ nav.setup-links {
 @media(max-width:430px){.online-foundation-panel{padding:12px 10px;}.online-foundation-panel p{font-size:11px;line-height:1.55;}.online-room-display{margin-top:8px;}}
 
 
-/* ===== CronoGol v2.1.4: Online Mode Layout Cleanup ===== */
+/* ===== CronoGol v2.1.5: Online Mode Layout Cleanup ===== */
 
 /* Tres modos en una fila adaptable */
 .game-mode-control{
@@ -2834,7 +2834,7 @@ body.online-mode-active .online-foundation-panel{
 }
 
 
-/* ===== CronoGol v2.1.4: Ko-fi Support Update ===== */
+/* ===== CronoGol v2.1.5: Ko-fi Support Update ===== */
 .kofi-direct-btn{
   width:100%;
   margin-top:10px;

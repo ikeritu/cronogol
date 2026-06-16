@@ -1,15 +1,24 @@
-# CronoGol v2.1.4 — Ko-fi Support Update
+# CronoGol v2.1.5 — Ko-fi URL & Auto Online Room
 
 
 
 
+
+
+## v2.1.5 — Ko-fi URL & Auto Online Room
+
+- Corrige el enlace real de Ko-fi a `https://ko-fi.com/ikeritu`.
+- Al seleccionar `1 vs 1 online`, se limpia la sala local anterior y se crea una sala nueva automáticamente.
+- Evita que aparezca un rival antiguo al entrar en modo online.
+- El botón `Crear sala` sigue disponible para regenerar una sala nueva.
+- No se toca la lógica del juego ni la sincronización online del partido.
 
 ## v2.1.4 — Ko-fi Support Update
 
 - Se mantiene PayPal.
 - Se sustituye Bizum por Ko-fi en `Apoya CronoGol`.
 - Actualizado el texto de soporte a `Ko-fi / PayPal`.
-- Enlace Ko-fi configurado: `https://ko-fi.com/ikeritus`.
+- Enlace Ko-fi configurado: `https://ko-fi.com/ikeritu`.
 - No se toca lógica de juego, online, Supabase ni reglas.
 
 ## v2.1.3 — Online Mode Layout Cleanup

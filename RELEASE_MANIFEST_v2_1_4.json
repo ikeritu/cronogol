@@ -10,7 +10,7 @@
     "Updated support modal labels and links",
     "Updated support text from Bizum/PayPal to Ko-fi/PayPal"
   ],
-  "assumption": "Ko-fi URL configured as https://ko-fi.com/ikeritus",
+  "assumption": "Ko-fi URL configured as https://ko-fi.com/ikeritu",
   "not_changed": [
     "Local game logic",
     "Online lobby",

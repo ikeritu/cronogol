@@ -1,8 +1,8 @@
 
-/* CronoGol v2.1.4 — Lobby Placeholder & Controls Fix */
+/* CronoGol v2.1.5 — Lobby Placeholder & Controls Fix */
 (function(){
   "use strict";
-  const CG_ONLINE_VERSION="2.1.2";
+  const CG_ONLINE_VERSION="2.1.5";
   const CG_SUPABASE_URL="https://xbrrdkflztxkvnngmdhu.supabase.co";
   const CG_SUPABASE_ANON_KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l";
   const CG_ROOMS_TABLE="cronogol_rooms";
@@ -41,9 +41,136 @@
   function explainSupabaseError(error){const raw=String(error&&error.message||""); if(error&&error.status===404) return "No encuentro la tabla cronogol_rooms. Ejecuta primero el SQL incluido."; if(error&&error.status===401) return "Supabase rechaza la clave pública. Revisa la anon/publishable key."; if(error&&error.status===409) return "Ese código ya existe. Pulsa Crear sala otra vez."; if(raw.toLowerCase().includes("failed to fetch")) return "No se pudo conectar con Supabase. Revisa URL, CORS o conexión."; return raw||"Error desconocido al conectar con Supabase.";}
   async function refreshLobby({silent=false}={}){if(!currentRoomCode){if(!silent)setStatus("No hay sala activa todavía.","error"); return null;} if(!silent)setStatus(`Actualizando sala ${currentRoomCode}...`,"loading"); const room=await refreshRoomRemote(currentRoomCode); rememberRoom(room,currentRole); if(room.status==="ready"&&room.guestName) setStatus(`Sala ${room.roomCode} lista · ${room.hostName} vs ${room.guestName}.`,"ok"); else setStatus(`Sala ${room.roomCode} activa · comparte el código con tu rival.`,"ok"); return room;}
   function startPolling(){if(pollTimer) window.clearInterval(pollTimer); if(!currentRoomCode)return; pollTimer=window.setInterval(()=>{refreshLobby({silent:true}).catch(()=>{});},POLL_INTERVAL_MS);}
-  function bindOnlineFoundationUI(){const createBtn=document.getElementById("cg-online-create-btn"); const joinBtn=document.getElementById("cg-online-join-btn"); const refreshBtn=document.getElementById("cg-online-refresh-btn"); const clearBtn=document.getElementById("cg-online-clear-btn"); const joinInput=document.getElementById("cg-online-join-code"); setStatus("Lobby online listo · crea una sala o únete con código.","ready"); const saved=restoreRememberedRoom(); if(saved){setStatus(`Sala recordada ${saved.roomCode}. Puedes actualizar o limpiar sala local.`,"ready"); refreshLobby({silent:true}).catch(()=>{});} if(joinInput){joinInput.addEventListener("input",()=>{joinInput.value=normalizeRoomCode(joinInput.value);}); joinInput.addEventListener("keydown",event=>{if(event.key==="Enter"&&joinBtn) joinBtn.click();});} if(clearBtn) clearBtn.addEventListener("click",clearRememberedRoom); if(createBtn){createBtn.addEventListener("click",async()=>{if(currentRoomCode&&currentRole==="host"){const confirmNew=window.confirm(`Ya eres anfitrión de la sala ${currentRoomCode}. ¿Crear una sala nueva?`); if(!confirmNew){setStatus(`Mantienes la sala ${currentRoomCode} · compártela con tu rival.`,"ready"); return;} clearRememberedRoom();} setLoading(true); setStatus("Creando sala en Supabase...","loading"); try{const room=await createRoomRemote(getSetupOptions()); rememberRoom(room,"host"); safeToast(`Sala ${room.roomCode} creada.`); setStatus(`Sala ${room.roomCode} creada · comparte el código con tu rival.`,"ok");}catch(error){const msg=explainSupabaseError(error); safeToast(msg); setStatus(msg,"error");}finally{setLoading(false);}});}
-    if(joinBtn){joinBtn.addEventListener("click",async()=>{const code=normalizeRoomCode(joinInput&&joinInput.value); if(!isValidRoomCode(code)){safeToast("Introduce un código de sala válido."); setStatus("Introduce un código de sala válido.","error"); return;} if(currentRole==="host"&&currentRoomCode===code){const msg="Ya eres el anfitrión de esta sala. Ábrela en otro móvil/navegador con otro nombre para unirte."; safeToast(msg); setStatus(msg,"error"); return;} if(currentRoomCode&&currentRoomCode!==code){currentRoomCode=""; currentRole=""; try{localStorage.removeItem("cronogol_online_active_room");}catch(e){} setRoomCode(""); setLobby(null);} setLoading(true); setStatus(`Uniéndose a sala ${code}...`,"loading"); try{const room=await joinRoomRemote(code,getLocalPlayerName()); rememberRoom(room,"guest"); safeToast(`Te has unido a la sala ${code}.`); setStatus(`Sala ${code} lista · ${room.hostName} vs ${room.guestName}.`,"ok");}catch(error){const msg=explainSupabaseError(error); safeToast(msg); setStatus(msg,"error");}finally{setLoading(false);}});}
-    if(refreshBtn){refreshBtn.addEventListener("click",async()=>{setLoading(true); try{await refreshLobby();}catch(error){const msg=explainSupabaseError(error); safeToast(msg); setStatus(msg,"error");}finally{setLoading(false);}});}}
+  function bindOnlineFoundationUI(){
+    const createBtn=document.getElementById("cg-online-create-btn");
+    const joinBtn=document.getElementById("cg-online-join-btn");
+    const refreshBtn=document.getElementById("cg-online-refresh-btn");
+    const clearBtn=document.getElementById("cg-online-clear-btn");
+    const joinInput=document.getElementById("cg-online-join-code");
+    const gameModeSelect=document.getElementById("game-mode");
+    let autoCreatingRoom=false;
+
+    setStatus("Selecciona 1 vs 1 online para crear una sala nueva automáticamente.","ready");
+
+    function clearLocalRoomSilent(){
+      currentRoomCode="";
+      currentRole="";
+      try{localStorage.removeItem("cronogol_online_active_room");}catch(e){}
+      setRoomCode("");
+      setLobby(null);
+      if(pollTimer) window.clearInterval(pollTimer);
+      pollTimer=null;
+    }
+
+    async function createFreshOnlineRoom(reason){
+      if(autoCreatingRoom) return;
+      autoCreatingRoom=true;
+      clearLocalRoomSilent();
+      setLoading(true);
+      setStatus(reason || "Creando nueva sala online...","loading");
+      try{
+        const room=await createRoomRemote(getSetupOptions());
+        rememberRoom(room,"host");
+        safeToast(`Sala ${room.roomCode} creada.`);
+        setStatus(`Sala ${room.roomCode} creada · esperando rival.`,"ok");
+      }catch(error){
+        const msg=explainSupabaseError(error);
+        safeToast(msg);
+        setStatus(msg,"error");
+      }finally{
+        setLoading(false);
+        autoCreatingRoom=false;
+      }
+    }
+
+    function onModeMaybeOnline(){
+      if(gameModeSelect && gameModeSelect.value==="online"){
+        createFreshOnlineRoom("Creando sala online nueva...");
+      }else{
+        clearLocalRoomSilent();
+        setStatus("Modo online desactivado.","ready");
+      }
+    }
+
+    if(joinInput){
+      joinInput.addEventListener("input",()=>{joinInput.value=normalizeRoomCode(joinInput.value);});
+      joinInput.addEventListener("keydown",event=>{if(event.key==="Enter"&&joinBtn) joinBtn.click();});
+    }
+
+    if(clearBtn){
+      clearBtn.addEventListener("click",()=>{
+        clearRememberedRoom();
+        setStatus("Sala local limpiada. Selecciona 1 vs 1 online para crear una sala nueva.","ready");
+      });
+    }
+
+    if(createBtn){
+      createBtn.addEventListener("click",async()=>{
+        await createFreshOnlineRoom("Creando sala online nueva...");
+      });
+    }
+
+    if(joinBtn){
+      joinBtn.addEventListener("click",async()=>{
+        const code=normalizeRoomCode(joinInput&&joinInput.value);
+        if(!isValidRoomCode(code)){
+          safeToast("Introduce un código de sala válido.");
+          setStatus("Introduce un código de sala válido.","error");
+          return;
+        }
+        if(currentRole==="host"&&currentRoomCode===code){
+          const msg="Ya eres el anfitrión de esta sala. Ábrela en otro móvil/navegador con otro nombre para unirte.";
+          safeToast(msg);
+          setStatus(msg,"error");
+          return;
+        }
+        if(currentRoomCode&&currentRoomCode!==code){
+          clearLocalRoomSilent();
+        }
+        setLoading(true);
+        setStatus(`Uniéndose a sala ${code}...`,"loading");
+        try{
+          const room=await joinRoomRemote(code,getLocalPlayerName());
+          rememberRoom(room,"guest");
+          safeToast(`Te has unido a la sala ${code}.`);
+          setStatus(`Sala ${code} lista · ${room.hostName} vs ${room.guestName}.`,"ok");
+        }catch(error){
+          const msg=explainSupabaseError(error);
+          safeToast(msg);
+          setStatus(msg,"error");
+        }finally{
+          setLoading(false);
+        }
+      });
+    }
+
+    if(refreshBtn){
+      refreshBtn.addEventListener("click",async()=>{
+        setLoading(true);
+        try{await refreshLobby();}
+        catch(error){
+          const msg=explainSupabaseError(error);
+          safeToast(msg);
+          setStatus(msg,"error");
+        }finally{
+          setLoading(false);
+        }
+      });
+    }
+
+    if(gameModeSelect){
+      gameModeSelect.addEventListener("change",onModeMaybeOnline);
+      document.querySelectorAll('[data-target="game-mode"][data-value="online"]').forEach(btn=>{
+        btn.addEventListener("click",()=>setTimeout(onModeMaybeOnline,0));
+      });
+      if(gameModeSelect.value==="online"){
+        createFreshOnlineRoom("Creando sala online nueva...");
+      }else{
+        clearLocalRoomSilent();
+      }
+    }
+  }
+  
   window.CronoGolOnline=Object.freeze({version:CG_ONLINE_VERSION,supabaseUrl:CG_SUPABASE_URL,table:CG_ROOMS_TABLE,randomRoomCode,normalizeRoomCode,isValidRoomCode,createRoomDraft,createMatchSnapshot,getOnlineStatus,fetchRoomRemote,createRoomRemote,joinRoomRemote,refreshRoomRemote});
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",bindOnlineFoundationUI); else bindOnlineFoundationUI();
 })();

@@ -1,19 +1,20 @@
 {
   "version": "2.1.5",
-  "name": "CronoGol v2.1.5 — Remote Snapshot Apply Draft",
-  "base": "v2.1.4 — Online Setup State Clarity",
-  "date": "2026-06-12",
+  "name": "Ko-fi URL & Auto Online Room",
+  "created_at": "2026-06-16T11:18:09.550760+00:00",
+  "base": "v2.1.4",
   "changes": [
-    "Adds remote snapshot application from Supabase Realtime room updates.",
-    "Reflects remote score, turn, half, player names, sanctions and finished state.",
-    "Ignores own-published snapshots to avoid echo loops.",
-    "Keeps local game and Supabase-disabled demo mode unchanged."
+    "Corrected Ko-fi URL to https://ko-fi.com/ikeritu",
+    "Automatically creates a fresh Supabase room when selecting 1 vs 1 online",
+    "Clears stale local room state before creating a new online room",
+    "Prevents old guest names from appearing when entering online mode",
+    "Keeps manual Crear sala as a regenerate-room action"
   ],
-  "validation": [
-    "node --check game.js",
-    "node --check online-foundation.js",
-    "node --check supabase-config.js",
-    "node --check sw.js",
-    "zip integrity checked"
+  "not_changed": [
+    "Local game logic",
+    "Rules",
+    "Supabase schema",
+    "Online lobby join flow",
+    "Sounds/vibration"
   ]
 }
