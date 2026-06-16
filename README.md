@@ -1,4 +1,4 @@
-# CronoGol v2.2.0 — Online Match Start
+# CronoGol v2.2.1 — Online Start Role & Names Fix
 
 
 
@@ -6,7 +6,17 @@
 
 
 
-## v2.2.0 — Online Match Start
+
+## v2.2.1 — Online Start Role & Names Fix
+
+Corrección de estabilidad sobre v2.2.0:
+
+- El host inicia la partida con el invitado real de Supabase.
+- El invitado ve el botón como espera/bloqueado, no como acción propia.
+- Si la sala pasa a `playing`, ambos dispositivos entran con los mismos nombres.
+- Se mantiene pendiente la sincronización de tiradas, turnos y marcador.
+
+## v2.2.1 — Online Match Start
 
 Primera transición online de lobby a partido:
 
@@ -17,7 +27,7 @@ Primera transición online de lobby a partido:
 - Ambos entran a la pantalla de partido con los mismos nombres.
 - Todavía no sincroniza tiradas, turnos ni marcador durante el partido.
 
-## v2.2.0 — Ko-fi URL & Auto Online Room
+## v2.2.1 — Ko-fi URL & Auto Online Room
 
 - Corrige el enlace real de Ko-fi a `https://ko-fi.com/ikeritu`.
 - Al seleccionar `1 vs 1 online`, se limpia la sala local anterior y se crea una sala nueva automáticamente.

@@ -1,6 +1,6 @@
 /*
 ===============================================================================
-CronoGol v2.2.0 — Online Match Start
+CronoGol v2.2.1 — Online Match Start
 ===============================================================================
 Objetivo:
 - Mantiene lobby online Supabase.
@@ -16,7 +16,7 @@ Importante:
 (function(){
   "use strict";
 
-  const CG_ONLINE_VERSION="2.2.0";
+  const CG_ONLINE_VERSION="2.2.1";
   const CG_SUPABASE_URL="https://xbrrdkflztxkvnngmdhu.supabase.co";
   const CG_SUPABASE_ANON_KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l";
   const CG_ROOMS_TABLE="cronogol_rooms";
@@ -28,6 +28,7 @@ Importante:
   let pollTimer=null;
   let autoCreatingRoom=false;
   let onlineLocalMatchStarted=false;
+  let latestRoom=null;
 
   function randomRoomCode(length=6){
     let code="";
@@ -164,12 +165,14 @@ Importante:
   function rowToLobby(row){
     if(!row) return null;
     const state=row.state_json||{};
-    const guestName=normalizedGuestName(row.guest_name||state.guestName||"");
+    const stateHost=(state.players&&state.players[0]&&state.players[0].name)||state.hostName||"";
+    const stateGuest=(state.players&&state.players[1]&&state.players[1].name)||state.guestName||"";
+    const guestName=normalizedGuestName(row.guest_name||stateGuest||"");
     const status=row.status || (guestName ? "ready" : "waiting");
     return {
       roomCode:row.room_code,
       status,
-      hostName:row.host_name||state.hostName||"Jugador 1",
+      hostName:cleanPlayerName(row.host_name||stateHost,"Jugador 1"),
       guestName,
       matchMode:row.match_mode||state.matchMode||"classic",
       gameMode:row.game_mode||state.gameMode||"online",
@@ -243,7 +246,7 @@ Importante:
     }
 
     const cleanGuest=cleanPlayerName(guestName,"Invitado");
-    const nextState=buildStateJson(current,cleanGuest,{phase:"lobby"});
+    const nextState=buildStateJson(current,cleanGuest,{phase:"lobby",players:[{index:0,name:current.hostName,goals:0,skipTurns:0},{index:1,name:cleanGuest,goals:0,skipTurns:0}]});
     const payload={
       status:"ready",
       guest_name:cleanGuest,
@@ -270,13 +273,17 @@ Importante:
     if(!currentRoomCode) throw new Error("No hay sala activa.");
     const room=await fetchRoomRemote(currentRoomCode);
     if(!(room.status==="ready"&&room.guestName)) throw new Error("Necesitas un rival conectado para empezar.");
-    const state=buildStateJson(room,room.guestName,{
+    const hostName=cleanPlayerName(room.hostName,"Jugador 1");
+    const guestName=cleanPlayerName(room.guestName,"Jugador 2");
+    const state=buildStateJson(room,guestName,{
       phase:"playing",
       status:"playing",
       startedAt:new Date().toISOString(),
+      hostName,
+      guestName,
       players:[
-        {index:0,name:room.hostName,goals:0,skipTurns:0},
-        {index:1,name:room.guestName,goals:0,skipTurns:0}
+        {index:0,name:hostName,goals:0,skipTurns:0},
+        {index:1,name:guestName,goals:0,skipTurns:0}
       ],
       score:[0,0],
       currentPlayerIndex:0,
@@ -284,6 +291,8 @@ Importante:
     });
     const payload={
       status:"playing",
+      host_name:hostName,
+      guest_name:guestName,
       state_json:state,
       app_version:CG_ONLINE_VERSION,
       last_seen_at:new Date().toISOString()
@@ -318,6 +327,7 @@ Importante:
   }
 
   function setLobby(room){
+    latestRoom=room||null;
     const host=document.getElementById("cg-online-host-name");
     const guest=document.getElementById("cg-online-guest-name");
     const state=document.getElementById("cg-online-room-state");
@@ -341,11 +351,23 @@ Importante:
   function updateStartButton(room){
     const btn=document.getElementById("cg-online-start-btn");
     if(!btn) return;
-    const ready=Boolean(room && room.status==="ready" && room.guestName && currentRole==="host");
+    const isHost=currentRole==="host";
+    if(!isHost && room && room.status==="ready" && room.guestName){
+      btn.disabled=true;
+      btn.classList.remove("is-ready");
+      btn.textContent=`Esperando a ${room.hostName || "anfitrión"}`;
+      return;
+    }
+    if(room && room.status==="playing"){
+      btn.disabled=true;
+      btn.classList.remove("is-ready");
+      btn.textContent="Partida iniciada";
+      return;
+    }
+    const ready=Boolean(room && room.status==="ready" && room.guestName && isHost);
     btn.disabled=!ready;
     btn.classList.toggle("is-ready",ready);
-    if(room && room.status==="playing") btn.textContent="Partida iniciada";
-    else btn.textContent="Empezar partido online";
+    btn.textContent="Empezar partido online";
   }
 
   function rememberRoom(room,role){
@@ -377,7 +399,8 @@ Importante:
   }
 
   function setLoading(isLoading){
-    document.querySelectorAll("#cg-online-create-btn,#cg-online-join-btn,#cg-online-refresh-btn,#cg-online-clear-btn,#cg-online-start-btn,#cg-online-join-code").forEach(el=>{el.disabled=Boolean(isLoading);});
+    document.querySelectorAll("#cg-online-create-btn,#cg-online-join-btn,#cg-online-refresh-btn,#cg-online-clear-btn,#cg-online-join-code").forEach(el=>{el.disabled=Boolean(isLoading);});
+    updateStartButton(latestRoom);
   }
 
   function explainSupabaseError(error){
@@ -405,8 +428,8 @@ Importante:
     onlineLocalMatchStarted=true;
 
     const state=room.stateJson||{};
-    const host=cleanPlayerName(state.hostName||room.hostName,"Jugador 1");
-    const guest=cleanPlayerName(state.guestName||room.guestName,"Jugador 2");
+    const host=cleanPlayerName((state.players&&state.players[0]&&state.players[0].name)||state.hostName||room.hostName,"Jugador 1");
+    const guest=cleanPlayerName((state.players&&state.players[1]&&state.players[1].name)||state.guestName||room.guestName,"Jugador 2");
     const mode=state.matchMode||room.matchMode||"classic";
 
     const p1=document.getElementById("player1-name");
@@ -440,7 +463,8 @@ Importante:
       setStatus(`Sala ${room.roomCode} en partida · entrando...`,"ok");
       startLocalOnlineMatch(room);
     }else if(room.status==="ready"&&room.guestName){
-      setStatus(`Sala ${room.roomCode} lista · ${room.hostName} vs ${room.guestName}.`,"ok");
+      if(currentRole==="host") setStatus(`Sala ${room.roomCode} lista · puedes empezar la partida.`,"ok");
+      else setStatus(`Sala ${room.roomCode} lista · esperando a ${room.hostName}.`,"ok");
     }else{
       setStatus(`Sala ${room.roomCode} creada · esperando rival.`,"ok");
     }
@@ -507,6 +531,10 @@ Importante:
 
     if(startBtn){
       startBtn.addEventListener("click",async()=>{
+        if(currentRole!=="host"){
+          const msg=latestRoom && latestRoom.hostName ? `Esperando a que ${latestRoom.hostName} empiece la partida.` : "Solo el anfitrión puede empezar la partida online.";
+          safeToast(msg); setStatus(msg,"ready"); updateStartButton(latestRoom); return;
+        }
         setLoading(true);
         setStatus("Iniciando partida online...","loading");
         try{
@@ -520,6 +548,7 @@ Importante:
           setStatus(msg,"error");
         }finally{
           setLoading(false);
+          updateStartButton(latestRoom);
         }
       });
     }
@@ -539,7 +568,7 @@ Importante:
           const room=await joinRoomRemote(code,getLocalPlayerName());
           rememberRoom(room,"guest");
           safeToast(`Te has unido a la sala ${code}.`);
-          setStatus(`Sala ${code} lista · ${room.hostName} vs ${room.guestName}.`,"ok");
+          setStatus(`Sala ${code} lista · esperando a ${room.hostName}.`,"ok");
         }catch(error){
           const msg=explainSupabaseError(error);
           safeToast(msg);

@@ -1,0 +1,18 @@
+{
+  "version": "2.2.1",
+  "name": "Online Start Role & Names Fix",
+  "created_at": "2026-06-16T22:21:14.816910+00:00",
+  "base": "v2.2.0",
+  "changes": [
+    "Host starts match with real Supabase guest name",
+    "state_json.players is kept as source for online start names",
+    "Guest start button becomes a waiting state",
+    "Guest auto-enters when room status is playing",
+    "window.startMatch exposed after local-stats wrapper"
+  ],
+  "not_changed": [
+    "No throw synchronization yet",
+    "No online score synchronization yet",
+    "Local and machine gameplay unchanged"
+  ]
+}
