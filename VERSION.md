@@ -1,1 +1,1 @@
-CronoGol v2.1.5 — Ko-fi URL & Auto Online Room
+CronoGol v2.2.0 — Online Match Start

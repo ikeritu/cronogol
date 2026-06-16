@@ -2508,6 +2508,7 @@ startMatch = function(){
   gameState.localStatsSaved = false;
   cgStartMatchBeforeLocalStats();
 };
+try{ window.startMatch = startMatch; }catch(e){}
 
 showFinal = function(pens){
   const savedStats = cgSaveFinishedMatch(Boolean(pens));
@@ -2548,3 +2549,6 @@ function cgWireLocalStats(){
 }
 
 try{ cgWireLocalStats(); }catch(e){}
+
+
+try{ window.startMatch = startMatch; }catch(e){}

@@ -11,8 +11,8 @@
   <meta property="og:image" content="https://cronogol.es/og-cronogol.png" />
   <link rel="icon" href="favicon.png" type="image/png" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-  <title>CronoGol v2.1.5</title>
-  <link rel="stylesheet" href="style.css?v=2.1.5" />
+  <title>CronoGol v2.2.0</title>
+  <link rel="stylesheet" href="style.css?v=2.2.0" />
   <link rel="manifest" href="site.webmanifest" />
 </head>
 <body>
@@ -106,7 +106,7 @@
             <button id="cg-online-refresh-btn" type="button">Actualizar lobby</button>
           </div>
 
-          <p>Online en pruebas: al elegir 1 vs 1 online se crea una sala nueva automáticamente.</p>
+          <p>Online en pruebas: al elegir 1 vs 1 online se crea una sala nueva automáticamente. El anfitrión podrá empezar cuando haya rival.</p>
 
           <div class="online-room-display" aria-live="polite">
             <span>Código de sala</span>
@@ -135,8 +135,9 @@
           </div>
 
           <button id="cg-online-clear-btn" class="online-clear-btn" type="button">Limpiar sala local</button>
+          <button id="cg-online-start-btn" class="online-start-match-btn" type="button" disabled>Empezar partido online</button>
 
-          <small id="cg-online-status">Lobby online listo · crea una sala o únete con código.</small>
+          <small id="cg-online-status">Lobby online listo · crea sala, espera rival y empieza partido.</small>
         </section>
 
         <nav class="setup-links secondary-actions-final setup-actions-polished" aria-label="Acciones secundarias">
@@ -153,7 +154,7 @@
           <span>WATER RESIST</span>
           <span>FOOTBALL CHRONO</span>
         </div>
-        <footer class="version-footer">CronoGol v2.1.5<span id="local-matches-count" style="display:none">0</span><br><span class="copyright-footer">© 2026 CronoGol. Juego original creado por Iker Ituarte. Todos los derechos reservados.</span></footer>
+        <footer class="version-footer">CronoGol v2.2.0<span id="local-matches-count" style="display:none">0</span><br><span class="copyright-footer">© 2026 CronoGol. Juego original creado por Iker Ituarte. Todos los derechos reservados.</span></footer>
       </div>
     </section>
 
@@ -285,8 +286,8 @@
       </div>
     </section>
   </main>
-<script src="online-foundation.js?v=2.1.5"></script>
-<script src="game.js?v=2.1.5"></script>
+<script src="online-foundation.js?v=2.2.0"></script>
+<script src="game.js?v=2.2.0"></script>
 <!-- Cloudflare Web Analytics -->
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7ee638b73aa24300b417a555e67fd1ae"}'></script>
 <!-- End Cloudflare Web Analytics -->

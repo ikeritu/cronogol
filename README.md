@@ -1,11 +1,23 @@
-# CronoGol v2.1.5 — Ko-fi URL & Auto Online Room
+# CronoGol v2.2.0 — Online Match Start
 
 
 
 
 
 
-## v2.1.5 — Ko-fi URL & Auto Online Room
+
+## v2.2.0 — Online Match Start
+
+Primera transición online de lobby a partido:
+
+- Cuando el lobby está listo, el anfitrión puede pulsar `Empezar partido online`.
+- La sala pasa de `ready` a `playing` en Supabase.
+- Se guarda estado inicial compartido: jugadores, marcador 0-0, modo y turno inicial.
+- El invitado detecta por polling/refresco que la partida ha empezado.
+- Ambos entran a la pantalla de partido con los mismos nombres.
+- Todavía no sincroniza tiradas, turnos ni marcador durante el partido.
+
+## v2.2.0 — Ko-fi URL & Auto Online Room
 
 - Corrige el enlace real de Ko-fi a `https://ko-fi.com/ikeritu`.
 - Al seleccionar `1 vs 1 online`, se limpia la sala local anterior y se crea una sala nueva automáticamente.
