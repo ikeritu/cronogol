@@ -1,4 +1,4 @@
-# CronoGol v2.4.6 — Technical Foundation
+# CronoGol v2.4.7 — Technical Foundation
 
 Base: `v1.10.17 — Flatten Secondary Actions`.
 

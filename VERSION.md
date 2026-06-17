@@ -1,1 +1,1 @@
-CronoGol v2.4.6 — Menu Order & Clean Release
+CronoGol v2.4.7 — Menu Final Fix & Host Mode Sync

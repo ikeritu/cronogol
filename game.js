@@ -60,7 +60,7 @@ const I18N = {
   es: {
     labelMode:"Rival",
     labelDuration:"Reglas",
-    labelDifficulty:"Dificultad",
+    labelDifficulty:"",
     machineDifficultyHint:"Normal: partida equilibrada.",
     advancedOptions:"Opciones avanzadas",
     labelPlayer1:"Jugador 1",
@@ -96,7 +96,7 @@ const I18N = {
   en: {
     labelMode:"Opponent",
     labelDuration:"Rules",
-    labelDifficulty:"Difficulty",
+    labelDifficulty:"",
     machineDifficultyHint:"Normal: balanced match.",
     advancedOptions:"Advanced options",
     labelPlayer1:"Player 1",
@@ -1775,7 +1775,7 @@ if(document.readyState === "loading"){
 }
 
 
-/* ===== CronoGol v2.4.6: support bugfix + clean share/support functions ===== */
+/* ===== CronoGol v2.4.7: support bugfix + clean share/support functions ===== */
 
 function openKofi(){
   window.open(CRONOGOL_CONFIG.kofiUrl, "_blank", "noopener");
@@ -1832,7 +1832,7 @@ function showSupportModal(){
 }
 
 
-/* ===== CronoGol v2.4.6: game feel improvements ===== */
+/* ===== CronoGol v2.4.7: game feel improvements ===== */
 /* No modifica reglas, turnos, START/STOP ni lógica base del partido. */
 
 function machineDifficultyText(){
@@ -1963,7 +1963,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-/* ===== CronoGol v2.4.6: Project Audit Fixes =====
+/* ===== CronoGol v2.4.7: Project Audit Fixes =====
    Jefe de proyecto: se aplican correcciones críticas de Frontend + UI/UX
    sin tocar reglas, marcador, máquina, sonidos ni vibración estable.
 */
@@ -2300,7 +2300,7 @@ syncActionControls();
 try{ bindAudioUnlockOnce(); }catch(e){}
 
 
-/* ===== CronoGol v2.4.6: Fast Rules & Stats Polish =====
+/* ===== CronoGol v2.4.7: Fast Rules & Stats Polish =====
    Rejugabilidad local sin backend: guarda resumen, acumulados e historial
    en localStorage. No cambia reglas, eventos de juego ni Cloudflare.
 */
@@ -2557,7 +2557,7 @@ try{ window.startMatch = startMatch; }catch(e){}
 
 /*
 ===============================================================================
-CronoGol v2.4.6 — Online Turn Control
+CronoGol v2.4.7 — Online Turn Control
 ===============================================================================
 Primera capa de control de turno online:
 - Host = jugador 1, invitado = jugador 2.
@@ -2572,7 +2572,7 @@ puedan jugar a la vez.
 (function(){
   "use strict";
 
-  const ONLINE_TURN_VERSION = "2.4.6";
+  const ONLINE_TURN_VERSION = "2.4.7";
   const SUPABASE_URL = "https://xbrrdkflztxkvnngmdhu.supabase.co";
   const SUPABASE_ANON_KEY = "sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l";
   const ROOMS_TABLE = "cronogol_rooms";
@@ -2944,10 +2944,10 @@ puedan jugar a la vez.
 
 
 
-/* CronoGol v2.4.6 — Online Throws & Score Sync */
+/* CronoGol v2.4.7 — Online Throws & Score Sync */
 (function(){
 "use strict";
-const V="2.4.6";
+const V="2.4.7";
 const URL="https://xbrrdkflztxkvnngmdhu.supabase.co";
 const KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l";
 const TABLE="cronogol_rooms";
@@ -3022,7 +3022,7 @@ window.CronoGolOnlineEvents=Object.freeze({version:V,pushThrowEvent:push,pullThr
 
 
 
-/* CronoGol v2.4.6 — Last Throw Message Fix */
+/* CronoGol v2.4.7 — Last Throw Message Fix */
 (function(){
   "use strict";
   let lastClean = null;
@@ -3083,10 +3083,10 @@ window.CronoGolOnlineEvents=Object.freeze({version:V,pushThrowEvent:push,pullThr
 
 
 
-/* CronoGol v2.4.6 — Rules Selector & Online Sanctions Fix */
+/* CronoGol v2.4.7 — Rules Selector & Online Sanctions Fix */
 (function(){
 "use strict";
-const V="2.4.6",URL="https://xbrrdkflztxkvnngmdhu.supabase.co",KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l",TABLE="cronogol_rooms";
+const V="2.4.7",URL="https://xbrrdkflztxkvnngmdhu.supabase.co",KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l",TABLE="cronogol_rooms";
 let busy=false;
 function st(){try{return window.CronoGolOnline&&window.CronoGolOnline.getOnlineStatus?window.CronoGolOnline.getOnlineStatus():{};}catch(e){return {};}}
 function code(){return String(st().currentRoomCode||"").trim().toUpperCase();}
@@ -3103,128 +3103,92 @@ window.CronoGolOnlineSanctions=Object.freeze({version:V,processOnlineSanctionSki
 
 
 
-/* CronoGol v2.4.6 — Rules First & Host Mode Sync */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+===============================================================================
+CronoGol v2.4.7 — Menu Final Fix & Host Mode Sync
+===============================================================================
+Corrección real, no cosmética:
+- Reglas queda antes que Rival en HTML.
+- Dificultad desaparece visualmente y queda fija en normal.
+- Reglas y Rival empiezan sin selección.
+- Rival queda bloqueado hasta elegir Clásico o Rápido.
+- No se puede empezar sin Reglas + Rival.
+- Online: el invitado hereda matchMode del anfitrión.
+===============================================================================
+*/
 (function(){
 "use strict";
-const V="2.4.6";
-let explicit=false,lastHostMode="";
-function id(x){return document.getElementById(x)}
-function rules(){try{const b=document.querySelector('.segment-btn[data-target="match-mode"].active');if(b&&b.dataset.value)return b.dataset.value;const s=id("match-mode");if(s&&s.value)return s.value;return gameState&&gameState.matchMode?gameState.matchMode:""}catch(e){return ""}}
-function rivals(){return Array.from(document.querySelectorAll('.segment-btn[data-target="game-mode"],select#game-mode,[data-target="game-mode"]'))}
-function gate(){try{explicit=explicit||document.body.dataset.rulesExplicit==="1";const block=!explicit&&homeScreen&&homeScreen.classList.contains("active");document.body.classList.toggle("rules-not-selected",block);document.body.classList.toggle("rules-selected",!block);rivals().forEach(el=>{if(block){el.setAttribute("aria-disabled","true");el.classList.add("rules-gated-disabled");if(el.tagName==="SELECT")el.disabled=true}else{el.removeAttribute("aria-disabled");el.classList.remove("rules-gated-disabled");if(el.tagName==="SELECT")el.disabled=false}});let hint=id("rules-gate-hint");const label=document.querySelector('[data-i18n="labelMode"]');if(!hint&&label&&label.parentElement){hint=document.createElement("div");hint.id="rules-gate-hint";hint.className="rules-gate-hint";label.parentElement.appendChild(hint)}if(hint){hint.style.display=block?"block":"none";hint.textContent=currentLang==="en"?"Choose rules first.":"Primero elige Clásico o Rápido."}}catch(e){}}
-function mark(){explicit=true;try{document.body.dataset.rulesExplicit="1";gameState.matchMode=rules()||gameState.matchMode||"classic"}catch(e){}gate();pushHostRules()}
-document.addEventListener("click",e=>{const m=e.target&&e.target.closest?e.target.closest('.segment-btn[data-target="match-mode"]'):null;if(m)setTimeout(mark,0);const r=e.target&&e.target.closest?e.target.closest('.segment-btn[data-target="game-mode"]'):null;if(r&&!explicit&&homeScreen&&homeScreen.classList.contains("active")){e.preventDefault();e.stopPropagation();gate()}},true);
-document.addEventListener("change",e=>{if(e.target&&e.target.id==="match-mode")setTimeout(mark,0);if(e.target&&e.target.id==="game-mode"&&!explicit&&homeScreen&&homeScreen.classList.contains("active")){e.preventDefault();e.target.value="local";gate()}},true);
-try{const prev=startMatch;startMatch=function(){if(homeScreen&&homeScreen.classList.contains("active")&&!explicit){gate();return}gameState.matchMode=rules()||gameState.matchMode||"classic";return prev.apply(this,arguments)}}catch(e){}
-async function fetchRoom(code,opt={}){const URL="https://xbrrdkflztxkvnngmdhu.supabase.co",KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l";const headers=Object.assign({"apikey":KEY,"Authorization":`Bearer ${KEY}`,"Content-Type":"application/json"},opt.headers||{});return fetch(`${URL}/rest/v1/cronogol_rooms?room_code=eq.${encodeURIComponent(code)}`+(opt.query||""),Object.assign({},opt,{headers}))}
-async function pushHostRules(){try{if(!window.CronoGolOnline||!window.CronoGolOnline.getOnlineStatus)return;const st=window.CronoGolOnline.getOnlineStatus()||{},code=String(st.currentRoomCode||"").trim().toUpperCase(),role=String(st.currentRole||"").toLowerCase();if(!code||role!=="host")return;const mode=rules()||gameState.matchMode||"classic";let state={};try{const r=await fetchRoom(code,{query:"&select=state_json"});const rows=await r.json();state=rows&&rows[0]&&rows[0].state_json?rows[0].state_json:{}}catch(e){}state.matchMode=mode;state.hostMatchMode=mode;state.rulesLockedByHost=true;state.rulesSyncedAt=new Date().toISOString();await fetchRoom(code,{method:"PATCH",headers:{"Prefer":"return=minimal"},body:JSON.stringify({state_json:state,app_version:V,last_seen_at:new Date().toISOString()})})}catch(e){try{console.warn("[v2.4.6 pushHostRules]",e)}catch(_){}}}
-async function pullHostRules(){try{if(!window.CronoGolOnline||!window.CronoGolOnline.getOnlineStatus)return;const st=window.CronoGolOnline.getOnlineStatus()||{},code=String(st.currentRoomCode||"").trim().toUpperCase(),role=String(st.currentRole||"").toLowerCase();if(!code||role!=="guest")return;const r=await fetchRoom(code,{query:"&select=state_json,status"});const rows=await r.json();const state=rows&&rows[0]&&rows[0].state_json?rows[0].state_json:{};const hostMode=state.hostMatchMode||state.matchMode;if(hostMode&&hostMode!==lastHostMode){lastHostMode=hostMode;gameState.matchMode=hostMode;document.querySelectorAll('.segment-btn[data-target="match-mode"]').forEach(b=>b.classList.toggle("active",b.dataset.value===hostMode));const sel=id("match-mode");if(sel)sel.value=hostMode;document.body.dataset.rulesExplicit="1";explicit=true;gate();try{updateUI()}catch(e){}}}catch(e){try{console.warn("[v2.4.6 pullHostRules]",e)}catch(_){}}}
-setInterval(()=>{pushHostRules();pullHostRules()},2200);
-try{const prev=syncActionControls;syncActionControls=function(){pullHostRules();return prev.apply(this,arguments)}}catch(e){}
-try{const prev=applyNormalResult;applyNormalResult=function(v,r){const mode=gameState.matchMode||rules();if(mode==="fast"&&Number(v)%10===9){if(typeof startSpecial==="function")return startSpecial("penalty",v)}return prev.apply(this,arguments)}}catch(e){}
-try{document.body.dataset.rulesExplicit="0";setTimeout(gate,80);setTimeout(gate,500)}catch(e){}
-window.CronoGolRulesFirst=Object.freeze({version:V,gate,markRulesExplicit:mark,pushHostRules,pullHostRules});
-})();
-
-
-
-/* CronoGol v2.4.6 — Menu Rules/Rival Cleanup */
-(function(){
-"use strict";
-const V="2.4.6";
-let rulesChosen=false,rivalChosen=false,clearing=false;
-function q(s){return document.querySelector(s)}
-function qa(s){return Array.from(document.querySelectorAll(s))}
-function id(x){return document.getElementById(x)}
-function home(){try{return homeScreen&&homeScreen.classList.contains("active")}catch(e){return false}}
-function getRules(){const b=q('.segment-btn[data-target="match-mode"].active');if(b&&b.dataset.value)return b.dataset.value;const s=id("match-mode");return s&&s.value?s.value:""}
-function getRival(){const b=q('.segment-btn[data-target="game-mode"].active');if(b&&b.dataset.value)return b.dataset.value;const s=id("game-mode");return s&&s.value?s.value:""}
-function setRivalEnabled(on){qa('.segment-btn[data-target="game-mode"],select#game-mode,[data-target="game-mode"]').forEach(el=>{if(on){el.classList.remove("rules-gated-disabled");el.removeAttribute("aria-disabled");if(el.tagName==="SELECT")el.disabled=false}else{el.classList.add("rules-gated-disabled");el.setAttribute("aria-disabled","true");if(el.tagName==="SELECT")el.disabled=true}})}
-function hint(){let h=id("menu-choice-hint");if(!h){const label=q('[data-i18n="labelMode"]');const parent=label&&label.parentElement?label.parentElement:document.body;h=document.createElement("div");h.id="menu-choice-hint";h.className="rules-gate-hint menu-choice-hint";parent.appendChild(h)}return h}
-function refresh(){if(!home())return;const r=getRules(),gm=getRival();rulesChosen=Boolean(rulesChosen||r);rivalChosen=Boolean(rivalChosen||gm);setRivalEnabled(Boolean(rulesChosen&&r));const canStart=Boolean(rulesChosen&&rivalChosen&&r&&gm);const start=id("start-match-btn")||q('[data-action="start-match"]')||q('.start-match-btn')||q('button[data-i18n="startMatch"]');if(start){start.disabled=!canStart;start.classList.toggle("start-disabled",!canStart);start.setAttribute("aria-disabled",canStart?"false":"true")}document.body.classList.toggle("rules-not-selected",!rulesChosen);document.body.classList.toggle("rules-selected",!!rulesChosen);document.body.classList.toggle("rival-not-selected",!rivalChosen);document.body.classList.toggle("rival-selected",!!rivalChosen);const h=hint();if(!rulesChosen){h.textContent=currentLang==="en"?"Choose Classic or Fast first.":"Primero elige Clásico o Rápido.";h.style.display="block"}else if(!rivalChosen){h.textContent=currentLang==="en"?"Now choose your opponent.":"Ahora elige rival.";h.style.display="block"}else{h.textContent="";h.style.display="none"}}
-function apply(){const r=getRules(),gm=getRival();if(r&&gameState)gameState.matchMode=r;if(gm&&gameState)gameState.gameMode=gm;return Boolean(r&&gm)}
-function clearDefaults(){if(!home())return;clearing=true;try{qa('.segment-btn[data-target="match-mode"],.segment-btn[data-target="game-mode"]').forEach(b=>{b.classList.remove("active");b.setAttribute("aria-pressed","false")});const ms=id("match-mode");if(ms)ms.value="";const gs=id("game-mode");if(gs)gs.value="";rulesChosen=false;rivalChosen=false;if(gameState){gameState.matchMode="";gameState.gameMode=""}document.body.dataset.rulesExplicit="0";document.body.dataset.rivalExplicit="0"}catch(e){}clearing=false;refresh()}
-function markRules(){if(clearing)return;rulesChosen=true;document.body.dataset.rulesExplicit="1";apply();refresh();try{if(window.CronoGolRulesFirst&&window.CronoGolRulesFirst.pushHostRules)window.CronoGolRulesFirst.pushHostRules()}catch(e){}}
-function markRival(){if(clearing)return;if(!rulesChosen&&home()){refresh();return}rivalChosen=true;document.body.dataset.rivalExplicit="1";apply();refresh()}
-document.addEventListener("click",e=>{const rb=e.target&&e.target.closest?e.target.closest('.segment-btn[data-target="match-mode"]'):null;if(rb)setTimeout(markRules,0);const gb=e.target&&e.target.closest?e.target.closest('.segment-btn[data-target="game-mode"]'):null;if(gb){if(!rulesChosen&&home()){e.preventDefault();e.stopPropagation();refresh();return}setTimeout(markRival,0)}},true);
-document.addEventListener("change",e=>{if(e.target&&e.target.id==="match-mode")setTimeout(markRules,0);if(e.target&&e.target.id==="game-mode"){if(!rulesChosen&&home()){e.preventDefault();e.target.value="";refresh();return}setTimeout(markRival,0)}},true);
-try{const prev=startMatch;startMatch=function(){if(home()&&!apply()){refresh();return}return prev.apply(this,arguments)}}catch(e){}
-document.addEventListener("click",e=>{const b=e.target&&e.target.closest?e.target.closest('#start-match-btn,.start-match-btn,button[data-i18n="startMatch"]'):null;if(b&&home()&&!apply()){e.preventDefault();e.stopPropagation();refresh()}},true);
-setTimeout(clearDefaults,70);setTimeout(refresh,110);setTimeout(refresh,500);
-window.CronoGolMenuChoice=Object.freeze({version:V,clearInitialMenuSelections:clearDefaults,refreshMenuGate:refresh,applyChosenValuesToGameState:apply});
-})();
-
-
-
-/* CronoGol v2.4.6 — Menu Order & Clean Release */
-(function(){
-"use strict";
-let rulesChosen=false,rivalChosen=false,clearing=false;
+const V="2.4.7";
+let rulesChosen=false, rivalChosen=false, clearing=false, lastHostMode="";
 
 function q(s){return document.querySelector(s)}
 function qa(s){return Array.from(document.querySelectorAll(s))}
 function id(x){return document.getElementById(x)}
 function home(){try{return homeScreen&&homeScreen.classList.contains("active")}catch(e){return false}}
-function box(el){return el ? (el.closest(".form-group,.field,.control,.option-block,.menu-row,.home-field,.setting-block")||el.parentElement||el) : null}
 
 function getRules(){
   const b=q('.segment-btn[data-target="match-mode"].active');
-  if(b&&b.dataset.value)return b.dataset.value;
+  if(b && b.dataset.value) return b.dataset.value;
   const s=id("match-mode");
-  return s&&s.value?s.value:"";
+  return s && s.value ? s.value : "";
 }
 function getRival(){
   const b=q('.segment-btn[data-target="game-mode"].active');
-  if(b&&b.dataset.value)return b.dataset.value;
+  if(b && b.dataset.value) return b.dataset.value;
   const s=id("game-mode");
-  return s&&s.value?s.value:"";
+  return s && s.value ? s.value : "";
+}
+function forceNormalDifficulty(){
+  const sel=id("machine-level") || id("difficulty") || id("machine-difficulty") || q('[name="difficulty"]') || q('[name="machine-difficulty"]');
+  if(sel) sel.value="normal";
+  if(gameState) gameState.machineLevel="normal";
 }
 function hideDifficulty(){
   try{
-    qa("label,.form-label,.field-label,.setting-label").forEach(l=>{
-      const t=(l.textContent||"").trim().toLowerCase();
-      if(t==="dificultad"||t==="difficulty"){
-        const b=box(l); if(b)b.classList.add("cg-hidden-difficulty");
-      }
+    qa('#machine-level-label,#difficulty,#machine-difficulty,[name="difficulty"],[name="machine-difficulty"],.machine-level-field').forEach(el=>{
+      const box=el.closest ? (el.closest(".form-group,.field,.control,.option-block,.menu-row,.home-field,label") || el) : el;
+      box.classList.add("cg-hidden-difficulty");
     });
-    qa('#difficulty,#machine-difficulty,[name="difficulty"],[name="machine-difficulty"]').forEach(e=>{
-      e.value="normal";
-      const b=box(e); if(b)b.classList.add("cg-hidden-difficulty");
+    qa("label,.form-label,.field-label,.setting-label").forEach(label=>{
+      const t=(label.textContent||"").trim().toLowerCase();
+      if(t==="dificultad" || t==="difficulty") label.classList.add("cg-hidden-difficulty");
     });
-    if(gameState) gameState.machineDifficulty="normal";
   }catch(e){}
+  forceNormalDifficulty();
 }
-function orderMenu(){
-  try{
-    const rulesLabel=q('[data-i18n="labelDuration"]');
-    const rivalLabel=q('[data-i18n="labelMode"]');
-    if(!rulesLabel||!rivalLabel)return;
-    const rulesBox=box(rulesLabel), rivalBox=box(rivalLabel);
-    if(!rulesBox||!rivalBox||!rivalBox.parentNode)return;
-    const pos=rivalBox.compareDocumentPosition(rulesBox);
-    if(pos & Node.DOCUMENT_POSITION_FOLLOWING){
-      rivalBox.parentNode.insertBefore(rulesBox,rivalBox);
-    }
-  }catch(e){}
-}
-function setRivalEnabled(on){
+function setRivalEnabled(enabled){
   qa('.segment-btn[data-target="game-mode"],select#game-mode,[data-target="game-mode"]').forEach(el=>{
-    if(on){
+    if(enabled){
       el.classList.remove("rules-gated-disabled");
       el.removeAttribute("aria-disabled");
-      if(el.tagName==="SELECT")el.disabled=false;
+      if(el.tagName==="SELECT") el.disabled=false;
     }else{
       el.classList.add("rules-gated-disabled");
       el.setAttribute("aria-disabled","true");
-      if(el.tagName==="SELECT")el.disabled=true;
+      if(el.tagName==="SELECT") el.disabled=true;
     }
   });
 }
 function ensureHint(){
   let h=id("menu-choice-hint");
   if(!h){
-    const label=q('[data-i18n="labelMode"]');
-    const parent=label&&label.parentElement?label.parentElement:(q(".home-card")||document.body);
+    const rivalLabel=q('[data-i18n="labelMode"]');
+    const parent=rivalLabel && rivalLabel.parentElement ? rivalLabel.parentElement : (q(".setup-card")||document.body);
     h=document.createElement("div");
     h.id="menu-choice-hint";
     h.className="rules-gate-hint menu-choice-hint";
@@ -3232,81 +3196,202 @@ function ensureHint(){
   }
   return h;
 }
-function refresh(){
-  if(!home())return;
-  hideDifficulty();
-  orderMenu();
-  const r=getRules(), gm=getRival();
-  rulesChosen=Boolean(rulesChosen||r);
-  rivalChosen=Boolean(rivalChosen||gm);
-  setRivalEnabled(Boolean(rulesChosen&&r));
-  const canStart=Boolean(rulesChosen&&rivalChosen&&r&&gm);
-  const start=id("start-match-btn")||q('[data-action="start-match"]')||q('.start-match-btn')||q('button[data-i18n="startMatch"]');
+function setStartEnabled(enabled){
+  const start=id("start-match-btn") || q('[data-action="start-match"]') || q('.start-match-btn') || q('button[data-i18n="startMatch"]');
   if(start){
-    start.disabled=!canStart;
-    start.classList.toggle("start-disabled",!canStart);
-    start.setAttribute("aria-disabled",canStart?"false":"true");
+    start.disabled=!enabled;
+    start.classList.toggle("start-disabled", !enabled);
+    start.setAttribute("aria-disabled", enabled ? "false" : "true");
   }
+}
+function refresh(){
+  if(!home()) return;
+  hideDifficulty();
+
+  const r=getRules();
+  const gm=getRival();
+
+  rulesChosen=Boolean(rulesChosen || r);
+  rivalChosen=Boolean(rivalChosen || gm);
+
+  setRivalEnabled(Boolean(rulesChosen && r));
+  setStartEnabled(Boolean(rulesChosen && rivalChosen && r && gm));
+
   const h=ensureHint();
-  if(!rulesChosen){h.textContent=currentLang==="en"?"Choose Classic or Fast first.":"Primero elige Clásico o Rápido.";h.style.display="block";}
-  else if(!rivalChosen){h.textContent=currentLang==="en"?"Now choose your opponent.":"Ahora elige rival.";h.style.display="block";}
-  else{h.textContent="";h.style.display="none";}
+  if(!rulesChosen){
+    h.textContent=currentLang==="en" ? "Choose Classic or Fast first." : "Primero elige Clásico o Rápido.";
+    h.style.display="block";
+  }else if(!rivalChosen){
+    h.textContent=currentLang==="en" ? "Now choose your opponent." : "Ahora elige rival.";
+    h.style.display="block";
+  }else{
+    h.textContent="";
+    h.style.display="none";
+  }
 }
 function apply(){
-  const r=getRules(), gm=getRival();
-  if(r&&gameState)gameState.matchMode=r;
-  if(gm&&gameState)gameState.gameMode=gm;
-  if(gameState)gameState.machineDifficulty="normal";
-  return Boolean(r&&gm);
+  const r=getRules();
+  const gm=getRival();
+  if(r && gameState) gameState.matchMode=r;
+  if(gm && gameState) gameState.gameMode=gm;
+  forceNormalDifficulty();
+  return Boolean(r && gm);
 }
 function clearDefaults(){
-  if(!home())return;
+  if(!home()) return;
   clearing=true;
-  qa('.segment-btn[data-target="match-mode"],.segment-btn[data-target="game-mode"]').forEach(b=>{
-    b.classList.remove("active");
-    b.setAttribute("aria-pressed","false");
+  qa('.segment-btn[data-target="match-mode"],.segment-btn[data-target="game-mode"]').forEach(btn=>{
+    btn.classList.remove("active");
+    btn.setAttribute("aria-pressed","false");
   });
-  const ms=id("match-mode"); if(ms)ms.value="";
-  const gs=id("game-mode"); if(gs)gs.value="";
-  rulesChosen=false; rivalChosen=false;
-  if(gameState){gameState.matchMode="";gameState.gameMode="";gameState.machineDifficulty="normal";}
+  const ms=id("match-mode"); if(ms) ms.value="";
+  const gs=id("game-mode"); if(gs) gs.value="";
+  rulesChosen=false;
+  rivalChosen=false;
+  if(gameState){
+    gameState.matchMode="";
+    gameState.gameMode="";
+    gameState.machineLevel="normal";
+  }
   clearing=false;
   refresh();
 }
-function markRules(){if(clearing)return;rulesChosen=true;apply();refresh();try{if(window.CronoGolRulesFirst&&window.CronoGolRulesFirst.pushHostRules)window.CronoGolRulesFirst.pushHostRules()}catch(e){}}
-function markRival(){if(clearing)return;if(!rulesChosen&&home()){refresh();return;}rivalChosen=true;apply();refresh();}
+function markRules(){
+  if(clearing) return;
+  rulesChosen=true;
+  apply();
+  refresh();
+  pushHostRules();
+}
+function markRival(){
+  if(clearing) return;
+  if(!rulesChosen && home()){ refresh(); return; }
+  rivalChosen=true;
+  apply();
+  refresh();
+}
+document.addEventListener("click", function(e){
+  const rb=e.target && e.target.closest ? e.target.closest('.segment-btn[data-target="match-mode"]') : null;
+  if(rb) setTimeout(markRules,0);
 
-document.addEventListener("click",e=>{
-  const rb=e.target&&e.target.closest?e.target.closest('.segment-btn[data-target="match-mode"]'):null;
-  if(rb)setTimeout(markRules,0);
-  const gb=e.target&&e.target.closest?e.target.closest('.segment-btn[data-target="game-mode"]'):null;
+  const gb=e.target && e.target.closest ? e.target.closest('.segment-btn[data-target="game-mode"]') : null;
   if(gb){
-    if(!rulesChosen&&home()){e.preventDefault();e.stopPropagation();refresh();return;}
+    if(!rulesChosen && home()){
+      e.preventDefault();
+      e.stopPropagation();
+      refresh();
+      return;
+    }
     setTimeout(markRival,0);
   }
-},true);
-document.addEventListener("change",e=>{
-  if(e.target&&e.target.id==="match-mode")setTimeout(markRules,0);
-  if(e.target&&e.target.id==="game-mode"){
-    if(!rulesChosen&&home()){e.preventDefault();e.target.value="";refresh();return;}
+}, true);
+document.addEventListener("change", function(e){
+  if(e.target && e.target.id==="match-mode") setTimeout(markRules,0);
+  if(e.target && e.target.id==="game-mode"){
+    if(!rulesChosen && home()){
+      e.preventDefault();
+      e.target.value="";
+      refresh();
+      return;
+    }
     setTimeout(markRival,0);
   }
-},true);
+}, true);
 
 try{
-  const prev=startMatch;
+  const prevStart=startMatch;
   startMatch=function(){
-    hideDifficulty();
-    if(home()&&!apply()){refresh();return;}
-    return prev.apply(this,arguments);
-  }
+    forceNormalDifficulty();
+    if(home() && !apply()){
+      refresh();
+      return;
+    }
+    return prevStart.apply(this, arguments);
+  };
+}catch(e){}
+
+function onlineStatus(){
+  try{
+    return window.CronoGolOnline && window.CronoGolOnline.getOnlineStatus ? window.CronoGolOnline.getOnlineStatus() : {};
+  }catch(e){return {}}
+}
+async function roomFetch(code, opts={}){
+  const URL="https://xbrrdkflztxkvnngmdhu.supabase.co";
+  const KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l";
+  const headers=Object.assign({"apikey":KEY,"Authorization":`Bearer ${KEY}`,"Content-Type":"application/json"},opts.headers||{});
+  return fetch(`${URL}/rest/v1/cronogol_rooms?room_code=eq.${encodeURIComponent(code)}`+(opts.query||""),Object.assign({},opts,{headers}));
+}
+async function pushHostRules(){
+  try{
+    const st=onlineStatus();
+    const code=String(st.currentRoomCode||"").trim().toUpperCase();
+    const role=String(st.currentRole||"").toLowerCase();
+    if(!code || role!=="host") return;
+    const mode=getRules() || (gameState && gameState.matchMode) || "";
+    if(!mode) return;
+
+    let state={};
+    try{
+      const r=await roomFetch(code,{query:"&select=state_json"});
+      const rows=await r.json();
+      state=rows && rows[0] && rows[0].state_json ? rows[0].state_json : {};
+    }catch(e){}
+
+    state.matchMode=mode;
+    state.hostMatchMode=mode;
+    state.rulesLockedByHost=true;
+    state.rulesSyncedAt=new Date().toISOString();
+
+    await roomFetch(code,{
+      method:"PATCH",
+      headers:{"Prefer":"return=minimal"},
+      body:JSON.stringify({state_json:state,app_version:V,last_seen_at:new Date().toISOString()})
+    });
+  }catch(e){try{console.warn("[v2.4.7 pushHostRules]",e)}catch(_){}}
+}
+async function pullHostRules(){
+  try{
+    const st=onlineStatus();
+    const code=String(st.currentRoomCode||"").trim().toUpperCase();
+    const role=String(st.currentRole||"").toLowerCase();
+    if(!code || role!=="guest") return;
+
+    const r=await roomFetch(code,{query:"&select=state_json,status"});
+    const rows=await r.json();
+    const state=rows && rows[0] && rows[0].state_json ? rows[0].state_json : {};
+    const hostMode=state.hostMatchMode || state.matchMode;
+
+    if(hostMode && hostMode!==lastHostMode){
+      lastHostMode=hostMode;
+      if(gameState) gameState.matchMode=hostMode;
+      const select=id("match-mode"); if(select) select.value=hostMode;
+      qa('.segment-btn[data-target="match-mode"]').forEach(b=>{
+        const on=b.dataset.value===hostMode;
+        b.classList.toggle("active",on);
+        b.setAttribute("aria-pressed",on?"true":"false");
+      });
+      rulesChosen=true;
+      refresh();
+    }
+  }catch(e){try{console.warn("[v2.4.7 pullHostRules]",e)}catch(_){}}
+}
+
+try{
+  const prevApply=applyNormalResult;
+  applyNormalResult=function(v,r){
+    const mode=(gameState && gameState.matchMode) || getRules();
+    if((mode==="five" || mode==="fast") && Number(v)%10===9){
+      if(typeof startSpecial==="function") return startSpecial("penalty",v);
+    }
+    return prevApply.apply(this, arguments);
+  };
 }catch(e){}
 
 setTimeout(clearDefaults,80);
-setTimeout(refresh,150);
-setTimeout(refresh,500);
-setInterval(()=>{if(home())refresh()},1200);
+setTimeout(refresh,180);
+setTimeout(refresh,600);
+setInterval(()=>{if(home()) refresh(); pushHostRules(); pullHostRules();},1500);
 
-window.CronoGolMenuChoice=Object.freeze({version:"2.4.6",refreshMenuGate:refresh,clearInitialMenuSelections:clearDefaults,applyChosenValuesToGameState:apply});
+window.CronoGolMenuChoice=Object.freeze({version:V,clearInitialMenuSelections:clearDefaults,refreshMenuGate:refresh,applyChosenValuesToGameState:apply,pushHostRules,pullHostRules});
 })();
 

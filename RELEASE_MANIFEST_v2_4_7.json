@@ -1,0 +1,25 @@
+{
+  "version": "2.4.7",
+  "name": "Menu Final Fix & Host Mode Sync",
+  "created_at": "2026-06-17T21:23:49.422672+00:00",
+  "base": "cronogol_v2_4_6_menu_order_clean.zip",
+  "audit_findings": [
+    "v2.4.6 failed because index.html still had Rival before Reglas",
+    "Difficulty block was id=machine-level-label / machine-level, not difficulty",
+    "App uses matchMode='five' for fast mode, not 'fast'",
+    "Previous audits were too abstract and did not match DOM/value names"
+  ],
+  "changes": [
+    "Static HTML reordered: Reglas before Rival",
+    "Difficulty block replaced with hidden machine-level normal select",
+    "No default rules/rival placeholders in hidden selects",
+    "Rival is disabled until rules selected",
+    "Start blocked until rules+rival selected",
+    "Host/guest sync uses matchMode five/classic",
+    "Fast hard safety accepts five or fast"
+  ],
+  "not_changed": [
+    "Supabase schema",
+    "Core local gameplay except menu gating and fast penalty safety"
+  ]
+}

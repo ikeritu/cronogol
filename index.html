@@ -11,8 +11,8 @@
   <meta property="og:image" content="https://cronogol.es/og-cronogol.png" />
   <link rel="icon" href="favicon.png" type="image/png" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-  <title>CronoGol v2.4.6</title>
-  <link rel="stylesheet" href="style.css?v=2.4.6" />
+  <title>CronoGol v2.4.7</title>
+  <link rel="stylesheet" href="style.css?v=2.4.7" />
   <link rel="manifest" href="site.webmanifest" />
 </head>
 <body>
@@ -44,29 +44,11 @@
             <input id="player2-name" type="text" value="Jugador 2" maxlength="14" />
           </label>
 
-          <div class="segmented-field">
-            <span data-i18n="labelMode">Rival</span>
-            <div class="segmented-control game-mode-control" role="group" aria-label="Modo de juego">
-              <button type="button" class="segment-btn" data-target="game-mode" data-rules-gated="1" data-value="local" data-i18n="modeLocal">1 vs 1 local</button>
-              <button type="button" class="segment-btn" data-target="game-mode" data-rules-gated="1" data-value="machine" data-i18n="modeMachine">1 vs Máquina</button>
-              <button type="button" class="segment-btn" data-target="game-mode" data-rules-gated="1" data-value="online" data-i18n="modeOnline">1 vs 1 online</button>
-            </div>
-            <select id="game-mode" class="native-select-hidden" aria-hidden="true" tabindex="-1">
-              <option value="local">1 vs 1 local</option>
-              <option value="machine">1 vs Máquina</option>
-              <option value="online">1 vs 1 online</option>
-            </select>
-          </div>
+          <select id="machine-level" class="native-select-hidden cg-hidden-difficulty" aria-hidden="true" tabindex="-1">
+            <option value="normal" selected>Normal</option>
+          </select>
 
-          <label id="machine-level-label" class="machine-level-field">
-            <span data-i18n="labelDifficulty">Dificultad</span>
-            <select id="machine-level">
-              <option value="easy">Fácil</option>
-              <option value="normal" selected>Normal</option>
-              <option value="hard">Difícil</option>
-            </select>
-              <small id="machine-difficulty-hint" class="field-hint" data-i18n="machineDifficultyHint">Normal: partida equilibrada.</small>
-          </label>
+
 
           <div class="segmented-field">
             <span data-i18n="labelDuration">Reglas</span>
@@ -75,10 +57,32 @@
               <button type="button" class="segment-btn" data-target="match-mode" data-value="five" data-i18n="durationFast"> Rápido</button>
             </div>
             <select id="match-mode" class="native-select-hidden" aria-hidden="true" tabindex="-1">
-              <option value="classic">Clásico: hasta 45 y 90</option>
+              <option value="" selected disabled>Elige reglas</option>
+<option value="classic">Clásico: hasta 45 y 90</option>
               <option value="five">Rápido: primero a 6 goles</option>
             </select>
           </div>
+
+
+
+          <div class="segmented-field">
+            <span data-i18n="labelMode">Rival</span>
+            <div class="segmented-control game-mode-control" role="group" aria-label="Modo de juego">
+              <button type="button" class="segment-btn" data-target="game-mode" data-rules-gated="1" data-value="local" data-i18n="modeLocal">1 vs 1 local</button>
+              <button type="button" class="segment-btn" data-target="game-mode" data-rules-gated="1" data-value="machine" data-i18n="modeMachine">1 vs Máquina</button>
+              <button type="button" class="segment-btn" data-target="game-mode" data-rules-gated="1" data-value="online" data-i18n="modeOnline">1 vs 1 online</button>
+            </div>
+            <select id="game-mode" class="native-select-hidden" aria-hidden="true" tabindex="-1">
+              <option value="" selected disabled>Elige rival</option>
+<option value="local">1 vs 1 local</option>
+              <option value="machine">1 vs Máquina</option>
+              <option value="online">1 vs 1 online</option>
+            </select>
+          </div>
+
+
+
+
 
           <div class="compact-options">
             <label class="checkbox-row">
@@ -154,7 +158,7 @@
           <span>WATER RESIST</span>
           <span>FOOTBALL CHRONO</span>
         </div>
-        <footer class="version-footer">CronoGol v2.4.6<span id="local-matches-count" style="display:none">0</span><br><span class="copyright-footer">© 2026 CronoGol. Juego original creado por Iker Ituarte. Todos los derechos reservados.</span></footer>
+        <footer class="version-footer">CronoGol v2.4.7<span id="local-matches-count" style="display:none">0</span><br><span class="copyright-footer">© 2026 CronoGol. Juego original creado por Iker Ituarte. Todos los derechos reservados.</span></footer>
       </div>
     </section>
 
@@ -286,8 +290,8 @@
       </div>
     </section>
   </main>
-<script src="online-foundation.js?v=2.4.6"></script>
-<script src="game.js?v=2.4.6"></script>
+<script src="online-foundation.js?v=2.4.7"></script>
+<script src="game.js?v=2.4.7"></script>
 <!-- Cloudflare Web Analytics -->
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "7ee638b73aa24300b417a555e67fd1ae"}'></script>
 <!-- End Cloudflare Web Analytics -->
