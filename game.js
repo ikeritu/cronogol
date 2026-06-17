@@ -2557,7 +2557,7 @@ try{ window.startMatch = startMatch; }catch(e){}
 
 /*
 ===============================================================================
-CronoGol v2.4.0 — Online Turn Control
+CronoGol v2.4.1 — Online Turn Control
 ===============================================================================
 Primera capa de control de turno online:
 - Host = jugador 1, invitado = jugador 2.
@@ -2572,7 +2572,7 @@ puedan jugar a la vez.
 (function(){
   "use strict";
 
-  const ONLINE_TURN_VERSION = "2.4.0";
+  const ONLINE_TURN_VERSION = "2.4.1";
   const SUPABASE_URL = "https://xbrrdkflztxkvnngmdhu.supabase.co";
   const SUPABASE_ANON_KEY = "sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l";
   const ROOMS_TABLE = "cronogol_rooms";
@@ -2811,10 +2811,21 @@ puedan jugar a la vez.
       if(!gameState.isRunning){
         mainActionBtn.textContent = currentLang === "en" ? "WAITING TURN" : "ESPERANDO TURNO";
       }
-      if(messageLabel && !pendingSpecial && !penaltyShootout){
-        messageLabel.textContent = currentLang === "en"
-          ? `Waiting for ${otherPlayerName()}.`
-          : `Esperando turno de ${otherPlayerName()}.`;
+      if(messageLabel && eventTitle && !pendingSpecial && !penaltyShootout){
+        const titleNow = String(eventTitle.textContent || "").trim();
+        const msgNow = String(messageLabel.textContent || "").trim();
+        const canReplace =
+          !titleNow || titleNow === "--" ||
+          !msgNow ||
+          msgNow.indexOf("Pulsa START") >= 0 ||
+          msgNow.indexOf("Press START") >= 0 ||
+          msgNow.indexOf("Esperando turno") === 0 ||
+          msgNow.indexOf("Waiting for") === 0;
+        if(canReplace){
+          messageLabel.textContent = currentLang === "en"
+            ? `Waiting for ${otherPlayerName()}.`
+            : `Esperando turno de ${otherPlayerName()}.`;
+        }
       }
       return;
     }
@@ -2933,10 +2944,10 @@ puedan jugar a la vez.
 
 
 
-/* CronoGol v2.4.0 — Online Throws & Score Sync */
+/* CronoGol v2.4.1 — Online Throws & Score Sync */
 (function(){
 "use strict";
-const V="2.4.0";
+const V="2.4.1";
 const URL="https://xbrrdkflztxkvnngmdhu.supabase.co";
 const KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l";
 const TABLE="cronogol_rooms";
@@ -2962,7 +2973,12 @@ function cls(){
 }
 function ev(kind,v,actor){
  const id=`${Date.now()}-${Math.random().toString(36).slice(2,8)}`;
- return {id,kind,value:Number.isFinite(Number(v))?Number(v):null,valueText:Number.isFinite(Number(v))?pad(Number(v)):(lastTwoDisplay?lastTwoDisplay.textContent:"--"),actorIndex:actor.idx,actorName:String(actor.name||"").slice(0,24),title:eventTitle?eventTitle.textContent:"",message:messageLabel?messageLabel.textContent:"",eventClass:cls(),createdAt:new Date().toISOString()};
+ const valueText=Number.isFinite(Number(v))?pad(Number(v)):(lastTwoDisplay?lastTwoDisplay.textContent:"--");
+ const actorName=String(actor.name||"").slice(0,24);
+ const title=eventTitle?String(eventTitle.textContent||""):"";
+ const rawMsg=messageLabel?String(messageLabel.textContent||""):"";
+ const cleanMessage=(title&&title!=="--")?(actorName?`${actorName} sacó ${valueText} → ${title}`:`${valueText} → ${title}`):rawMsg;
+ return {id,kind,value:Number.isFinite(Number(v))?Number(v):null,valueText,actorIndex:actor.idx,actorName,title,message:cleanMessage,eventClass:cls(),createdAt:new Date().toISOString()};
 }
 function state(lastThrow,reason){
  const ps=players();
@@ -3002,5 +3018,66 @@ try{const prev=evaluateSpecialThrow; evaluateSpecialThrow=function(v){const a=ac
 try{const prev=evaluateShootoutPenalty; evaluateShootoutPenalty=function(v){const a=actor();const out=prev(v);setTimeout(()=>{if(online())push(ev("shootout",v,a),"shootout_penalty")},140);return out;};}catch(e){}
 setInterval(pull,1800);
 window.CronoGolOnlineEvents=Object.freeze({version:V,pushThrowEvent:push,pullThrowState:pull});
+})();
+
+
+
+/* CronoGol v2.4.1 — Last Throw Message Fix */
+(function(){
+  "use strict";
+  let lastClean = null;
+
+  function remember(){
+    try{
+      if(!eventTitle || !messageLabel || !eventCard) return;
+      const title = String(eventTitle.textContent || "").trim();
+      const msg = String(messageLabel.textContent || "").trim();
+      if(title && title !== "--" && msg && msg.indexOf("Esperando turno") !== 0 && msg.indexOf("Waiting for") !== 0){
+        lastClean = {title, msg, cls:eventCard.className};
+      }
+    }catch(e){}
+  }
+
+  function restore(){
+    try{
+      if(!lastClean || !eventTitle || !messageLabel || !eventCard) return;
+      const msg = String(messageLabel.textContent || "").trim();
+      if(msg.indexOf("Esperando turno") === 0 || msg.indexOf("Waiting for") === 0){
+        eventTitle.textContent = lastClean.title;
+        messageLabel.textContent = lastClean.msg;
+        eventCard.className = lastClean.cls || "event-card event-neutral";
+      }
+    }catch(e){}
+  }
+
+  try{
+    const prevSync = syncActionControls;
+    syncActionControls = function(){
+      remember();
+      const out = prevSync();
+      restore();
+      return out;
+    };
+  }catch(e){}
+
+  try{
+    const prevNormal = applyNormalResult;
+    applyNormalResult = function(v,r){
+      const out = prevNormal(v,r);
+      remember();
+      setTimeout(remember,80);
+      return out;
+    };
+  }catch(e){}
+
+  try{
+    const prevSpecial = evaluateSpecialThrow;
+    evaluateSpecialThrow = function(v){
+      const out = prevSpecial(v);
+      remember();
+      setTimeout(remember,80);
+      return out;
+    };
+  }catch(e){}
 })();
 

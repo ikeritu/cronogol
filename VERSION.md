@@ -1,1 +1,1 @@
-CronoGol v2.4.0 — Online Throws & Score Sync
+CronoGol v2.4.1 — Last Throw Message Fix
