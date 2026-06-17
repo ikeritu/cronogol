@@ -1,4 +1,4 @@
-# CronoGol v2.2.1 — Online Start Role & Names Fix
+# CronoGol v2.3.0 — Online Turn Control
 
 
 
@@ -7,7 +7,20 @@
 
 
 
-## v2.2.1 — Online Start Role & Names Fix
+
+## v2.3.0 — Online Turn Control
+
+Primera capa de control de turno online:
+
+- Host = Jugador 1.
+- Invitado = Jugador 2.
+- Si no es tu turno, el botón `START` queda bloqueado.
+- Se muestra `ESPERANDO TURNO`.
+- Tras una tirada local, se sube a Supabase el turno activo y un snapshot básico.
+- El rival lee Supabase por polling y se le habilita `START` cuando le toca.
+- Todavía no es la sincronización completa de eventos/final, pero evita que ambos puedan jugar a la vez.
+
+## v2.3.0 — Online Start Role & Names Fix
 
 Corrección de estabilidad sobre v2.2.0:
 
@@ -16,7 +29,7 @@ Corrección de estabilidad sobre v2.2.0:
 - Si la sala pasa a `playing`, ambos dispositivos entran con los mismos nombres.
 - Se mantiene pendiente la sincronización de tiradas, turnos y marcador.
 
-## v2.2.1 — Online Match Start
+## v2.3.0 — Online Match Start
 
 Primera transición online de lobby a partido:
 
@@ -27,7 +40,7 @@ Primera transición online de lobby a partido:
 - Ambos entran a la pantalla de partido con los mismos nombres.
 - Todavía no sincroniza tiradas, turnos ni marcador durante el partido.
 
-## v2.2.1 — Ko-fi URL & Auto Online Room
+## v2.3.0 — Ko-fi URL & Auto Online Room
 
 - Corrige el enlace real de Ko-fi a `https://ko-fi.com/ikeritu`.
 - Al seleccionar `1 vs 1 online`, se limpia la sala local anterior y se crea una sala nueva automáticamente.

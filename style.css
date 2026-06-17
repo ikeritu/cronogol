@@ -2782,7 +2782,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.2.1: Lobby Placeholder & Controls Fix ===== */
+/* ===== CronoGol v2.3.0: Lobby Placeholder & Controls Fix ===== */
 .online-foundation-panel{overflow:visible;}
 .online-primary-actions{margin:10px 0;}
 .online-clear-btn{width:100%;margin-top:8px;padding:8px;background:rgba(0,0,0,.24);border:1px dashed rgba(76,110,126,.85);color:var(--muted);font-family:inherit;font-weight:900;cursor:pointer;}
@@ -2791,7 +2791,7 @@ nav.setup-links {
 @media(max-width:430px){.online-foundation-panel{padding:12px 10px;}.online-foundation-panel p{font-size:11px;line-height:1.55;}.online-room-display{margin-top:8px;}}
 
 
-/* ===== CronoGol v2.2.1: Online Mode Layout Cleanup ===== */
+/* ===== CronoGol v2.3.0: Online Mode Layout Cleanup ===== */
 
 /* Tres modos en una fila adaptable */
 .game-mode-control{
@@ -2834,7 +2834,7 @@ body.online-mode-active .online-foundation-panel{
 }
 
 
-/* ===== CronoGol v2.2.1: Ko-fi Support Update ===== */
+/* ===== CronoGol v2.3.0: Ko-fi Support Update ===== */
 .kofi-direct-btn{
   width:100%;
   margin-top:10px;
@@ -2850,7 +2850,7 @@ body.online-mode-active .online-foundation-panel{
 }
 
 
-/* ===== CronoGol v2.2.1: Online Match Start ===== */
+/* ===== CronoGol v2.3.0: Online Match Start ===== */
 .online-start-match-btn{
   width:100%;
   margin-top:10px;
@@ -2883,7 +2883,24 @@ body.online-mode-active .online-foundation-panel{
   border-color:rgba(230,143,24,.95);
 }
 
-/* ===== CronoGol v2.2.1: Online Start Role & Names Fix ===== */
+/* ===== CronoGol v2.3.0: Online Start Role & Names Fix ===== */
 .online-start-match-btn:disabled{
   opacity:.55;
+}
+
+
+/* ===== CronoGol v2.3.0: Online Turn Control ===== */
+#main-action-btn.online-waiting-turn,
+#special-start-btn.online-waiting-turn{
+  background:linear-gradient(#a98b42,#6e5b2d) !important;
+  color:#1b1205 !important;
+  opacity:.72;
+  cursor:not-allowed;
+  box-shadow:0 4px 0 #3a3019;
+}
+body.online-waiting-turn #turn-label{
+  color:#e68f18;
+}
+body.online-my-turn #turn-label{
+  color:#3fd06b;
 }

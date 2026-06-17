@@ -1,1 +1,1 @@
-CronoGol v2.2.1 — Online Start Role & Names Fix
+CronoGol v2.3.0 — Online Turn Control

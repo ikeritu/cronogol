@@ -2552,3 +2552,382 @@ try{ cgWireLocalStats(); }catch(e){}
 
 
 try{ window.startMatch = startMatch; }catch(e){}
+
+
+
+/*
+===============================================================================
+CronoGol v2.3.0 — Online Turn Control
+===============================================================================
+Primera capa de control de turno online:
+- Host = jugador 1, invitado = jugador 2.
+- Si no es tu turno, START queda bloqueado.
+- Tras una tirada local, se sube a Supabase el turno activo y un snapshot básico.
+- El rival lee Supabase por polling y habilita START cuando le toca.
+
+Todavía no es la sincronización completa de eventos/final, pero ya evita que ambos
+puedan jugar a la vez.
+===============================================================================
+*/
+(function(){
+  "use strict";
+
+  const ONLINE_TURN_VERSION = "2.3.0";
+  const SUPABASE_URL = "https://xbrrdkflztxkvnngmdhu.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l";
+  const ROOMS_TABLE = "cronogol_rooms";
+  const POLL_MS = 2500;
+
+  let pullTimer = null;
+  let lastPulledTurnAt = "";
+  let isPushingOnlineState = false;
+  let lastBlockedToastAt = 0;
+
+  function onlineStatus(){
+    try{
+      if(window.CronoGolOnline && typeof window.CronoGolOnline.getOnlineStatus === "function"){
+        return window.CronoGolOnline.getOnlineStatus() || {};
+      }
+    }catch(e){}
+    return {};
+  }
+
+  function activeRoomCode(){
+    return String(onlineStatus().currentRoomCode || "").trim().toUpperCase();
+  }
+
+  function activeRole(){
+    return String(onlineStatus().currentRole || "").trim().toLowerCase();
+  }
+
+  function onlineLocalPlayerIndex(){
+    return activeRole() === "guest" ? 1 : 0;
+  }
+
+  function isOnlineGameActive(){
+    try{
+      return Boolean(
+        gameState &&
+        gameState.gameMode === "online" &&
+        gameScreen &&
+        gameScreen.classList.contains("active") &&
+        activeRoomCode()
+      );
+    }catch(e){
+      return false;
+    }
+  }
+
+  function isLocalOnlineTurn(){
+    if(!isOnlineGameActive()) return true;
+    return Number(gameState.currentPlayerIndex || 0) === onlineLocalPlayerIndex();
+  }
+
+  function otherPlayerName(){
+    try{
+      const idx = Number(gameState.currentPlayerIndex || 0);
+      return gameState.players && gameState.players[idx] ? gameState.players[idx].name : "rival";
+    }catch(e){
+      return "rival";
+    }
+  }
+
+  function canApplyRemoteState(){
+    try{
+      return isOnlineGameActive() &&
+        !gameState.isRunning &&
+        !pendingSpecial &&
+        !penaltyShootout &&
+        !gameState.matchEnded;
+    }catch(e){
+      return false;
+    }
+  }
+
+  function roomEndpoint(code){
+    return `${ROOMS_TABLE}?room_code=eq.${encodeURIComponent(code)}`;
+  }
+
+  async function supabaseFetch(path, options = {}){
+    const headers = Object.assign({
+      "apikey": SUPABASE_ANON_KEY,
+      "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+      "Content-Type": "application/json"
+    }, options.headers || {});
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, Object.assign({}, options, {headers}));
+    const text = await response.text();
+    let data = null;
+    if(text){
+      try{ data = JSON.parse(text); }catch(e){ data = text; }
+    }
+    if(!response.ok){
+      const err = new Error(data && data.message ? data.message : `Supabase HTTP ${response.status}`);
+      err.status = response.status;
+      err.data = data;
+      throw err;
+    }
+    return data;
+  }
+
+  function onlineSnapshot(reason){
+    const players = (gameState.players || []).map((p, index)=>({
+      index,
+      name: String(p && p.name ? p.name : `Jugador ${index + 1}`).slice(0,24),
+      goals: Number(p && p.goals || 0),
+      skipTurns: Number(p && p.skipTurns || 0)
+    }));
+
+    return {
+      schemaVersion: 4,
+      appVersion: ONLINE_TURN_VERSION,
+      phase: "playing",
+      gameMode: "online",
+      matchMode: gameState.matchMode || "classic",
+      half: gameState.half || 1,
+      currentPlayerIndex: Number(gameState.currentPlayerIndex || 0),
+      players,
+      score: [
+        Number(players[0] && players[0].goals || 0),
+        Number(players[1] && players[1].goals || 0)
+      ],
+      stats: Object.assign({}, gameState.stats || {}),
+      matchEnded: Boolean(gameState.matchEnded),
+      lastTurnReason: reason || "turn_sync",
+      lastTurnActorRole: activeRole() || "unknown",
+      lastTurnSyncAt: new Date().toISOString()
+    };
+  }
+
+  async function pushOnlineTurnState(reason){
+    if(!isOnlineGameActive() || isPushingOnlineState) return;
+    const code = activeRoomCode();
+    if(!code) return;
+
+    isPushingOnlineState = true;
+    try{
+      const state = onlineSnapshot(reason);
+      await supabaseFetch(roomEndpoint(code), {
+        method: "PATCH",
+        headers: {"Prefer": "return=minimal"},
+        body: JSON.stringify({
+          status: gameState.matchEnded ? "finished" : "playing",
+          state_json: state,
+          app_version: ONLINE_TURN_VERSION,
+          last_seen_at: new Date().toISOString()
+        })
+      });
+    }catch(e){
+      try{ console.warn("[CronoGol online turn push]", e); }catch(_){}
+    }finally{
+      isPushingOnlineState = false;
+    }
+  }
+
+  function applyRemoteStateToLocal(state){
+    if(!state || !canApplyRemoteState()) return;
+
+    let changed = false;
+
+    if(Array.isArray(state.players) && state.players.length >= 2){
+      for(let i = 0; i < 2; i++){
+        const remote = state.players[i] || {};
+        if(gameState.players[i]){
+          if(remote.name && gameState.players[i].name !== remote.name){
+            gameState.players[i].name = String(remote.name).slice(0,24);
+            changed = true;
+          }
+          if(Number.isFinite(Number(remote.goals)) && gameState.players[i].goals !== Number(remote.goals)){
+            gameState.players[i].goals = Number(remote.goals);
+            changed = true;
+          }
+          if(Number.isFinite(Number(remote.skipTurns)) && gameState.players[i].skipTurns !== Number(remote.skipTurns)){
+            gameState.players[i].skipTurns = Number(remote.skipTurns);
+            changed = true;
+          }
+        }
+      }
+    }
+
+    if(Number.isFinite(Number(state.currentPlayerIndex))){
+      const remoteTurn = Number(state.currentPlayerIndex);
+      if(remoteTurn === 0 || remoteTurn === 1){
+        if(gameState.currentPlayerIndex !== remoteTurn){
+          gameState.currentPlayerIndex = remoteTurn;
+          changed = true;
+        }
+      }
+    }
+
+    if(state.matchEnded && !gameState.matchEnded){
+      gameState.matchEnded = true;
+      changed = true;
+    }
+
+    if(changed){
+      try{ updateUI(); }catch(e){}
+    }
+    try{ syncActionControls(); }catch(e){}
+  }
+
+  async function pullOnlineTurnState(){
+    if(!isOnlineGameActive()) return;
+    const code = activeRoomCode();
+    if(!code || !canApplyRemoteState()) return;
+
+    try{
+      const data = await supabaseFetch(`${roomEndpoint(code)}&select=state_json,status,updated_at`, {method:"GET"});
+      if(!Array.isArray(data) || !data.length) return;
+      const row = data[0];
+      const state = row.state_json || {};
+      const stamp = state.lastTurnSyncAt || row.updated_at || "";
+      if(stamp && stamp === lastPulledTurnAt) return;
+      lastPulledTurnAt = stamp;
+      if(row.status === "playing" || state.phase === "playing"){
+        applyRemoteStateToLocal(state);
+      }
+    }catch(e){
+      try{ console.warn("[CronoGol online turn pull]", e); }catch(_){}
+    }
+  }
+
+  function applyOnlineTurnControls(){
+    if(!mainActionBtn || !specialStartBtn) return;
+
+    if(!isOnlineGameActive()){
+      mainActionBtn.classList.remove("online-waiting-turn");
+      specialStartBtn.classList.remove("online-waiting-turn");
+      return;
+    }
+
+    const localTurn = isLocalOnlineTurn();
+    document.body.classList.toggle("online-my-turn", localTurn);
+    document.body.classList.toggle("online-waiting-turn", !localTurn);
+
+    if(!localTurn && !gameState.matchEnded){
+      mainActionBtn.disabled = true;
+      specialStartBtn.disabled = true;
+      mainActionBtn.classList.add("online-waiting-turn");
+      specialStartBtn.classList.add("online-waiting-turn");
+      if(!gameState.isRunning){
+        mainActionBtn.textContent = currentLang === "en" ? "WAITING TURN" : "ESPERANDO TURNO";
+      }
+      if(messageLabel && !pendingSpecial && !penaltyShootout){
+        messageLabel.textContent = currentLang === "en"
+          ? `Waiting for ${otherPlayerName()}.`
+          : `Esperando turno de ${otherPlayerName()}.`;
+      }
+      return;
+    }
+
+    mainActionBtn.classList.remove("online-waiting-turn");
+    specialStartBtn.classList.remove("online-waiting-turn");
+
+    if(localTurn && !gameState.isRunning && !pendingSpecial && !penaltyShootout && !gameState.matchEnded){
+      mainActionBtn.disabled = false;
+      mainActionBtn.textContent = safeCgText("start", "START");
+    }
+
+    if(localTurn && pendingSpecial && !gameState.matchEnded){
+      specialStartBtn.disabled = false;
+    }
+  }
+
+  function blockedTurnFeedback(){
+    const now = Date.now();
+    if(now - lastBlockedToastAt < 1400) return;
+    lastBlockedToastAt = now;
+    const msg = currentLang === "en"
+      ? `Wait for ${otherPlayerName()}'s turn.`
+      : `Espera el turno de ${otherPlayerName()}.`;
+    try{ showToast(msg); }catch(e){}
+  }
+
+  function startOnlineTurnPolling(){
+    if(pullTimer) clearInterval(pullTimer);
+    pullTimer = setInterval(()=>{ pullOnlineTurnState(); }, POLL_MS);
+  }
+
+  // Wrap control sync.
+  try{
+    const originalSyncActionControls = syncActionControls;
+    syncActionControls = function(){
+      originalSyncActionControls();
+      applyOnlineTurnControls();
+    };
+  }catch(e){}
+
+  // Guard main action.
+  try{
+    const originalHandleMainAction = handleMainAction;
+    handleMainAction = function(){
+      if(isOnlineGameActive() && !isLocalOnlineTurn()){
+        applyOnlineTurnControls();
+        blockedTurnFeedback();
+        return;
+      }
+      return originalHandleMainAction();
+    };
+  }catch(e){}
+
+  // Push turn state after any normal/special/shootout throw.
+  try{
+    const originalApplyNormalResult = applyNormalResult;
+    applyNormalResult = function(v, r){
+      const out = originalApplyNormalResult(v, r);
+      setTimeout(()=>pushOnlineTurnState("normal_throw"), 80);
+      setTimeout(()=>applyOnlineTurnControls(), 120);
+      return out;
+    };
+  }catch(e){}
+
+  try{
+    const originalEvaluateSpecialThrow = evaluateSpecialThrow;
+    evaluateSpecialThrow = function(v){
+      const out = originalEvaluateSpecialThrow(v);
+      setTimeout(()=>pushOnlineTurnState("special_throw"), 80);
+      setTimeout(()=>applyOnlineTurnControls(), 120);
+      return out;
+    };
+  }catch(e){}
+
+  try{
+    const originalEvaluateShootoutPenalty = evaluateShootoutPenalty;
+    evaluateShootoutPenalty = function(v){
+      const out = originalEvaluateShootoutPenalty(v);
+      setTimeout(()=>pushOnlineTurnState("shootout_penalty"), 80);
+      setTimeout(()=>applyOnlineTurnControls(), 120);
+      return out;
+    };
+  }catch(e){}
+
+  // After match start, publish initial turn snapshot and apply controls.
+  try{
+    const originalStartMatchForOnlineTurn = startMatch;
+    startMatch = function(){
+      const out = originalStartMatchForOnlineTurn();
+      setTimeout(()=>{
+        if(isOnlineGameActive()){
+          pushOnlineTurnState("match_start");
+          applyOnlineTurnControls();
+          startOnlineTurnPolling();
+        }
+      }, 180);
+      return out;
+    };
+    try{ window.startMatch = startMatch; }catch(e){}
+  }catch(e){}
+
+  // Keep polling alive; only acts during online game.
+  startOnlineTurnPolling();
+  setInterval(()=>{ try{ applyOnlineTurnControls(); }catch(e){} }, 1000);
+
+  window.CronoGolOnlineTurn = Object.freeze({
+    version: ONLINE_TURN_VERSION,
+    isOnlineGameActive,
+    onlineLocalPlayerIndex,
+    isLocalOnlineTurn,
+    pushOnlineTurnState,
+    pullOnlineTurnState
+  });
+})();
+
