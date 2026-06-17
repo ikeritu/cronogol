@@ -1,1 +1,1 @@
-CronoGol v2.4.3 — Online Audit Expansion
+CronoGol v2.4.4 — Rules First & Host Mode Sync

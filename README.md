@@ -1,4 +1,4 @@
-# CronoGol v2.4.3 — Online Audit Expansion
+# CronoGol v2.4.4 — Rules First & Host Mode Sync
 
 
 
@@ -12,7 +12,16 @@
 
 
 
-## v2.4.3 — Online Audit Expansion
+
+## v2.4.4 — Rules First & Host Mode Sync
+
+- Primero hay que elegir `Clásico` o `Rápido`.
+- Rival queda bloqueado hasta elegir reglas.
+- En online, el invitado hereda las reglas del anfitrión.
+- En rápido, `19` vuelve a ser penalti.
+- Añade `scripts/audit_cronogol_host_mode_sync.js`.
+
+## v2.4.4 — Online Audit Expansion
 
 - Mantiene las correcciones de v2.4.2.
 - Amplía la autoauditoría con flujo online simulado sin Supabase real.
@@ -33,7 +42,7 @@
 powershell -ExecutionPolicy Bypass -File ".\scripts\run_auditoria_cronogol.ps1" -ProjectPath "."
 ```
 
-## v2.4.3 — Rules Selector & Online Sanctions Fix
+## v2.4.4 — Rules Selector & Online Sanctions Fix
 
 - Renombra `Modo` a `Rival`.
 - Renombra `Duración` a `Reglas`.
@@ -49,13 +58,13 @@ powershell -ExecutionPolicy Bypass -File ".\scripts\run_auditoria_cronogol.ps1" 
 powershell -ExecutionPolicy Bypass -File ".\scripts\run_auditoria_cronogol.ps1" -ProjectPath "."
 ```
 
-## v2.4.3 — Last Throw Message Fix
+## v2.4.4 — Last Throw Message Fix
 
 - La última tirada conserva el mensaje real de la jugada.
 - `Esperando turno de X` ya no pisa el resultado.
 - Mantiene sincronización de número, resultado, marcador y turno.
 
-## v2.4.3 — Online Throws & Score Sync
+## v2.4.4 — Online Throws & Score Sync
 
 - Se guarda en Supabase la última tirada.
 - El rival ve el número y resultado textual.
@@ -63,7 +72,7 @@ powershell -ExecutionPolicy Bypass -File ".\scripts\run_auditoria_cronogol.ps1" 
 - Mantiene el bloqueo de turno de v2.3.0.
 - Queda pendiente final online completo y revancha.
 
-## v2.4.3 — Online Turn Control
+## v2.4.4 — Online Turn Control
 
 Primera capa de control de turno online:
 
@@ -75,7 +84,7 @@ Primera capa de control de turno online:
 - El rival lee Supabase por polling y se le habilita `START` cuando le toca.
 - Todavía no es la sincronización completa de eventos/final, pero evita que ambos puedan jugar a la vez.
 
-## v2.4.3 — Online Start Role & Names Fix
+## v2.4.4 — Online Start Role & Names Fix
 
 Corrección de estabilidad sobre v2.2.0:
 
@@ -84,7 +93,7 @@ Corrección de estabilidad sobre v2.2.0:
 - Si la sala pasa a `playing`, ambos dispositivos entran con los mismos nombres.
 - Se mantiene pendiente la sincronización de tiradas, turnos y marcador.
 
-## v2.4.3 — Online Match Start
+## v2.4.4 — Online Match Start
 
 Primera transición online de lobby a partido:
 
@@ -95,7 +104,7 @@ Primera transición online de lobby a partido:
 - Ambos entran a la pantalla de partido con los mismos nombres.
 - Todavía no sincroniza tiradas, turnos ni marcador durante el partido.
 
-## v2.4.3 — Ko-fi URL & Auto Online Room
+## v2.4.4 — Ko-fi URL & Auto Online Room
 
 - Corrige el enlace real de Ko-fi a `https://ko-fi.com/ikeritu`.
 - Al seleccionar `1 vs 1 online`, se limpia la sala local anterior y se crea una sala nueva automáticamente.
