@@ -1,0 +1,18 @@
+{
+  "version": "2.4.6",
+  "name": "Menu Order & Clean Release",
+  "created_at": "2026-06-17T20:38:42.014425+00:00",
+  "base": "cronogol_v2_4_5_menu_rules_rival_cleanup.zip",
+  "changes": [
+    "Reglas before Rival",
+    "Difficulty removed visually",
+    "Machine difficulty fixed to normal",
+    "Rival blocked until rules",
+    "No default rules/rival",
+    "Cleaned unnecessary files"
+  ],
+  "not_changed": [
+    "Supabase schema",
+    "Online sync"
+  ]
+}
