@@ -1,1 +1,1 @@
-CronoGol v2.4.1 — Last Throw Message Fix
+CronoGol v2.4.2 — Rules Selector & Online Sanctions Fix

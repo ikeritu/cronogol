@@ -58,8 +58,8 @@ const CRONOGOL_CONFIG = {
 
 const I18N = {
   es: {
-    labelMode:"Modo",
-    labelDuration:"Duración",
+    labelMode:"Rival",
+    labelDuration:"Reglas",
     labelDifficulty:"Dificultad",
     machineDifficultyHint:"Normal: partida equilibrada.",
     advancedOptions:"Opciones avanzadas",
@@ -94,8 +94,8 @@ const I18N = {
     supportFull:"Apoya CronoGol"
   },
   en: {
-    labelMode:"Mode",
-    labelDuration:"Duration",
+    labelMode:"Opponent",
+    labelDuration:"Rules",
     labelDifficulty:"Difficulty",
     machineDifficultyHint:"Normal: balanced match.",
     advancedOptions:"Advanced options",
@@ -2557,7 +2557,7 @@ try{ window.startMatch = startMatch; }catch(e){}
 
 /*
 ===============================================================================
-CronoGol v2.4.1 — Online Turn Control
+CronoGol v2.4.2 — Online Turn Control
 ===============================================================================
 Primera capa de control de turno online:
 - Host = jugador 1, invitado = jugador 2.
@@ -2572,7 +2572,7 @@ puedan jugar a la vez.
 (function(){
   "use strict";
 
-  const ONLINE_TURN_VERSION = "2.4.1";
+  const ONLINE_TURN_VERSION = "2.4.2";
   const SUPABASE_URL = "https://xbrrdkflztxkvnngmdhu.supabase.co";
   const SUPABASE_ANON_KEY = "sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l";
   const ROOMS_TABLE = "cronogol_rooms";
@@ -2944,10 +2944,10 @@ puedan jugar a la vez.
 
 
 
-/* CronoGol v2.4.1 — Online Throws & Score Sync */
+/* CronoGol v2.4.2 — Online Throws & Score Sync */
 (function(){
 "use strict";
-const V="2.4.1";
+const V="2.4.2";
 const URL="https://xbrrdkflztxkvnngmdhu.supabase.co";
 const KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l";
 const TABLE="cronogol_rooms";
@@ -2978,7 +2978,7 @@ function ev(kind,v,actor){
  const title=eventTitle?String(eventTitle.textContent||""):"";
  const rawMsg=messageLabel?String(messageLabel.textContent||""):"";
  const cleanMessage=(title&&title!=="--")?(actorName?`${actorName} sacó ${valueText} → ${title}`:`${valueText} → ${title}`):rawMsg;
- return {id,kind,value:Number.isFinite(Number(v))?Number(v):null,valueText,actorIndex:actor.idx,actorName,title,message:cleanMessage,eventClass:cls(),createdAt:new Date().toISOString()};
+ const payload={id,kind,value:Number.isFinite(Number(v))?Number(v):null,valueText,actorIndex:actor.idx,actorName,title,message:cleanMessage,eventClass:cls(),createdAt:new Date().toISOString()};try{window.__cronogolLastThrowForAudit=payload;}catch(e){}return payload;
 }
 function state(lastThrow,reason){
  const ps=players();
@@ -3022,7 +3022,7 @@ window.CronoGolOnlineEvents=Object.freeze({version:V,pushThrowEvent:push,pullThr
 
 
 
-/* CronoGol v2.4.1 — Last Throw Message Fix */
+/* CronoGol v2.4.2 — Last Throw Message Fix */
 (function(){
   "use strict";
   let lastClean = null;
@@ -3079,5 +3079,25 @@ window.CronoGolOnlineEvents=Object.freeze({version:V,pushThrowEvent:push,pullThr
       return out;
     };
   }catch(e){}
+})();
+
+
+
+/* CronoGol v2.4.2 — Rules Selector & Online Sanctions Fix */
+(function(){
+"use strict";
+const V="2.4.2",URL="https://xbrrdkflztxkvnngmdhu.supabase.co",KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l",TABLE="cronogol_rooms";
+let busy=false;
+function st(){try{return window.CronoGolOnline&&window.CronoGolOnline.getOnlineStatus?window.CronoGolOnline.getOnlineStatus():{};}catch(e){return {};}}
+function code(){return String(st().currentRoomCode||"").trim().toUpperCase();}
+function role(){return String(st().currentRole||"").trim().toLowerCase();}
+function online(){try{return gameState&&gameState.gameMode==="online"&&gameScreen.classList.contains("active")&&code();}catch(e){return false;}}
+async function sf(path,opt={}){const h=Object.assign({"apikey":KEY,"Authorization":`Bearer ${KEY}`,"Content-Type":"application/json"},opt.headers||{});const r=await fetch(`${URL}/rest/v1/${path}`,Object.assign({},opt,{headers:h}));const tx=await r.text();let d=null;if(tx){try{d=JSON.parse(tx)}catch(e){d=tx}}if(!r.ok)throw new Error(d&&d.message?d.message:`Supabase HTTP ${r.status}`);return d;}
+function ps(){return (gameState.players||[]).map((p,i)=>({index:i,name:String(p&&p.name?p.name:`Jugador ${i+1}`).slice(0,24),goals:Number(p&&p.goals||0),skipTurns:Number(p&&p.skipTurns||0)}));}
+async function push(reason){if(!online())return;const c=code(),p=ps();const state={schemaVersion:6,appVersion:V,phase:gameState.matchEnded?"finished":"playing",gameMode:"online",matchMode:gameState.matchMode||"classic",half:gameState.half||1,currentPlayerIndex:Number(gameState.currentPlayerIndex||0),players:p,score:[Number(p[0]&&p[0].goals||0),Number(p[1]&&p[1].goals||0)],stats:Object.assign({},gameState.stats||{}),matchEnded:Boolean(gameState.matchEnded),lastTurnReason:reason||"sanction_skip",lastTurnActorRole:role()||"unknown",lastTurnSyncAt:new Date().toISOString(),lastThrow:window.__cronogolLastThrowForAudit||null};try{await sf(`${TABLE}?room_code=eq.${encodeURIComponent(c)}`,{method:"PATCH",headers:{"Prefer":"return=minimal"},body:JSON.stringify({status:gameState.matchEnded?"finished":"playing",state_json:state,app_version:V,last_seen_at:new Date().toISOString()})});}catch(e){try{console.warn("[sanctions push]",e)}catch(_){}}}
+function process(){if(!online()||busy||gameState.matchEnded||pendingSpecial||penaltyShootout)return false;const p=gameState.players&&gameState.players[gameState.currentPlayerIndex];if(!p||Number(p.skipTurns||0)<=0)return false;busy=true;try{const skipped=p.name;p.skipTurns=Math.max(0,Number(p.skipTurns||0)-1);addLog(`${clockSec()}  ${skipped} pierde turno por sanción`);gameState.currentPlayerIndex=gameState.currentPlayerIndex===0?1:0;const next=gameState.players&&gameState.players[gameState.currentPlayerIndex]?gameState.players[gameState.currentPlayerIndex].name:"rival";if(eventTitle&&messageLabel&&eventCard){eventTitle.textContent="SANCIÓN";messageLabel.textContent=`${skipped} pierde turno. Turno de ${next}.`;eventCard.className="event-card event-special";}updateUI();setTimeout(()=>push("sanction_skip"),80);return true;}finally{busy=false;}}
+try{const prev=syncActionControls;syncActionControls=function(){const skipped=process();const out=prev();if(skipped)setTimeout(()=>{try{syncActionControls()}catch(e){}},120);return out;};}catch(e){}
+try{const prev=updateUI;updateUI=function(){const out=prev();setTimeout(process,30);return out;};}catch(e){}
+window.CronoGolOnlineSanctions=Object.freeze({version:V,processOnlineSanctionSkipIfNeeded:process,pushSanctionTurnState:push});
 })();
 

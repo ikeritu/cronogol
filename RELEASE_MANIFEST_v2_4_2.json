@@ -1,0 +1,18 @@
+{
+  "version": "2.4.2",
+  "name": "Rules Selector & Online Sanctions Fix",
+  "created_at": "2026-06-17T11:59:45.328966+00:00",
+  "base": "v2.4.1",
+  "changes": [
+    "Renames Mode to Rival",
+    "Renames Duration to Rules",
+    "Reorders opponent buttons",
+    "Adds online sanction skip processing",
+    "Adds local Node/PowerShell autoaudit scripts"
+  ],
+  "not_changed": [
+    "Supabase schema",
+    "Online throw sync structure",
+    "Ko-fi/PayPal support"
+  ]
+}
