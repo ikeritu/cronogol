@@ -1,1 +1,1 @@
-CronoGol v2.4.4 — Rules First & Host Mode Sync
+CronoGol v2.4.5 — Menu Rules/Rival Cleanup

@@ -1,6 +1,6 @@
 /*
 ===============================================================================
-CronoGol v2.4.4 — Online Match Start
+CronoGol v2.4.5 — Online Match Start
 ===============================================================================
 Objetivo:
 - Mantiene lobby online Supabase.
@@ -16,7 +16,7 @@ Importante:
 (function(){
   "use strict";
 
-  const CG_ONLINE_VERSION="2.4.4";
+  const CG_ONLINE_VERSION="2.4.5";
   const CG_SUPABASE_URL="https://xbrrdkflztxkvnngmdhu.supabase.co";
   const CG_SUPABASE_ANON_KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l";
   const CG_ROOMS_TABLE="cronogol_rooms";

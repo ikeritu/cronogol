@@ -1,0 +1,19 @@
+{
+  "version": "2.4.5",
+  "name": "Menu Rules/Rival Cleanup",
+  "created_at": "2026-06-17T20:06:41.511007+00:00",
+  "base": "uploaded current project",
+  "changes": [
+    "Removes default selected rules",
+    "Removes default selected rival",
+    "Requires rules before rival",
+    "Requires rules+rival before start",
+    "Rules apply to local, machine and online",
+    "Adds menu flow audit"
+  ],
+  "not_changed": [
+    "Supabase schema",
+    "Online throw sync",
+    "Host mode sync"
+  ]
+}

@@ -1,0 +1,1 @@
+-- CronoGol v2.4.5: no requiere cambios de esquema.
