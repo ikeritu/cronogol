@@ -1775,7 +1775,7 @@ if(document.readyState === "loading"){
 }
 
 
-/* ===== CronoGol v2.4.7: support bugfix + clean share/support functions ===== */
+/* ===== CronoGol v2.4.8: support bugfix + clean share/support functions ===== */
 
 function openKofi(){
   window.open(CRONOGOL_CONFIG.kofiUrl, "_blank", "noopener");
@@ -1832,7 +1832,7 @@ function showSupportModal(){
 }
 
 
-/* ===== CronoGol v2.4.7: game feel improvements ===== */
+/* ===== CronoGol v2.4.8: game feel improvements ===== */
 /* No modifica reglas, turnos, START/STOP ni lógica base del partido. */
 
 function machineDifficultyText(){
@@ -1963,7 +1963,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-/* ===== CronoGol v2.4.7: Project Audit Fixes =====
+/* ===== CronoGol v2.4.8: Project Audit Fixes =====
    Jefe de proyecto: se aplican correcciones críticas de Frontend + UI/UX
    sin tocar reglas, marcador, máquina, sonidos ni vibración estable.
 */
@@ -2300,7 +2300,7 @@ syncActionControls();
 try{ bindAudioUnlockOnce(); }catch(e){}
 
 
-/* ===== CronoGol v2.4.7: Fast Rules & Stats Polish =====
+/* ===== CronoGol v2.4.8: Fast Rules & Stats Polish =====
    Rejugabilidad local sin backend: guarda resumen, acumulados e historial
    en localStorage. No cambia reglas, eventos de juego ni Cloudflare.
 */
@@ -2557,7 +2557,7 @@ try{ window.startMatch = startMatch; }catch(e){}
 
 /*
 ===============================================================================
-CronoGol v2.4.7 — Online Turn Control
+CronoGol v2.4.8 — Online Turn Control
 ===============================================================================
 Primera capa de control de turno online:
 - Host = jugador 1, invitado = jugador 2.
@@ -2572,7 +2572,7 @@ puedan jugar a la vez.
 (function(){
   "use strict";
 
-  const ONLINE_TURN_VERSION = "2.4.7";
+  const ONLINE_TURN_VERSION = "2.4.8";
   const SUPABASE_URL = "https://xbrrdkflztxkvnngmdhu.supabase.co";
   const SUPABASE_ANON_KEY = "sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l";
   const ROOMS_TABLE = "cronogol_rooms";
@@ -2944,10 +2944,10 @@ puedan jugar a la vez.
 
 
 
-/* CronoGol v2.4.7 — Online Throws & Score Sync */
+/* CronoGol v2.4.8 — Online Throws & Score Sync */
 (function(){
 "use strict";
-const V="2.4.7";
+const V="2.4.8";
 const URL="https://xbrrdkflztxkvnngmdhu.supabase.co";
 const KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l";
 const TABLE="cronogol_rooms";
@@ -3022,7 +3022,7 @@ window.CronoGolOnlineEvents=Object.freeze({version:V,pushThrowEvent:push,pullThr
 
 
 
-/* CronoGol v2.4.7 — Last Throw Message Fix */
+/* CronoGol v2.4.8 — Last Throw Message Fix */
 (function(){
   "use strict";
   let lastClean = null;
@@ -3083,10 +3083,10 @@ window.CronoGolOnlineEvents=Object.freeze({version:V,pushThrowEvent:push,pullThr
 
 
 
-/* CronoGol v2.4.7 — Rules Selector & Online Sanctions Fix */
+/* CronoGol v2.4.8 — Rules Selector & Online Sanctions Fix */
 (function(){
 "use strict";
-const V="2.4.7",URL="https://xbrrdkflztxkvnngmdhu.supabase.co",KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l",TABLE="cronogol_rooms";
+const V="2.4.8",URL="https://xbrrdkflztxkvnngmdhu.supabase.co",KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l",TABLE="cronogol_rooms";
 let busy=false;
 function st(){try{return window.CronoGolOnline&&window.CronoGolOnline.getOnlineStatus?window.CronoGolOnline.getOnlineStatus():{};}catch(e){return {};}}
 function code(){return String(st().currentRoomCode||"").trim().toUpperCase();}
@@ -3120,7 +3120,7 @@ window.CronoGolOnlineSanctions=Object.freeze({version:V,processOnlineSanctionSki
 
 /*
 ===============================================================================
-CronoGol v2.4.7 — Menu Final Fix & Host Mode Sync
+CronoGol v2.4.8 — Menu Final Fix & Host Mode Sync
 ===============================================================================
 Corrección real, no cosmética:
 - Reglas queda antes que Rival en HTML.
@@ -3133,7 +3133,7 @@ Corrección real, no cosmética:
 */
 (function(){
 "use strict";
-const V="2.4.7";
+const V="2.4.8";
 let rulesChosen=false, rivalChosen=false, clearing=false, lastHostMode="";
 
 function q(s){return document.querySelector(s)}
@@ -3347,7 +3347,7 @@ async function pushHostRules(){
       headers:{"Prefer":"return=minimal"},
       body:JSON.stringify({state_json:state,app_version:V,last_seen_at:new Date().toISOString()})
     });
-  }catch(e){try{console.warn("[v2.4.7 pushHostRules]",e)}catch(_){}}
+  }catch(e){try{console.warn("[v2.4.8 pushHostRules]",e)}catch(_){}}
 }
 async function pullHostRules(){
   try{
@@ -3373,7 +3373,7 @@ async function pullHostRules(){
       rulesChosen=true;
       refresh();
     }
-  }catch(e){try{console.warn("[v2.4.7 pullHostRules]",e)}catch(_){}}
+  }catch(e){try{console.warn("[v2.4.8 pullHostRules]",e)}catch(_){}}
 }
 
 try{
@@ -3393,5 +3393,218 @@ setTimeout(refresh,600);
 setInterval(()=>{if(home()) refresh(); pushHostRules(); pullHostRules();},1500);
 
 window.CronoGolMenuChoice=Object.freeze({version:V,clearInitialMenuSelections:clearDefaults,refreshMenuGate:refresh,applyChosenValuesToGameState:apply,pushHostRules,pullHostRules});
+})();
+
+
+
+/*
+===============================================================================
+CronoGol v2.4.8 — Rival Lock Final Fix
+===============================================================================
+- Rival queda realmente bloqueado hasta elegir reglas.
+- Sin selección por defecto de rival.
+- Si un script anterior marca 1 vs 1 local por defecto, este bloque lo limpia.
+- El botón empezar queda bloqueado hasta reglas + rival.
+===============================================================================
+*/
+(function(){
+"use strict";
+const V="2.4.8";
+let rulesChosen=false;
+let rivalChosen=false;
+let bootDone=false;
+
+function q(s){return document.querySelector(s)}
+function qa(s){return Array.from(document.querySelectorAll(s))}
+function id(x){return document.getElementById(x)}
+function home(){
+  try{
+    if(typeof homeScreen!=="undefined" && homeScreen) return homeScreen.classList.contains("active");
+  }catch(e){}
+  return !!q("#home-screen.active,.home-screen.active,.setup-card");
+}
+function getRules(){
+  const b=q('.segment-btn[data-target="match-mode"].active');
+  if(b && b.dataset.value) return b.dataset.value;
+  const s=id("match-mode");
+  return s && s.value ? s.value : "";
+}
+function getRival(){
+  const b=q('.segment-btn[data-target="game-mode"].active');
+  if(b && b.dataset.value) return b.dataset.value;
+  const s=id("game-mode");
+  return s && s.value ? s.value : "";
+}
+function setRivalLocked(locked){
+  qa('.segment-btn[data-target="game-mode"]').forEach(btn=>{
+    if(locked){
+      btn.classList.remove("active");
+      btn.classList.add("rules-gated-disabled");
+      btn.setAttribute("aria-disabled","true");
+      btn.setAttribute("disabled","disabled");
+      btn.disabled=true;
+      btn.setAttribute("aria-pressed","false");
+    }else{
+      btn.classList.remove("rules-gated-disabled");
+      btn.removeAttribute("aria-disabled");
+      btn.removeAttribute("disabled");
+      btn.disabled=false;
+    }
+  });
+  const sel=id("game-mode");
+  if(sel){
+    if(locked){
+      sel.value="";
+      sel.disabled=true;
+    }else{
+      sel.disabled=false;
+    }
+  }
+}
+function setStartEnabled(enabled){
+  const start=id("start-match-btn") || q('[data-action="start-match"]') || q('.start-match-btn') || q('button[data-i18n="startMatch"]');
+  if(start){
+    start.disabled=!enabled;
+    if(enabled){
+      start.removeAttribute("disabled");
+      start.setAttribute("aria-disabled","false");
+    }else{
+      start.setAttribute("disabled","disabled");
+      start.setAttribute("aria-disabled","true");
+    }
+    start.classList.toggle("start-disabled",!enabled);
+  }
+}
+function hideDifficulty(){
+  qa('#machine-level-label,#difficulty,#machine-difficulty,[name="difficulty"],[name="machine-difficulty"]').forEach(el=>{
+    const box=el.closest ? (el.closest(".form-group,.field,.control,.option-block,.menu-row,.home-field,label")||el) : el;
+    box.classList.add("cg-hidden-difficulty");
+    if("value" in el) el.value="normal";
+  });
+  try{ if(gameState) gameState.machineLevel="normal"; }catch(e){}
+}
+function ensureHint(){
+  let h=id("menu-choice-hint");
+  if(!h){
+    const rivalLabel=q('[data-i18n="labelMode"]');
+    const parent=rivalLabel && rivalLabel.parentElement ? rivalLabel.parentElement : document.body;
+    h=document.createElement("div");
+    h.id="menu-choice-hint";
+    h.className="rules-gate-hint menu-choice-hint";
+    parent.appendChild(h);
+  }
+  return h;
+}
+function applyState(){
+  const r=getRules();
+  const gm=getRival();
+  try{
+    if(r && gameState) gameState.matchMode=r;
+    if(gm && gameState) gameState.gameMode=gm;
+    if(gameState) gameState.machineLevel="normal";
+  }catch(e){}
+  return !!(r && gm);
+}
+function refresh(){
+  if(!home()) return;
+  hideDifficulty();
+
+  const rules=getRules();
+  if(rules) rulesChosen=true;
+
+  if(!rulesChosen || !rules){
+    rivalChosen=false;
+    setRivalLocked(true);
+    setStartEnabled(false);
+    try{ if(gameState) gameState.gameMode=""; }catch(e){}
+  }else{
+    setRivalLocked(false);
+    if(getRival()) rivalChosen=true;
+    setStartEnabled(!!(rulesChosen && rivalChosen && getRival()));
+  }
+
+  const h=ensureHint();
+  if(!rulesChosen || !rules){
+    h.textContent=currentLang==="en" ? "Choose Classic or Fast first." : "Primero elige Clásico o Rápido.";
+    h.style.display="block";
+  }else if(!rivalChosen){
+    h.textContent=currentLang==="en" ? "Now choose your opponent." : "Ahora elige rival.";
+    h.style.display="block";
+  }else{
+    h.textContent="";
+    h.style.display="none";
+  }
+}
+function clearBootDefaults(){
+  if(!home()) return;
+  qa('.segment-btn[data-target="match-mode"],.segment-btn[data-target="game-mode"]').forEach(btn=>{
+    btn.classList.remove("active");
+    btn.setAttribute("aria-pressed","false");
+  });
+  const ms=id("match-mode"); if(ms) ms.value="";
+  const gs=id("game-mode"); if(gs) gs.value="";
+  try{ if(gameState){ gameState.matchMode=""; gameState.gameMode=""; gameState.machineLevel="normal"; } }catch(e){}
+  rulesChosen=false;
+  rivalChosen=false;
+  bootDone=true;
+  refresh();
+}
+function chooseRules(){
+  rulesChosen=true;
+  applyState();
+  refresh();
+  try{ if(window.CronoGolRulesFirst && window.CronoGolRulesFirst.pushHostRules) window.CronoGolRulesFirst.pushHostRules(); }catch(e){}
+}
+function chooseRival(){
+  if(!rulesChosen || !getRules()){
+    refresh();
+    return;
+  }
+  rivalChosen=true;
+  applyState();
+  refresh();
+}
+document.addEventListener("click",function(e){
+  const rb=e.target && e.target.closest ? e.target.closest('.segment-btn[data-target="match-mode"]') : null;
+  if(rb) setTimeout(chooseRules,0);
+
+  const gb=e.target && e.target.closest ? e.target.closest('.segment-btn[data-target="game-mode"]') : null;
+  if(gb && (!rulesChosen || !getRules())){
+    e.preventDefault();
+    e.stopPropagation();
+    refresh();
+    return;
+  }
+  if(gb) setTimeout(chooseRival,0);
+},true);
+document.addEventListener("change",function(e){
+  if(e.target && e.target.id==="match-mode") setTimeout(chooseRules,0);
+  if(e.target && e.target.id==="game-mode"){
+    if(!rulesChosen || !getRules()){
+      e.preventDefault();
+      e.target.value="";
+      refresh();
+      return;
+    }
+    setTimeout(chooseRival,0);
+  }
+},true);
+try{
+  const prevStart=startMatch;
+  startMatch=function(){
+    if(home() && !applyState()){
+      refresh();
+      return;
+    }
+    return prevStart.apply(this,arguments);
+  };
+}catch(e){}
+
+setTimeout(clearBootDefaults,50);
+setTimeout(clearBootDefaults,250);
+setTimeout(refresh,700);
+setInterval(refresh,900);
+
+window.CronoGolRivalLockFix=Object.freeze({version:V,refresh,clearBootDefaults});
 })();
 

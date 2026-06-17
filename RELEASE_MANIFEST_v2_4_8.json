@@ -1,0 +1,18 @@
+{
+  "version": "2.4.8",
+  "name": "Rival Lock Final Fix",
+  "created_at": "2026-06-17T21:51:35.256735+00:00",
+  "base": "cronogol_v2_4_7_menu_final_fix_clean.zip",
+  "fixes": [
+    "Rival buttons statically disabled in HTML until JS unlocks them",
+    "Boot cleanup runs twice to remove any older default active local selection",
+    "CSS pointer-events disabled for locked rival buttons",
+    "Start button disabled until rules+rival selected",
+    "Menu audit now explicitly checks rival locked by default"
+  ],
+  "not_changed": [
+    "Supabase schema",
+    "Online throw sync",
+    "Rules/Rival order from v2.4.7"
+  ]
+}

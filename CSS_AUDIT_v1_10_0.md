@@ -1,4 +1,4 @@
-# CronoGol v2.4.7 — CSS Audit
+# CronoGol v2.4.8 — CSS Audit
 
 ## Objetivo
 
