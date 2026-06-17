@@ -1,1 +1,1 @@
-CronoGol v2.3.0 — Online Turn Control
+CronoGol v2.4.0 — Online Throws & Score Sync

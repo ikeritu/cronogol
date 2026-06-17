@@ -2557,7 +2557,7 @@ try{ window.startMatch = startMatch; }catch(e){}
 
 /*
 ===============================================================================
-CronoGol v2.3.0 — Online Turn Control
+CronoGol v2.4.0 — Online Turn Control
 ===============================================================================
 Primera capa de control de turno online:
 - Host = jugador 1, invitado = jugador 2.
@@ -2572,7 +2572,7 @@ puedan jugar a la vez.
 (function(){
   "use strict";
 
-  const ONLINE_TURN_VERSION = "2.3.0";
+  const ONLINE_TURN_VERSION = "2.4.0";
   const SUPABASE_URL = "https://xbrrdkflztxkvnngmdhu.supabase.co";
   const SUPABASE_ANON_KEY = "sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l";
   const ROOMS_TABLE = "cronogol_rooms";
@@ -2929,5 +2929,78 @@ puedan jugar a la vez.
     pushOnlineTurnState,
     pullOnlineTurnState
   });
+})();
+
+
+
+/* CronoGol v2.4.0 — Online Throws & Score Sync */
+(function(){
+"use strict";
+const V="2.4.0";
+const URL="https://xbrrdkflztxkvnngmdhu.supabase.co";
+const KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l";
+const TABLE="cronogol_rooms";
+let lastApplied="", lastPushed="", pushing=false;
+
+function st(){try{return window.CronoGolOnline&&window.CronoGolOnline.getOnlineStatus?window.CronoGolOnline.getOnlineStatus():{};}catch(e){return {};}}
+function code(){return String(st().currentRoomCode||"").trim().toUpperCase();}
+function role(){return String(st().currentRole||"").trim().toLowerCase();}
+function online(){try{return gameState&&gameState.gameMode==="online"&&gameScreen.classList.contains("active")&&code();}catch(e){return false;}}
+function ep(c){return `${TABLE}?room_code=eq.${encodeURIComponent(c)}`;}
+async function sf(path,opt={}){
+ const h=Object.assign({"apikey":KEY,"Authorization":`Bearer ${KEY}`,"Content-Type":"application/json"},opt.headers||{});
+ const r=await fetch(`${URL}/rest/v1/${path}`,Object.assign({},opt,{headers:h}));
+ const tx=await r.text(); let d=null; if(tx){try{d=JSON.parse(tx)}catch(e){d=tx}}
+ if(!r.ok){throw new Error(d&&d.message?d.message:`Supabase HTTP ${r.status}`)}
+ return d;
+}
+function players(){
+ return (gameState.players||[]).map((p,i)=>({index:i,name:String(p&&p.name?p.name:`Jugador ${i+1}`).slice(0,24),goals:Number(p&&p.goals||0),skipTurns:Number(p&&p.skipTurns||0)}));
+}
+function cls(){
+ try{return Array.from(eventCard.classList||[]).find(c=>c.indexOf("event-")===0&&c!=="event-card")||"event-neutral";}catch(e){return "event-neutral";}
+}
+function ev(kind,v,actor){
+ const id=`${Date.now()}-${Math.random().toString(36).slice(2,8)}`;
+ return {id,kind,value:Number.isFinite(Number(v))?Number(v):null,valueText:Number.isFinite(Number(v))?pad(Number(v)):(lastTwoDisplay?lastTwoDisplay.textContent:"--"),actorIndex:actor.idx,actorName:String(actor.name||"").slice(0,24),title:eventTitle?eventTitle.textContent:"",message:messageLabel?messageLabel.textContent:"",eventClass:cls(),createdAt:new Date().toISOString()};
+}
+function state(lastThrow,reason){
+ const ps=players();
+ return {schemaVersion:5,appVersion:V,phase:gameState.matchEnded?"finished":"playing",gameMode:"online",matchMode:gameState.matchMode||"classic",half:gameState.half||1,currentPlayerIndex:Number(gameState.currentPlayerIndex||0),players:ps,score:[Number(ps[0]&&ps[0].goals||0),Number(ps[1]&&ps[1].goals||0)],stats:Object.assign({},gameState.stats||{}),matchEnded:Boolean(gameState.matchEnded),lastTurnReason:reason||"online_throw",lastTurnActorRole:role()||"unknown",lastTurnSyncAt:new Date().toISOString(),lastThrow};
+}
+async function push(lastThrow,reason){
+ if(!online()||!lastThrow||pushing||lastPushed===lastThrow.id)return;
+ lastPushed=lastThrow.id; pushing=true;
+ try{await sf(ep(code()),{method:"PATCH",headers:{"Prefer":"return=minimal"},body:JSON.stringify({status:gameState.matchEnded?"finished":"playing",state_json:state(lastThrow,reason),app_version:V,last_seen_at:new Date().toISOString()})});}
+ catch(e){try{console.warn("[CronoGol v2.4 push]",e)}catch(_){}} finally{pushing=false;}
+}
+function actor(){try{const i=Number(gameState.currentPlayerIndex||0),p=gameState.players&&gameState.players[i];return {idx:i,name:p?p.name:`Jugador ${i+1}`};}catch(e){return {idx:0,name:"Jugador 1"};}}
+function canPull(){try{return online()&&!gameState.isRunning&&!pendingSpecial&&!penaltyShootout;}catch(e){return false;}}
+function applyState(s){
+ if(!s)return;
+ if(Array.isArray(s.players)&&s.players.length>=2){for(let i=0;i<2;i++){const r=s.players[i]||{};if(gameState.players[i]){if(r.name)gameState.players[i].name=String(r.name).slice(0,24);if(Number.isFinite(Number(r.goals)))gameState.players[i].goals=Number(r.goals);if(Number.isFinite(Number(r.skipTurns)))gameState.players[i].skipTurns=Number(r.skipTurns);}}}
+ if(Number.isFinite(Number(s.currentPlayerIndex))){const i=Number(s.currentPlayerIndex); if(i===0||i===1)gameState.currentPlayerIndex=i;}
+ if(s.half)gameState.half=Number(s.half)||gameState.half;
+ if(s.stats&&typeof s.stats==="object")gameState.stats=Object.assign({},gameState.stats||{},s.stats);
+ if(s.matchEnded)gameState.matchEnded=true;
+ try{updateUI()}catch(e){}; try{syncActionControls()}catch(e){};
+}
+function applyThrow(t){
+ if(!t||!t.id||lastApplied===t.id)return;
+ lastApplied=t.id;
+ if(lastTwoDisplay)lastTwoDisplay.textContent=t.valueText||(Number.isFinite(Number(t.value))?pad(Number(t.value)):"--");
+ if(eventTitle&&messageLabel&&eventCard){eventTitle.textContent=t.title||"--";messageLabel.textContent=t.message||"";eventCard.className=`event-card ${t.eventClass||"event-neutral"}`;}
+ try{if(gameState.log){gameState.log.unshift(`${clockSec()}  ${t.actorName||"Jugador"} — ${t.valueText||"--"} — ${t.title||""}`);if(gameState.log.length>50)gameState.log.pop();renderLog();}}catch(e){}
+}
+async function pull(){
+ if(!canPull())return;
+ try{const d=await sf(`${ep(code())}&select=state_json,status,updated_at`,{method:"GET"}); if(!Array.isArray(d)||!d.length)return; const row=d[0],s=row.state_json||{}; if(row.status!=="playing"&&row.status!=="finished"&&s.phase!=="playing"&&s.phase!=="finished")return; applyState(s); if(s.lastThrow)applyThrow(s.lastThrow);}
+ catch(e){try{console.warn("[CronoGol v2.4 pull]",e)}catch(_){}}
+}
+try{const prev=applyNormalResult; applyNormalResult=function(v,r){const a=actor();const out=prev(v,r);setTimeout(()=>{if(online())push(ev("normal",v,a),"normal_throw")},140);return out;};}catch(e){}
+try{const prev=evaluateSpecialThrow; evaluateSpecialThrow=function(v){const a=actor();const out=prev(v);setTimeout(()=>{if(online())push(ev("special",v,a),"special_throw")},140);return out;};}catch(e){}
+try{const prev=evaluateShootoutPenalty; evaluateShootoutPenalty=function(v){const a=actor();const out=prev(v);setTimeout(()=>{if(online())push(ev("shootout",v,a),"shootout_penalty")},140);return out;};}catch(e){}
+setInterval(pull,1800);
+window.CronoGolOnlineEvents=Object.freeze({version:V,pushThrowEvent:push,pullThrowState:pull});
 })();
 
