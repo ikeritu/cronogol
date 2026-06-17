@@ -1,1 +1,1 @@
-CronoGol v2.4.2 — Rules Selector & Online Sanctions Fix
+CronoGol v2.4.3 — Online Audit Expansion

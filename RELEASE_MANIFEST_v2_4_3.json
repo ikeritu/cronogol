@@ -1,0 +1,16 @@
+{
+  "version": "2.4.3",
+  "name": "Online Audit Expansion",
+  "created_at": "2026-06-17T12:33:06.818225+00:00",
+  "base": "v2.4.2",
+  "changes": [
+    "Adds simulated online-flow audit",
+    "PowerShell runner now executes rules audit and online audit",
+    "Online audit validates score, turn, lastThrow, red-card skips, penalty miss and dangerous free kick"
+  ],
+  "not_changed": [
+    "Gameplay runtime logic",
+    "Supabase schema",
+    "UI structure"
+  ]
+}
