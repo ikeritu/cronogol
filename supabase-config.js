@@ -1,6 +1,6 @@
 /*
 ===============================================================================
-CronoGol v2.5.0 — Supabase configuration
+CronoGol v2.5.1 — Supabase configuration
 ===============================================================================
 1) Crea el proyecto en Supabase.
 2) Ejecuta el SQL de SUPABASE_PRIVATE_ROOMS_SETUP.sql.

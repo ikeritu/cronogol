@@ -1775,7 +1775,7 @@ if(document.readyState === "loading"){
 }
 
 
-/* ===== CronoGol v2.5.0: support bugfix + clean share/support functions ===== */
+/* ===== CronoGol v2.5.1: support bugfix + clean share/support functions ===== */
 
 function openKofi(){
   window.open(CRONOGOL_CONFIG.kofiUrl, "_blank", "noopener");
@@ -1832,7 +1832,7 @@ function showSupportModal(){
 }
 
 
-/* ===== CronoGol v2.5.0: game feel improvements ===== */
+/* ===== CronoGol v2.5.1: game feel improvements ===== */
 /* No modifica reglas, turnos, START/STOP ni lógica base del partido. */
 
 function machineDifficultyText(){
@@ -1963,7 +1963,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-/* ===== CronoGol v2.5.0: Project Audit Fixes =====
+/* ===== CronoGol v2.5.1: Project Audit Fixes =====
    Jefe de proyecto: se aplican correcciones críticas de Frontend + UI/UX
    sin tocar reglas, marcador, máquina, sonidos ni vibración estable.
 */
@@ -2300,7 +2300,7 @@ syncActionControls();
 try{ bindAudioUnlockOnce(); }catch(e){}
 
 
-/* ===== CronoGol v2.5.0: Fast Rules & Stats Polish =====
+/* ===== CronoGol v2.5.1: Fast Rules & Stats Polish =====
    Rejugabilidad local sin backend: guarda resumen, acumulados e historial
    en localStorage. No cambia reglas, eventos de juego ni Cloudflare.
 */
@@ -2557,7 +2557,7 @@ try{ window.startMatch = startMatch; }catch(e){}
 
 /*
 ===============================================================================
-CronoGol v2.5.0 — Online Turn Control
+CronoGol v2.5.1 — Online Turn Control
 ===============================================================================
 Primera capa de control de turno online:
 - Host = jugador 1, invitado = jugador 2.
@@ -2572,7 +2572,7 @@ puedan jugar a la vez.
 (function(){
   "use strict";
 
-  const ONLINE_TURN_VERSION = "2.5.0";
+  const ONLINE_TURN_VERSION = "2.5.1";
   const SUPABASE_URL = "https://xbrrdkflztxkvnngmdhu.supabase.co";
   const SUPABASE_ANON_KEY = "sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l";
   const ROOMS_TABLE = "cronogol_rooms";
@@ -2944,10 +2944,10 @@ puedan jugar a la vez.
 
 
 
-/* CronoGol v2.5.0 — Online Throws & Score Sync */
+/* CronoGol v2.5.1 — Online Throws & Score Sync */
 (function(){
 "use strict";
-const V="2.5.0";
+const V="2.5.1";
 const URL="https://xbrrdkflztxkvnngmdhu.supabase.co";
 const KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l";
 const TABLE="cronogol_rooms";
@@ -3022,7 +3022,7 @@ window.CronoGolOnlineEvents=Object.freeze({version:V,pushThrowEvent:push,pullThr
 
 
 
-/* CronoGol v2.5.0 — Last Throw Message Fix */
+/* CronoGol v2.5.1 — Last Throw Message Fix */
 (function(){
   "use strict";
   let lastClean = null;
@@ -3083,10 +3083,10 @@ window.CronoGolOnlineEvents=Object.freeze({version:V,pushThrowEvent:push,pullThr
 
 
 
-/* CronoGol v2.5.0 — Rules Selector & Online Sanctions Fix */
+/* CronoGol v2.5.1 — Rules Selector & Online Sanctions Fix */
 (function(){
 "use strict";
-const V="2.5.0",URL="https://xbrrdkflztxkvnngmdhu.supabase.co",KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l",TABLE="cronogol_rooms";
+const V="2.5.1",URL="https://xbrrdkflztxkvnngmdhu.supabase.co",KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l",TABLE="cronogol_rooms";
 let busy=false;
 function st(){try{return window.CronoGolOnline&&window.CronoGolOnline.getOnlineStatus?window.CronoGolOnline.getOnlineStatus():{};}catch(e){return {};}}
 function code(){return String(st().currentRoomCode||"").trim().toUpperCase();}
@@ -3120,7 +3120,7 @@ window.CronoGolOnlineSanctions=Object.freeze({version:V,processOnlineSanctionSki
 
 /*
 ===============================================================================
-CronoGol v2.5.0 — Menu Final Fix & Host Mode Sync
+CronoGol v2.5.1 — Menu Final Fix & Host Mode Sync
 ===============================================================================
 Corrección real, no cosmética:
 - Reglas queda antes que Rival en HTML.
@@ -3133,7 +3133,7 @@ Corrección real, no cosmética:
 */
 (function(){
 "use strict";
-const V="2.5.0";
+const V="2.5.1";
 let rulesChosen=false, rivalChosen=false, clearing=false, lastHostMode="";
 
 function q(s){return document.querySelector(s)}
@@ -3347,7 +3347,7 @@ async function pushHostRules(){
       headers:{"Prefer":"return=minimal"},
       body:JSON.stringify({state_json:state,app_version:V,last_seen_at:new Date().toISOString()})
     });
-  }catch(e){try{console.warn("[v2.5.0 pushHostRules]",e)}catch(_){}}
+  }catch(e){try{console.warn("[v2.5.1 pushHostRules]",e)}catch(_){}}
 }
 async function pullHostRules(){
   try{
@@ -3373,7 +3373,7 @@ async function pullHostRules(){
       rulesChosen=true;
       refresh();
     }
-  }catch(e){try{console.warn("[v2.5.0 pullHostRules]",e)}catch(_){}}
+  }catch(e){try{console.warn("[v2.5.1 pullHostRules]",e)}catch(_){}}
 }
 
 try{
@@ -3399,7 +3399,7 @@ window.CronoGolMenuChoice=Object.freeze({version:V,clearInitialMenuSelections:cl
 
 /*
 ===============================================================================
-CronoGol v2.5.0 — Rival Lock Final Fix
+CronoGol v2.5.1 — Rival Lock Final Fix
 ===============================================================================
 - Rival queda realmente bloqueado hasta elegir reglas.
 - Sin selección por defecto de rival.
@@ -3409,7 +3409,7 @@ CronoGol v2.5.0 — Rival Lock Final Fix
 */
 (function(){
 "use strict";
-const V="2.5.0";
+const V="2.5.1";
 let rulesChosen=false;
 let rivalChosen=false;
 let bootDone=false;
@@ -3612,7 +3612,7 @@ window.CronoGolRivalLockFix=Object.freeze({version:V,refresh,clearBootDefaults})
 
 /*
 ===============================================================================
-CronoGol v2.5.0 — Online Clock & Match Complete
+CronoGol v2.5.1 — Online Clock & Match Complete
 ===============================================================================
 Objetivo:
 - Un único reloj online visible por ambos dispositivos.
@@ -3625,7 +3625,7 @@ Objetivo:
 (function(){
 "use strict";
 
-const V="2.5.0";
+const V="2.5.1";
 const URL="https://xbrrdkflztxkvnngmdhu.supabase.co";
 const KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l";
 const TABLE="cronogol_rooms";
@@ -3794,7 +3794,7 @@ function applyRemoteClock(clock){
   stopwatchBaseMs=elapsed;
   try{ updateTimerDisplay(elapsed); }catch(e){
     if(timerDisplay) timerDisplay.textContent=clock.displayTime||officialTimeText(elapsed);
-    if(lastTwoDisplay) lastTwoDisplay.textContent=pad(clock.lastTwo||0);
+    // v2.5.1: no pisar lastTwoDisplay con onlineClock.lastTwo; la tirada real manda.
   }
   lastPulledClockId=id;
 }
@@ -3825,7 +3825,7 @@ function applyRemoteFinal(finalState,state){
   currentElapsedMs=Number(finalState.finalElapsedMs||currentElapsedMs||0);
   stopwatchBaseMs=currentElapsedMs;
   if(timerDisplay) timerDisplay.textContent=finalState.finalTime||officialTimeText(currentElapsedMs);
-  if(lastTwoDisplay) lastTwoDisplay.textContent=pad(Math.floor(currentElapsedMs/10)%100);
+  // v2.5.1: no pisar lastTwoDisplay con centésimas del reloj al finalizar.
 
   try{ setEvent("FINAL", `${finalState.winnerName?("Gana "+finalState.winnerName):"Partido finalizado"} · ${finalState.finalScore?finalState.finalScore.join("-"):""}`, "special"); }catch(e){}
   try{ updateUI(); syncActionControls(); }catch(e){}
@@ -3952,5 +3952,68 @@ setInterval(()=>{
 },700);
 
 window.CronoGolOnlineClock=Object.freeze({version:V,pushClock,pullOnlineState,pushFinal});
+})();
+
+
+
+/* CronoGol v2.5.1 — Online Clock Display Fix */
+(function(){
+"use strict";
+const V="2.5.1";
+function online(){try{return gameState&&gameState.gameMode==="online"&&gameScreen&&gameScreen.classList.contains("active")}catch(e){return false}}
+function st(){try{return window.CronoGolOnline&&window.CronoGolOnline.getOnlineStatus?window.CronoGolOnline.getOnlineStatus():{}}catch(e){return {}}}
+function code(){return String(st().currentRoomCode||"").trim().toUpperCase()}
+function protectThrow(t){
+ if(!online()||!t)return;
+ const txt=t.valueText||(Number.isFinite(Number(t.value))?pad(Number(t.value)):"");
+ if(txt&&lastTwoDisplay)lastTwoDisplay.textContent=txt;
+}
+function remember(v){
+ if(!online()||!Number.isFinite(Number(v)))return;
+ const txt=pad(Number(v));
+ if(lastTwoDisplay)lastTwoDisplay.textContent=txt;
+ try{window.__cronogolLastThrowForAudit=Object.assign({},window.__cronogolLastThrowForAudit||{},{value:Number(v),valueText:txt})}catch(e){}
+}
+try{
+ const prev=updateTimerDisplay;
+ updateTimerDisplay=function(ms){
+   const old=online()&&lastTwoDisplay?String(lastTwoDisplay.textContent||""):"";
+   const out=prev.apply(this,arguments);
+   if(online()&&/^\d{2}$/.test(old)&&old!=="--")lastTwoDisplay.textContent=old;
+   return out;
+ };
+}catch(e){}
+try{
+ const prev=applyNormalResult;
+ applyNormalResult=function(v,r){const out=prev.apply(this,arguments);setTimeout(()=>remember(v),20);setTimeout(()=>remember(v),180);return out}
+}catch(e){}
+try{
+ const prev=evaluateSpecialThrow;
+ evaluateSpecialThrow=function(v){const out=prev.apply(this,arguments);setTimeout(()=>remember(v),20);setTimeout(()=>remember(v),180);return out}
+}catch(e){}
+try{
+ const prev=evaluateShootoutPenalty;
+ evaluateShootoutPenalty=function(v){const out=prev.apply(this,arguments);setTimeout(()=>remember(v),20);setTimeout(()=>remember(v),180);return out}
+}catch(e){}
+async function sf(path,opt={}){
+ const URL="https://xbrrdkflztxkvnngmdhu.supabase.co",KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l";
+ const headers=Object.assign({"apikey":KEY,"Authorization":`Bearer ${KEY}`,"Content-Type":"application/json"},opt.headers||{});
+ const r=await fetch(`${URL}/rest/v1/${path}`,Object.assign({},opt,{headers}));
+ const tx=await r.text();let d=null;if(tx){try{d=JSON.parse(tx)}catch(e){d=tx}}
+ if(!r.ok)throw new Error(d&&d.message?d.message:`Supabase HTTP ${r.status}`);
+ return d;
+}
+async function pullProtect(){
+ if(!online()||!code())return;
+ try{
+   const rows=await sf(`cronogol_rooms?room_code=eq.${encodeURIComponent(code())}&select=state_json,status`,{method:"GET"});
+   if(!Array.isArray(rows)||!rows.length)return;
+   const state=rows[0].state_json||{};
+   if(state.lastThrow)protectThrow(state.lastThrow);
+   if(state.finalState&&state.finalState.lastThrow)protectThrow(state.finalState.lastThrow);
+ }catch(e){}
+}
+setInterval(pullProtect,900);
+window.CronoGolClockDisplayFix=Object.freeze({version:V,protectThrow,pullProtect});
 })();
 
