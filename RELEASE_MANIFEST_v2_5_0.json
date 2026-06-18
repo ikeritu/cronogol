@@ -1,0 +1,23 @@
+{
+  "version": "2.5.0",
+  "name": "Online Clock & Match Complete",
+  "created_at": "2026-06-18T09:29:58.321446+00:00",
+  "base": "cronogol_v2_4_8_rival_lock_fix_clean.zip",
+  "changes": [
+    "Online official clock shared through state_json.onlineClock",
+    "Turn owner publishes elapsedMs/displayTime",
+    "Remote device paints official timer while waiting",
+    "Every final state stores finalTime/finalScore/winner",
+    "Supabase status becomes finished",
+    "Remote device blocks START after finished",
+    "Adds online clock/finish audit"
+  ],
+  "limitations": [
+    "Still not a browser-level Playwright audit",
+    "Realtime is polling-based, not Supabase Realtime"
+  ],
+  "not_changed": [
+    "Supabase schema",
+    "Menu flow from v2.4.8"
+  ]
+}

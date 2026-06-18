@@ -1,1 +1,1 @@
-CronoGol v2.4.8 — Rival Lock Final Fix
+CronoGol v2.5.0 — Online Clock & Match Complete
