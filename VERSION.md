@@ -1,1 +1,1 @@
-CronoGol v2.5.1 — Online Clock Display Fix
+CronoGol v2.5.2 — Last Throw Time Freeze Fix

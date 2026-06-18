@@ -1,5 +1,5 @@
 /**
- * CronoGol v2.5.1 — Cloudflare Worker example for feedback proxy
+ * CronoGol v2.5.2 — Cloudflare Worker example for feedback proxy
  *
  * Purpose:
  * - Keep the real Formspree endpoint outside the public frontend.
