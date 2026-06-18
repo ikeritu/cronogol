@@ -1,1 +1,1 @@
-CronoGol v2.5.3 — Stop-Time Authoritative Sync
+CronoGol v2.5.4 — Start Visual & Fast 70 Fix

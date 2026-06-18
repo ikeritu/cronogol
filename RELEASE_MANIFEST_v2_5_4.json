@@ -1,0 +1,19 @@
+{
+  "version": "2.5.4",
+  "name": "Start Visual & Fast 70 Fix",
+  "created_at": "2026-06-18T14:10:34.255749+00:00",
+  "base": "cronogol_v2_5_3_stop_time_authoritative_sync.zip",
+  "fixes": [
+    "Reduce online START visual delay by forcing local live render while running",
+    "Fast/five rules hardened: 70, 10, 90 are goals",
+    "50 remains yellow and 60 remains red"
+  ],
+  "audit": [
+    "AUDITORIA_CRONOGOL_FAST70_START_VISUAL"
+  ],
+  "not_changed": [
+    "Supabase schema",
+    "Stop-time authoritative sync",
+    "Menu flow"
+  ]
+}
