@@ -223,7 +223,7 @@
 
 - Congelada como versión estable tras validación manual.
 - Confirmado que la vibración física solo ocurre en gol y penalti fallado.
-- Confirmado cache busting `game.js?v=2.5.2` y `style.css?v=2.5.2`.
+- Confirmado cache busting `game.js?v=2.5.3` y `style.css?v=2.5.3`.
 
 ### No se ha tocado
 
@@ -254,7 +254,7 @@
 - Tarjetas no vibran.
 - Descanso/final no vibra.
 - Eliminada animación de fallo normal.
-- Añadido cache busting `game.js?v=2.5.2` y `style.css?v=2.5.2`.
+- Añadido cache busting `game.js?v=2.5.3` y `style.css?v=2.5.3`.
 
 ### No se ha tocado
 

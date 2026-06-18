@@ -1,0 +1,22 @@
+{
+  "version": "2.5.3",
+  "name": "Stop-Time Authoritative Sync",
+  "created_at": "2026-06-18T12:57:19.275435+00:00",
+  "strategy_change": [
+    "Live online clock sync disabled",
+    "STOP time is authoritative",
+    "lastStoppedThrow drives remote display"
+  ],
+  "fixes": [
+    "No retroceso after STOP",
+    "Pending special keeps trigger value/time",
+    "Remote clock cannot overwrite stopped throw"
+  ],
+  "audit": [
+    "AUDITORIA_CRONOGOL_STOP_TIME_SYNC"
+  ],
+  "not_changed": [
+    "Supabase schema",
+    "Menu flow"
+  ]
+}
