@@ -1,1 +1,1 @@
-CronoGol v2.5.4 — Start Visual & Fast 70 Fix
+CronoGol v2.5.5 — Remote Stop Paint & Timer Smoothing

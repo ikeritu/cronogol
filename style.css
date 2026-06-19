@@ -1,6 +1,6 @@
 /*
 ===============================================================================
-CronoGol v2.5.4 — CSS Refactor
+CronoGol v2.5.5 — CSS Refactor
 ===============================================================================
 
 Objetivo:
@@ -1645,7 +1645,7 @@ button[data-action="start-match"]:hover {
 }
 
 
-/* ===== CronoGol v2.5.4: goal/penalty visual feedback ===== */
+/* ===== CronoGol v2.5.5: goal/penalty visual feedback ===== */
 body.cg-flash-goal .game-device,
 body.cg-flash-penalty .game-device,
 body.cg-flash-special .game-device,
@@ -1723,7 +1723,7 @@ body.cg-shake-soft .game-device {
 }
 
 
-/* ===== CronoGol v2.5.4: sound & haptics polish visual feedback ===== */
+/* ===== CronoGol v2.5.5: sound & haptics polish visual feedback ===== */
 body.cg-flash-goal .game-device {
   animation: cgGoalDevicePop 0.62s ease-out 1;
 }
@@ -1766,14 +1766,14 @@ body.cg-flash-red .game-device {
 }
 
 
-/* ===== CronoGol v2.5.4: strict physical vibration gate =====
+/* ===== CronoGol v2.5.5: strict physical vibration gate =====
    La vibración física está totalmente centralizada en game.js:
    physicalVibration() -> solo goal / penalty_fail.
    Feedback visual activo solo para goal y penalty_fail.
 */
 
 
-/* ===== CronoGol v2.5.4: Project Audit UI/UX fixes ===== */
+/* ===== CronoGol v2.5.5: Project Audit UI/UX fixes ===== */
 .top-back-link {
   display: inline-flex;
   align-items: center;
@@ -1850,7 +1850,7 @@ body.cg-flash-red .game-device {
 }
 
 
-/* ===== CronoGol v2.5.4: Menu & Home Hierarchy Polish ===== */
+/* ===== CronoGol v2.5.5: Menu & Home Hierarchy Polish ===== */
 
 /* Home: acciones secundarias agrupadas, menos ruido visual */
 .setup-actions-polished {
@@ -1985,7 +1985,7 @@ body.cg-flash-red .game-device {
 }
 
 
-/* ===== CronoGol v2.5.4: Mobile Layout Fix ===== */
+/* ===== CronoGol v2.5.5: Mobile Layout Fix ===== */
 /* Corrección de la zona inferior de acciones en móvil.
 .setup-links.secondary-actions-final,
 .setup-links.setup-actions-polished {
@@ -2114,7 +2114,7 @@ body.cg-flash-red .game-device {
 }
 
 
-/* ===== CronoGol v2.5.4: Secondary Actions Grid Hard Fix ===== */
+/* ===== CronoGol v2.5.5: Secondary Actions Grid Hard Fix ===== */
 /* Fix real observado:
    Los grupos internos .setup-action-group se estaban comportando como columnas
    dentro de .setup-links, generando cajas estrechas y textos pisados.
@@ -2222,7 +2222,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.5.4: Flattened Secondary Actions Final Fix ===== */
+/* ===== CronoGol v2.5.5: Flattened Secondary Actions Final Fix ===== */
 /* Causa real corregida:
    El HTML tenía grupos .setup-action-group dentro de .setup-links, mientras parte
    del CSS histórico esperaba botones/enlaces directos con [data-slot].
@@ -2308,7 +2308,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.5.4: Local Stats & Match History ===== */
+/* ===== CronoGol v2.5.5: Local Stats & Match History ===== */
 /* Fix conservador para móvil:
    - Resetea grid-column/grid-row históricos con !important que podían crear columnas implícitas.
    - Evita que la botonera secundaria se salga del reloj en pantallas estrechas.
@@ -2419,7 +2419,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.5.4: Local Stats UI Polish ===== */
+/* ===== CronoGol v2.5.5: Local Stats UI Polish ===== */
 .local-stats-panel {
   margin: 10px 0 14px;
   padding: 12px;
@@ -2553,7 +2553,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.5.4: Stats UI Final Polish ===== */
+/* ===== CronoGol v2.5.5: Stats UI Final Polish ===== */
 .local-stats-panel {
   margin: 12px 0 18px;
   padding: 14px 12px;
@@ -2649,7 +2649,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.5.4: Online Foundation Panel ===== */
+/* ===== CronoGol v2.5.5: Online Foundation Panel ===== */
 .online-foundation-panel{
   margin-top:12px;
   background:rgba(0,0,0,.38);
@@ -2691,7 +2691,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.5.4: Supabase Private Rooms UI ===== */
+/* ===== CronoGol v2.5.5: Supabase Private Rooms UI ===== */
 .online-room-display{
   margin:10px auto;
   padding:10px;
@@ -2766,14 +2766,14 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.5.4: Room Lobby Sync ===== */
+/* ===== CronoGol v2.5.5: Room Lobby Sync ===== */
 .online-lobby-card{margin:10px 0;border:1px solid rgba(76,110,126,.8);background:rgba(0,0,0,.22);padding:8px;display:grid;gap:6px}
 .online-lobby-row{display:grid;grid-template-columns:90px 1fr;align-items:center;gap:8px;border-bottom:1px dashed rgba(76,110,126,.45);padding:4px 0}
 .online-lobby-row:last-child{border-bottom:0}.online-lobby-row span{color:var(--muted);font-size:10px;letter-spacing:1px;text-transform:uppercase}.online-lobby-row strong{color:var(--orange);font-size:11px;text-align:right;overflow-wrap:anywhere}#cg-online-refresh-btn{background:rgba(0,0,0,.28);border:1px solid rgba(76,110,126,.9);color:var(--orange)}
 @media(max-width:430px){.online-foundation-actions{grid-template-columns:1fr}.online-lobby-row{grid-template-columns:1fr;text-align:center}.online-lobby-row strong{text-align:center}}
 
 
-/* ===== CronoGol v2.5.4: Lobby Guardrails ===== */
+/* ===== CronoGol v2.5.5: Lobby Guardrails ===== */
 #cg-online-status[data-state="ready"]{
   color:var(--muted);
 }
@@ -2782,7 +2782,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.5.4: Lobby Placeholder & Controls Fix ===== */
+/* ===== CronoGol v2.5.5: Lobby Placeholder & Controls Fix ===== */
 .online-foundation-panel{overflow:visible;}
 .online-primary-actions{margin:10px 0;}
 .online-clear-btn{width:100%;margin-top:8px;padding:8px;background:rgba(0,0,0,.24);border:1px dashed rgba(76,110,126,.85);color:var(--muted);font-family:inherit;font-weight:900;cursor:pointer;}
@@ -2791,7 +2791,7 @@ nav.setup-links {
 @media(max-width:430px){.online-foundation-panel{padding:12px 10px;}.online-foundation-panel p{font-size:11px;line-height:1.55;}.online-room-display{margin-top:8px;}}
 
 
-/* ===== CronoGol v2.5.4: Online Mode Layout Cleanup ===== */
+/* ===== CronoGol v2.5.5: Online Mode Layout Cleanup ===== */
 
 /* Tres modos en una fila adaptable */
 .game-mode-control{
@@ -2834,7 +2834,7 @@ body.online-mode-active .online-foundation-panel{
 }
 
 
-/* ===== CronoGol v2.5.4: Ko-fi Support Update ===== */
+/* ===== CronoGol v2.5.5: Ko-fi Support Update ===== */
 .kofi-direct-btn{
   width:100%;
   margin-top:10px;
@@ -2850,7 +2850,7 @@ body.online-mode-active .online-foundation-panel{
 }
 
 
-/* ===== CronoGol v2.5.4: Online Match Start ===== */
+/* ===== CronoGol v2.5.5: Online Match Start ===== */
 .online-start-match-btn{
   width:100%;
   margin-top:10px;
@@ -2883,13 +2883,13 @@ body.online-mode-active .online-foundation-panel{
   border-color:rgba(230,143,24,.95);
 }
 
-/* ===== CronoGol v2.5.4: Online Start Role & Names Fix ===== */
+/* ===== CronoGol v2.5.5: Online Start Role & Names Fix ===== */
 .online-start-match-btn:disabled{
   opacity:.55;
 }
 
 
-/* ===== CronoGol v2.5.4: Online Turn Control ===== */
+/* ===== CronoGol v2.5.5: Online Turn Control ===== */
 #main-action-btn.online-waiting-turn,
 #special-start-btn.online-waiting-turn{
   background:linear-gradient(#a98b42,#6e5b2d) !important;
@@ -2905,32 +2905,32 @@ body.online-my-turn #turn-label{
   color:#3fd06b;
 }
 
-/* ===== CronoGol v2.5.4: Online Throws & Score Sync ===== */
+/* ===== CronoGol v2.5.5: Online Throws & Score Sync ===== */
 body.online-my-turn #event-card{box-shadow:0 0 0 1px rgba(63,208,107,.12) inset;}body.online-waiting-turn #event-card{box-shadow:0 0 0 1px rgba(230,143,24,.12) inset;}
 
-/* ===== CronoGol v2.5.4: Rules First & Host Mode Sync ===== */
+/* ===== CronoGol v2.5.5: Rules First & Host Mode Sync ===== */
 .rules-gated-disabled{opacity:.42;filter:grayscale(.55);pointer-events:none;}
 .rules-gate-hint{margin:.35rem 0 .65rem;font-size:.78rem;color:#ffd454;letter-spacing:.04em;}
 body.rules-not-selected [data-target="game-mode"]{opacity:.62;}
 
-/* ===== CronoGol v2.5.4: Menu Rules/Rival Cleanup ===== */
+/* ===== CronoGol v2.5.5: Menu Rules/Rival Cleanup ===== */
 .start-disabled,button.start-disabled{opacity:.48;filter:grayscale(.45);cursor:not-allowed;}
 .menu-choice-hint{border-left:2px solid rgba(255,212,84,.65);padding-left:.55rem;}
 body.rules-not-selected [data-target="game-mode"],body.rival-not-selected #start-match-btn,body.rival-not-selected .start-match-btn{opacity:.58;}
 
-/* ===== CronoGol v2.5.4: Menu Order & Clean Release ===== */
+/* ===== CronoGol v2.5.5: Menu Order & Clean Release ===== */
 .cg-hidden-difficulty,#difficulty,#machine-difficulty,[name="difficulty"],[name="machine-difficulty"]{display:none!important;}
 .rules-gated-disabled{opacity:.42!important;filter:grayscale(.55)!important;pointer-events:none!important;}
 .start-disabled,button.start-disabled{opacity:.48!important;filter:grayscale(.45)!important;cursor:not-allowed!important;}
 .menu-choice-hint{border-left:2px solid rgba(255,212,84,.65);padding-left:.55rem;margin:.35rem 0 .65rem;font-size:.78rem;color:#ffd454;letter-spacing:.04em;}
 
-/* ===== CronoGol v2.5.4: Menu Final Fix ===== */
+/* ===== CronoGol v2.5.5: Menu Final Fix ===== */
 .cg-hidden-difficulty,#machine-level-label,#difficulty,#machine-difficulty,[name="difficulty"],[name="machine-difficulty"]{display:none!important;}
 .rules-gated-disabled{opacity:.42!important;filter:grayscale(.55)!important;pointer-events:none!important;}
 .start-disabled,button.start-disabled{opacity:.48!important;filter:grayscale(.45)!important;cursor:not-allowed!important;}
 .menu-choice-hint{border-left:2px solid rgba(255,212,84,.65);padding-left:.55rem;margin:.35rem 0 .65rem;font-size:.78rem;color:#ffd454;letter-spacing:.04em;}
 
-/* ===== CronoGol v2.5.4: Rival Lock Final Fix ===== */
+/* ===== CronoGol v2.5.5: Rival Lock Final Fix ===== */
 .rules-gated-disabled,
 .rules-gated-disabled *{pointer-events:none!important;}
 .rules-gated-disabled{opacity:.38!important;filter:grayscale(.7)!important;cursor:not-allowed!important;}
@@ -2938,5 +2938,5 @@ button[disabled].segment-btn[data-target="game-mode"]{opacity:.38!important;filt
 .start-disabled,button.start-disabled,button[disabled][data-i18n="startMatch"]{opacity:.48!important;filter:grayscale(.45)!important;cursor:not-allowed!important;}
 .cg-hidden-difficulty,#machine-level-label,#difficulty,#machine-difficulty,[name="difficulty"],[name="machine-difficulty"]{display:none!important;}
 
-/* ===== CronoGol v2.5.4: Online Clock & Match Complete ===== */
+/* ===== CronoGol v2.5.5: Online Clock & Match Complete ===== */
 button.start-disabled,#main-action-btn.start-disabled{opacity:.55!important;filter:grayscale(.45)!important;cursor:not-allowed!important;}

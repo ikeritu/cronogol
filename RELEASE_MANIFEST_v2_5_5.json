@@ -1,0 +1,22 @@
+{
+  "version": "2.5.5",
+  "name": "Remote Stop Paint & Timer Smoothing",
+  "created_at": "2026-06-19T14:18:00.345294+00:00",
+  "base": "cronogol_v2_5_4_start_visual_fast70_fix.zip",
+  "fixes": [
+    "New remote lastStoppedThrow paints immediately",
+    "New stopId replaces previous protected STOP",
+    "Fast polling window after STOP",
+    "Single local render authority while timer is running"
+  ],
+  "audit": [
+    "AUDITORIA_CRONOGOL_REMOTE_STOP_PAINT",
+    "AUDITORIA_CRONOGOL_TIMER_SMOOTHING"
+  ],
+  "not_changed": [
+    "Supabase schema",
+    "Fast 70 goal fix",
+    "Stop-time authoritative strategy",
+    "Menu flow"
+  ]
+}
