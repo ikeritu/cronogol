@@ -1,4 +1,4 @@
-# CronoGol v2.5.5 — Online Foundation
+# CronoGol v2.5.6 — Online Foundation
 
 Esta versión inicia la rama V2 sin activar todavía multijugador real.
 

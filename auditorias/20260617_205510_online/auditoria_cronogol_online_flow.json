@@ -1,0 +1,219 @@
+{
+  "generatedAt": "2026-06-17T20:55:10.863Z",
+  "ok": true,
+  "failures": [],
+  "rows": [
+    {
+      "kind": "throw",
+      "actor": "Iker",
+      "value": "10",
+      "title": "GOL",
+      "message": "Iker sacó 10 → GOL",
+      "score": "1-0",
+      "turnAfter": "ikeritus",
+      "skipTurns": "0/0"
+    },
+    {
+      "kind": "throw",
+      "actor": "ikeritus",
+      "value": "61",
+      "title": "FALLO",
+      "message": "ikeritus sacó 61 → FALLO",
+      "score": "1-0",
+      "turnAfter": "Iker",
+      "skipTurns": "0/0"
+    },
+    {
+      "kind": "throw",
+      "actor": "Iker",
+      "value": "60",
+      "title": "ROJA",
+      "message": "Iker sacó 60 → ROJA",
+      "score": "1-0",
+      "turnAfter": "ikeritus",
+      "skipTurns": "2/0"
+    },
+    {
+      "kind": "skip",
+      "actor": "Iker",
+      "value": "--",
+      "title": "SANCIÓN",
+      "message": "Iker pierde turno por sanción",
+      "score": "1-0",
+      "turnAfter": "ikeritus",
+      "skipTurns": "1/0"
+    },
+    {
+      "kind": "throw",
+      "actor": "ikeritus",
+      "value": "62",
+      "title": "FALLO",
+      "message": "ikeritus sacó 62 → FALLO",
+      "score": "1-0",
+      "turnAfter": "ikeritus",
+      "skipTurns": "1/0"
+    },
+    {
+      "kind": "skip",
+      "actor": "Iker",
+      "value": "--",
+      "title": "SANCIÓN",
+      "message": "Iker pierde turno por sanción",
+      "score": "1-0",
+      "turnAfter": "ikeritus",
+      "skipTurns": "0/0"
+    },
+    {
+      "kind": "throw",
+      "actor": "ikeritus",
+      "value": "63",
+      "title": "FALLO",
+      "message": "ikeritus sacó 63 → FALLO",
+      "score": "1-0",
+      "turnAfter": "ikeritus",
+      "skipTurns": "0/0"
+    },
+    {
+      "kind": "throw",
+      "actor": "ikeritus",
+      "value": "21",
+      "title": "PENALTI FALLADO",
+      "message": "ikeritus sacó 21 → PENALTI FALLADO",
+      "score": "1-0",
+      "turnAfter": "Iker",
+      "skipTurns": "0/0"
+    },
+    {
+      "kind": "throw",
+      "actor": "Iker",
+      "value": "12",
+      "title": "GOL DE FALTA",
+      "message": "Iker sacó 12 → GOL DE FALTA",
+      "score": "2-0",
+      "turnAfter": "ikeritus",
+      "skipTurns": "0/0"
+    }
+  ],
+  "finalState": {
+    "phase": "playing",
+    "gameMode": "online",
+    "matchMode": "fast",
+    "currentPlayerIndex": 1,
+    "players": [
+      {
+        "index": 0,
+        "name": "Iker",
+        "goals": 2,
+        "skipTurns": 0
+      },
+      {
+        "index": 1,
+        "name": "ikeritus",
+        "goals": 0,
+        "skipTurns": 0
+      }
+    ],
+    "score": [
+      2,
+      0
+    ],
+    "lastThrow": {
+      "id": "audit-9",
+      "kind": "special",
+      "value": 12,
+      "valueText": "12",
+      "actorIndex": 0,
+      "actorName": "Iker",
+      "title": "GOL DE FALTA",
+      "message": "Iker sacó 12 → GOL DE FALTA",
+      "eventClass": "event-goal",
+      "createdAt": "2026-06-17T20:55:10.863Z"
+    },
+    "events": [
+      {
+        "id": "audit-1",
+        "kind": "normal",
+        "value": 10,
+        "valueText": "10",
+        "actorIndex": 0,
+        "actorName": "Iker",
+        "title": "GOL",
+        "message": "Iker sacó 10 → GOL",
+        "eventClass": "event-goal",
+        "createdAt": "2026-06-17T20:55:10.861Z"
+      },
+      {
+        "id": "audit-2",
+        "kind": "normal",
+        "value": 61,
+        "valueText": "61",
+        "actorIndex": 1,
+        "actorName": "ikeritus",
+        "title": "FALLO",
+        "message": "ikeritus sacó 61 → FALLO",
+        "eventClass": "event-neutral",
+        "createdAt": "2026-06-17T20:55:10.863Z"
+      },
+      {
+        "id": "audit-3",
+        "kind": "normal",
+        "value": 60,
+        "valueText": "60",
+        "actorIndex": 0,
+        "actorName": "Iker",
+        "title": "ROJA",
+        "message": "Iker sacó 60 → ROJA",
+        "eventClass": "event-red",
+        "createdAt": "2026-06-17T20:55:10.863Z"
+      },
+      {
+        "id": "audit-5",
+        "kind": "normal",
+        "value": 62,
+        "valueText": "62",
+        "actorIndex": 1,
+        "actorName": "ikeritus",
+        "title": "FALLO",
+        "message": "ikeritus sacó 62 → FALLO",
+        "eventClass": "event-neutral",
+        "createdAt": "2026-06-17T20:55:10.863Z"
+      },
+      {
+        "id": "audit-7",
+        "kind": "normal",
+        "value": 63,
+        "valueText": "63",
+        "actorIndex": 1,
+        "actorName": "ikeritus",
+        "title": "FALLO",
+        "message": "ikeritus sacó 63 → FALLO",
+        "eventClass": "event-neutral",
+        "createdAt": "2026-06-17T20:55:10.863Z"
+      },
+      {
+        "id": "audit-8",
+        "kind": "special",
+        "value": 21,
+        "valueText": "21",
+        "actorIndex": 1,
+        "actorName": "ikeritus",
+        "title": "PENALTI FALLADO",
+        "message": "ikeritus sacó 21 → PENALTI FALLADO",
+        "eventClass": "event-neutral",
+        "createdAt": "2026-06-17T20:55:10.863Z"
+      },
+      {
+        "id": "audit-9",
+        "kind": "special",
+        "value": 12,
+        "valueText": "12",
+        "actorIndex": 0,
+        "actorName": "Iker",
+        "title": "GOL DE FALTA",
+        "message": "Iker sacó 12 → GOL DE FALTA",
+        "eventClass": "event-goal",
+        "createdAt": "2026-06-17T20:55:10.863Z"
+      }
+    ]
+  }
+}

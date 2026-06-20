@@ -1,0 +1,12 @@
+{
+  "ok": true,
+  "failures": [],
+  "generatedAt": "2026-06-17T20:55:10.981Z",
+  "checks": [
+    "guest inherits host fast mode",
+    "fast 19 => penalty",
+    "fast 29 => penalty",
+    "fast 90 => goal",
+    "classic 19 != penalty"
+  ]
+}

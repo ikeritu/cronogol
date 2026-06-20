@@ -1,1 +1,1 @@
-CronoGol v2.5.5 — Remote Stop Paint & Timer Smoothing
+CronoGol v2.5.6 — Monotonic Timer Render Guard
