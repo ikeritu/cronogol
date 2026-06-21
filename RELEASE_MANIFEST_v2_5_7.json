@@ -1,0 +1,22 @@
+{
+  "version": "2.5.7",
+  "name": "Display Ownership State Machine",
+  "created_at": "2026-06-21T16:40:37.082346+00:00",
+  "base": "cronogol_v2_5_6_monotonic_timer_guard.zip",
+  "fixes": [
+    "Prevents mixed display states like clock 00:11:43 with lower 70 and GOL",
+    "Defines a single display owner per state",
+    "Rival running keeps last official STOP frozen",
+    "Local running paints live local timer",
+    "Special pending and finished states keep official STOP"
+  ],
+  "audit": [
+    "AUDITORIA_CRONOGOL_DISPLAY_OWNERSHIP"
+  ],
+  "not_changed": [
+    "Supabase schema",
+    "Fast 70 goal fix",
+    "Remote stop paint",
+    "Menu flow"
+  ]
+}

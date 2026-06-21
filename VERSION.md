@@ -1,1 +1,1 @@
-CronoGol v2.5.6 — Monotonic Timer Render Guard
+CronoGol v2.5.7 — Display Ownership State Machine
