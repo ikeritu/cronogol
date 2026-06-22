@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
-CronoGol v2.5.7 — Autoauditoría de flujo online simulado
+CronoGol v2.5.8 — Autoauditoría de flujo online simulado
 
 No usa Supabase real ni navegador.
 Simula host/invitado, turnos, marcador, última tirada y sanciones.

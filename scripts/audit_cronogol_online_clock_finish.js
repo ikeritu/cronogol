@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
-CronoGol v2.5.7 — auditoría de reloj/final online
+CronoGol v2.5.8 — auditoría de reloj/final online
 Simula:
 - jugador activo publica reloj oficial
 - rival hereda reloj

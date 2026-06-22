@@ -1,0 +1,26 @@
+{
+  "version": "2.5.8",
+  "name": "Online Display Cleanup",
+  "created_at": "2026-06-22T08:31:48.584338+00:00",
+  "base": "cronogol_v2_5_7_display_ownership_state_machine.zip",
+  "pony_tail_scope": "minimal cleanup, no new visual layer",
+  "changes": [
+    "Disabled older emergency visual polling/render loops superseded by v2.5.7 display ownership",
+    "Kept CronoGolDisplayOwnership as single visual owner",
+    "Added cleanup audit marker"
+  ],
+  "not_changed": [
+    "Supabase schema",
+    "Ranking",
+    "Saved predictions",
+    "Results recovery",
+    "11 ideal",
+    "Position logic",
+    "Validated CSS",
+    "Fast 70 goal fix",
+    "Menu flow"
+  ],
+  "audit": [
+    "AUDITORIA_CRONOGOL_ONLINE_DISPLAY_CLEANUP"
+  ]
+}
