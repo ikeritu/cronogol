@@ -430,7 +430,8 @@ function triggerScreenFeedback(type){
   try{
     const map = {
       goal: "cg-flash-goal",
-      penalty_fail: "cg-shake-soft"
+      penalty_fail: "cg-shake-soft",
+      free_kick_fail: "cg-shake-soft"
     };
     const cls = map[type];
     if(!cls) return;
@@ -1231,63 +1232,7 @@ function showRulesModal(){
 
   syncActionControls();
 }
-function showSupportModal(){
-  const isEn = currentLang === "en";
-  showModal(
-    isEn ? "SUPPORT CRONOGOL" : "APOYA CRONOGOL",
-    isEn
-      ? "CronoGol is free and will remain free. If you enjoy it, you can buy me a coffee."
-      : "CronoGol es gratis y lo seguirá siendo. Si te divierte, puedes invitarme a un café.",
-    `<div class="support-modal">
-      <div class="support-highlight">☕ ${isEn ? "Voluntary support" : "Apoyo voluntario"}</div>
-      <div class="donation-data">
-        <div class="donation-item">
-          <strong>Ko-fi</strong><br>
-          <a class="support-link kofi-link" href="${CRONOGOL_CONFIG.kofiUrl}" target="_blank" rel="noopener">${isEn ? "Open Ko-fi" : "Abrir Ko-fi"}</a>
-        </div>
-        <div class="donation-item">
-          <strong>PayPal</strong><br>
-          <a class="support-link" href="${CRONOGOL_CONFIG.paypalUrl}" target="_blank" rel="noopener">${isEn ? "Open PayPal" : "Abrir PayPal"}</a>
-        </div>
-      </div>
-      <p class="support-note">${isEn ? "No ads during the match. No paywalls." : "Sin anuncios durante la partida. Sin pagos obligatorios."}</p>
-    </div>`,
-    [{text:isEn ? "CLOSE" : "CERRAR", action:closeModal}]
-  );
-}
 function whatsappShareUrl(){ return `https://wa.me/?text=${encodeURIComponent(CRONOGOL_CONFIG.whatsappText)}`; }
-async function shareCronoGol(){
-  const nativeText = currentLang === "en"
-    ? "I'm playing CronoGol ⚽⌚"
-    : "Estoy jugando a CronoGol ⚽⌚";
-
-  const fullText = `${nativeText}
-${CRONOGOL_CONFIG.siteUrl}`;
-
-  try{
-    if(navigator.share){
-      await navigator.share({
-        title:"CronoGol",
-        text:nativeText,
-        url:CRONOGOL_CONFIG.siteUrl
-      });
-      return;
-    }
-  }catch(e){}
-
-  window.open(`https://wa.me/?text=${encodeURIComponent(fullText)}`,"_blank","noopener");
-}
-
-function resultText(includeUrl=true){
-  const final = gameState.lastFinalText || formattedFinalResult();
-  const challenge = currentLang === "en" ? "Do you dare?" : "¿Te atreves?";
-  const base = `⚽ CronoGol
-${final}
-
-${challenge}`;
-  return includeUrl ? `${base}
-${CRONOGOL_CONFIG.siteUrl}` : base;
-}
 async function shareResult(){
   try{
     if(navigator.share){
@@ -1300,53 +1245,6 @@ async function shareResult(){
     }
   }catch(e){}
   window.open(`https://wa.me/?text=${encodeURIComponent(resultText(true))}`,"_blank","noopener");
-}
-function copyCronoGolLink(){
-  copyText(CRONOGOL_CONFIG.siteUrl, currentLang === "en" ? "Link copied" : "Enlace copiado");
-}
-
-function showSupportModal(){
-  const t = MODAL_TEXTS[modalLang()];
-  showModal(
-    t.supportTitle,
-    t.supportIntro,
-    `<div class="donation-data"><div class="donation-item"><strong>Ko-fi</strong><br><a class="support-link kofi-link" href="${CRONOGOL_CONFIG.kofiUrl}" target="_blank" rel="noopener">${t.kofiButton || "Abrir Ko-fi"}</a></div><div class="donation-item"><strong>PayPal</strong><br><a class="support-link" href="${CRONOGOL_CONFIG.paypalUrl}" target="_blank">${t.paypalButton}</a></div></div>`,
-    [{text:t.close, action:closeModal}]
-  );
-}
-
-
-// ===== v1.8.2 overrides: share/support language fix =====
-async function shareCronoGol(){
-  const nativeText = currentLang === "en" ? "I'm playing CronoGol ⚽⌚" : "Estoy jugando a CronoGol ⚽⌚";
-  const fullText = `${nativeText}\n${CRONOGOL_CONFIG.siteUrl}`;
-
-  try{
-    if(navigator.share){
-      await navigator.share({
-        title:"CronoGol",
-        text:nativeText,
-        url:CRONOGOL_CONFIG.siteUrl
-      });
-      return;
-    }
-  }catch(e){}
-
-  window.open(`https://wa.me/?text=${encodeURIComponent(fullText)}`,"_blank","noopener");
-}
-
-function copyCronoGolLink(){
-  copyText(CRONOGOL_CONFIG.siteUrl, currentLang === "en" ? "Link copied" : "Enlace copiado");
-}
-
-function showSupportModal(){
-  const t = MODAL_TEXTS[modalLang()];
-  showModal(
-    t.supportTitle,
-    t.supportIntro,
-    `<div class="donation-data"><div class="donation-item"><strong>Ko-fi</strong><br><a class="support-link kofi-link" href="${CRONOGOL_CONFIG.kofiUrl}" target="_blank" rel="noopener">${t.kofiButton || "Abrir Ko-fi"}</a></div><div class="donation-item"><strong>PayPal</strong><br><a class="support-link" href="${CRONOGOL_CONFIG.paypalUrl}" target="_blank">${t.paypalButton}</a></div></div>`,
-    [{text:t.close, action:closeModal}]
-  );
 }
 
 
@@ -1775,7 +1673,7 @@ if(document.readyState === "loading"){
 }
 
 
-/* ===== CronoGol v2.5.8: support bugfix + clean share/support functions ===== */
+/* ===== CronoGol v2.6.0: support bugfix + clean share/support functions ===== */
 
 function openKofi(){
   window.open(CRONOGOL_CONFIG.kofiUrl, "_blank", "noopener");
@@ -1832,7 +1730,7 @@ function showSupportModal(){
 }
 
 
-/* ===== CronoGol v2.5.8: game feel improvements ===== */
+/* ===== CronoGol v2.6.0: game feel improvements ===== */
 /* No modifica reglas, turnos, START/STOP ni lógica base del partido. */
 
 function machineDifficultyText(){
@@ -1963,7 +1861,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-/* ===== CronoGol v2.5.8: Project Audit Fixes =====
+/* ===== CronoGol v2.6.0: Project Audit Fixes =====
    Jefe de proyecto: se aplican correcciones críticas de Frontend + UI/UX
    sin tocar reglas, marcador, máquina, sonidos ni vibración estable.
 */
@@ -2300,7 +2198,7 @@ syncActionControls();
 try{ bindAudioUnlockOnce(); }catch(e){}
 
 
-/* ===== CronoGol v2.5.8: Fast Rules & Stats Polish =====
+/* ===== CronoGol v2.6.0: Fast Rules & Stats Polish =====
    Rejugabilidad local sin backend: guarda resumen, acumulados e historial
    en localStorage. No cambia reglas, eventos de juego ni Cloudflare.
 */
@@ -2557,7 +2455,14 @@ try{ window.startMatch = startMatch; }catch(e){}
 
 /*
 ===============================================================================
-CronoGol v2.5.8 — Online Turn Control
+CronoGol v2.6.0 — Legacy Online Patch Gate
+===============================================================================
+*/
+window.CRONOGOL_DISABLE_LEGACY_ONLINE_PATCHES = true;
+
+/*
+===============================================================================
+CronoGol v2.6.0 — Online Turn Control
 ===============================================================================
 Primera capa de control de turno online:
 - Host = jugador 1, invitado = jugador 2.
@@ -2571,8 +2476,9 @@ puedan jugar a la vez.
 */
 (function(){
   "use strict";
+if(window.CRONOGOL_DISABLE_LEGACY_ONLINE_PATCHES){ window.__cronogolLegacyDisabled = window.__cronogolLegacyDisabled || []; window.__cronogolLegacyDisabled.push("Online Turn Control"); return; }
 
-  const ONLINE_TURN_VERSION = "2.5.8";
+  const ONLINE_TURN_VERSION = "2.6.0";
   const SUPABASE_URL = "https://xbrrdkflztxkvnngmdhu.supabase.co";
   const SUPABASE_ANON_KEY = "sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l";
   const ROOMS_TABLE = "cronogol_rooms";
@@ -2944,10 +2850,11 @@ puedan jugar a la vez.
 
 
 
-/* CronoGol v2.5.8 — Online Throws & Score Sync */
+/* CronoGol v2.6.0 — Online Throws & Score Sync */
 (function(){
 "use strict";
-const V="2.5.8";
+if(window.CRONOGOL_DISABLE_LEGACY_ONLINE_PATCHES){ window.__cronogolLegacyDisabled = window.__cronogolLegacyDisabled || []; window.__cronogolLegacyDisabled.push("Online Throws & Score Sync"); return; }
+const V="2.6.0";
 const URL="https://xbrrdkflztxkvnngmdhu.supabase.co";
 const KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l";
 const TABLE="cronogol_rooms";
@@ -3022,7 +2929,7 @@ window.CronoGolOnlineEvents=Object.freeze({version:V,pushThrowEvent:push,pullThr
 
 
 
-/* CronoGol v2.5.8 — Last Throw Message Fix */
+/* CronoGol v2.6.0 — Last Throw Message Fix */
 (function(){
   "use strict";
   let lastClean = null;
@@ -3083,10 +2990,11 @@ window.CronoGolOnlineEvents=Object.freeze({version:V,pushThrowEvent:push,pullThr
 
 
 
-/* CronoGol v2.5.8 — Rules Selector & Online Sanctions Fix */
+/* CronoGol v2.6.0 — Rules Selector & Online Sanctions Fix */
 (function(){
 "use strict";
-const V="2.5.8",URL="https://xbrrdkflztxkvnngmdhu.supabase.co",KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l",TABLE="cronogol_rooms";
+if(window.CRONOGOL_DISABLE_LEGACY_ONLINE_PATCHES){ window.__cronogolLegacyDisabled = window.__cronogolLegacyDisabled || []; window.__cronogolLegacyDisabled.push("Rules Selector & Online Sanctions Fix"); return; }
+const V="2.6.0",URL="https://xbrrdkflztxkvnngmdhu.supabase.co",KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l",TABLE="cronogol_rooms";
 let busy=false;
 function st(){try{return window.CronoGolOnline&&window.CronoGolOnline.getOnlineStatus?window.CronoGolOnline.getOnlineStatus():{};}catch(e){return {};}}
 function code(){return String(st().currentRoomCode||"").trim().toUpperCase();}
@@ -3120,7 +3028,7 @@ window.CronoGolOnlineSanctions=Object.freeze({version:V,processOnlineSanctionSki
 
 /*
 ===============================================================================
-CronoGol v2.5.8 — Menu Final Fix & Host Mode Sync
+CronoGol v2.6.0 — Menu Final Fix & Host Mode Sync
 ===============================================================================
 Corrección real, no cosmética:
 - Reglas queda antes que Rival en HTML.
@@ -3133,7 +3041,7 @@ Corrección real, no cosmética:
 */
 (function(){
 "use strict";
-const V="2.5.8";
+const V="2.6.0";
 let rulesChosen=false, rivalChosen=false, clearing=false, lastHostMode="";
 
 function q(s){return document.querySelector(s)}
@@ -3347,7 +3255,7 @@ async function pushHostRules(){
       headers:{"Prefer":"return=minimal"},
       body:JSON.stringify({state_json:state,app_version:V,last_seen_at:new Date().toISOString()})
     });
-  }catch(e){try{console.warn("[v2.5.8 pushHostRules]",e)}catch(_){}}
+  }catch(e){try{console.warn("[v2.6.0 pushHostRules]",e)}catch(_){}}
 }
 async function pullHostRules(){
   try{
@@ -3373,7 +3281,7 @@ async function pullHostRules(){
       rulesChosen=true;
       refresh();
     }
-  }catch(e){try{console.warn("[v2.5.8 pullHostRules]",e)}catch(_){}}
+  }catch(e){try{console.warn("[v2.6.0 pullHostRules]",e)}catch(_){}}
 }
 
 try{
@@ -3399,7 +3307,7 @@ window.CronoGolMenuChoice=Object.freeze({version:V,clearInitialMenuSelections:cl
 
 /*
 ===============================================================================
-CronoGol v2.5.8 — Rival Lock Final Fix
+CronoGol v2.6.0 — Rival Lock Final Fix
 ===============================================================================
 - Rival queda realmente bloqueado hasta elegir reglas.
 - Sin selección por defecto de rival.
@@ -3409,7 +3317,7 @@ CronoGol v2.5.8 — Rival Lock Final Fix
 */
 (function(){
 "use strict";
-const V="2.5.8";
+const V="2.6.0";
 let rulesChosen=false;
 let rivalChosen=false;
 let bootDone=false;
@@ -3612,7 +3520,7 @@ window.CronoGolRivalLockFix=Object.freeze({version:V,refresh,clearBootDefaults})
 
 /*
 ===============================================================================
-CronoGol v2.5.8 — Online Clock & Match Complete
+CronoGol v2.6.0 — Online Clock & Match Complete
 ===============================================================================
 Objetivo:
 - Un único reloj online visible por ambos dispositivos.
@@ -3624,8 +3532,9 @@ Objetivo:
 */
 (function(){
 "use strict";
+if(window.CRONOGOL_DISABLE_LEGACY_ONLINE_PATCHES){ window.__cronogolLegacyDisabled = window.__cronogolLegacyDisabled || []; window.__cronogolLegacyDisabled.push("Online Clock & Match Complete"); return; }
 
-const V="2.5.8";
+const V="2.6.0";
 const URL="https://xbrrdkflztxkvnngmdhu.supabase.co";
 const KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l";
 const TABLE="cronogol_rooms";
@@ -3794,7 +3703,7 @@ function applyRemoteClock(clock){
   stopwatchBaseMs=elapsed;
   try{ updateTimerDisplay(elapsed); }catch(e){
     if(timerDisplay) timerDisplay.textContent=clock.displayTime||officialTimeText(elapsed);
-    // v2.5.8: no pisar lastTwoDisplay con onlineClock.lastTwo; la tirada real manda.
+    // v2.6.0: no pisar lastTwoDisplay con onlineClock.lastTwo; la tirada real manda.
   }
   lastPulledClockId=id;
 }
@@ -3825,7 +3734,7 @@ function applyRemoteFinal(finalState,state){
   currentElapsedMs=Number(finalState.finalElapsedMs||currentElapsedMs||0);
   stopwatchBaseMs=currentElapsedMs;
   if(timerDisplay) timerDisplay.textContent=finalState.finalTime||officialTimeText(currentElapsedMs);
-  // v2.5.8: no pisar lastTwoDisplay con centésimas del reloj al finalizar.
+  // v2.6.0: no pisar lastTwoDisplay con centésimas del reloj al finalizar.
 
   try{ setEvent("FINAL", `${finalState.winnerName?("Gana "+finalState.winnerName):"Partido finalizado"} · ${finalState.finalScore?finalState.finalScore.join("-"):""}`, "special"); }catch(e){}
   try{ updateUI(); syncActionControls(); }catch(e){}
@@ -3946,7 +3855,7 @@ try{
 
 setInterval(()=>{
   if(!onlineActive()) return;
-  // v2.5.8: STOP manda; no sincronizar reloj vivo. // pushClock("tick",true);
+  // v2.6.0: STOP manda; no sincronizar reloj vivo. // pushClock("tick",true);
   pullOnlineState();
   blockIfFinished();
 },700);
@@ -3956,10 +3865,11 @@ window.CronoGolOnlineClock=Object.freeze({version:V,pushClock,pullOnlineState,pu
 
 
 
-/* CronoGol v2.5.8 — Online Clock Display Fix */
+/* CronoGol v2.6.0 — Online Clock Display Fix */
 (function(){
 "use strict";
-const V="2.5.8";
+if(window.CRONOGOL_DISABLE_LEGACY_ONLINE_PATCHES){ window.__cronogolLegacyDisabled = window.__cronogolLegacyDisabled || []; window.__cronogolLegacyDisabled.push("Online Clock Display Fix"); return; }
+const V="2.6.0";
 function online(){try{return gameState&&gameState.gameMode==="online"&&gameScreen&&gameScreen.classList.contains("active")}catch(e){return false}}
 function st(){try{return window.CronoGolOnline&&window.CronoGolOnline.getOnlineStatus?window.CronoGolOnline.getOnlineStatus():{}}catch(e){return {}}}
 function code(){return String(st().currentRoomCode||"").trim().toUpperCase()}
@@ -4013,16 +3923,17 @@ async function pullProtect(){
    if(state.finalState&&state.finalState.lastThrow)protectThrow(state.finalState.lastThrow);
  }catch(e){}
 }
-/* v2.5.8 cleanup: old v2.5.1 pullProtect polling disabled; v2.5.7 display ownership owns visual state. */
+/* v2.6.0 cleanup: old v2.5.1 pullProtect polling disabled; v2.5.7 display ownership owns visual state. */
 window.CronoGolClockDisplayFix=Object.freeze({version:V,protectThrow,pullProtect});
 })();
 
 
 
-/* CronoGol v2.5.8 — Last Throw Time Freeze Fix */
+/* CronoGol v2.6.0 — Last Throw Time Freeze Fix */
 (function(){
 "use strict";
-const V="2.5.8";
+if(window.CRONOGOL_DISABLE_LEGACY_ONLINE_PATCHES){ window.__cronogolLegacyDisabled = window.__cronogolLegacyDisabled || []; window.__cronogolLegacyDisabled.push("Last Throw Time Freeze Fix"); return; }
+const V="2.6.0";
 let protectedThrow=null;
 
 function online(){try{return gameState&&gameState.gameMode==="online"&&gameScreen&&gameScreen.classList.contains("active")}catch(e){return false}}
@@ -4106,16 +4017,17 @@ async function pullProtect(){
    restoreIfWaiting();
  }catch(e){}
 }
-/* v2.5.8 cleanup: old v2.5.2 freeze poll disabled; v2.5.7 display ownership owns visual state. */
+/* v2.6.0 cleanup: old v2.5.2 freeze poll disabled; v2.5.7 display ownership owns visual state. */
 window.CronoGolLastThrowTimeFix=Object.freeze({version:V,protectThrow,restoreIfWaiting,pullProtect});
 })();
 
 
 
-/* CronoGol v2.5.8 — Stop-Time Authoritative Sync */
+/* CronoGol v2.6.0 — Stop-Time Authoritative Sync */
 (function(){
 "use strict";
-const V="2.5.8";
+if(window.CRONOGOL_DISABLE_LEGACY_ONLINE_PATCHES){ window.__cronogolLegacyDisabled = window.__cronogolLegacyDisabled || []; window.__cronogolLegacyDisabled.push("Stop-Time Authoritative Sync"); return; }
+const V="2.6.0";
 const URL="https://xbrrdkflztxkvnngmdhu.supabase.co";
 const KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l";
 const TABLE="cronogol_rooms";
@@ -4171,7 +4083,7 @@ async function pushStop(stop){
    state.lastThrow={id:stop.stopId,value:stop.value,valueText:stop.valueText,displayTime:stop.displayTime,elapsedMs:stop.elapsedMs,actorIndex:stop.actorIndex,actorName:stop.actorName,title:stop.title,message:stop.message,eventClass:stop.eventClass,createdAt:stop.createdAt};
    state.onlineClock={mode:"stopped",isRunning:false,elapsedMs:stop.elapsedMs,displayTime:stop.displayTime,lastTwo:stop.value,sourcePlayerIndex:stop.actorIndex,updatedAt:stop.createdAt};
    await sf(endpoint(),{method:"PATCH",headers:{"Prefer":"return=minimal"},body:JSON.stringify({status:state.status,state_json:state,app_version:V,last_seen_at:new Date().toISOString()})});
- }catch(e){try{console.warn("[v2.5.8 pushStop]",e)}catch(_){}}
+ }catch(e){try{console.warn("[v2.6.0 pushStop]",e)}catch(_){}}
  finally{pushing=false}
 }
 function protect(v,kind){
@@ -4208,7 +4120,7 @@ async function pull(){
    if(state.lastStoppedThrow)applyRemote(state.lastStoppedThrow);
    else if(state.lastThrow&&state.lastThrow.displayTime)applyRemote(Object.assign({stopId:state.lastThrow.id},state.lastThrow));
    restore();
- }catch(e){try{console.warn("[v2.5.8 pull]",e)}catch(_){}}
+ }catch(e){try{console.warn("[v2.6.0 pull]",e)}catch(_){}}
  finally{pulling=false}
 }
 try{const prev=applyNormalResult;applyNormalResult=function(v,r){const out=prev.apply(this,arguments);setTimeout(()=>protect(v,"normal"),0);setTimeout(()=>protect(v,"normal"),150);return out}}catch(e){}
@@ -4216,16 +4128,17 @@ try{const prev=evaluateSpecialThrow;evaluateSpecialThrow=function(v){const out=p
 try{const prev=evaluateShootoutPenalty;evaluateShootoutPenalty=function(v){const out=prev.apply(this,arguments);setTimeout(()=>protect(v,"shootout"),0);setTimeout(()=>protect(v,"shootout"),150);return out}}catch(e){}
 try{const prev=updateTimerDisplay;updateTimerDisplay=function(ms){const out=prev.apply(this,arguments);if(online()&&!gameState.isRunning)setTimeout(restore,0);return out}}catch(e){}
 try{const prev=evaluateThrow;evaluateThrow=function(v){const mode=(gameState&&gameState.matchMode)||"";if((mode==="five"||mode==="fast")&&Number(v)%10===9)return {type:"penalty",msg:"PENALTI",cls:"special",special:"penalty"};return prev.apply(this,arguments)}}catch(e){}
-/* v2.5.8 cleanup: old v2.5.3 pull/restore polling disabled; v2.5.7 display ownership owns visual state. */
+/* v2.6.0 cleanup: old v2.5.3 pull/restore polling disabled; v2.5.7 display ownership owns visual state. */
 window.CronoGolStopTimeSync=Object.freeze({version:V,protect,applyRemote,pull});
 })();
 
 
 
-/* CronoGol v2.5.8 — Start Visual & Fast 70 Fix */
+/* CronoGol v2.6.0 — Start Visual & Fast 70 Fix */
 (function(){
 "use strict";
-const V="2.5.8";
+if(window.CRONOGOL_DISABLE_LEGACY_ONLINE_PATCHES){ window.__cronogolLegacyDisabled = window.__cronogolLegacyDisabled || []; window.__cronogolLegacyDisabled.push("Start Visual & Fast 70 Fix"); return; }
+const V="2.6.0";
 
 function online(){try{return gameState&&gameState.gameMode==="online"&&gameScreen&&gameScreen.classList.contains("active")}catch(e){return false}}
 function st(){try{return window.CronoGolOnline&&window.CronoGolOnline.getOnlineStatus?window.CronoGolOnline.getOnlineStatus():{}}catch(e){return {}}}
@@ -4276,7 +4189,7 @@ try{
   };
 }catch(e){}
 
-/* v2.5.8 cleanup: old v2.5.4 60ms live render disabled; v2.5.7 RUNNING_LOCAL owns visual state. */
+/* v2.6.0 cleanup: old v2.5.4 60ms live render disabled; v2.5.7 RUNNING_LOCAL owns visual state. */
 
 try{
   const previousEvaluateThrow=evaluateThrow;
@@ -4302,10 +4215,11 @@ window.CronoGolStartVisualFastFix=Object.freeze({version:V,forceLiveVisual});
 
 
 
-/* CronoGol v2.5.8 — Remote Stop Paint & Timer Smoothing */
+/* CronoGol v2.6.0 — Remote Stop Paint & Timer Smoothing */
 (function(){
 "use strict";
-const V="2.5.8",URL="https://xbrrdkflztxkvnngmdhu.supabase.co",KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l",TABLE="cronogol_rooms";
+if(window.CRONOGOL_DISABLE_LEGACY_ONLINE_PATCHES){ window.__cronogolLegacyDisabled = window.__cronogolLegacyDisabled || []; window.__cronogolLegacyDisabled.push("Remote Stop Paint & Timer Smoothing"); return; }
+const V="2.6.0",URL="https://xbrrdkflztxkvnngmdhu.supabase.co",KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l",TABLE="cronogol_rooms";
 let lastPaintedStopId="",pollingFastUntil=0,pullBusy=false;
 function online(){try{return gameState&&gameState.gameMode==="online"&&gameScreen&&gameScreen.classList.contains("active")}catch(e){return false}}
 function st(){try{return window.CronoGolOnline&&window.CronoGolOnline.getOnlineStatus?window.CronoGolOnline.getOnlineStatus():{}}catch(e){return {}}}
@@ -4320,7 +4234,7 @@ function endpoint(){return `${TABLE}?room_code=eq.${encodeURIComponent(code())}`
 function norm(raw){if(!raw)return null;const v=Number.isFinite(Number(raw.value))?Number(raw.value):null;const vt=raw.valueText||(v!==null?p2(v):"");const ms=Number.isFinite(Number(raw.elapsedMs))?Number(raw.elapsedMs):null;const dt=raw.displayTime||(ms!==null?fmt(ms):(vt?`00:00:${vt}`:""));return Object.assign({},raw,{stopId:raw.stopId||raw.id||`remote-${raw.createdAt||Date.now()}-${vt}`,value:v,valueText:vt,displayTime:dt,title:raw.title||"--",message:raw.message||"",eventClass:raw.eventClass||"event-neutral"})}
 function paint(stop,src){if(!online()||!stop)return;stop=norm(stop);if(!stop)return;if(timerDisplay&&stop.displayTime)timerDisplay.textContent=stop.displayTime;if(lastTwoDisplay&&stop.valueText)lastTwoDisplay.textContent=stop.valueText;if(eventTitle&&stop.title)eventTitle.textContent=stop.title;if(messageLabel&&stop.message)messageLabel.textContent=stop.message;if(eventCard&&stop.eventClass)eventCard.className=`event-card ${stop.eventClass}`;if(Array.isArray(stop.score)&&gameState.players&&gameState.players.length>=2){if(Number.isFinite(Number(stop.score[0])))gameState.players[0].goals=Number(stop.score[0]);if(Number.isFinite(Number(stop.score[1])))gameState.players[1].goals=Number(stop.score[1])}if(Number.isFinite(Number(stop.turnAfter)))gameState.currentPlayerIndex=Number(stop.turnAfter);try{updateUI()}catch(e){}if(timerDisplay&&stop.displayTime)timerDisplay.textContent=stop.displayTime;if(lastTwoDisplay&&stop.valueText)lastTwoDisplay.textContent=stop.valueText;if(eventTitle&&stop.title)eventTitle.textContent=stop.title;if(messageLabel&&stop.message)messageLabel.textContent=stop.message;if(eventCard&&stop.eventClass)eventCard.className=`event-card ${stop.eventClass}`;try{syncActionControls()}catch(e){}lastPaintedStopId=stop.stopId;window.__cronogolLastPaintedRemoteStop=Object.assign({source:src||"unknown",paintedAt:new Date().toISOString()},stop)}
 function applyNew(stop,src){if(!online()||!stop)return false;stop=norm(stop);if(!stop||!stop.stopId)return false;if(stop.stopId===lastPaintedStopId)return false;paint(stop,src||"remote");setTimeout(()=>paint(stop,src||"remote-late-80"),80);setTimeout(()=>paint(stop,src||"remote-late-220"),220);pollingFastUntil=Date.now()+2500;return true}
-async function pull(){if(!online()||!code()||pullBusy)return;if(isLocalTurn()&&gameState.isRunning)return;pullBusy=true;try{const rows=await sf(`${endpoint()}&select=state_json,status,updated_at`,{method:"GET"});if(!Array.isArray(rows)||!rows.length)return;const state=rows[0].state_json||{};const stop=state.lastStoppedThrow||(state.lastThrow&&state.lastThrow.displayTime?Object.assign({stopId:state.lastThrow.id},state.lastThrow):null);if(stop)applyNew(stop,"poll");if((rows[0].status==="finished"||state.phase==="finished"||state.status==="finished")&&state.finalState&&state.finalState.lastThrow)applyNew(state.finalState.lastThrow,"final")}catch(e){try{console.warn("[v2.5.8 pull]",e)}catch(_){}}finally{pullBusy=false}}
+async function pull(){if(!online()||!code()||pullBusy)return;if(isLocalTurn()&&gameState.isRunning)return;pullBusy=true;try{const rows=await sf(`${endpoint()}&select=state_json,status,updated_at`,{method:"GET"});if(!Array.isArray(rows)||!rows.length)return;const state=rows[0].state_json||{};const stop=state.lastStoppedThrow||(state.lastThrow&&state.lastThrow.displayTime?Object.assign({stopId:state.lastThrow.id},state.lastThrow):null);if(stop)applyNew(stop,"poll");if((rows[0].status==="finished"||state.phase==="finished"||state.status==="finished")&&state.finalState&&state.finalState.lastThrow)applyNew(state.finalState.lastThrow,"final")}catch(e){try{console.warn("[v2.6.0 pull]",e)}catch(_){}}finally{pullBusy=false}}
 function renderLocal(ms){if(!online()||!isLocalTurn()||!gameState.isRunning)return;const h=Math.floor(Number(ms||0)/10),m=Math.floor(h/6000),s=Math.floor((h%6000)/100),c=h%100;if(timerDisplay)timerDisplay.textContent=`${p2(m)}:${p2(s)}:${p2(c)}`;if(lastTwoDisplay)lastTwoDisplay.textContent=p2(c)}
 try{const ps=startTimer;startTimer=function(){const out=ps.apply(this,arguments);if(online()&&isLocalTurn()){pollingFastUntil=Date.now()+1500;setTimeout(()=>renderLocal(currentElapsedMs),0);setTimeout(()=>renderLocal(currentElapsedMs),25);setTimeout(()=>renderLocal(currentElapsedMs),90)}return out}}catch(e){}
 try{const ps=stopTimer;stopTimer=function(){const out=ps.apply(this,arguments);pollingFastUntil=Date.now()+3000;return out}}catch(e){}
@@ -4329,7 +4243,7 @@ function afterStop(){pollingFastUntil=Date.now()+3000;setTimeout(pull,100)}
 try{const p=applyNormalResult;applyNormalResult=function(v,r){const out=p.apply(this,arguments);setTimeout(afterStop,80);return out}}catch(e){}
 try{const p=evaluateSpecialThrow;evaluateSpecialThrow=function(v){const out=p.apply(this,arguments);setTimeout(afterStop,80);return out}}catch(e){}
 try{const p=evaluateShootoutPenalty;evaluateShootoutPenalty=function(v){const out=p.apply(this,arguments);setTimeout(afterStop,80);return out}}catch(e){}
-/* v2.5.8 cleanup: old v2.5.5 remote stop polling disabled; v2.5.7 pullStop owns remote STOP paint. */
+/* v2.6.0 cleanup: old v2.5.5 remote stop polling disabled; v2.5.7 pullStop owns remote STOP paint. */
 window.CronoGolRemoteStopPaint=Object.freeze({version:V,pullRemoteStop:pull,paintStop:paint,applyRemoteStopIfNew:applyNew});
 })();
 
@@ -4337,7 +4251,7 @@ window.CronoGolRemoteStopPaint=Object.freeze({version:V,pullRemoteStop:pull,pain
 
 /*
 ===============================================================================
-CronoGol v2.5.8 — Monotonic Timer Render Guard
+CronoGol v2.6.0 — Monotonic Timer Render Guard
 ===============================================================================
 Problema corregido:
 - Mientras el cronómetro corre, algunas capas antiguas podían repintar un valor menor:
@@ -4350,7 +4264,8 @@ Regla nueva:
 */
 (function(){
 "use strict";
-const V="2.5.8";
+if(window.CRONOGOL_DISABLE_LEGACY_ONLINE_PATCHES){ window.__cronogolLegacyDisabled = window.__cronogolLegacyDisabled || []; window.__cronogolLegacyDisabled.push("Monotonic Timer Render Guard"); return; }
+const V="2.6.0";
 let runningGuard = {
   active:false,
   ownerKey:"",
@@ -4466,7 +4381,7 @@ try{
   };
 }catch(e){}
 
-/* v2.5.8 cleanup: old v2.5.6 monotonic 50ms painter disabled; v2.5.7 display ownership owns visual state. */
+/* v2.6.0 cleanup: old v2.5.6 monotonic 50ms painter disabled; v2.5.7 display ownership owns visual state. */
 
 // Reset claro cuando se procesa un resultado y cambia el estado de carrera/turno.
 function afterOfficialStop(){
@@ -4511,7 +4426,7 @@ window.CronoGolMonotonicTimerGuard=Object.freeze({
 
 /*
 ===============================================================================
-CronoGol v2.5.8 — Display Ownership State Machine
+CronoGol v2.6.0 — Display Ownership State Machine
 ===============================================================================
 Problema corregido:
 - Se podían mezclar estados visuales: reloj grande vivo de otra capa + número/evento de STOP.
@@ -4525,7 +4440,8 @@ Regla final:
 */
 (function(){
 "use strict";
-const V="2.5.8";
+if(window.CRONOGOL_DISABLE_LEGACY_ONLINE_PATCHES){ window.__cronogolLegacyDisabled = window.__cronogolLegacyDisabled || []; window.__cronogolLegacyDisabled.push("Display Ownership State Machine"); return; }
+const V="2.6.0";
 const URL="https://xbrrdkflztxkvnngmdhu.supabase.co";
 const KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l";
 const TABLE="cronogol_rooms";
@@ -4640,7 +4556,7 @@ async function pushLocalStop(stop){
    // onlineClock queda como estado parado, nunca como dueño visual.
    state.onlineClock={mode:"stopped",isRunning:false,elapsedMs:stop.elapsedMs,displayTime:stop.displayTime,lastTwo:stop.value,sourcePlayerIndex:stop.actorIndex,updatedAt:stop.createdAt};
    await sf(endpoint(),{method:"PATCH",headers:{"Prefer":"return=minimal"},body:JSON.stringify({status:state.status,state_json:state,app_version:V,last_seen_at:new Date().toISOString()})});
- }catch(e){try{console.warn("[v2.5.8 pushLocalStop]",e)}catch(_){}}
+ }catch(e){try{console.warn("[v2.6.0 pushLocalStop]",e)}catch(_){}}
 }
 async function pullStop(){
  if(!online()||!code()||pulling)return;
@@ -4662,7 +4578,7 @@ async function pullStop(){
       const fs=normStop(state.finalState.lastThrow);
       if(fs && fs.stopId!==lastFrozenStopId)applyStop(fs,"final");
    }
- }catch(e){try{console.warn("[v2.5.8 pullStop]",e)}catch(_){}}
+ }catch(e){try{console.warn("[v2.6.0 pullStop]",e)}catch(_){}}
  finally{pulling=false}
 }
 function afterLocalStop(v,kind){
@@ -4740,12 +4656,438 @@ window.CronoGolDisplayOwnership=Object.freeze({version:V,setOwner,paintOwned,app
 
 
 
-/* CronoGol v2.5.8 — Online Display Cleanup
+/* CronoGol v2.6.0 — Online Display Cleanup
    Ponytail cleanup: no new display layer added.
    CronoGolDisplayOwnership remains the single visual owner.
 */
 window.CronoGolOnlineDisplayCleanup = Object.freeze({
-  version: "2.5.8",
+  version: "2.6.0",
   displayOwner: "CronoGolDisplayOwnership"
 });
+
+
+
+/* CronoGol v2.6.0 — Online Turn Authority & Running Remote Display */
+(function(){
+"use strict";
+if(window.CRONOGOL_DISABLE_LEGACY_ONLINE_PATCHES){ window.__cronogolLegacyDisabled = window.__cronogolLegacyDisabled || []; window.__cronogolLegacyDisabled.push("Online Turn Authority & Running Remote Display"); window.__cronogolLegacyDisabled.push("Online Display Cleanup"); return; }
+const V="2.6.0",URL="https://xbrrdkflztxkvnngmdhu.supabase.co",KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l",TABLE="cronogol_rooms";
+let remoteTurnIndex=null,remoteRunningState=null,pulling=false,pushing=false;
+function online(){try{return gameState&&gameState.gameMode==="online"&&gameScreen&&gameScreen.classList.contains("active")}catch(e){return false}}
+function st(){try{return window.CronoGolOnline&&window.CronoGolOnline.getOnlineStatus?window.CronoGolOnline.getOnlineStatus():{}}catch(e){return {}}}
+function code(){return String(st().currentRoomCode||"").trim().toUpperCase()}
+function role(){return String(st().currentRole||"").toLowerCase()}
+function localIndex(){return role()==="guest"?1:0}
+function isMyRemoteTurn(){return Number(remoteTurnIndex)===localIndex()}
+function p2(n){return String(n).padStart(2,"0")}
+function fmt(ms){const h=Math.floor(Number(ms||0)/10),m=Math.floor(h/6000),s=Math.floor((h%6000)/100),c=h%100;return `${p2(m)}:${p2(s)}:${p2(c)}`}
+async function sf(path,opt={}){const headers=Object.assign({"apikey":KEY,"Authorization":`Bearer ${KEY}`,"Content-Type":"application/json"},opt.headers||{});const r=await fetch(`${URL}/rest/v1/${path}`,Object.assign({},opt,{headers}));const tx=await r.text();let d=null;if(tx){try{d=JSON.parse(tx)}catch(e){d=tx}}if(!r.ok)throw new Error(d&&d.message?d.message:`Supabase HTTP ${r.status}`);return d}
+function endpoint(){return `${TABLE}?room_code=eq.${encodeURIComponent(code())}`}
+function btn(){return typeof mainActionBtn!=="undefined"?mainActionBtn:document.querySelector("#main-action-btn,.main-action-btn,button.action-button")}
+function waitBtn(){const b=btn();if(!b)return;b.disabled=true;b.textContent="ESPERANDO TURNO";b.classList.add("waiting-turn")}
+function startBtn(){const b=btn();if(!b)return;b.disabled=false;b.textContent="START";b.classList.remove("waiting-turn")}
+function readTurn(state){if(!state)return;if(Number.isFinite(Number(state.currentPlayerIndex)))remoteTurnIndex=Number(state.currentPlayerIndex);if(state.lastStoppedThrow&&Number.isFinite(Number(state.lastStoppedThrow.turnAfter)))remoteTurnIndex=Number(state.lastStoppedThrow.turnAfter)}
+function applyTurn(reason){if(!online())return;if(Number.isFinite(Number(remoteTurnIndex)))gameState.currentPlayerIndex=Number(remoteTurnIndex);try{syncActionControls()}catch(e){}if(gameState.matchEnded)return;if(gameState.isRunning&&isMyRemoteTurn())return;if(isMyRemoteTurn())startBtn();else waitBtn();try{window.__cronogolTurnAuthority={version:V,reason,remoteTurnIndex,localIndex:localIndex(),isMyTurn:isMyRemoteTurn(),at:new Date().toISOString()}}catch(e){}}
+function remoteRunning(){return online()&&remoteRunningState&&remoteRunningState.isRunning&&Number(remoteRunningState.playerIndex)!==localIndex()&&Number.isFinite(Number(remoteRunningState.startedAtMs))}
+function paintRemoteRunning(){if(!remoteRunning())return false;const ms=Number(remoteRunningState.baseMs||0)+Math.max(0,Date.now()-Number(remoteRunningState.startedAtMs));const text=fmt(ms);if(timerDisplay)timerDisplay.textContent=text;if(lastTwoDisplay)lastTwoDisplay.textContent=text.slice(-2);try{window.CronoGolDisplayOwnership&&window.CronoGolDisplayOwnership.setOwner&&window.CronoGolDisplayOwnership.setOwner("RUNNING_REMOTE","v2.6.0")}catch(e){}try{window.__cronogolRunningRemote={version:V,text,ms,playerIndex:remoteRunningState.playerIndex,at:new Date().toISOString()}}catch(e){}return true}
+async function pull(){if(!online()||!code()||pulling)return;pulling=true;try{const rows=await sf(`${endpoint()}&select=state_json,status,updated_at`,{method:"GET"});if(!Array.isArray(rows)||!rows.length)return;const state=rows[0].state_json||{};readTurn(state);remoteRunningState=(state.runningState&&state.runningState.isRunning)?state.runningState:null;applyTurn("pull");if(remoteRunning())paintRemoteRunning()}catch(e){try{console.warn("[v2.6.0 pull]",e)}catch(_){}}finally{pulling=false}}
+async function pushRunning(isRunning){if(!online()||!code()||pushing)return;pushing=true;try{const rows=await sf(`${endpoint()}&select=state_json,status`,{method:"GET"});const state=(Array.isArray(rows)&&rows[0]&&rows[0].state_json)?rows[0].state_json:{};state.appVersion=V;state.currentPlayerIndex=Number(gameState.currentPlayerIndex||0);state.runningState=isRunning?{runningId:`run-${Date.now()}-${Math.random().toString(36).slice(2,8)}`,isRunning:true,playerIndex:localIndex(),startedAtMs:Date.now(),baseMs:Number.isFinite(Number(currentElapsedMs))?Number(currentElapsedMs):0,sourceRole:role()||"unknown",updatedAt:new Date().toISOString()}:null;await sf(endpoint(),{method:"PATCH",headers:{"Prefer":"return=minimal"},body:JSON.stringify({state_json:state,app_version:V,last_seen_at:new Date().toISOString()})})}catch(e){try{console.warn("[v2.6.0 pushRunning]",e)}catch(_){}}finally{pushing=false}}
+function blocked(){if(!online()||gameState.matchEnded||remoteTurnIndex===null)return false;if(!isMyRemoteTurn()){applyTurn("start-blocked");return true}return false}
+try{const p=startTimer;startTimer=function(){if(blocked())return;const out=p.apply(this,arguments);if(online())setTimeout(()=>pushRunning(true),40);return out}}catch(e){}
+try{const p=stopTimer;stopTimer=function(){const out=p.apply(this,arguments);if(online())setTimeout(()=>pushRunning(false),30);return out}}catch(e){}
+try{const p=updateTimerDisplay;updateTimerDisplay=function(ms){if(online()&&remoteRunning()&&!gameState.isRunning){paintRemoteRunning();return}return p.apply(this,arguments)}}catch(e){}
+function afterStop(){setTimeout(()=>{pushRunning(false);pull()},100)}
+try{const p=applyNormalResult;applyNormalResult=function(v,r){const out=p.apply(this,arguments);afterStop();return out}}catch(e){}
+try{const p=evaluateSpecialThrow;evaluateSpecialThrow=function(v){const out=p.apply(this,arguments);afterStop();return out}}catch(e){}
+try{const p=evaluateShootoutPenalty;evaluateShootoutPenalty=function(v){const out=p.apply(this,arguments);afterStop();return out}}catch(e){}
+setInterval(pull,450);
+setInterval(()=>{if(remoteRunning())paintRemoteRunning();else applyTurn("tick")},90);
+window.CronoGolOnlineTurnAuthority=Object.freeze({version:V,pullAuthority:pull,applyTurnAuthority:applyTurn,paintRemoteRunning,pushRunningState:pushRunning,get remoteTurnIndex(){return remoteTurnIndex},get remoteRunningState(){return remoteRunningState}});
+})();
+
+
+
+/*
+===============================================================================
+CronoGol v2.6.0 — Online Core Refactor
+===============================================================================
+Objetivo:
+- Sustituir los parches online apilados por un único controlador online.
+- Mantener el juego local/máquina intacto.
+- No añadir dependencias.
+- No cambiar esquema obligatorio: usa state_json existente.
+- START publica runningState una vez; el rival anima localmente.
+- STOP publica lastStoppedThrow; STOP sigue siendo autoridad.
+===============================================================================
+*/
+(function(){
+"use strict";
+const VERSION="2.6.1";
+const URL="https://xbrrdkflztxkvnngmdhu.supabase.co";
+const KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l";
+const TABLE="cronogol_rooms";
+const PULL_MS=350;
+const REMOTE_RUN_MS=80;
+
+let roomState=null;
+let pullBusy=false;
+let pushBusy=false;
+let lastAppliedStopId="";
+let lastPushedStopId="";
+let runningPaintTimer=null;
+let pullTimer=null;
+let lastRemoteTurnIndex=null;
+
+function online(){
+  try{return gameState && gameState.gameMode==="online" && gameScreen && gameScreen.classList.contains("active") && roomCode();}catch(e){return false}
+}
+function onlineStatus(){
+  try{return window.CronoGolOnline && window.CronoGolOnline.getOnlineStatus ? (window.CronoGolOnline.getOnlineStatus()||{}) : {}}catch(e){return {}}
+}
+function roomCode(){return String(onlineStatus().currentRoomCode||"").trim().toUpperCase()}
+function role(){return String(onlineStatus().currentRole||"").trim().toLowerCase()}
+function localIndex(){return role()==="guest" ? 1 : 0}
+function isLocalTurn(){
+  // v2.6.1 BUG2: una sola regla de turno para botón y guard.
+  // Es mi turno solo si el estado remoto Y el estado local coinciden conmigo.
+  // Tras mi propia tirada, gameState avanza de forma síncrona y deja de ser mi turno
+  // al instante (cierra la ventana de doble tirada) sin esperar al siguiente pull.
+  const mine=localIndex();
+  const remoteTurn=Number(currentRemoteTurn());
+  const localTurn=Number(gameState.currentPlayerIndex||0);
+  return remoteTurn===mine && localTurn===mine;
+}
+function pad2(n){return String(n).padStart(2,"0")}
+function fmt(ms){
+  const h=Math.floor(Number(ms||0)/10);
+  const m=Math.floor(h/6000);
+  const s=Math.floor((h%6000)/100);
+  const c=h%100;
+  return `${pad2(m)}:${pad2(s)}:${pad2(c)}`;
+}
+function lastTwoFromMs(ms){return Math.floor(Number(ms||0)/10)%100}
+function currentRemoteTurn(){
+  if(roomState && Number.isFinite(Number(roomState.currentPlayerIndex))) return Number(roomState.currentPlayerIndex);
+  return Number(gameState.currentPlayerIndex||0);
+}
+function eventClass(){
+  try{return Array.from(eventCard.classList||[]).find(c=>c.indexOf("event-")===0 && c!=="event-card") || "event-neutral"}catch(e){return "event-neutral"}
+}
+function playersSnapshot(){
+  return (gameState.players||[]).map((p,i)=>({
+    index:i,
+    name:String(p && p.name ? p.name : `Jugador ${i+1}`).replace(/[\u0000-\u001F\u007F]/g,"").slice(0,24),
+    goals:Number(p && p.goals || 0),
+    skipTurns:Number(p && p.skipTurns || 0)
+  }));
+}
+function stateScore(players){
+  const ps=players||playersSnapshot();
+  return [Number(ps[0]&&ps[0].goals||0), Number(ps[1]&&ps[1].goals||0)];
+}
+async function sf(path,opt={}){
+  const headers=Object.assign({"apikey":KEY,"Authorization":`Bearer ${KEY}`,"Content-Type":"application/json"},opt.headers||{});
+  const res=await fetch(`${URL}/rest/v1/${path}`,Object.assign({},opt,{headers}));
+  const text=await res.text();
+  let data=null;
+  if(text){try{data=JSON.parse(text)}catch(e){data=text}}
+  if(!res.ok)throw new Error(data&&data.message?data.message:`Supabase HTTP ${res.status}`);
+  return data;
+}
+function endpoint(){return `${TABLE}?room_code=eq.${encodeURIComponent(roomCode())}`}
+function actionButton(){return typeof mainActionBtn!=="undefined" ? mainActionBtn : document.querySelector("#main-action-btn")}
+function setActionWaiting(){
+  const b=actionButton(); if(!b)return;
+  b.disabled=true; b.textContent="ESPERANDO TURNO"; b.classList.add("waiting-turn"); b.classList.remove("stop");
+}
+function setActionStart(){
+  const b=actionButton(); if(!b)return;
+  b.disabled=false; b.textContent="START"; b.classList.remove("waiting-turn"); b.classList.remove("stop");
+}
+function setActionStop(){
+  const b=actionButton(); if(!b)return;
+  b.disabled=false; b.textContent="STOP"; b.classList.remove("waiting-turn"); b.classList.add("stop");
+}
+function applyControls(){
+  if(!online())return;
+  const myTurn=isLocalTurn();
+  if(gameState.matchEnded){try{syncActionControls()}catch(e){} return;}
+  if(gameState.isRunning && myTurn){setActionStop(); return;}
+  if(pendingSpecial || penaltyShootout){
+    try{syncActionControls()}catch(e){}
+    return;
+  }
+  if(myTurn)setActionStart(); else setActionWaiting();
+  try{window.__cronogolOnlineCoreControls={version:VERSION,myTurn,remoteTurn:currentRemoteTurn(),localIndex:localIndex(),at:new Date().toISOString()}}catch(e){}
+}
+function applyPlayersFromState(state){
+  if(!state || !Array.isArray(state.players) || !gameState.players)return;
+  state.players.slice(0,2).forEach((p,i)=>{
+    if(!gameState.players[i])return;
+    if(typeof p.name==="string")gameState.players[i].name=p.name.replace(/[\u0000-\u001F\u007F]/g,"").slice(0,24) || gameState.players[i].name;
+    if(Number.isFinite(Number(p.goals)))gameState.players[i].goals=Number(p.goals);
+    if(Number.isFinite(Number(p.skipTurns)))gameState.players[i].skipTurns=Number(p.skipTurns);
+  });
+}
+function applyTurnFromState(state){
+  if(state && Number.isFinite(Number(state.currentPlayerIndex))){
+    lastRemoteTurnIndex=Number(state.currentPlayerIndex);
+    gameState.currentPlayerIndex=lastRemoteTurnIndex;
+  }
+}
+function normalizeStop(raw){
+  if(!raw)return null;
+  const value=Number.isFinite(Number(raw.value))?Number(raw.value):null;
+  const valueText=raw.valueText || (value!==null?pad2(value):"");
+  const elapsedMs=Number.isFinite(Number(raw.elapsedMs))?Number(raw.elapsedMs):null;
+  const displayTime=raw.displayTime || (elapsedMs!==null?fmt(elapsedMs):(valueText?`00:00:${valueText}`:"00:00:00"));
+  return Object.assign({},raw,{
+    stopId:raw.stopId || raw.id || `stop-${raw.createdAt||Date.now()}-${valueText}`,
+    value,valueText,elapsedMs,displayTime,
+    title:raw.title||"",
+    message:raw.message||"",
+    eventClass:raw.eventClass||"event-neutral"
+  });
+}
+function paintStop(raw, reason){
+  const stop=normalizeStop(raw); if(!stop)return false;
+  if(timerDisplay)timerDisplay.textContent=stop.displayTime;
+  if(lastTwoDisplay)lastTwoDisplay.textContent=stop.valueText;
+  if(eventTitle && stop.title)eventTitle.textContent=stop.title;
+  if(messageLabel && stop.message)messageLabel.textContent=stop.message;
+  if(eventCard && stop.eventClass)eventCard.className=`event-card ${stop.eventClass}`;
+  try{window.__cronogolOnlineCoreStop={version:VERSION,reason,stop,at:new Date().toISOString()}}catch(e){}
+  return true;
+}
+function makeStop(value,kind,actorIndexOverride){
+  const elapsed=Number.isFinite(Number(currentElapsedMs))?Math.round(Number(currentElapsedMs)):0;
+  const v=Number.isFinite(Number(value))?Number(value):lastTwoFromMs(elapsed);
+  // v2.6.1 BUG1: el actor se captura ANTES de switchTurn en el wrapper y se pasa aquí.
+  // Sin el override, gameState.currentPlayerIndex ya apunta al siguiente jugador.
+  const actorIndex=Number.isFinite(Number(actorIndexOverride))?Number(actorIndexOverride):Number(gameState.currentPlayerIndex||0);
+  const actor=gameState.players&&gameState.players[actorIndex]?gameState.players[actorIndex]:{name:`Jugador ${actorIndex+1}`};
+  const title=eventTitle?String(eventTitle.textContent||""):"";
+  const valueText=pad2(v);
+  return {
+    stopId:`stop-${Date.now()}-${Math.random().toString(36).slice(2,8)}`,
+    kind:kind||"normal",
+    value:v,
+    valueText,
+    elapsedMs:elapsed,
+    displayTime:fmt(elapsed),
+    actorIndex,
+    actorName:String(actor.name||`Jugador ${actorIndex+1}`).replace(/[\u0000-\u001F\u007F]/g,"").slice(0,24),
+    title,
+    message:title && title!=="--" ? `${actor.name} sacó ${valueText} → ${title}` : (messageLabel?String(messageLabel.textContent||""):""),
+    eventClass:eventClass(),
+    score:stateScore(),
+    turnAfter:Number(gameState.currentPlayerIndex||0),
+    matchEnded:Boolean(gameState.matchEnded),
+    createdAt:new Date().toISOString()
+  };
+}
+function buildState(extra={}){
+  const players=playersSnapshot();
+  return Object.assign({},roomState||{},{
+    schemaVersion:10,
+    appVersion:VERSION,
+    phase:gameState.matchEnded?"finished":"playing",
+    status:gameState.matchEnded?"finished":"playing",
+    gameMode:"online",
+    matchMode:gameState.matchMode||"classic",
+    players,
+    score:stateScore(players),
+    currentPlayerIndex:Number(gameState.currentPlayerIndex||0),
+    totalTurns:Number(gameState.totalTurns||0),
+    stats:Object.assign({},gameState.stats||{}),
+    updatedBy:role()||"unknown",
+    updatedAtClient:new Date().toISOString()
+  },extra);
+}
+async function patchState(extra){
+  if(!online()||pushBusy)return;
+  pushBusy=true;
+  try{
+    const state=buildState(extra||{});
+    roomState=state;
+    await sf(endpoint(),{
+      method:"PATCH",
+      headers:{"Prefer":"return=minimal"},
+      body:JSON.stringify({
+        status:state.status,
+        state_json:state,
+        app_version:VERSION,
+        last_seen_at:new Date().toISOString()
+      })
+    });
+  }catch(e){try{console.warn("[CronoGolOnlineCore patchState]",e)}catch(_){}}
+  finally{pushBusy=false}
+}
+async function publishRunning(isRunning){
+  if(!online())return;
+  if(isRunning){
+    await patchState({
+      runningState:{
+        runningId:`run-${Date.now()}-${Math.random().toString(36).slice(2,8)}`,
+        isRunning:true,
+        playerIndex:localIndex(),
+        startedAtMs:Date.now(),
+        baseMs:Number.isFinite(Number(currentElapsedMs))?Number(currentElapsedMs):0,
+        sourceRole:role()||"unknown",
+        updatedAt:new Date().toISOString()
+      }
+    });
+  }else{
+    await patchState({runningState:null});
+  }
+}
+async function publishStop(value,kind,actorIndex){
+  if(!online())return;
+  const stop=makeStop(value,kind,actorIndex);
+  if(stop.stopId===lastPushedStopId)return;
+  lastPushedStopId=stop.stopId;
+  paintStop(stop,"local");
+  await patchState({
+    runningState:null,
+    lastStoppedThrow:stop,
+    lastThrow:{
+      id:stop.stopId,
+      value:stop.value,
+      valueText:stop.valueText,
+      displayTime:stop.displayTime,
+      elapsedMs:stop.elapsedMs,
+      actorIndex:stop.actorIndex,
+      actorName:stop.actorName,
+      title:stop.title,
+      message:stop.message,
+      eventClass:stop.eventClass,
+      createdAt:stop.createdAt
+    },
+    finalState:gameState.matchEnded?{winnerIndex:gameState.players[0].goals>gameState.players[1].goals?0:(gameState.players[1].goals>gameState.players[0].goals?1:null),score:stateScore(),lastThrow:stop,finishedAt:new Date().toISOString()}:undefined
+  });
+}
+function paintRemoteRunning(state){
+  const rs=state && state.runningState;
+  if(!rs || !rs.isRunning || !Number.isFinite(Number(rs.startedAtMs)))return false;
+  if(Number(rs.playerIndex)===localIndex())return false;
+  const elapsed=Number(rs.baseMs||0)+Math.max(0,Date.now()-Number(rs.startedAtMs));
+  const text=fmt(elapsed);
+  if(timerDisplay)timerDisplay.textContent=text;
+  if(lastTwoDisplay)lastTwoDisplay.textContent=text.slice(-2);
+  try{window.__cronogolOnlineCoreRunningRemote={version:VERSION,text,elapsed,playerIndex:rs.playerIndex,at:new Date().toISOString()}}catch(e){}
+  return true;
+}
+function applyRemoteState(state){
+  if(!online()||!state)return;
+  roomState=state;
+  applyPlayersFromState(state);
+  applyTurnFromState(state);
+  if(state.status==="finished" || state.phase==="finished"){
+    gameState.matchEnded=true;
+  }
+  try{updateUI()}catch(e){}
+  if(state.lastStoppedThrow){
+    const stop=normalizeStop(state.lastStoppedThrow);
+    if(stop && stop.stopId!==lastAppliedStopId){
+      lastAppliedStopId=stop.stopId;
+      paintStop(stop,"remote-new");
+    }else{
+      paintStop(stop,"remote-refresh");
+    }
+  }
+  if(!paintRemoteRunning(state)){
+    applyControls();
+  }
+}
+async function pullState(){
+  if(!online()||pullBusy)return;
+  pullBusy=true;
+  try{
+    const rows=await sf(`${endpoint()}&select=state_json,status,updated_at`,{method:"GET"});
+    if(!Array.isArray(rows)||!rows.length)return;
+    const state=rows[0].state_json||{};
+    if(rows[0].status && !state.status)state.status=rows[0].status;
+    applyRemoteState(state);
+  }catch(e){try{console.warn("[CronoGolOnlineCore pullState]",e)}catch(_){}}
+  finally{pullBusy=false}
+}
+function blockIfNotTurn(){
+  if(!online())return false;
+  // v2.6.1 BUG2: mismo criterio que el botón (isLocalTurn), no un índice rancio.
+  if(!isLocalTurn()){
+    applyControls();
+    return true;
+  }
+  return false;
+}
+try{
+  const baseStart=startTimer;
+  startTimer=function(){
+    if(blockIfNotTurn())return;
+    const out=baseStart.apply(this,arguments);
+    if(online())setTimeout(()=>publishRunning(true),20);
+    return out;
+  };
+}catch(e){}
+try{
+  const baseStop=stopTimer;
+  stopTimer=function(){
+    const out=baseStop.apply(this,arguments);
+    if(online())setTimeout(()=>publishRunning(false),20);
+    return out;
+  };
+}catch(e){}
+try{
+  const baseUpdate=updateTimerDisplay;
+  updateTimerDisplay=function(ms){
+    if(online() && roomState && paintRemoteRunning(roomState) && !gameState.isRunning){
+      return;
+    }
+    return baseUpdate.apply(this,arguments);
+  };
+}catch(e){}
+try{
+  const baseApply=applyNormalResult;
+  applyNormalResult=function(value,result){
+    const actorIndex=online()?Number(gameState.currentPlayerIndex||0):0; // v2.6.1 BUG1: antes del switchTurn
+    const out=baseApply.apply(this,arguments);
+    if(online()){applyControls();setTimeout(()=>publishStop(value,"normal",actorIndex),40);} // applyControls síncrono cierra ventana (BUG2)
+    return out;
+  };
+}catch(e){}
+try{
+  const baseSpecial=evaluateSpecialThrow;
+  evaluateSpecialThrow=function(value){
+    const actorIndex=online()?Number(gameState.currentPlayerIndex||0):0; // v2.6.1 BUG1
+    const out=baseSpecial.apply(this,arguments);
+    if(online()){applyControls();setTimeout(()=>publishStop(value,"special",actorIndex),40);}
+    return out;
+  };
+}catch(e){}
+try{
+  const baseShoot=evaluateShootoutPenalty;
+  evaluateShootoutPenalty=function(value){
+    const actorIndex=online()?Number(gameState.currentPlayerIndex||0):0; // v2.6.1 BUG1
+    const out=baseShoot.apply(this,arguments);
+    if(online()){applyControls();setTimeout(()=>publishStop(value,"shootout",actorIndex),40);}
+    return out;
+  };
+}catch(e){}
+function ensureLoop(){
+  if(pullTimer)return;
+  pullTimer=setInterval(pullState,PULL_MS);
+  runningPaintTimer=setInterval(()=>{if(online()){if(roomState)paintRemoteRunning(roomState);applyControls();}},REMOTE_RUN_MS);
+}
+ensureLoop();
+window.CronoGolOnlineCore=Object.freeze({
+  version:VERSION,
+  pullState,
+  patchState,
+  publishRunning,
+  publishStop,
+  applyRemoteState,
+  paintRemoteRunning,
+  get state(){return roomState}
+});
+})();
 

@@ -6,7 +6,7 @@ let failures = [];
 function a(cond,msg){ if(!cond) failures.push(msg); }
 
 a(game.includes("CronoGolDisplayOwnership"), "Debe mantenerse CronoGolDisplayOwnership como dueño visual");
-a(game.includes("CronoGolOnlineDisplayCleanup"), "Debe existir marcador v2.5.8 de limpieza");
+a(game.includes("CronoGolOnlineDisplayCleanup"), "Debe existir marcador v2.6.0 de limpieza");
 a(game.includes("old v2.5.1 pullProtect polling disabled"), "PullProtect antiguo debe estar desactivado");
 a(game.includes("old v2.5.3 pull/restore polling disabled"), "Pull/restore antiguo v2.5.3 debe estar desactivado");
 a(game.includes("old v2.5.5 remote stop polling disabled"), "Polling remoto antiguo v2.5.5 debe estar desactivado");

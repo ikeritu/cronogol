@@ -1,0 +1,2 @@
+-- CronoGol v2.6.0: no requiere cambios obligatorios en bases ya actualizadas.
+-- Usa state_json, app_version y last_seen_at. Ver SUPABASE_PRIVATE_ROOMS_SETUP.sql para instalación limpia.

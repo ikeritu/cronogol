@@ -1,4 +1,4 @@
--- CronoGol v2.1.2 — Supabase Private Rooms
+-- CronoGol v2.6.0 — Supabase Private Rooms
 -- Ejecutar en Supabase SQL Editor.
 -- No pegues aquí claves privadas. La web solo debe usar anon/public key.
 
@@ -12,7 +12,9 @@ create table if not exists public.cronogol_rooms (
   guest_name text not null default '',
   match_mode text not null default 'classic',
   game_mode text not null default 'online',
-  room_state jsonb not null default '{}'::jsonb,
+  state_json jsonb not null default '{}'::jsonb,
+  app_version text not null default '2.6.0',
+  last_seen_at timestamptz,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -32,6 +34,12 @@ create trigger trg_cronogol_rooms_updated_at
 before update on public.cronogol_rooms
 for each row
 execute function public.set_cronogol_rooms_updated_at();
+
+
+-- Migración idempotente para proyectos creados con SQL antiguo.
+alter table public.cronogol_rooms add column if not exists state_json jsonb not null default '{}'::jsonb;
+alter table public.cronogol_rooms add column if not exists app_version text not null default '2.6.0';
+alter table public.cronogol_rooms add column if not exists last_seen_at timestamptz;
 
 alter table public.cronogol_rooms enable row level security;
 

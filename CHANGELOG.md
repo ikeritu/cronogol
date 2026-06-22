@@ -1,3 +1,10 @@
+## v2.6.1 — Online Core Bugfix
+
+- BUG1: corregida la atribución del STOP online. El actor se captura antes de `switchTurn`, así `actorName`/`message` nombran al jugador que tiró, no al siguiente.
+- BUG2: regla de turno unificada para botón y guard. `isLocalTurn` exige acuerdo entre estado remoto y local; `blockIfNotTurn` deja de fiarse de un índice rancio y cierra la ventana de doble tirada de forma síncrona.
+- BUG3: eliminada línea de gate legacy inalcanzable (código muerto).
+- Bump de versión a 2.6.1 (cache, manifest, app_version). Sin tocar reglas, ranking, predicciones, 11 ideal, posiciones, CSS ni RLS.
+
 ## v2.0.0 — Online Foundation
 
 - Inicio de la rama V2.
@@ -223,7 +230,7 @@
 
 - Congelada como versión estable tras validación manual.
 - Confirmado que la vibración física solo ocurre en gol y penalti fallado.
-- Confirmado cache busting `game.js?v=2.5.8` y `style.css?v=2.5.8`.
+- Confirmado cache busting `game.js?v=2.6.0` y `style.css?v=2.6.0`.
 
 ### No se ha tocado
 
@@ -254,7 +261,7 @@
 - Tarjetas no vibran.
 - Descanso/final no vibra.
 - Eliminada animación de fallo normal.
-- Añadido cache busting `game.js?v=2.5.8` y `style.css?v=2.5.8`.
+- Añadido cache busting `game.js?v=2.6.0` y `style.css?v=2.6.0`.
 
 ### No se ha tocado
 
