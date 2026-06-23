@@ -1,4 +1,4 @@
-window.CRONOGOL_DETERMINISTIC_CLOCK_ACTIVE = true;
+﻿window.CRONOGOL_DETERMINISTIC_CLOCK_ACTIVE = true;
 const $ = (id) => document.getElementById(id);
 
 const setupScreen = $("setup-screen");
@@ -50,7 +50,7 @@ const modalTitle = $("modal-title"), modalText = $("modal-text"), modalExtra = $
 
 const CRONOGOL_CONFIG = {
   siteUrl:"https://cronogol.es/",
-  whatsappText: "Estoy jugando a CronoGol, el juego del cronómetro Casio ⚽⌚\n\nPruébalo aquí:\nhttps://cronogol.es/",
+  whatsappText: "Estoy jugando a CronoGol, el juego del cronÃ³metro Casio âš½âŒš\n\nPruÃ©balo aquÃ­:\nhttps://cronogol.es/",
   paypalUrl: "https://paypal.me/ikeritus",
   kofiUrl: "https://ko-fi.com/ikeritu",
   contactEmail: "ikeritu@hotmail.com"
@@ -60,19 +60,19 @@ const CRONOGOL_CONFIG = {
 const I18N = {
   es: {
     labelMode:"Modo",
-    labelDuration:"Duración",
+    labelDuration:"DuraciÃ³n",
     labelDifficulty:"Dificultad",
     machineDifficultyHint:"Normal: partida equilibrada.",
     advancedOptions:"Opciones avanzadas",
     labelPlayer1:"Jugador 1",
-    labelPlayer2:"Jugador 2 / Máquina",
+    labelPlayer2:"Jugador 2 / MÃ¡quina",
     modeLocal:"1 vs 1 local",
     modeOnline:"1 vs 1 online",
-    modeMachine:"1 vs Máquina",
-    durationClassic:"Clásico",
-    durationFast:"Rápido",
+    modeMachine:"1 vs MÃ¡quina",
+    durationClassic:"ClÃ¡sico",
+    durationFast:"RÃ¡pido",
     startMatch:"EMPEZAR PARTIDO",
-    forceMachine:"Forzar descanso/final contra máquina",
+    forceMachine:"Forzar descanso/final contra mÃ¡quina",
     sound:"Sonido",
     rules:"Reglas",
     modes:"Modos",
@@ -82,16 +82,16 @@ const I18N = {
     feedback:"Feedback",
     supportShort:"Apoya",
     inDevelopment:"En desarrollo",
-    onlineSoon:"Modo online próximamente",
+    onlineSoon:"Modo online prÃ³ximamente",
     onlineSoonText:"Salas privadas para jugar con amigos.",
     sponsorSpace:"CronoGol es gratis",
-    sponsorText:"Puedes apoyar el proyecto invitándome a un café.",
-    lastThrow:"ÚLTIMA TIRADA",
+    sponsorText:"Puedes apoyar el proyecto invitÃ¡ndome a un cafÃ©.",
+    lastThrow:"ÃšLTIMA TIRADA",
     turnOf:"TURNO DE",
-    stats:"Estadísticas",
+    stats:"EstadÃ­sticas",
     matchHistory:"Historial del partido",
     resetMatch:"Reiniciar partido",
-    menu:"Menú",
+    menu:"MenÃº",
     supportFull:"Apoya CronoGol"
   },
   en: {
@@ -166,35 +166,35 @@ function applyLanguage(lang){
 const MODAL_TEXTS = {
   es: {
     rulesTitle: "REGLAS",
-    rulesIntro: "Se usan los dos últimos dígitos del cronómetro.",
+    rulesIntro: "Se usan los dos Ãºltimos dÃ­gitos del cronÃ³metro.",
     rulesHtml: `<div class="donation-item">
-      <strong>Modo clásico</strong><br>
+      <strong>Modo clÃ¡sico</strong><br>
       <strong>00</strong> = Gol.<br>
       <strong>01-02</strong> = Poste. Repite el mismo jugador.<br>
       <strong>03-04</strong> = Larguero. Repite el mismo jugador.<br>
-      <strong>45</strong> = Descanso. Se resetea el cronómetro y cambia el turno.<br>
+      <strong>45</strong> = Descanso. Se resetea el cronÃ³metro y cambia el turno.<br>
       <strong>50</strong> = Amarilla. Termina el turno y pierde el siguiente.<br>
       <strong>60</strong> = Roja. Termina el turno y pierde dos turnos.<br>
       <strong>90</strong> = Final del partido.<br>
       <strong>96-97</strong> = Falta peligrosa. Hay una tirada especial: si sale de <strong>00 a 20</strong>, es gol; si sale de <strong>21 a 99</strong>, falla.<br>
-      <strong>98-99</strong> = Penalti. Hay una tirada especial: si sale número <strong>par</strong>, es gol; si sale <strong>impar</strong>, falla.<br>
-      <strong>Otros números</strong> = Fallo y cambia el turno.
+      <strong>98-99</strong> = Penalti. Hay una tirada especial: si sale nÃºmero <strong>par</strong>, es gol; si sale <strong>impar</strong>, falla.<br>
+      <strong>Otros nÃºmeros</strong> = Fallo y cambia el turno.
     </div>
     <div class="donation-item">
-      <strong>Modo rápido</strong><br>
-      <strong>Números acabados en 0</strong> = Gol, excepto <strong>50</strong> y <strong>60</strong>: 00, 10, 20, 30, 40, 70, 80 y 90.<br>
-      <strong>Números acabados en 9</strong> = Penalti: 09, 19, 29, 39, 49, 59, 69, 79, 89 y 99. Tirada especial: <strong>par = gol</strong>; <strong>impar = fallo</strong>.<br>
+      <strong>Modo rÃ¡pido</strong><br>
+      <strong>NÃºmeros acabados en 0</strong> = Gol, excepto <strong>50</strong> y <strong>60</strong>: 00, 10, 20, 30, 40, 70, 80 y 90.<br>
+      <strong>NÃºmeros acabados en 9</strong> = Penalti: 09, 19, 29, 39, 49, 59, 69, 79, 89 y 99. Tirada especial: <strong>par = gol</strong>; <strong>impar = fallo</strong>.<br>
       <strong>01-02</strong> = Poste. Repite el mismo jugador.<br>
       <strong>03-04</strong> = Larguero. Repite el mismo jugador.<br>
       <strong>50</strong> = Amarilla. Termina el turno y pierde el siguiente.<br>
       <strong>60</strong> = Roja. Termina el turno y pierde dos turnos.<br>
       <strong>96-97</strong> = Falta peligrosa. Tirada especial: <strong>00 a 20</strong> gol; <strong>21 a 99</strong> fallo.<br>
-      <strong>Otros números</strong> = Fallo y cambia el turno.<br>
+      <strong>Otros nÃºmeros</strong> = Fallo y cambia el turno.<br>
       Gana el primero que llegue a <strong>6 goles con 2 de ventaja</strong>. Ejemplo: 6-4 gana; 6-5 no gana; hay que llegar a 7-5.
     </div>`,
     close: "CERRAR",
     supportTitle: "APOYA CRONOGOL",
-    supportIntro: "CronoGol es gratis y lo seguirá siendo.",
+    supportIntro: "CronoGol es gratis y lo seguirÃ¡ siendo.",
     kofiButton: "Abrir Ko-fi",
     paypalButton: "Abrir PayPal",
     concept: "Concepto"
@@ -268,8 +268,8 @@ const gameState = {
 
 
 /* ===== v1.8.7 QA FIX: helpers base restaurados =====
-   El juego se rompía antes de arrancar porque varias funciones usadas en
-   asignaciones onclick y en el flujo principal no existían en el bundle.
+   El juego se rompÃ­a antes de arrancar porque varias funciones usadas en
+   asignaciones onclick y en el flujo principal no existÃ­an en el bundle.
 */
 function pad(n){ return String(Number(n)||0).padStart(2,"0"); }
 function randomInt(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
@@ -285,12 +285,12 @@ function clockSec(){
 
 
 function physicalVibration(event){
-  // v1.11.0 — Strict Physical Vibration Gate
-  // ÚNICO punto permitido para activar vibración física.
+  // v1.11.0 â€” Strict Physical Vibration Gate
+  // ÃšNICO punto permitido para activar vibraciÃ³n fÃ­sica.
   // Norma:
-  // - Gol: vibración fuerte
-  // - Penalti fallado: vibración leve
-  // - Todo lo demás: sin vibración física
+  // - Gol: vibraciÃ³n fuerte
+  // - Penalti fallado: vibraciÃ³n leve
+  // - Todo lo demÃ¡s: sin vibraciÃ³n fÃ­sica
   try{
     if(!navigator.vibrate) return;
 
@@ -319,7 +319,7 @@ function applyPhysicalVibration(context){
     return;
   }
 
-  // Todos los demás eventos quedan explícitamente sin vibración.
+  // Todos los demÃ¡s eventos quedan explÃ­citamente sin vibraciÃ³n.
 }
 
 function playSound(type){
@@ -336,7 +336,7 @@ function playSound(type){
         {f:390,d:0.060,v:0.030,w:"square"}
       ],
 
-      // Celebración corta tipo arcade, sin ser molesta.
+      // CelebraciÃ³n corta tipo arcade, sin ser molesta.
       goal: [
         {f:523.25,d:0.065,v:0.045,w:"triangle"},
         {f:659.25,d:0.070,v:0.050,w:"triangle"},
@@ -344,7 +344,7 @@ function playSound(type){
         {f:1046.50,d:0.140,v:0.058,w:"square"}
       ],
 
-      // Aviso de tensión.
+      // Aviso de tensiÃ³n.
       penalty: [
         {f:392.00,d:0.075,v:0.044,w:"square"},
         {f:0,d:0.045,v:0,w:"square"},
@@ -487,9 +487,9 @@ menuResetBtn.onclick = () => { sideMenu.classList.add("hidden"); confirmReset();
 specialStartBtn.onclick = handleSpecialButton;
 debugThrowBtn.onclick = forceDebugThrow;
 gameModeSelect.onchange = () => {
-  if(gameModeSelect.value==="machine" && (player2Input.value==="Jugador 2" || player2Input.value==="Rival")) player2Input.value="Máquina";
-  if(gameModeSelect.value==="online" && (player2Input.value==="Jugador 2" || player2Input.value==="Máquina")) player2Input.value="Rival";
-  if(gameModeSelect.value==="local" && (player2Input.value==="Máquina" || player2Input.value==="Rival")) player2Input.value="Jugador 2";
+  if(gameModeSelect.value==="machine" && (player2Input.value==="Jugador 2" || player2Input.value==="Rival")) player2Input.value="MÃ¡quina";
+  if(gameModeSelect.value==="online" && (player2Input.value==="Jugador 2" || player2Input.value==="MÃ¡quina")) player2Input.value="Rival";
+  if(gameModeSelect.value==="local" && (player2Input.value==="MÃ¡quina" || player2Input.value==="Rival")) player2Input.value="Jugador 2";
   updateSetupVisibility();
 };
 rulesBtn.onclick = showRulesModal; menuRulesBtn.onclick = () => { sideMenu.classList.add("hidden"); showRulesModal(); };
@@ -569,12 +569,12 @@ function resetRuntimeState(){
 
 
 /* ===== v1.11.0 TECHNICAL FOUNDATION HELPERS ===== */
-/* Preparación conservadora para V2 online:
+/* PreparaciÃ³n conservadora para V2 online:
    - guardas idempotentes;
-   - limpieza centralizada de timers críticos;
+   - limpieza centralizada de timers crÃ­ticos;
    - unlock robusto de AudioContext;
-   - restauración segura de textos de controles.
-   No cambia reglas ni mecánica de juego. */
+   - restauraciÃ³n segura de textos de controles.
+   No cambia reglas ni mecÃ¡nica de juego. */
 
 function safeCgText(key, fallback){
   try{
@@ -654,7 +654,7 @@ function incrementMatches(){ try{ const n=Number(localStorage.getItem("cronogol_
 function startMatch(){
   clearMachineTimers();
   const p1 = player1Input.value.trim() || "Jugador 1";
-  const p2Default = gameModeSelect.value === "machine" ? "Máquina" : "Jugador 2";
+  const p2Default = gameModeSelect.value === "machine" ? "MÃ¡quina" : "Jugador 2";
   const p2 = player2Input.value.trim() || p2Default;
   saveLocal(p1,p2);
 
@@ -667,7 +667,7 @@ function startMatch(){
   pendingSpecial=null; penaltyShootout=null; currentElapsedMs=0; stopwatchBaseMs=0; matchStartTime=Date.now();
   setupScreen.classList.remove("active"); gameScreen.classList.add("active"); closeModal(); sideMenu.classList.add("hidden");
   timerDisplay.textContent="00:00:00"; lastTwoDisplay.textContent="--"; setEvent("--", currentLang === "en" ? "Press START to begin." : "Pulsa START para comenzar.","neutral");
-  // v1.11.0: vibración física directa eliminada; usar
+  // v1.11.0: vibraciÃ³n fÃ­sica directa eliminada; usar
 }
 
 function handleMainAction(){ if(gameState.matchEnded||pendingSpecial) return; gameState.isRunning ? stopTimerAndEvaluate() : startTimer(); }
@@ -698,9 +698,9 @@ function hasFastModeWinner() {
 }
 
 function evaluateFastThrow(v) {
-  // Modo rápido v1.12.3:
-  // - Números acabados en 0 = gol, excepto 50 y 60.
-  // - Números acabados en 9 = penalti.
+  // Modo rÃ¡pido v1.12.3:
+  // - NÃºmeros acabados en 0 = gol, excepto 50 y 60.
+  // - NÃºmeros acabados en 9 = penalti.
   // - 01-02 = poste, repite el mismo jugador.
   // - 03-04 = larguero, repite el mismo jugador.
   // - 50 = amarilla, termina turno y pierde el siguiente.
@@ -708,10 +708,10 @@ function evaluateFastThrow(v) {
   // - 96-97 = falta peligrosa con tirada especial: 00-20 gol, 21-99 falla.
   if (v === 1 || v === 2) return {type:"post",msg:"POSTE",cls:"special",repeat:true};
   if (v === 3 || v === 4) return {type:"crossbar",msg:"LARGUERO",cls:"special",repeat:true};
-  if (v === 50) return {type:"yellow",msg:"🟨 AMARILLA",cls:"yellow"};
-  if (v === 60) return {type:"red",msg:"🟥 ROJA",cls:"red"};
+  if (v === 50) return {type:"yellow",msg:"ðŸŸ¨ AMARILLA",cls:"yellow"};
+  if (v === 60) return {type:"red",msg:"ðŸŸ¥ ROJA",cls:"red"};
   if (v === 96 || v === 97) return {type:"free_kick",msg:"FALTA PELIGROSA",cls:"special",special:"free_kick"};
-  if (v % 10 === 0) return {type:"goal",msg:"⚽ GOOOL",cls:"goal"};
+  if (v % 10 === 0) return {type:"goal",msg:"âš½ GOOOL",cls:"goal"};
   if (v % 10 === 9) return {type:"penalty",msg:"PENALTI",cls:"special",special:"penalty"};
   return {type:"miss",msg:"FALLO",cls:"neutral"};
 }
@@ -719,12 +719,12 @@ function evaluateFastThrow(v) {
 
 function evaluateThrow(v){
   if(isFastMode()) return evaluateFastThrow(v);
-  if(v===0) return {type:"goal",msg:"⚽ GOOOL",cls:"goal"};
+  if(v===0) return {type:"goal",msg:"âš½ GOOOL",cls:"goal"};
   if(v===1||v===2) return {type:"post",msg:"POSTE",cls:"special",repeat:true};
   if(v===3||v===4) return {type:"crossbar",msg:"LARGUERO",cls:"special",repeat:true};
   if(v===45) return {type:"half_time",msg:"DESCANSO",cls:"special"};
-  if(v===50) return {type:"yellow",msg:"🟨 AMARILLA",cls:"yellow"};
-  if(v===60) return {type:"red",msg:"🟥 ROJA",cls:"red"};
+  if(v===50) return {type:"yellow",msg:"ðŸŸ¨ AMARILLA",cls:"yellow"};
+  if(v===60) return {type:"red",msg:"ðŸŸ¥ ROJA",cls:"red"};
   if(v===90) return {type:"full_time",msg:"FINAL",cls:"special"};
   if(v===96||v===97) return {type:"free_kick",msg:"FALTA PELIGROSA",cls:"special",special:"free_kick"};
   if(v===98||v===99) return {type:"penalty",msg:"PENALTI",cls:"special",special:"penalty"};
@@ -732,8 +732,8 @@ function evaluateThrow(v){
 }
 function applyNormalResult(v,r){
   const p = currentPlayer();
-  setEvent(r.msg, `${p.name} sacó ${pad(v)} → ${r.msg}`, r.cls);
-  addLog(`${clockSec()}  ${p.name} — ${pad(v)} — ${r.msg}`);
+  setEvent(r.msg, `${p.name} sacÃ³ ${pad(v)} â†’ ${r.msg}`, r.cls);
+  addLog(`${clockSec()}  ${p.name} â€” ${pad(v)} â€” ${r.msg}`);
   playSound(r.type);
   triggerScreenFeedback(r.type);
 
@@ -833,8 +833,8 @@ function evaluateSpecialThrow(v){
     gameState.stats.misses++;
   }
 
-  setEvent(msg, `${pad(v)} → ${msg}`, goal ? "goal" : "neutral");
-  addLog(`${clockSec()}  ${p.name} — ${pad(v)} — ${msg}`);
+  setEvent(msg, `${pad(v)} â†’ ${msg}`, goal ? "goal" : "neutral");
+  addLog(`${clockSec()}  ${p.name} â€” ${pad(v)} â€” ${msg}`);
   playSound(goal ? "goal" : (specialType === "penalty" ? "penalty_fail" : "miss"));
   triggerScreenFeedback(goal ? "goal" : (specialType === "penalty" ? "penalty_fail" : "free_kick_fail"));
 
@@ -860,7 +860,7 @@ function evaluateSpecialThrow(v){
 
   syncActionControls();
 }
-function showHalfTime(){ gameState.half=2; currentElapsedMs=0; stopwatchBaseMs=0; timerDisplay.textContent="00:00:00"; lastTwoDisplay.textContent="--"; switchTurn(); showModal("DESCANSO",scoreText(),"<p>Se resetea el cronómetro y comienza la segunda parte.</p>",[{text:"CONTINUAR",action:()=>{closeModal();maybeMachineTurn();}}]); }
+function showHalfTime(){ gameState.half=2; currentElapsedMs=0; stopwatchBaseMs=0; timerDisplay.textContent="00:00:00"; lastTwoDisplay.textContent="--"; switchTurn(); showModal("DESCANSO",scoreText(),"<p>Se resetea el cronÃ³metro y comienza la segunda parte.</p>",[{text:"CONTINUAR",action:()=>{closeModal();maybeMachineTurn();}}]); }
 function endMatch(){
   if(gameState.matchEnded) return;
   gameState.matchEnded = true;
@@ -906,7 +906,7 @@ function evaluateShootoutPenalty(v){
     gameState.stats.misses++;
   }
 
-  addLog(`${clockSec()}  ${gameState.players[idx].name} — ${pad(v)} — ${goal ? "Gol penalti" : "Penalti fallado"}`);
+  addLog(`${clockSec()}  ${gameState.players[idx].name} â€” ${pad(v)} â€” ${goal ? "Gol penalti" : "Penalti fallado"}`);
   setEvent(goal ? "GOL" : "FALLO", pad(v), goal ? "goal" : "neutral");
   playSound(goal ? "goal" : "penalty_fail");
   triggerScreenFeedback(goal ? "goal" : "penalty_fail");
@@ -928,10 +928,10 @@ function evaluateShootoutPenalty(v){
 }
 function isShootoutFinished(){ const a=penaltyShootout.shots[0],b=penaltyShootout.shots[1]; return a.length>=5&&b.length>=5&&a.length===b.length&&gameState.players[0].goals!==gameState.players[1].goals; }
 function showFinal(pens){ incrementMatches(); let text=scoreText(); if(gameState.players[0].goals>gameState.players[1].goals) text+=`. Gana ${gameState.players[0].name}.`; else if(gameState.players[1].goals>gameState.players[0].goals) text+=`. Gana ${gameState.players[1].name}.`; else text+=". Igualado antes de penaltis."; if(pens) text+=" Resuelto en penaltis."; gameState.lastFinalText=formattedFinalResult(); showModal("FINAL DEL PARTIDO",text,finalHtml(),[{text:"REVANCHA",action:restartSameMatch},{text:"COMPARTIR RESULTADO",action:shareResult},{text:"COPIAR RESULTADO",action:copyResult},{text:"NUEVA PARTIDA",action:resetToSetup}]); }
-function finalHtml(){ return `<div class="donation-item"><strong>Resumen</strong><br>Tiradas: ${gameState.totalTurns}<br>Goles: ${gameState.stats.goals}<br>Postes/Largueros: ${gameState.stats.woodwork}<br>Tarjetas: ${gameState.stats.cards}<br>Especiales: ${gameState.stats.specials}</div><div class="donation-item"><strong>☕ CronoGol es gratis</strong><br><button class="kofi-direct-btn" onclick="openKofi()">Abrir Ko-fi</button><a class="support-link" href="${CRONOGOL_CONFIG.paypalUrl}" target="_blank">PayPal</a></div>`; }
+function finalHtml(){ return `<div class="donation-item"><strong>Resumen</strong><br>Tiradas: ${gameState.totalTurns}<br>Goles: ${gameState.stats.goals}<br>Postes/Largueros: ${gameState.stats.woodwork}<br>Tarjetas: ${gameState.stats.cards}<br>Especiales: ${gameState.stats.specials}</div><div class="donation-item"><strong>â˜• CronoGol es gratis</strong><br><button class="kofi-direct-btn" onclick="openKofi()">Abrir Ko-fi</button><a class="support-link" href="${CRONOGOL_CONFIG.paypalUrl}" target="_blank">PayPal</a></div>`; }
 function restartSameMatch(){ closeModal(); player1Input.value=gameState.players[0].name; player2Input.value=gameState.players[1].name; startMatch(); }
 function switchTurn(){ gameState.currentPlayerIndex=gameState.currentPlayerIndex===0?1:0; processSkippedTurns(); }
-function processSkippedTurns(){ let safe=0; while(currentPlayer().skipTurns>0&&safe<4){ const p=currentPlayer(); p.skipTurns--; addLog(`${clockSec()}  ${p.name} pierde turno por sanción`); gameState.currentPlayerIndex=gameState.currentPlayerIndex===0?1:0; safe++; } }
+function processSkippedTurns(){ let safe=0; while(currentPlayer().skipTurns>0&&safe<4){ const p=currentPlayer(); p.skipTurns--; addLog(`${clockSec()}  ${p.name} pierde turno por sanciÃ³n`); gameState.currentPlayerIndex=gameState.currentPlayerIndex===0?1:0; safe++; } }
 
 function getMachineSpecialStopDelay(){
   if(gameState.machineLevel === "easy") return randomInt(700, 1300);
@@ -1010,7 +1010,7 @@ function resolveMachineSpecialDirectly(){
   resetMainTimerVisualState();
   mainActionBtn.disabled = true;
   specialStartBtn.disabled = true;
-  setMachineSpecialStatus("MÁQUINA...");
+  setMachineSpecialStatus("MÃQUINA...");
 
   const specialTypeAtStart = pendingSpecial;
 
@@ -1158,14 +1158,14 @@ function maybeMachineTurn(){
 }
 function getMachineStopDelay(){ return gameState.machineLevel==="easy"?randomInt(600,1800):gameState.machineLevel==="hard"?randomInt(900,3200):randomInt(800,2500); }
 function getMachineForcedValue(){ if(isFastMode()) return null; if(gameState.forceEvents){ if(gameState.half===1&&gameState.firstHalfTurns>=gameState.machineForceHalfAt) return 45; if(gameState.half===2&&gameState.secondHalfTurns>=gameState.machineForceEndAt) return 90; } if(gameState.machineLevel==="hard"){ const r=Math.random(); if(r<.025)return 0; if(r<.055)return [96,97,98,99][randomInt(0,3)]; } return null; }
-function startMatchClock(){ clearInterval(matchClockInterval); matchClockInterval=setInterval(()=>{ const sec=Math.floor((Date.now()-matchStartTime)/1000); matchClockLabel.textContent=`${pad(Math.floor(sec/60))}:${pad(sec%60)}`; /* En modo rápido v1.6.1 no hay límite de 5 minutos: gana quien llega a 6 con 2 de ventaja. */ },1000); }
-function updateUI(){ p1Label.textContent=gameState.players[0].name.toUpperCase(); p2Label.textContent=gameState.players[1].name.toUpperCase(); p1Score.textContent=gameState.players[0].goals; p2Score.textContent=gameState.players[1].goals; p1Sanction.textContent=gameState.players[0].skipTurns?`Sanción: ${gameState.players[0].skipTurns}`:""; p2Sanction.textContent=gameState.players[1].skipTurns?`Sanción: ${gameState.players[1].skipTurns}`:""; halfLabel.textContent=isFastMode()?"MODO RÁPIDO":(gameState.half===1?"1ª PARTE":"2ª PARTE"); turnLabel.textContent=currentPlayer().name; team0.classList.toggle("active",gameState.currentPlayerIndex===0); team1.classList.toggle("active",gameState.currentPlayerIndex===1); statTurns.textContent=gameState.totalTurns; statGoals.textContent=gameState.stats.goals; statWoodwork.textContent=gameState.stats.woodwork; statCards.textContent=gameState.stats.cards; statSpecials.textContent=gameState.stats.specials; updateShootoutUI(); renderLog(); }
+function startMatchClock(){ clearInterval(matchClockInterval); matchClockInterval=setInterval(()=>{ const sec=Math.floor((Date.now()-matchStartTime)/1000); matchClockLabel.textContent=`${pad(Math.floor(sec/60))}:${pad(sec%60)}`; /* En modo rÃ¡pido v1.6.1 no hay lÃ­mite de 5 minutos: gana quien llega a 6 con 2 de ventaja. */ },1000); }
+function updateUI(){ p1Label.textContent=gameState.players[0].name.toUpperCase(); p2Label.textContent=gameState.players[1].name.toUpperCase(); p1Score.textContent=gameState.players[0].goals; p2Score.textContent=gameState.players[1].goals; p1Sanction.textContent=gameState.players[0].skipTurns?`SanciÃ³n: ${gameState.players[0].skipTurns}`:""; p2Sanction.textContent=gameState.players[1].skipTurns?`SanciÃ³n: ${gameState.players[1].skipTurns}`:""; halfLabel.textContent=isFastMode()?"MODO RÃPIDO":(gameState.half===1?"1Âª PARTE":"2Âª PARTE"); turnLabel.textContent=currentPlayer().name; team0.classList.toggle("active",gameState.currentPlayerIndex===0); team1.classList.toggle("active",gameState.currentPlayerIndex===1); statTurns.textContent=gameState.totalTurns; statGoals.textContent=gameState.stats.goals; statWoodwork.textContent=gameState.stats.woodwork; statCards.textContent=gameState.stats.cards; statSpecials.textContent=gameState.stats.specials; updateShootoutUI(); renderLog(); }
 function updateShootoutUI(){ if(!penaltyShootout){shootoutPanel.classList.add("hidden");return;} shootoutPanel.classList.remove("hidden"); shootoutP1Name.textContent=gameState.players[0].name; shootoutP2Name.textContent=gameState.players[1].name; shootoutP1.textContent=icons(penaltyShootout.shots[0]); shootoutP2.textContent=icons(penaltyShootout.shots[1]); }
-function icons(shots){ const i=shots.map(s=>s?"✅":"❌"); while(i.length<5)i.push("⬜"); return i.join(" "); }
+function icons(shots){ const i=shots.map(s=>s?"âœ…":"âŒ"); while(i.length<5)i.push("â¬œ"); return i.join(" "); }
 function setEvent(title,msg,cls){ eventTitle.textContent=title; messageLabel.textContent=msg; eventCard.className=`event-card event-${cls}`; }
 function addLog(t){ gameState.log.unshift(t); if(gameState.log.length>50) gameState.log.pop(); renderLog(); }
 function renderLog(){ gameLog.innerHTML=""; gameState.log.forEach(x=>{ const li=document.createElement("li"); li.textContent=x; gameLog.appendChild(li); }); }
-function confirmReset(){ showModal("Reiniciar partido","¿Seguro que quieres reiniciar?", "", [{text:"SÍ, REINICIAR",action:resetToSetup},{text:"CANCELAR",action:closeModal}]); }
+function confirmReset(){ showModal("Reiniciar partido","Â¿Seguro que quieres reiniciar?", "", [{text:"SÃ, REINICIAR",action:resetToSetup},{text:"CANCELAR",action:closeModal}]); }
 function resetToSetup(){ clearInterval(timerInterval); clearInterval(matchClockInterval); currentElapsedMs=0; stopwatchBaseMs=0; setupScreen.classList.add("active"); gameScreen.classList.remove("active"); closeModal(); sideMenu.classList.add("hidden"); }
 function showModal(t,txt,html,actions){ modalTitle.textContent=t; modalText.textContent=txt; modalExtra.innerHTML=html||""; modalActions.innerHTML=""; actions.forEach(a=>{ const b=document.createElement("button"); b.textContent=a.text; b.onclick=a.action; modalActions.appendChild(b); }); modalScreen.classList.remove("hidden"); }
 function closeModal(){ modalScreen.classList.add("hidden"); modalExtra.innerHTML=""; }
@@ -1201,30 +1201,30 @@ function showRulesModal(){
 
   showModal(
     "REGLAS",
-    "Se usan los dos últimos dígitos del cronómetro.",
+    "Se usan los dos Ãºltimos dÃ­gitos del cronÃ³metro.",
     `<div class="donation-item">
-      <strong>Modo clásico</strong><br>
+      <strong>Modo clÃ¡sico</strong><br>
       <strong>00</strong> = Gol.<br>
       <strong>01-02</strong> = Poste. Repite el mismo jugador.<br>
       <strong>03-04</strong> = Larguero. Repite el mismo jugador.<br>
-      <strong>45</strong> = Descanso. Se resetea el cronómetro y cambia el turno.<br>
+      <strong>45</strong> = Descanso. Se resetea el cronÃ³metro y cambia el turno.<br>
       <strong>50</strong> = Amarilla. Termina el turno y pierde el siguiente.<br>
       <strong>60</strong> = Roja. Termina el turno y pierde dos turnos.<br>
       <strong>90</strong> = Final del partido.<br>
       <strong>96-97</strong> = Falta peligrosa. Hay una tirada especial: si sale de <strong>00 a 20</strong>, es gol; si sale de <strong>21 a 99</strong>, falla.<br>
-      <strong>98-99</strong> = Penalti. Hay una tirada especial: si sale número <strong>par</strong>, es gol; si sale <strong>impar</strong>, falla.<br>
-      <strong>Otros números</strong> = Fallo y cambia el turno.
+      <strong>98-99</strong> = Penalti. Hay una tirada especial: si sale nÃºmero <strong>par</strong>, es gol; si sale <strong>impar</strong>, falla.<br>
+      <strong>Otros nÃºmeros</strong> = Fallo y cambia el turno.
     </div>
     <div class="donation-item">
-      <strong>Modo rápido</strong><br>
-      <strong>Números acabados en 0</strong> = Gol, excepto <strong>50</strong> y <strong>60</strong>: 00, 10, 20, 30, 40, 70, 80 y 90.<br>
-      <strong>Números acabados en 9</strong> = Penalti: 09, 19, 29, 39, 49, 59, 69, 79, 89 y 99. Tirada especial: <strong>par = gol</strong>; <strong>impar = fallo</strong>.<br>
+      <strong>Modo rÃ¡pido</strong><br>
+      <strong>NÃºmeros acabados en 0</strong> = Gol, excepto <strong>50</strong> y <strong>60</strong>: 00, 10, 20, 30, 40, 70, 80 y 90.<br>
+      <strong>NÃºmeros acabados en 9</strong> = Penalti: 09, 19, 29, 39, 49, 59, 69, 79, 89 y 99. Tirada especial: <strong>par = gol</strong>; <strong>impar = fallo</strong>.<br>
       <strong>01-02</strong> = Poste. Repite el mismo jugador.<br>
       <strong>03-04</strong> = Larguero. Repite el mismo jugador.<br>
       <strong>50</strong> = Amarilla. Termina el turno y pierde el siguiente.<br>
       <strong>60</strong> = Roja. Termina el turno y pierde dos turnos.<br>
       <strong>96-97</strong> = Falta peligrosa. Tirada especial: <strong>00 a 20</strong> gol; <strong>21 a 99</strong> fallo.<br>
-      <strong>Otros números</strong> = Fallo y cambia el turno.<br>
+      <strong>Otros nÃºmeros</strong> = Fallo y cambia el turno.<br>
       Gana el primero que llegue a <strong>6 goles con 2 de ventaja</strong>. Ejemplo: 6-4 gana; 6-5 no gana; hay que llegar a 7-5.
     </div>`,
     [{text:"CERRAR",action:closeModal}]
@@ -1238,9 +1238,9 @@ function showSupportModal(){
     isEn ? "SUPPORT CRONOGOL" : "APOYA CRONOGOL",
     isEn
       ? "CronoGol is free and will remain free. If you enjoy it, you can buy me a coffee."
-      : "CronoGol es gratis y lo seguirá siendo. Si te divierte, puedes invitarme a un café.",
+      : "CronoGol es gratis y lo seguirÃ¡ siendo. Si te divierte, puedes invitarme a un cafÃ©.",
     `<div class="support-modal">
-      <div class="support-highlight">☕ ${isEn ? "Voluntary support" : "Apoyo voluntario"}</div>
+      <div class="support-highlight">â˜• ${isEn ? "Voluntary support" : "Apoyo voluntario"}</div>
       <div class="donation-data">
         <div class="donation-item">
           <strong>Ko-fi</strong><br>
@@ -1259,8 +1259,8 @@ function showSupportModal(){
 function whatsappShareUrl(){ return `https://wa.me/?text=${encodeURIComponent(CRONOGOL_CONFIG.whatsappText)}`; }
 async function shareCronoGol(){
   const nativeText = currentLang === "en"
-    ? "I'm playing CronoGol ⚽⌚"
-    : "Estoy jugando a CronoGol ⚽⌚";
+    ? "I'm playing CronoGol âš½âŒš"
+    : "Estoy jugando a CronoGol âš½âŒš";
 
   const fullText = `${nativeText}
 ${CRONOGOL_CONFIG.siteUrl}`;
@@ -1281,8 +1281,8 @@ ${CRONOGOL_CONFIG.siteUrl}`;
 
 function resultText(includeUrl=true){
   const final = gameState.lastFinalText || formattedFinalResult();
-  const challenge = currentLang === "en" ? "Do you dare?" : "¿Te atreves?";
-  const base = `⚽ CronoGol
+  const challenge = currentLang === "en" ? "Do you dare?" : "Â¿Te atreves?";
+  const base = `âš½ CronoGol
 ${final}
 
 ${challenge}`;
@@ -1319,7 +1319,7 @@ function showSupportModal(){
 
 // ===== v1.8.2 overrides: share/support language fix =====
 async function shareCronoGol(){
-  const nativeText = currentLang === "en" ? "I'm playing CronoGol ⚽⌚" : "Estoy jugando a CronoGol ⚽⌚";
+  const nativeText = currentLang === "en" ? "I'm playing CronoGol âš½âŒš" : "Estoy jugando a CronoGol âš½âŒš";
   const fullText = `${nativeText}\n${CRONOGOL_CONFIG.siteUrl}`;
 
   try{
@@ -1351,7 +1351,7 @@ function showSupportModal(){
 }
 
 
-/* ===== v1.8.5 SAFE I18N PATCH — no toca flujo del juego ===== */
+/* ===== v1.8.5 SAFE I18N PATCH â€” no toca flujo del juego ===== */
 
 const CG_TEXT = {
   es: {
@@ -1359,7 +1359,7 @@ const CG_TEXT = {
     stop: "STOP",
     specialThrow: "TIRADA ESPECIAL",
     specialStop: "STOP ESPECIAL",
-    goal: "⚽ GOOOL",
+    goal: "âš½ GOOOL",
     goalTitle: "GOOOL",
     miss: "FALLO",
     post: "POSTE",
@@ -1371,8 +1371,8 @@ const CG_TEXT = {
     red: "ROJA",
     penalty: "PENALTI",
     freeKick: "FALTA",
-    noEvents: "Sin jugadas todavía.",
-    playerGot: "sacó",
+    noEvents: "Sin jugadas todavÃ­a.",
+    playerGot: "sacÃ³",
     finalDraw: "Igualado antes de penaltis.",
     winsBefore: "Gana",
     winsAfter: "",
@@ -1383,49 +1383,49 @@ const CG_TEXT = {
     woodwork: "Postes/Largueros",
     cards: "Tarjetas",
     specials: "Especiales",
-    free: "☕ CronoGol es gratis",
+    free: "â˜• CronoGol es gratis",
     openKofi: "Abrir Ko-fi",
     rematch: "REVANCHA",
     shareResult: "COMPARTIR RESULTADO",
     copyResult: "COPIAR RESULTADO",
     newMatch: "NUEVA PARTIDA",
     confirmResetTitle: "REINICIAR",
-    confirmResetText: "¿Seguro que quieres reiniciar el partido?",
+    confirmResetText: "Â¿Seguro que quieres reiniciar el partido?",
     cancel: "CANCELAR",
     reset: "REINICIAR",
     resultCopied: "Resultado copiado",
     linkCopied: "Enlace copiado",
-    challenge: "¿Te atreves?",
+    challenge: "Â¿Te atreves?",
     rulesTitle: "REGLAS",
-    rulesIntro: "Se usan los dos últimos dígitos del cronómetro.",
+    rulesIntro: "Se usan los dos Ãºltimos dÃ­gitos del cronÃ³metro.",
     close: "CERRAR",
     supportTitle: "APOYA CRONOGOL",
-    supportIntro: "CronoGol es gratis y lo seguirá siendo.",
+    supportIntro: "CronoGol es gratis y lo seguirÃ¡ siendo.",
     concept: "Concepto",
     paypal: "PayPal",
     rulesHtml: `<div class="donation-item">
-      <strong>Modo clásico</strong><br>
+      <strong>Modo clÃ¡sico</strong><br>
       <strong>00</strong> = Gol.<br>
       <strong>01-02</strong> = Poste. Repite el mismo jugador.<br>
       <strong>03-04</strong> = Larguero. Repite el mismo jugador.<br>
-      <strong>45</strong> = Descanso. Se resetea el cronómetro y cambia el turno.<br>
+      <strong>45</strong> = Descanso. Se resetea el cronÃ³metro y cambia el turno.<br>
       <strong>50</strong> = Amarilla. Termina el turno y pierde el siguiente.<br>
       <strong>60</strong> = Roja. Termina el turno y pierde dos turnos.<br>
       <strong>90</strong> = Final del partido.<br>
       <strong>96-97</strong> = Falta peligrosa. Tirada especial: <strong>00 a 20</strong> gol; <strong>21 a 99</strong> fallo.<br>
       <strong>98-99</strong> = Penalti. Tirada especial: <strong>par = gol</strong>; <strong>impar = fallo</strong>.<br>
-      <strong>Otros números</strong> = Fallo y cambia el turno.
+      <strong>Otros nÃºmeros</strong> = Fallo y cambia el turno.
     </div>
     <div class="donation-item">
-      <strong>Modo rápido</strong><br>
-      <strong>Números acabados en 0</strong> = Gol, excepto <strong>50</strong> y <strong>60</strong>: 00, 10, 20, 30, 40, 70, 80 y 90.<br>
-      <strong>Números acabados en 9</strong> = Penalti: 09, 19, 29, 39, 49, 59, 69, 79, 89 y 99. Tirada especial: <strong>par = gol</strong>; <strong>impar = fallo</strong>.<br>
+      <strong>Modo rÃ¡pido</strong><br>
+      <strong>NÃºmeros acabados en 0</strong> = Gol, excepto <strong>50</strong> y <strong>60</strong>: 00, 10, 20, 30, 40, 70, 80 y 90.<br>
+      <strong>NÃºmeros acabados en 9</strong> = Penalti: 09, 19, 29, 39, 49, 59, 69, 79, 89 y 99. Tirada especial: <strong>par = gol</strong>; <strong>impar = fallo</strong>.<br>
       <strong>01-02</strong> = Poste. Repite el mismo jugador.<br>
       <strong>03-04</strong> = Larguero. Repite el mismo jugador.<br>
       <strong>50</strong> = Amarilla. Termina el turno y pierde el siguiente.<br>
       <strong>60</strong> = Roja. Termina el turno y pierde dos turnos.<br>
       <strong>96-97</strong> = Falta peligrosa. Tirada especial: <strong>00 a 20</strong> gol; <strong>21 a 99</strong> fallo.<br>
-      <strong>Otros números</strong> = Fallo y cambia el turno.<br>
+      <strong>Otros nÃºmeros</strong> = Fallo y cambia el turno.<br>
       Gana el primero que llegue a <strong>6 goles con 2 de ventaja</strong>. Ejemplo: 6-4 gana; 6-5 no gana; hay que llegar a 7-5.
     </div>`
   },
@@ -1434,7 +1434,7 @@ const CG_TEXT = {
     stop: "STOP",
     specialThrow: "SPECIAL THROW",
     specialStop: "SPECIAL STOP",
-    goal: "⚽ GOAL",
+    goal: "âš½ GOAL",
     goalTitle: "GOAL",
     miss: "MISS",
     post: "POST",
@@ -1458,7 +1458,7 @@ const CG_TEXT = {
     woodwork: "Posts/Crossbars",
     cards: "Cards",
     specials: "Specials",
-    free: "☕ CronoGol is free",
+    free: "â˜• CronoGol is free",
     openKofi: "Open Ko-fi",
     rematch: "REMATCH",
     shareResult: "SHARE RESULT",
@@ -1513,7 +1513,7 @@ function cgName(name){
   if(cgLang() === "en"){
     if(name === "Jugador 1") return "Player 1";
     if(name === "Jugador 2") return "Player 2";
-    if(name === "Máquina") return "Machine";
+    if(name === "MÃ¡quina") return "Machine";
   }
   return name;
 }
@@ -1523,7 +1523,7 @@ function cgLocalizeText(text){
   const replacements = [
     ["Jugador 1", cgName("Jugador 1")],
     ["Jugador 2", cgName("Jugador 2")],
-    ["Máquina", cgName("Máquina")],
+    ["MÃ¡quina", cgName("MÃ¡quina")],
     ["GOOOL", cgT("goalTitle")],
     ["FALLO", cgT("miss")],
     ["POSTE", cgT("post")],
@@ -1534,7 +1534,7 @@ function cgLocalizeText(text){
     ["ROJA", cgT("red")],
     ["PENALTI", cgT("penalty")],
     ["FALTA", cgT("freeKick")],
-    ["sacó", cgT("playerGot")]
+    ["sacÃ³", cgT("playerGot")]
   ];
   replacements.forEach(([a,b]) => { out = out.split(a).join(b); });
   return out;
@@ -1622,7 +1622,7 @@ function cgPatchDynamicTranslations(){
   if(typeof resultText === "function" && !resultText.__cgPatched){
     resultText = function(includeUrl=true){
       const final = gameState.lastFinalText || formattedFinalResult();
-      const base = `⚽ CronoGol\n${cgLocalizeText(final)}\n\n${cgT("challenge")}`;
+      const base = `âš½ CronoGol\n${cgLocalizeText(final)}\n\n${cgT("challenge")}`;
       return includeUrl ? `${base}\n${CRONOGOL_CONFIG.siteUrl}` : base;
     };
     resultText.__cgPatched = true;
@@ -1670,15 +1670,15 @@ function cgPatchDynamicTranslations(){
 
 /* ===== v1.8.6 BOOT FIX =====
    Causa del bloqueo:
-   En v1.8.2+ se perdió la llamada final de inicialización:
+   En v1.8.2+ se perdiÃ³ la llamada final de inicializaciÃ³n:
    setupSegmentedControls(); setupLanguageSelector(); updateSetupVisibility(); loadLocal();
 
    Sin esa llamada:
-   - los botones segmentados 1 vs Máquina / Rápido no reciben listener,
+   - los botones segmentados 1 vs MÃ¡quina / RÃ¡pido no reciben listener,
    - el selector de idioma no termina de inicializar,
    - la pantalla parece viva pero los controles principales no cambian estado.
 
-   Este boot es defensivo: no reescribe la lógica de juego, solo asegura listeners.
+   Este boot es defensivo: no reescribe la lÃ³gica de juego, solo asegura listeners.
 */
 function bootCronoGol(){
   try {
@@ -1700,7 +1700,7 @@ function bootCronoGol(){
       };
     });
 
-    // Botones principales: reasignación segura.
+    // Botones principales: reasignaciÃ³n segura.
     if(startMatchBtn) startMatchBtn.onclick = startMatch;
     if(mainActionBtn) mainActionBtn.onclick = handleMainAction;
     if(specialStartBtn) specialStartBtn.onclick = handleSpecialButton;
@@ -1711,9 +1711,9 @@ function bootCronoGol(){
 
     if(gameModeSelect){
       gameModeSelect.onchange = () => {
-        if(gameModeSelect.value==="machine" && (player2Input.value==="Jugador 2" || player2Input.value==="Rival")) player2Input.value="Máquina";
-        if(gameModeSelect.value==="online" && (player2Input.value==="Jugador 2" || player2Input.value==="Máquina")) player2Input.value="Rival";
-        if(gameModeSelect.value==="local" && (player2Input.value==="Máquina" || player2Input.value==="Rival")) player2Input.value="Jugador 2";
+        if(gameModeSelect.value==="machine" && (player2Input.value==="Jugador 2" || player2Input.value==="Rival")) player2Input.value="MÃ¡quina";
+        if(gameModeSelect.value==="online" && (player2Input.value==="Jugador 2" || player2Input.value==="MÃ¡quina")) player2Input.value="Rival";
+        if(gameModeSelect.value==="local" && (player2Input.value==="MÃ¡quina" || player2Input.value==="Rival")) player2Input.value="Jugador 2";
         updateSetupVisibility();
       };
     }
@@ -1776,7 +1776,7 @@ if(document.readyState === "loading"){
 }
 
 
-/* ===== CronoGol v2.6.3 — Deterministic Online Clock
+/* ===== CronoGol v2.6.3 â€” Deterministic Online Clock
 
 function openKofi(){
   window.open(CRONOGOL_CONFIG.kofiUrl, "_blank", "noopener");
@@ -1784,8 +1784,8 @@ function openKofi(){
 
 async function shareCronoGol(){
   const nativeText = currentLang === "en"
-    ? "I'm playing CronoGol ⚽⌚"
-    : "Estoy jugando a CronoGol ⚽⌚";
+    ? "I'm playing CronoGol âš½âŒš"
+    : "Estoy jugando a CronoGol âš½âŒš";
 
   const fullText = `${nativeText}\n${CRONOGOL_CONFIG.siteUrl}`;
 
@@ -1813,9 +1813,9 @@ function showSupportModal(){
     isEn ? "SUPPORT CRONOGOL" : "APOYA CRONOGOL",
     isEn
       ? "CronoGol is free and will remain free. If you enjoy it, you can buy me a coffee."
-      : "CronoGol es gratis y lo seguirá siendo. Si te divierte, puedes invitarme a un café.",
+      : "CronoGol es gratis y lo seguirÃ¡ siendo. Si te divierte, puedes invitarme a un cafÃ©.",
     `<div class="support-modal">
-      <div class="support-highlight">☕ ${isEn ? "Voluntary support" : "Apoyo voluntario"}</div>
+      <div class="support-highlight">â˜• ${isEn ? "Voluntary support" : "Apoyo voluntario"}</div>
       <div class="donation-data">
         <div class="donation-item">
           <strong>Ko-fi</strong><br>
@@ -1833,8 +1833,8 @@ function showSupportModal(){
 }
 
 
-/* ===== CronoGol v2.6.3 — Deterministic Online Clock
-/* No modifica reglas, turnos, START/STOP ni lógica base del partido. */
+/* ===== CronoGol v2.6.3 â€” Deterministic Online Clock
+/* No modifica reglas, turnos, START/STOP ni lÃ³gica base del partido. */
 
 function machineDifficultyText(){
   const level = machineLevelSelect ? machineLevelSelect.value : "normal";
@@ -1842,9 +1842,9 @@ function machineDifficultyText(){
 
   const texts = {
     es: {
-      easy: "Fácil: máquina torpe, ideal para aprender.",
+      easy: "FÃ¡cil: mÃ¡quina torpe, ideal para aprender.",
       normal: "Normal: partida equilibrada.",
-      hard: "Difícil: más precisión y más peligro en jugadas especiales."
+      hard: "DifÃ­cil: mÃ¡s precisiÃ³n y mÃ¡s peligro en jugadas especiales."
     },
     en: {
       easy: "Easy: clumsy machine, ideal for learning.",
@@ -1886,7 +1886,7 @@ function getFinalEmotion(pens=false){
   if(diff === 1){
     return isEn
       ? "Extremely tight match."
-      : "Partido ajustadísimo.";
+      : "Partido ajustadÃ­simo.";
   }
 
   if(totalGoals >= 7){
@@ -1904,25 +1904,25 @@ function getFinalEmotion(pens=false){
   if(gameState.gameMode === "machine" && goals2 > goals1){
     return isEn
       ? "The machine shows no mercy."
-      : "La máquina no perdona.";
+      : "La mÃ¡quina no perdona.";
   }
 
   if(gameState.gameMode === "machine" && goals1 > goals2 && machineLevelSelect && machineLevelSelect.value === "hard"){
     return isEn
       ? "Big statement against the hard machine."
-      : "Golpe sobre la mesa contra la máquina difícil.";
+      : "Golpe sobre la mesa contra la mÃ¡quina difÃ­cil.";
   }
 
   return isEn
     ? "Decided by stopwatch precision."
-    : "Decidido por precisión de cronómetro.";
+    : "Decidido por precisiÃ³n de cronÃ³metro.";
 }
 
 function resultText(includeUrl=true){
   const final = gameState.lastFinalText || formattedFinalResult();
   const emotion = getFinalEmotion(Boolean(penaltyShootout));
-  const challenge = currentLang === "en" ? "Do you dare?" : "¿Te atreves?";
-  const base = `⚽ CronoGol\n${final}\n\n${emotion}\n${challenge}`;
+  const challenge = currentLang === "en" ? "Do you dare?" : "Â¿Te atreves?";
+  const base = `âš½ CronoGol\n${final}\n\n${emotion}\n${challenge}`;
   return includeUrl ? `${base}\n${CRONOGOL_CONFIG.siteUrl}` : base;
 }
 
@@ -1941,14 +1941,14 @@ function finalHtml(pens=false){
     ${isEn ? "Specials" : "Especiales"}: ${gameState.stats.specials}${penaltyLine}
   </div>
   <div class="donation-item final-support-box">
-    <strong>☕ ${isEn ? "CronoGol is free" : "CronoGol es gratis"}</strong><br>
-    ${isEn ? "If this match made you smile, you can buy me a coffee." : "Si esta partida te ha divertido, puedes invitarme a un café."}
+    <strong>â˜• ${isEn ? "CronoGol is free" : "CronoGol es gratis"}</strong><br>
+    ${isEn ? "If this match made you smile, you can buy me a coffee." : "Si esta partida te ha divertido, puedes invitarme a un cafÃ©."}
     <button class="kofi-direct-btn" onclick="openKofi()">${isEn ? "Open Ko-fi" : "Abrir Ko-fi"}</button>
     <a class="support-link" href="${CRONOGOL_CONFIG.paypalUrl}" target="_blank" rel="noopener">${isEn ? "Open PayPal" : "Abrir PayPal"}</a>
   </div>`;
 }
 
-/* Conecta la descripción de dificultad sin alterar el comportamiento de la máquina */
+/* Conecta la descripciÃ³n de dificultad sin alterar el comportamiento de la mÃ¡quina */
 document.addEventListener("DOMContentLoaded", () => {
   updateMachineDifficultyHint();
 
@@ -1964,9 +1964,9 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-/* ===== CronoGol v2.6.3 — Deterministic Online Clock
-   Jefe de proyecto: se aplican correcciones críticas de Frontend + UI/UX
-   sin tocar reglas, marcador, máquina, sonidos ni vibración estable.
+/* ===== CronoGol v2.6.3 â€” Deterministic Online Clock
+   Jefe de proyecto: se aplican correcciones crÃ­ticas de Frontend + UI/UX
+   sin tocar reglas, marcador, mÃ¡quina, sonidos ni vibraciÃ³n estable.
 */
 
 let actionLockUntil = 0;
@@ -2070,11 +2070,11 @@ function confirmReset(){
     currentLang === "en" ? "RESET MATCH" : "REINICIAR PARTIDO",
     currentLang === "en"
       ? "Are you sure you want to restart the current match? Current progress will be lost."
-      : "¿Seguro que deseas reiniciar el partido actual? Se perderá el progreso.",
+      : "Â¿Seguro que deseas reiniciar el partido actual? Se perderÃ¡ el progreso.",
     "",
     [
       {
-        text: currentLang === "en" ? "YES, RESET" : "SÍ, REINICIAR",
+        text: currentLang === "en" ? "YES, RESET" : "SÃ, REINICIAR",
         action: () => {
           resetConfirmationOpen = false;
           resetToSetup();
@@ -2109,7 +2109,7 @@ function startMatch(){
   clearMachineTimers();
 
   const p1 = safePlayerName(player1Input.value, "Jugador 1");
-  const p2Default = gameModeSelect.value === "machine" ? "Máquina" : "Jugador 2";
+  const p2Default = gameModeSelect.value === "machine" ? "MÃ¡quina" : "Jugador 2";
   const p2 = safePlayerName(player2Input.value, p2Default);
 
   player1Input.value = p1;
@@ -2301,7 +2301,7 @@ syncActionControls();
 try{ bindAudioUnlockOnce(); }catch(e){}
 
 
-/* ===== CronoGol v2.6.3 — Deterministic Online Clock
+/* ===== CronoGol v2.6.3 â€” Deterministic Online Clock
    Rejugabilidad local sin backend: guarda resumen, acumulados e historial
    en localStorage. No cambia reglas, eventos de juego ni Cloudflare.
 */
@@ -2346,8 +2346,8 @@ function cgWriteLocalStats(stats){
 }
 
 function cgMatchModeLabel(){
-  if(gameState.matchMode === "five") return currentLang === "en" ? "Fast" : "Rápido";
-  return currentLang === "en" ? "Classic" : "Clásico";
+  if(gameState.matchMode === "five") return currentLang === "en" ? "Fast" : "RÃ¡pido";
+  return currentLang === "en" ? "Classic" : "ClÃ¡sico";
 }
 
 function cgWinnerLabel(p1, p2){
@@ -2433,20 +2433,20 @@ function cgFormatHistoryDate(iso){
 function cgLocalHistoryHtml(){
   const stats = cgReadLocalStats();
   if(!stats.history.length){
-    return `<div class="donation-item"><strong>${currentLang === "en" ? "No matches yet" : "Aún no hay partidas"}</strong><br>${currentLang === "en" ? "Finish a match and it will appear here." : "Termina una partida y aparecerá aquí."}</div>`;
+    return `<div class="donation-item"><strong>${currentLang === "en" ? "No matches yet" : "AÃºn no hay partidas"}</strong><br>${currentLang === "en" ? "Finish a match and it will appear here." : "Termina una partida y aparecerÃ¡ aquÃ­."}</div>`;
   }
 
   const items = stats.history.map((m)=>{
     const extra = [
       m.mode,
-      m.machine ? (currentLang === "en" ? "vs Machine" : "vs Máquina") : "1 vs 1",
+      m.machine ? (currentLang === "en" ? "vs Machine" : "vs MÃ¡quina") : "1 vs 1",
       m.pens ? (currentLang === "en" ? "Penalties" : "Penaltis") : null,
       `${m.throws || 0} ${currentLang === "en" ? "throws" : "tiradas"}`
-    ].filter(Boolean).join(" · ");
+    ].filter(Boolean).join(" Â· ");
 
     return `<div class="local-history-item">
       <strong>${m.p1} ${m.g1} - ${m.g2} ${m.p2}</strong>
-      <small>${cgFormatHistoryDate(m.date)} · ${currentLang === "en" ? "Winner" : "Ganador"}: ${m.winner}</small>
+      <small>${cgFormatHistoryDate(m.date)} Â· ${currentLang === "en" ? "Winner" : "Ganador"}: ${m.winner}</small>
       <small>${extra}</small>
     </div>`;
   }).join("");
@@ -2468,13 +2468,13 @@ function cgShowLocalHistory(){
 
 function cgConfirmResetStats(){
   showModal(
-    currentLang === "en" ? "RESET STATISTICS" : "BORRAR ESTADÍSTICAS",
+    currentLang === "en" ? "RESET STATISTICS" : "BORRAR ESTADÃSTICAS",
     currentLang === "en"
       ? "Delete local match history from this device?"
-      : "¿Borrar el historial local de este dispositivo?",
+      : "Â¿Borrar el historial local de este dispositivo?",
     "",
     [
-      {text: currentLang === "en" ? "YES, DELETE" : "SÍ, BORRAR", action: () => {
+      {text: currentLang === "en" ? "YES, DELETE" : "SÃ, BORRAR", action: () => {
         cgWriteLocalStats(cgDefaultLocalStats());
         try{ localStorage.setItem("cronogol_matches_played", "0"); }catch(e){}
         cgRenderLocalStatsPanel();
@@ -2549,3 +2549,4 @@ function cgWireLocalStats(){
 }
 
 try{ cgWireLocalStats(); }catch(e){}
+
