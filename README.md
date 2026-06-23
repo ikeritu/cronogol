@@ -1,121 +1,11 @@
-# CronoGol v2.6.0 — Menu Rules/Rival Cleanup
+# CronoGol v2.6.2 — Usuario mejoras
 
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-## v2.6.0 — Menu Rules/Rival Cleanup
-
-- Orden visual: Jugador 1, Jugador 2 / Máquina, Reglas, Rival.
-- Sin reglas seleccionadas por defecto.
-- Sin rival seleccionado por defecto.
-- No se puede elegir rival hasta elegir Clásico o Rápido.
-- No se puede empezar hasta elegir reglas y rival.
-- Las reglas elegidas aplican a local, máquina y online.
-- Añade `scripts/audit_cronogol_menu_flow.js`.
-
-## v2.6.0 — Rules First & Host Mode Sync
-
-- Primero hay que elegir `Clásico` o `Rápido`.
-- Rival queda bloqueado hasta elegir reglas.
-- En online, el invitado hereda las reglas del anfitrión.
-- En rápido, `19` vuelve a ser penalti.
-- Añade `scripts/audit_cronogol_host_mode_sync.js`.
-
-## v2.6.0 — Online Audit Expansion
-
-- Mantiene las correcciones de v2.4.2.
-- Amplía la autoauditoría con flujo online simulado sin Supabase real.
-- Añade `scripts/audit_cronogol_online_flow.js`.
-- El runner PowerShell ejecuta ahora:
-  - auditoría de reglas
-  - auditoría de flujo online
-- La auditoría online simula:
-  - host/invitado
-  - marcador
-  - última tirada
-  - turno sincronizado
-  - roja con dos turnos perdidos
-  - penalti fallado
-  - falta peligrosa con gol
-
-```powershell
-powershell -ExecutionPolicy Bypass -File ".\scripts\run_auditoria_cronogol.ps1" -ProjectPath "."
-```
-
-## v2.6.0 — Rules Selector & Online Sanctions Fix
-
-- Renombra `Modo` a `Rival`.
-- Renombra `Duración` a `Reglas`.
-- Reordena rivales: `1 vs 1 local`, `1 vs Máquina`, `1 vs 1 online`.
-- Corrige salto de turnos online por sanción:
-  - amarilla: pierde 1 turno
-  - roja: pierde 2 turnos
-- Añade autoauditoría local:
-  - `scripts/audit_cronogol_rules.js`
-  - `scripts/run_auditoria_cronogol.ps1`
-
-```powershell
-powershell -ExecutionPolicy Bypass -File ".\scripts\run_auditoria_cronogol.ps1" -ProjectPath "."
-```
-
-## v2.6.0 — Last Throw Message Fix
-
-- La última tirada conserva el mensaje real de la jugada.
-- `Esperando turno de X` ya no pisa el resultado.
-- Mantiene sincronización de número, resultado, marcador y turno.
-
-## v2.6.0 — Online Throws & Score Sync
-
-- Se guarda en Supabase la última tirada.
-- El rival ve el número y resultado textual.
-- Marcador y turno se actualizan en ambos dispositivos.
-- Mantiene el bloqueo de turno de v2.3.0.
-- Queda pendiente final online completo y revancha.
-
-## v2.6.0 — Online Turn Control
-
-Primera capa de control de turno online:
-
-- Host = Jugador 1.
-- Invitado = Jugador 2.
-- Si no es tu turno, el botón `START` queda bloqueado.
-- Se muestra `ESPERANDO TURNO`.
-- Tras una tirada local, se sube a Supabase el turno activo y un snapshot básico.
-- El rival lee Supabase por polling y se le habilita `START` cuando le toca.
-- Todavía no es la sincronización completa de eventos/final, pero evita que ambos puedan jugar a la vez.
-
-## v2.6.0 — Online Start Role & Names Fix
-
-Corrección de estabilidad sobre v2.2.0:
-
-- El host inicia la partida con el invitado real de Supabase.
-- El invitado ve el botón como espera/bloqueado, no como acción propia.
-- Si la sala pasa a `playing`, ambos dispositivos entran con los mismos nombres.
-- Se mantiene pendiente la sincronización de tiradas, turnos y marcador.
-
-## v2.6.0 — Online Match Start
-
-Primera transición online de lobby a partido:
-
-- Cuando el lobby está listo, el anfitrión puede pulsar `Empezar partido online`.
-- La sala pasa de `ready` a `playing` en Supabase.
-- Se guarda estado inicial compartido: jugadores, marcador 0-0, modo y turno inicial.
-- El invitado detecta por polling/refresco que la partida ha empezado.
-- Ambos entran a la pantalla de partido con los mismos nombres.
-- Todavía no sincroniza tiradas, turnos ni marcador durante el partido.
-
-## v2.6.0 — Ko-fi URL & Auto Online Room
+## v2.1.5 — Ko-fi URL & Auto Online Room
 
 - Corrige el enlace real de Ko-fi a `https://ko-fi.com/ikeritu`.
 - Al seleccionar `1 vs 1 online`, se limpia la sala local anterior y se crea una sala nueva automáticamente.
@@ -632,8 +522,8 @@ Cambios técnicos:
   - `goal`;
   - `penalty_fail`.
 - Añadido cache busting:
-  - `game.js?v=2.6.0`;
-  - `style.css?v=2.6.0`.
+  - `game.js?v=2.6.2`;
+  - `style.css?v=2.6.2`.
 
 No se toca:
 
@@ -666,7 +556,7 @@ Correcciones aplicadas desde la auditoría multidisciplinar:
 - Mejora visual de estados del selector de idioma.
 - Transición suave del menú lateral.
 - Fallback de portapapeles ya mantenido.
-- Cache busting actualizado a `game.js?v=2.6.0` y `style.css?v=2.6.0`.
+- Cache busting actualizado a `game.js?v=2.6.2` y `style.css?v=2.6.2`.
 - PWA mínima con `sw.js` y `site.webmanifest`.
 
 No se han cambiado reglas, marcador, máquina, sonidos ni vibración estable.
@@ -696,7 +586,7 @@ Cambios:
 - `Reiniciar partido` separado como acción peligrosa.
 - `Apoya CronoGol` baja peso visual en home y menú.
 - Se mantiene la confirmación de reinicio añadida en v1.11.0.
-- Cache busting actualizado a `game.js?v=2.6.0` y `style.css?v=2.6.0`.
+- Cache busting actualizado a `game.js?v=2.6.2` y `style.css?v=2.6.2`.
 
 No se toca:
 

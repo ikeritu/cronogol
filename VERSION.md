@@ -1,1 +1,1 @@
-CronoGol v2.6.1 — Online Core Bugfix (turn authority + stop attribution)
+CronoGol v2.6.2 — Usuario mejoras

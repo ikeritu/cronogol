@@ -1,10 +1,11 @@
-const CACHE_NAME = "cronogol-v2.6.1";
+const CACHE_NAME = "cronogol-v2.1.5";
 const ASSETS = [
   "./",
   "./index.html",
-  "./style.css?v=2.6.1",
-  "./game.js?v=2.6.1",
-  "./online-foundation.js?v=2.6.1",
+  "./style.css?v=2.6.2",
+  "./game.js?v=2.6.2",
+  "./online-foundation.js?v=2.6.2",
+  "./logo-cronogol.png",
   "./logo-cronogol-horizontal.png",
   "./favicon.png",
   "./favicon.svg",
@@ -17,13 +18,7 @@ const ASSETS = [
 ];
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) =>
-      Promise.allSettled(ASSETS.map((asset) => cache.add(asset)))
-    ).catch((error) => {
-      console.warn("[CronoGol SW] cache install failed", error);
-    })
-  );
+  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)).catch(()=>{}));
   self.skipWaiting();
 });
 

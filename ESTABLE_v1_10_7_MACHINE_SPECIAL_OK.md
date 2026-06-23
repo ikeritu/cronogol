@@ -1,4 +1,4 @@
-# CronoGol v2.6.0_ESTABLE_MACHINE_SPECIAL_OK
+# CronoGol v2.6.2 — Usuario mejoras_ESTABLE_MACHINE_SPECIAL_OK
 
 ## Estado
 
@@ -6,7 +6,7 @@ Versión estable congelada tras confirmar que el flujo de penalti/falta de la m�
 
 ## Base
 
-`CronoGol v2.6.0 — Machine Special Direct Resolve`
+`CronoGol v2.6.2 — Usuario mejoras
 
 ## Confirmado
 

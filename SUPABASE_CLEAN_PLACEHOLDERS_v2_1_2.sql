@@ -1,4 +1,4 @@
--- CronoGol v2.1.2 — limpieza opcional de placeholders
+-- CronoGol v2.6.2 — Usuario mejoras
 update public.cronogol_rooms
 set guest_name = '',
     status = 'waiting',

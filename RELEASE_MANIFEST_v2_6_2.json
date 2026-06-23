@@ -1,0 +1,8 @@
+{
+  "version": "2.6.2",
+  "name": "Usuario mejoras",
+  "created_at": "2026-06-23T09:42:22.445549+00:00",
+  "source_zip": "⏱ Cronogol.zip",
+  "note": "Versión renombrada a petición del usuario. No se han aplicado cambios funcionales adicionales salvo actualización de etiquetas/versionado.",
+  "caution": "Antes de nuevos cambios, inspeccionar la base real porque puede no coincidir con el refactor v2.6.0 generado previamente."
+}
