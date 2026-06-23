@@ -4732,6 +4732,7 @@ const REMOTE_RUN_MS=80;
 let roomState=null;
 let pullBusy=false;
 let pushBusy=false;
+let pendingPatch=null;
 let lastAppliedStopId="";
 let lastPushedStopId="";
 let runningPaintTimer=null;
@@ -4905,7 +4906,15 @@ function buildState(extra={}){
   },extra);
 }
 async function patchState(extra){
-  if(!online()||pushBusy)return;
+  if(!online())return;
+  // v2.6.2 BUG3: si hay un PATCH en vuelo (frecuente en móvil, donde el round-trip
+  // supera los 20-40ms entre publishRunning(false) y publishStop), no descartar la
+  // escritura: se perdía el lastStoppedThrow real y el rival se quedaba con el
+  // cronómetro remoto congelado en el último valor animado, sin tirada visible.
+  if(pushBusy){
+    pendingPatch=Object.assign({},pendingPatch||{},extra||{});
+    return;
+  }
   pushBusy=true;
   try{
     const state=buildState(extra||{});
@@ -4921,7 +4930,14 @@ async function patchState(extra){
       })
     });
   }catch(e){try{console.warn("[CronoGolOnlineCore patchState]",e)}catch(_){}}
-  finally{pushBusy=false}
+  finally{
+    pushBusy=false;
+    if(pendingPatch){
+      const next=pendingPatch;
+      pendingPatch=null;
+      patchState(next);
+    }
+  }
 }
 async function publishRunning(isRunning){
   if(!online())return;
