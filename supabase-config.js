@@ -1,14 +1,16 @@
 /*
 ===============================================================================
-CronoGol v2.7.0 — Supabase shared config
+CronoGol v2.6.3 — Deterministic Online Clock
 ===============================================================================
-Fuente única de URL/anon key para online-foundation.js, supabase-client.js
-y online-clock.js. No uses nunca la service_role key en esta web pública.
+1) Crea el proyecto en Supabase.
+2) Ejecuta el SQL de SUPABASE_PRIVATE_ROOMS_SETUP.sql.
+3) Copia aquí Project URL y anon/public key.
+
+No uses nunca la service_role key en esta web pública.
 ===============================================================================
 */
 window.CRONOGOL_SUPABASE_CONFIG = {
-  enabled: true,
-  url: "https://xbrrdkflztxkvnngmdhu.supabase.co",
-  anonKey: "sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l",
-  roomsTable: "cronogol_rooms"
+  enabled: false,
+  url: "",
+  anonKey: ""
 };

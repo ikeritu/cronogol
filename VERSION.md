@@ -1,2 +1,1 @@
-﻿CronoGol v2.6.4 — Game Logic Update
-
+CronoGol v2.6.3 — Deterministic Online Clock
