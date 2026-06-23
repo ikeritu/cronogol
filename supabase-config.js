@@ -1,6 +1,6 @@
 /*
 ===============================================================================
-CronoGol v2.6.2 — Usuario mejoras
+CronoGol v2.6.3 — Deterministic Online Clock
 ===============================================================================
 1) Crea el proyecto en Supabase.
 2) Ejecuta el SQL de SUPABASE_PRIVATE_ROOMS_SETUP.sql.

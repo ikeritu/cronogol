@@ -1,4 +1,4 @@
-# CronoGol v2.6.2 — Usuario mejoras
+# CronoGol v2.6.3 — Deterministic Online Clock
 
 
 
@@ -522,8 +522,8 @@ Cambios técnicos:
   - `goal`;
   - `penalty_fail`.
 - Añadido cache busting:
-  - `game.js?v=2.6.2`;
-  - `style.css?v=2.6.2`.
+  - `game.js?v=2.6.3`;
+  - `style.css?v=2.6.3`.
 
 No se toca:
 
@@ -556,7 +556,7 @@ Correcciones aplicadas desde la auditoría multidisciplinar:
 - Mejora visual de estados del selector de idioma.
 - Transición suave del menú lateral.
 - Fallback de portapapeles ya mantenido.
-- Cache busting actualizado a `game.js?v=2.6.2` y `style.css?v=2.6.2`.
+- Cache busting actualizado a `game.js?v=2.6.3` y `style.css?v=2.6.3`.
 - PWA mínima con `sw.js` y `site.webmanifest`.
 
 No se han cambiado reglas, marcador, máquina, sonidos ni vibración estable.
@@ -586,7 +586,7 @@ Cambios:
 - `Reiniciar partido` separado como acción peligrosa.
 - `Apoya CronoGol` baja peso visual en home y menú.
 - Se mantiene la confirmación de reinicio añadida en v1.11.0.
-- Cache busting actualizado a `game.js?v=2.6.2` y `style.css?v=2.6.2`.
+- Cache busting actualizado a `game.js?v=2.6.3` y `style.css?v=2.6.3`.
 
 No se toca:
 

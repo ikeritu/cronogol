@@ -1,5 +1,5 @@
 /**
- * CronoGol v2.6.2 — Usuario mejoras
+ * CronoGol v2.6.3 — Deterministic Online Clock
  *
  * Purpose:
  * - Keep the real Formspree endpoint outside the public frontend.

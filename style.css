@@ -1,6 +1,6 @@
 /*
 ===============================================================================
-CronoGol v2.6.2 — Usuario mejoras
+CronoGol v2.6.3 — Deterministic Online Clock
 ===============================================================================
 
 Objetivo:
@@ -1645,7 +1645,7 @@ button[data-action="start-match"]:hover {
 }
 
 
-/* ===== CronoGol v2.6.2 — Usuario mejoras: goal/penalty visual feedback ===== */
+/* ===== CronoGol v2.6.3 — Deterministic Online Clock
 body.cg-flash-goal .game-device,
 body.cg-flash-penalty .game-device,
 body.cg-flash-special .game-device,
@@ -1723,7 +1723,7 @@ body.cg-shake-soft .game-device {
 }
 
 
-/* ===== CronoGol v2.6.2 — Usuario mejoras: sound & haptics polish visual feedback ===== */
+/* ===== CronoGol v2.6.3 — Deterministic Online Clock
 body.cg-flash-goal .game-device {
   animation: cgGoalDevicePop 0.62s ease-out 1;
 }
@@ -1766,14 +1766,14 @@ body.cg-flash-red .game-device {
 }
 
 
-/* ===== CronoGol v2.6.2 — Usuario mejoras: strict physical vibration gate =====
+/* ===== CronoGol v2.6.3 — Deterministic Online Clock
    La vibración física está totalmente centralizada en game.js:
    physicalVibration() -> solo goal / penalty_fail.
    Feedback visual activo solo para goal y penalty_fail.
 */
 
 
-/* ===== CronoGol v2.6.2 — Usuario mejoras: Project Audit UI/UX fixes ===== */
+/* ===== CronoGol v2.6.3 — Deterministic Online Clock
 .top-back-link {
   display: inline-flex;
   align-items: center;
@@ -1850,7 +1850,7 @@ body.cg-flash-red .game-device {
 }
 
 
-/* ===== CronoGol v2.6.2 — Usuario mejoras: Menu & Home Hierarchy Polish ===== */
+/* ===== CronoGol v2.6.3 — Deterministic Online Clock
 
 /* Home: acciones secundarias agrupadas, menos ruido visual */
 .setup-actions-polished {
@@ -1985,7 +1985,7 @@ body.cg-flash-red .game-device {
 }
 
 
-/* ===== CronoGol v2.6.2 — Usuario mejoras: Mobile Layout Fix ===== */
+/* ===== CronoGol v2.6.3 — Deterministic Online Clock
 /* Corrección de la zona inferior de acciones en móvil.
 .setup-links.secondary-actions-final,
 .setup-links.setup-actions-polished {
@@ -2114,7 +2114,7 @@ body.cg-flash-red .game-device {
 }
 
 
-/* ===== CronoGol v2.6.2 — Usuario mejoras: Secondary Actions Grid Hard Fix ===== */
+/* ===== CronoGol v2.6.3 — Deterministic Online Clock
 /* Fix real observado:
    Los grupos internos .setup-action-group se estaban comportando como columnas
    dentro de .setup-links, generando cajas estrechas y textos pisados.
@@ -2222,7 +2222,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.6.2 — Usuario mejoras: Flattened Secondary Actions Final Fix ===== */
+/* ===== CronoGol v2.6.3 — Deterministic Online Clock
 /* Causa real corregida:
    El HTML tenía grupos .setup-action-group dentro de .setup-links, mientras parte
    del CSS histórico esperaba botones/enlaces directos con [data-slot].
@@ -2308,7 +2308,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.6.2 — Usuario mejoras: Local Stats & Match History ===== */
+/* ===== CronoGol v2.6.3 — Deterministic Online Clock
 /* Fix conservador para móvil:
    - Resetea grid-column/grid-row históricos con !important que podían crear columnas implícitas.
    - Evita que la botonera secundaria se salga del reloj en pantallas estrechas.
@@ -2419,7 +2419,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.6.2 — Usuario mejoras: Local Stats UI Polish ===== */
+/* ===== CronoGol v2.6.3 — Deterministic Online Clock
 .local-stats-panel {
   margin: 10px 0 14px;
   padding: 12px;
@@ -2553,7 +2553,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.6.2 — Usuario mejoras: Stats UI Final Polish ===== */
+/* ===== CronoGol v2.6.3 — Deterministic Online Clock
 .local-stats-panel {
   margin: 12px 0 18px;
   padding: 14px 12px;
@@ -2649,7 +2649,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.6.2 — Usuario mejoras: Online Foundation Panel ===== */
+/* ===== CronoGol v2.6.3 — Deterministic Online Clock
 .online-foundation-panel{
   margin-top:12px;
   background:rgba(0,0,0,.38);
@@ -2691,7 +2691,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.6.2 — Usuario mejoras: Supabase Private Rooms UI ===== */
+/* ===== CronoGol v2.6.3 — Deterministic Online Clock
 .online-room-display{
   margin:10px auto;
   padding:10px;
@@ -2766,14 +2766,14 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.6.2 — Usuario mejoras: Room Lobby Sync ===== */
+/* ===== CronoGol v2.6.3 — Deterministic Online Clock
 .online-lobby-card{margin:10px 0;border:1px solid rgba(76,110,126,.8);background:rgba(0,0,0,.22);padding:8px;display:grid;gap:6px}
 .online-lobby-row{display:grid;grid-template-columns:90px 1fr;align-items:center;gap:8px;border-bottom:1px dashed rgba(76,110,126,.45);padding:4px 0}
 .online-lobby-row:last-child{border-bottom:0}.online-lobby-row span{color:var(--muted);font-size:10px;letter-spacing:1px;text-transform:uppercase}.online-lobby-row strong{color:var(--orange);font-size:11px;text-align:right;overflow-wrap:anywhere}#cg-online-refresh-btn{background:rgba(0,0,0,.28);border:1px solid rgba(76,110,126,.9);color:var(--orange)}
 @media(max-width:430px){.online-foundation-actions{grid-template-columns:1fr}.online-lobby-row{grid-template-columns:1fr;text-align:center}.online-lobby-row strong{text-align:center}}
 
 
-/* ===== CronoGol v2.6.2 — Usuario mejoras: Lobby Guardrails ===== */
+/* ===== CronoGol v2.6.3 — Deterministic Online Clock
 #cg-online-status[data-state="ready"]{
   color:var(--muted);
 }
@@ -2782,7 +2782,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.6.2 — Usuario mejoras: Lobby Placeholder & Controls Fix ===== */
+/* ===== CronoGol v2.6.3 — Deterministic Online Clock
 .online-foundation-panel{overflow:visible;}
 .online-primary-actions{margin:10px 0;}
 .online-clear-btn{width:100%;margin-top:8px;padding:8px;background:rgba(0,0,0,.24);border:1px dashed rgba(76,110,126,.85);color:var(--muted);font-family:inherit;font-weight:900;cursor:pointer;}
@@ -2791,7 +2791,7 @@ nav.setup-links {
 @media(max-width:430px){.online-foundation-panel{padding:12px 10px;}.online-foundation-panel p{font-size:11px;line-height:1.55;}.online-room-display{margin-top:8px;}}
 
 
-/* ===== CronoGol v2.6.2 — Usuario mejoras: Online Mode Layout Cleanup ===== */
+/* ===== CronoGol v2.6.3 — Deterministic Online Clock
 
 /* Tres modos en una fila adaptable */
 .game-mode-control{
@@ -2834,7 +2834,7 @@ body.online-mode-active .online-foundation-panel{
 }
 
 
-/* ===== CronoGol v2.6.2 — Usuario mejoras: Ko-fi Support Update ===== */
+/* ===== CronoGol v2.6.3 — Deterministic Online Clock
 .kofi-direct-btn{
   width:100%;
   margin-top:10px;

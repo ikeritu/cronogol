@@ -1,4 +1,4 @@
-# CronoGol v2.6.2 — Usuario mejoras
+# CronoGol v2.6.3 — Deterministic Online Clock
 
 Esta versión inicia la rama V2 sin activar todavía multijugador real.
 

@@ -1,4 +1,4 @@
-# CronoGol v2.6.2 — Usuario mejoras
+# CronoGol v2.6.3 — Deterministic Online Clock
 
 Base: `v1.10.17 — Flatten Secondary Actions`.
 
