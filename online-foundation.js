@@ -2,10 +2,11 @@
 /* CronoGol v2.6.3 — Deterministic Online Clock */
 (function(){
   "use strict";
-  const CG_ONLINE_VERSION="2.6.3";
-  const CG_SUPABASE_URL="https://xbrrdkflztxkvnngmdhu.supabase.co";
-  const CG_SUPABASE_ANON_KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l";
-  const CG_ROOMS_TABLE="cronogol_rooms";
+  const CG_ONLINE_VERSION="2.7.0";
+  const CG_CONFIG=window.CRONOGOL_SUPABASE_CONFIG||{};
+  const CG_SUPABASE_URL=CG_CONFIG.url||"https://xbrrdkflztxkvnngmdhu.supabase.co";
+  const CG_SUPABASE_ANON_KEY=CG_CONFIG.anonKey||"sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l";
+  const CG_ROOMS_TABLE=CG_CONFIG.roomsTable||"cronogol_rooms";
   const ROOM_CODE_CHARS="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   const POLL_INTERVAL_MS=8000;
   let currentRoomCode="";
