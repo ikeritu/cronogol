@@ -697,38 +697,55 @@ function hasFastModeWinner() {
   return (a >= 6 || b >= 6) && Math.abs(a - b) >= 2;
 }
 
-function evaluateFastThrow(v) {
-  // Modo rápido v1.12.3:
-  // - Números acabados en 0 = gol, excepto 50 y 60.
-  // - Números acabados en 9 = penalti.
-  // - 01-02 = poste, repite el mismo jugador.
-  // - 03-04 = larguero, repite el mismo jugador.
-  // - 50 = amarilla, termina turno y pierde el siguiente.
-  // - 60 = roja, termina turno y pierde dos turnos.
-  // - 96-97 = falta peligrosa con tirada especial: 00-20 gol, 21-99 falla.
-  if (v === 1 || v === 2) return {type:"post",msg:"POSTE",cls:"special",repeat:true};
-  if (v === 3 || v === 4) return {type:"crossbar",msg:"LARGUERO",cls:"special",repeat:true};
-  if (v === 50) return {type:"yellow",msg:"🟨 AMARILLA",cls:"yellow"};
-  if (v === 60) return {type:"red",msg:"🟥 ROJA",cls:"red"};
-  if (v === 96 || v === 97) return {type:"free_kick",msg:"FALTA PELIGROSA",cls:"special",special:"free_kick"};
-  if (v % 10 === 0) return {type:"goal",msg:"⚽ GOOOL",cls:"goal"};
-  if (v % 10 === 9) return {type:"penalty",msg:"PENALTI",cls:"special",special:"penalty"};
+function isFastRulesMode(mode) {
+  const m = String(mode || "").toLowerCase();
+  return m === "five" || m === "fast" || m === "rapido" || m === "rápido";
+}
+
+function evaluateThrowOfficial(v, mode) {
+  const n = Number(v);
+  const fast = isFastRulesMode(mode);
+
+  if (!Number.isFinite(n)) return {type:"miss",msg:"FALLO",cls:"neutral"};
+
+  if (fast) {
+    // Modo rápido:
+    // - Números acabados en 0 = gol, excepto 50 y 60.
+    // - Números acabados en 9 = penalti.
+    // - 01-02 = poste, 03-04 = larguero.
+    // - 50 = amarilla, 60 = roja.
+    // - 96-97 = falta peligrosa.
+    if (n === 1 || n === 2) return {type:"post",msg:"POSTE",cls:"special",repeat:true};
+    if (n === 3 || n === 4) return {type:"crossbar",msg:"LARGUERO",cls:"special",repeat:true};
+    if (n === 50) return {type:"yellow",msg:"🟨 AMARILLA",cls:"yellow"};
+    if (n === 60) return {type:"red",msg:"🟥 ROJA",cls:"red"};
+    if (n === 96 || n === 97) return {type:"free_kick",msg:"FALTA PELIGROSA",cls:"special",special:"free_kick"};
+    if (n % 10 === 0) return {type:"goal",msg:"⚽ GOOOL",cls:"goal"};
+    if (n % 10 === 9) return {type:"penalty",msg:"PENALTI",cls:"special",special:"penalty"};
+    return {type:"miss",msg:"FALLO",cls:"neutral"};
+  }
+
+  // Modo clásico:
+  // 00 gol; 01-02 poste; 03-04 larguero; 45 descanso; 50 amarilla;
+  // 60 roja; 90 final; 96-97 falta peligrosa; 98-99 penalti.
+  if (n === 0) return {type:"goal",msg:"⚽ GOOOL",cls:"goal"};
+  if (n === 1 || n === 2) return {type:"post",msg:"POSTE",cls:"special",repeat:true};
+  if (n === 3 || n === 4) return {type:"crossbar",msg:"LARGUERO",cls:"special",repeat:true};
+  if (n === 45) return {type:"half_time",msg:"DESCANSO",cls:"special"};
+  if (n === 50) return {type:"yellow",msg:"🟨 AMARILLA",cls:"yellow"};
+  if (n === 60) return {type:"red",msg:"🟥 ROJA",cls:"red"};
+  if (n === 90) return {type:"full_time",msg:"FINAL",cls:"special"};
+  if (n === 96 || n === 97) return {type:"free_kick",msg:"FALTA PELIGROSA",cls:"special",special:"free_kick"};
+  if (n === 98 || n === 99) return {type:"penalty",msg:"PENALTI",cls:"special",special:"penalty"};
   return {type:"miss",msg:"FALLO",cls:"neutral"};
 }
 
+function evaluateFastThrow(v) {
+  return evaluateThrowOfficial(v, "five");
+}
 
 function evaluateThrow(v){
-  if(isFastMode()) return evaluateFastThrow(v);
-  if(v===0) return {type:"goal",msg:"⚽ GOOOL",cls:"goal"};
-  if(v===1||v===2) return {type:"post",msg:"POSTE",cls:"special",repeat:true};
-  if(v===3||v===4) return {type:"crossbar",msg:"LARGUERO",cls:"special",repeat:true};
-  if(v===45) return {type:"half_time",msg:"DESCANSO",cls:"special"};
-  if(v===50) return {type:"yellow",msg:"🟨 AMARILLA",cls:"yellow"};
-  if(v===60) return {type:"red",msg:"🟥 ROJA",cls:"red"};
-  if(v===90) return {type:"full_time",msg:"FINAL",cls:"special"};
-  if(v===96||v===97) return {type:"free_kick",msg:"FALTA PELIGROSA",cls:"special",special:"free_kick"};
-  if(v===98||v===99) return {type:"penalty",msg:"PENALTI",cls:"special",special:"penalty"};
-  return {type:"miss",msg:"FALLO",cls:"neutral"};
+  return evaluateThrowOfficial(v, gameState && gameState.matchMode);
 }
 function applyNormalResult(v,r){
   const p = currentPlayer();
@@ -2554,7 +2571,7 @@ try{ cgWireLocalStats(); }catch(e){}
 /* CronoGol v2.6.3 — Deterministic Online Clock */
 (function(){
 "use strict";if(!window.CRONOGOL_DETERMINISTIC_CLOCK_ACTIVE)return;
-const VERSION="2.6.9",URL="https://xbrrdkflztxkvnngmdhu.supabase.co",KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l",TABLE="cronogol_rooms",PULL_MS=450;
+const VERSION="2.7.0",URL="https://xbrrdkflztxkvnngmdhu.supabase.co",KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l",TABLE="cronogol_rooms",PULL_MS=450;
 let state=null,rafId=0,pullId=0,pullBusy=false,pushBusy=false,lastStopId="",stopLockUntil=0;
 let serverOffsetMs=0,serverOffsetReady=false,serverSyncBusy=false,lastServerSyncAt=0;
 function applyServerClockSample(serverMs,t0,t1,source){
@@ -2609,7 +2626,24 @@ function roomCode(){return String(st().currentRoomCode||"").trim().toUpperCase()
 function p2(n){return String(n).padStart(2,"0")} function formatMs(ms){const h=Math.floor(Number(ms||0)/10),m=Math.floor(h/6000),s=Math.floor((h%6000)/100),c=h%100;return `${p2(m)}:${p2(s)}:${p2(c)}`}
 function valueFromMs(ms){return Math.floor(Number(ms||0)/10)%100}
 function eventClass(t){return t==="goal"?"event-goal":(t==="miss"?"event-miss":"event-special")}
-function officialEvent(v,mode){const n=Number(v),m=String(mode||(gameState&&gameState.matchMode)||"classic").toLowerCase(),fast=(m==="five"||m==="fast"||m==="rapido"||m==="rápido");if(fast){if(n===1||n===2)return{eventType:"post",title:"POSTE",eventClass:eventClass("post")};if(n===3||n===4)return{eventType:"crossbar",title:"LARGUERO",eventClass:eventClass("crossbar")};if(n===50)return{eventType:"yellow",title:"AMARILLA",eventClass:eventClass("yellow")};if(n===60)return{eventType:"red",title:"ROJA",eventClass:eventClass("red")};if(n===96||n===97)return{eventType:"free",title:"FALTA PELIGROSA",eventClass:eventClass("free")};if(n%10===9)return{eventType:"penalty",title:"PENALTI",eventClass:eventClass("penalty")};if(n%10===0)return{eventType:"goal",title:"GOL",eventClass:eventClass("goal")};return{eventType:"miss",title:"FALLO",eventClass:eventClass("miss")}} if(n===99)return{eventType:"penalty",title:"PENALTI",eventClass:eventClass("penalty")};if(n===96||n===97)return{eventType:"free",title:"FALTA PELIGROSA",eventClass:eventClass("free")};if(n%11===0)return{eventType:"goal",title:"GOL",eventClass:eventClass("goal")};return{eventType:"miss",title:"FALLO",eventClass:eventClass("miss")}}
+function officialEvent(v,mode){
+  const r = typeof evaluateThrowOfficial === "function" ? evaluateThrowOfficial(v, mode || (gameState && gameState.matchMode)) : {type:"miss",msg:"FALLO",cls:"neutral"};
+  const typeMap = {free_kick:"free",half_time:"half_time",full_time:"full_time"};
+  const titleMap = {
+    goal:"GOL",
+    post:"POSTE",
+    crossbar:"LARGUERO",
+    yellow:"AMARILLA",
+    red:"ROJA",
+    free_kick:"FALTA PELIGROSA",
+    penalty:"PENALTI",
+    half_time:"DESCANSO",
+    full_time:"FINAL",
+    miss:"FALLO"
+  };
+  const eventType = typeMap[r.type] || r.type || "miss";
+  return {eventType, title:titleMap[r.type] || String(r.msg || "FALLO").replace(/[⚽🟨🟥]/g,"").trim(), eventClass:eventClass(eventType)};
+}
 async function sf(path,opt={}){const headers=Object.assign({apikey:KEY,Authorization:`Bearer ${KEY}`,"Content-Type":"application/json"},opt.headers||{}),t0=Date.now(),r=await fetch(`${URL}/rest/v1/${path}`,Object.assign({},opt,{headers})),t1=Date.now();try{const hd=r.headers&&r.headers.get?r.headers.get("date"):null,sv=hd?Date.parse(hd):NaN;if(Number.isFinite(sv))applyServerClockSample(sv,t0,t1,"http-date");}catch(e){}const tx=await r.text();let d=null;if(tx){try{d=JSON.parse(tx)}catch(e){d=tx}}if(!r.ok)throw new Error(d&&d.message?d.message:`Supabase HTTP ${r.status}`);return d}
 function endpoint(){return `${TABLE}?room_code=eq.${encodeURIComponent(roomCode())}`}
 function players(){return (gameState.players||[]).slice(0,2).map((p,i)=>({index:i,name:String(p&&p.name?p.name:`Jugador ${i+1}`).replace(/[\u0000-\u001F\u007F]/g,"").slice(0,24),goals:Number(p&&p.goals||0),skipTurns:Number(p&&p.skipTurns||0)}))}
@@ -2632,6 +2666,6 @@ try{const b=startTimer;startTimer=function(){if(blockStart())return;const out=b.
 try{const b=stopTimer;stopTimer=function(){const out=b.apply(this,arguments);if(online())setTimeout(publishStop,20);return out}}catch(e){}
 try{const b=updateTimerDisplay;updateTimerDisplay=function(ms){if(online()){if(Date.now()<stopLockUntil)return;const rs=currentRun();if(rs&&Number(rs.playerIndex)!==localIndex()){paintClock(runElapsed(rs));return}}return b.apply(this,arguments)}}catch(e){}
 if(!pullId)pullId=setInterval(pullState,PULL_MS);
-window.CronoGolDeterministicOnlineClock=Object.freeze({version:VERSION,formatMs,valueFromMs,officialEvent,pullState,patchState,publishStart,publishStop,applyState,paintStop,paintClock,syncServerClock,serverNow,get serverOffsetMs(){return serverOffsetMs},get serverOffsetReady(){return serverOffsetReady},get state(){return state}});
+window.CronoGolDeterministicOnlineClock=Object.freeze({version:VERSION,formatMs,valueFromMs,officialEvent,evaluateThrowOfficial,pullState,patchState,publishStart,publishStop,applyState,paintStop,paintClock,syncServerClock,serverNow,get serverOffsetMs(){return serverOffsetMs},get serverOffsetReady(){return serverOffsetReady},get state(){return state}});
 })();
 

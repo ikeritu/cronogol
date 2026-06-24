@@ -1,1 +1,1 @@
-CronoGol v2.6.9 — Server Millisecond Clock Sync
+CronoGol v2.7.0 — Unified Event Rules

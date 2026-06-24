@@ -1,0 +1,2 @@
+-- CronoGol v2.7.0: no requiere cambios de esquema.
+-- Unifica reglas de eventos en frontend.

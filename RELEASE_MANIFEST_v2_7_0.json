@@ -1,0 +1,24 @@
+{
+  "version": "2.7.0",
+  "name": "Unified Event Rules",
+  "created_at": "2026-06-24T22:22:23.799173+00:00",
+  "base": "cronogol_v2_6_9_server_millisecond_clock_sync.zip",
+  "scope": "Unify local and online event classification through a single evaluateThrowOfficial helper",
+  "changes": [
+    "Added evaluateThrowOfficial(v, mode) as single source of event truth",
+    "evaluateFastThrow delegates to evaluateThrowOfficial",
+    "evaluateThrow delegates to evaluateThrowOfficial",
+    "online officialEvent maps from evaluateThrowOfficial instead of separate rules",
+    "Added audit_cronogol_unified_event_rules.js"
+  ],
+  "not_changed": [
+    "Lobby visual layout",
+    "Server millisecond clock synchronization logic except version label/export",
+    "Ranking",
+    "Saved predictions",
+    "Results recovery",
+    "11 ideal",
+    "Position logic",
+    "RLS policies"
+  ]
+}
