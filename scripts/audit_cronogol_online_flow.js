@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
-CronoGol v2.6.0 — Autoauditoría de flujo online simulado
+CronoGol v2.6.0 - Autoauditoría de flujo online simulado
 
 No usa Supabase real ni navegador.
 Simula host/invitado, turnos, marcador, última tirada y sanciones.
@@ -215,7 +215,7 @@ function writeReports(result){
   ];
 
   const md = [
-    "# Autoauditoría CronoGol — flujo online simulado",
+    "# Autoauditoría CronoGol - flujo online simulado",
     "",
     `Fecha: ${now.toISOString()}`,
     "",

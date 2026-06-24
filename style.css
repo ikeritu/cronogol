@@ -1,6 +1,6 @@
 /*
 ===============================================================================
-CronoGol v2.6.3 — Deterministic Online Clock
+CronoGol v2.6.5 - Online Lobby Visual Match
 ===============================================================================
 
 Objetivo:
@@ -1645,7 +1645,7 @@ button[data-action="start-match"]:hover {
 }
 
 
-/* ===== CronoGol v2.6.3 — Deterministic Online Clock
+/* ===== CronoGol v2.6.5 - Online Lobby Visual Match
 body.cg-flash-goal .game-device,
 body.cg-flash-penalty .game-device,
 body.cg-flash-special .game-device,
@@ -1723,7 +1723,7 @@ body.cg-shake-soft .game-device {
 }
 
 
-/* ===== CronoGol v2.6.3 — Deterministic Online Clock
+/* ===== CronoGol v2.6.5 - Online Lobby Visual Match
 body.cg-flash-goal .game-device {
   animation: cgGoalDevicePop 0.62s ease-out 1;
 }
@@ -1766,14 +1766,14 @@ body.cg-flash-red .game-device {
 }
 
 
-/* ===== CronoGol v2.6.3 — Deterministic Online Clock
+/* ===== CronoGol v2.6.5 - Online Lobby Visual Match
    La vibración física está totalmente centralizada en game.js:
    physicalVibration() -> solo goal / penalty_fail.
    Feedback visual activo solo para goal y penalty_fail.
 */
 
 
-/* ===== CronoGol v2.6.3 — Deterministic Online Clock
+/* ===== CronoGol v2.6.5 - Online Lobby Visual Match
 .top-back-link {
   display: inline-flex;
   align-items: center;
@@ -1850,7 +1850,7 @@ body.cg-flash-red .game-device {
 }
 
 
-/* ===== CronoGol v2.6.3 — Deterministic Online Clock
+/* ===== CronoGol v2.6.5 - Online Lobby Visual Match
 
 /* Home: acciones secundarias agrupadas, menos ruido visual */
 .setup-actions-polished {
@@ -1985,7 +1985,7 @@ body.cg-flash-red .game-device {
 }
 
 
-/* ===== CronoGol v2.6.3 — Deterministic Online Clock
+/* ===== CronoGol v2.6.5 - Online Lobby Visual Match
 /* Corrección de la zona inferior de acciones en móvil.
 .setup-links.secondary-actions-final,
 .setup-links.setup-actions-polished {
@@ -2114,7 +2114,7 @@ body.cg-flash-red .game-device {
 }
 
 
-/* ===== CronoGol v2.6.3 — Deterministic Online Clock
+/* ===== CronoGol v2.6.5 - Online Lobby Visual Match
 /* Fix real observado:
    Los grupos internos .setup-action-group se estaban comportando como columnas
    dentro de .setup-links, generando cajas estrechas y textos pisados.
@@ -2222,7 +2222,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.6.3 — Deterministic Online Clock
+/* ===== CronoGol v2.6.5 - Online Lobby Visual Match
 /* Causa real corregida:
    El HTML tenía grupos .setup-action-group dentro de .setup-links, mientras parte
    del CSS histórico esperaba botones/enlaces directos con [data-slot].
@@ -2308,7 +2308,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.6.3 — Deterministic Online Clock
+/* ===== CronoGol v2.6.5 - Online Lobby Visual Match
 /* Fix conservador para móvil:
    - Resetea grid-column/grid-row históricos con !important que podían crear columnas implícitas.
    - Evita que la botonera secundaria se salga del reloj en pantallas estrechas.
@@ -2419,7 +2419,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.6.3 — Deterministic Online Clock
+/* ===== CronoGol v2.6.5 - Online Lobby Visual Match
 .local-stats-panel {
   margin: 10px 0 14px;
   padding: 12px;
@@ -2553,7 +2553,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.6.3 — Deterministic Online Clock
+/* ===== CronoGol v2.6.5 - Online Lobby Visual Match
 .local-stats-panel {
   margin: 12px 0 18px;
   padding: 14px 12px;
@@ -2649,7 +2649,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.6.3 — Deterministic Online Clock
+/* ===== CronoGol v2.6.5 - Online Lobby Visual Match
 .online-foundation-panel{
   margin-top:12px;
   background:rgba(0,0,0,.38);
@@ -2691,7 +2691,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.6.3 — Deterministic Online Clock
+/* ===== CronoGol v2.6.5 - Online Lobby Visual Match
 .online-room-display{
   margin:10px auto;
   padding:10px;
@@ -2766,14 +2766,14 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.6.3 — Deterministic Online Clock
+/* ===== CronoGol v2.6.5 - Online Lobby Visual Match
 .online-lobby-card{margin:10px 0;border:1px solid rgba(76,110,126,.8);background:rgba(0,0,0,.22);padding:8px;display:grid;gap:6px}
 .online-lobby-row{display:grid;grid-template-columns:90px 1fr;align-items:center;gap:8px;border-bottom:1px dashed rgba(76,110,126,.45);padding:4px 0}
 .online-lobby-row:last-child{border-bottom:0}.online-lobby-row span{color:var(--muted);font-size:10px;letter-spacing:1px;text-transform:uppercase}.online-lobby-row strong{color:var(--orange);font-size:11px;text-align:right;overflow-wrap:anywhere}#cg-online-refresh-btn{background:rgba(0,0,0,.28);border:1px solid rgba(76,110,126,.9);color:var(--orange)}
 @media(max-width:430px){.online-foundation-actions{grid-template-columns:1fr}.online-lobby-row{grid-template-columns:1fr;text-align:center}.online-lobby-row strong{text-align:center}}
 
 
-/* ===== CronoGol v2.6.3 — Deterministic Online Clock
+/* ===== CronoGol v2.6.5 - Online Lobby Visual Match
 #cg-online-status[data-state="ready"]{
   color:var(--muted);
 }
@@ -2782,7 +2782,7 @@ nav.setup-links {
 }
 
 
-/* ===== CronoGol v2.6.3 — Deterministic Online Clock
+/* ===== CronoGol v2.6.5 - Online Lobby Visual Match
 .online-foundation-panel{overflow:visible;}
 .online-primary-actions{margin:10px 0;}
 .online-clear-btn{width:100%;margin-top:8px;padding:8px;background:rgba(0,0,0,.24);border:1px dashed rgba(76,110,126,.85);color:var(--muted);font-family:inherit;font-weight:900;cursor:pointer;}
@@ -2791,7 +2791,7 @@ nav.setup-links {
 @media(max-width:430px){.online-foundation-panel{padding:12px 10px;}.online-foundation-panel p{font-size:11px;line-height:1.55;}.online-room-display{margin-top:8px;}}
 
 
-/* ===== CronoGol v2.6.3 — Deterministic Online Clock
+/* ===== CronoGol v2.6.5 - Online Lobby Visual Match
 
 /* Tres modos en una fila adaptable */
 .game-mode-control{
@@ -2834,7 +2834,7 @@ body.online-mode-active .online-foundation-panel{
 }
 
 
-/* ===== CronoGol v2.6.3 — Deterministic Online Clock
+/* ===== CronoGol v2.6.5 - Online Lobby Visual Match
 .kofi-direct-btn{
   width:100%;
   margin-top:10px;
@@ -2848,3 +2848,26 @@ body.online-mode-active .online-foundation-panel{
 .kofi-link{
   display:inline-block;
 }
+
+/* ===== CronoGol v2.6.5 - Online Lobby Visual Match UI ===== */
+.online-lobby,#onlineLobby{width:min(306px,calc(100vw - 24px))!important;margin:0 auto!important;padding:14px!important;background:#050b12!important;color:#dbe7d7!important;border:1px solid #274a5c!important;border-radius:10px!important;font-family:var(--font-pixel,"Courier New",monospace)!important;box-shadow:none!important}
+.online-lobby *{box-sizing:border-box!important}
+.online-lobby-header{display:flex!important;align-items:center!important;gap:8px!important;margin:0 0 12px!important;color:#f59d0c!important;text-transform:uppercase!important;letter-spacing:.08em!important;font-size:11px!important;font-weight:800!important}
+.online-lobby-badge{display:inline-flex!important;align-items:center!important;height:18px!important;padding:0 9px!important;border-radius:4px!important;background:#ef970c!important;color:#07111d!important;font-size:10px!important;font-weight:900!important;letter-spacing:.08em!important}
+.online-section,#onlineCreateBox,#onlineJoinBox{background:#081525!important;border:1px solid #274a5c!important;border-radius:7px!important;padding:14px 13px!important;margin:0 0 11px!important}
+.online-section-title{display:block!important;margin:0 0 9px!important;color:#78a9c4!important;font-size:9px!important;text-transform:uppercase!important;letter-spacing:.32em!important;font-weight:500!important}
+.online-code-row{display:grid!important;grid-template-columns:1fr 38px!important;gap:8px!important;align-items:stretch!important;margin-bottom:14px!important}
+.online-room-code,#roomCodeDisplay,#onlineRoomCode{min-height:42px!important;display:flex!important;align-items:center!important;justify-content:center!important;background:#050b12!important;border:1px solid #315d75!important;border-radius:7px!important;color:#f59d0c!important;font-size:20px!important;letter-spacing:.18em!important;font-weight:900!important;text-align:center!important}
+.online-copy-btn,#copyRoomCodeBtn{width:38px!important;height:42px!important;border-radius:7px!important;background:#07111d!important;border:1px solid #315d75!important;color:#f59d0c!important;display:inline-flex!important;align-items:center!important;justify-content:center!important}
+.online-player-row{display:grid!important;grid-template-columns:1fr auto!important;align-items:center!important;gap:10px!important;padding:5px 0!important;border-top:1px solid rgba(120,169,196,.18)!important;color:#dbe7d7!important;font-size:12px!important}.online-player-row:first-of-type{border-top:0!important}
+.online-status-pill{display:inline-flex!important;align-items:center!important;gap:5px!important;height:18px!important;padding:0 9px!important;border-radius:999px!important;font-size:9px!important;letter-spacing:.05em!important;text-transform:uppercase!important;font-weight:800!important;white-space:nowrap!important}
+.online-status-pill.connected{background:#164f39!important;color:#b9ffd7!important}.online-status-pill.waiting{background:#5a3905!important;color:#ffd36f!important}
+.online-status-pill::before{content:""!important;width:7px!important;height:7px!important;border-radius:50%!important;display:inline-block!important}.online-status-pill.connected::before{background:#6df0a6!important}.online-status-pill.waiting::before{background:#f5a20c!important}
+.online-actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important;margin-top:12px!important}
+.online-actions button,#onlineCreateRoomBtn,#onlineRefreshRoomBtn,#joinRoomBtn{height:34px!important;border-radius:7px!important;font-size:10px!important;letter-spacing:.08em!important;text-transform:uppercase!important;font-weight:800!important;box-shadow:none!important}
+#onlineCreateRoomBtn{background:#f59d0c!important;border:1px solid #ffbd37!important;color:#070707!important}#onlineRefreshRoomBtn{background:transparent!important;border:1px solid #315d75!important;color:#dbe7d7!important}
+.online-alert,#onlineRoomMessage{margin:10px 0 11px!important;padding:9px 11px!important;border-radius:7px!important;background:#0b462e!important;border:1px solid #1d8252!important;color:#b7ffd0!important;font-size:10px!important;line-height:1.3!important}
+.online-join-input,#joinRoomCodeInput,input[placeholder*="Código"],input[placeholder*="sala"]{height:34px!important;background:#050b12!important;border:1px solid #315d75!important;border-radius:7px!important;color:#dbe7d7!important;padding:0 13px!important;font-size:13px!important;letter-spacing:.22em!important;box-shadow:none!important}
+#joinRoomBtn{width:100%!important;background:#f59d0c!important;border:1px solid #ffbd37!important;color:#070707!important}.online-clear-room,#clearLocalRoomBtn{display:block!important;margin:9px auto 0!important;color:#7fa8c3!important;background:transparent!important;border:0!important;text-decoration:underline!important;font-size:10px!important;padding:0!important;height:auto!important}
+@media(max-width:420px){.online-lobby,#onlineLobby{width:calc(100vw - 24px)!important;padding:12px!important}.online-room-code,#roomCodeDisplay,#onlineRoomCode{font-size:18px!important}}
+

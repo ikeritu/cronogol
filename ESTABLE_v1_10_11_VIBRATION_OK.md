@@ -1,10 +1,10 @@
-# CronoGol v2.6.3 — Deterministic Online Clock
+# CronoGol v2.6.5 - Online Lobby Visual Match
 
 Versión estable congelada tras confirmar que la vibración física cumple la norma cerrada.
 
 ## Base
 
-`CronoGol v2.6.3 — Deterministic Online Clock
+`CronoGol v2.6.5 - Online Lobby Visual Match
 
 ## Confirmado
 
@@ -25,7 +25,7 @@ Versión estable congelada tras confirmar que la vibración física cumple la no
 - `vibrate()` genérico eliminado.
 - `navigator.vibrate` solo se usa dentro de `physicalVibration()`.
 - `applyPhysicalVibration()` es la única puerta de decisión.
-- Cache busting activo: `game.js?v=2.6.3` y `style.css?v=2.6.3`.
+- Cache busting activo: `game.js?v=2.6.5` y `style.css?v=2.6.5`.
 - Penalti/falta automática de máquina se mantiene.
 - Zaraz/event tracking sigue fuera.
 

@@ -1,4 +1,4 @@
-## v2.0.0 — Online Foundation
+## v2.0.0 - Online Foundation
 
 - Inicio de la rama V2.
 - Añadido `online-foundation.js` con helpers seguros para futura sala online.
@@ -7,7 +7,7 @@
 - Actualizado cache/versionado a `v2.0.0`.
 - No se modifica la lógica jugable estable de v1.12.3.
 
-## v1.12.3 — Stats UI Final Polish
+## v1.12.3 - Stats UI Final Polish
 
 - Pulido visual final del bloque de estadísticas locales.
 - Cambio de etiqueta `STATS` a `LOCAL`.
@@ -18,7 +18,7 @@
 
 # Changelog
 
-## v1.12.3 — Fast Rules & Stats Polish
+## v1.12.3 - Fast Rules & Stats Polish
 
 - Pulido visual del panel de estadísticas locales para mantener el estilo CronoGol.
 - Estadísticas desde la perspectiva de Jugador 1: victorias, derrotas, goles a favor y goles en contra.
@@ -26,7 +26,7 @@
 - Modo rápido actualizado: 00 gol, 01-02 poste, 03-04 larguero, 50 amarilla, 60 roja, 96-97 falta peligrosa.
 - No se toca Cloudflare, analítica ni modo online.
 
-## v1.12.3 — Fast Rules & Stats Polish
+## v1.12.3 - Fast Rules & Stats Polish
 
 - Añadido panel de estadísticas locales visible desde la pantalla inicial.
 - Guardadas las últimas 10 partidas en `localStorage`.
@@ -35,7 +35,7 @@
 - Añadido resumen acumulado dentro del modal final del partido.
 - No se modifican reglas, sonidos, machine mode ni configuración de Cloudflare.
 
-## v1.12.3 — Fast Rules & Stats Polish
+## v1.12.3 - Fast Rules & Stats Polish
 
 - Corrección responsive conservadora de la botonera secundaria en móvil.
 - Reseteados `grid-column`/`grid-row` heredados que podían crear columnas implícitas y provocar botones cortados.
@@ -44,7 +44,7 @@
 
 # CHANGELOG
 
-## v1.11.0 — Technical Foundation
+## v1.11.0 - Technical Foundation
 
 ### Cambios
 
@@ -76,7 +76,7 @@
 - V2 online alpha: creación de salas.
 
 
-## v1.11.0 — Flatten Secondary Actions
+## v1.11.0 - Flatten Secondary Actions
 
 ### Cambios
 
@@ -99,7 +99,7 @@
 - Estadísticas.
 
 
-## v1.11.0 — Secondary Actions Fix
+## v1.11.0 - Secondary Actions Fix
 
 ### Cambios
 
@@ -124,7 +124,7 @@
 - Estadísticas.
 
 
-## v1.11.0 — Mobile Layout Fix
+## v1.11.0 - Mobile Layout Fix
 
 ### Cambios
 
@@ -148,7 +148,7 @@
 - Estadísticas.
 
 
-## v1.11.0 — Menu & Home Hierarchy Polish
+## v1.11.0 - Menu & Home Hierarchy Polish
 
 ### UI/UX
 
@@ -170,7 +170,7 @@
 - Zaraz/event tracking.
 
 
-## v1.11.0 — Home Support Dedup
+## v1.11.0 - Home Support Dedup
 
 ### UI/UX
 
@@ -190,7 +190,7 @@
 - Zaraz/event tracking.
 
 
-## v1.11.0 — Project Audit Fixes
+## v1.11.0 - Project Audit Fixes
 
 ### Frontend
 
@@ -223,7 +223,7 @@
 
 - Congelada como versión estable tras validación manual.
 - Confirmado que la vibración física solo ocurre en gol y penalti fallado.
-- Confirmado cache busting `game.js?v=2.6.3` y `style.css?v=2.6.3`.
+- Confirmado cache busting `game.js?v=2.6.5` y `style.css?v=2.6.5`.
 
 ### No se ha tocado
 
@@ -237,7 +237,7 @@
 - Footer/copyright.
 
 
-## v1.11.0 — Strict Physical Vibration Gate
+## v1.11.0 - Strict Physical Vibration Gate
 
 ### Correcciones
 
@@ -254,7 +254,7 @@
 - Tarjetas no vibran.
 - Descanso/final no vibra.
 - Eliminada animación de fallo normal.
-- Añadido cache busting `game.js?v=2.6.3` y `style.css?v=2.6.3`.
+- Añadido cache busting `game.js?v=2.6.5` y `style.css?v=2.6.5`.
 
 ### No se ha tocado
 
@@ -266,7 +266,7 @@
 - Zaraz/tracking de eventos.
 
 
-## v1.11.0 — Vibration Strict Fix
+## v1.11.0 - Vibration Strict Fix
 
 ### Correcciones
 
@@ -288,7 +288,7 @@
 - Zaraz/tracking de eventos.
 
 
-## v1.11.0 — Haptics Tuning
+## v1.11.0 - Haptics Tuning
 
 ### Cambios
 
@@ -308,7 +308,7 @@
 - Zaraz/tracking de eventos.
 
 
-## v1.11.0 — Sound & Haptics Polish
+## v1.11.0 - Sound & Haptics Polish
 
 ### Mejoras
 
@@ -352,7 +352,7 @@ Esta versión queda como base estable para futuras modificaciones.
 - Footer/copyright.
 
 
-## v1.11.0 — Machine Special Direct Resolve
+## v1.11.0 - Machine Special Direct Resolve
 
 ### Correcciones
 
@@ -375,7 +375,7 @@ Esta versión queda como base estable para futuras modificaciones.
 - Zaraz/tracking de eventos.
 
 
-## v1.11.0 — Machine Special Flow Fix
+## v1.11.0 - Machine Special Flow Fix
 
 ### Correcciones
 
@@ -398,7 +398,7 @@ Esta versión queda como base estable para futuras modificaciones.
 - Zaraz/tracking de eventos.
 
 
-## v1.11.0 — Machine Special Autoshot Fix
+## v1.11.0 - Machine Special Autoshot Fix
 
 ### Correcciones
 
@@ -419,7 +419,7 @@ Esta versión queda como base estable para futuras modificaciones.
 - Zaraz/tracking de eventos.
 
 
-## v1.11.0 — Machine Special Lock Fix
+## v1.11.0 - Machine Special Lock Fix
 
 ### Correcciones
 
@@ -441,7 +441,7 @@ Esta versión queda como base estable para futuras modificaciones.
 - Zaraz/tracking de eventos.
 
 
-## v1.11.0 — Goal & Penalty Feedback
+## v1.11.0 - Goal & Penalty Feedback
 
 ### Cambios
 
@@ -464,7 +464,7 @@ Esta versión queda como base estable para futuras modificaciones.
 - Tracking de eventos/Zaraz.
 
 
-## v1.11.0 — Stability Rollback
+## v1.11.0 - Stability Rollback
 
 ### Cambios
 
@@ -489,7 +489,7 @@ Se detectó bloqueo de la web durante partida tras añadir tracking de eventos.
 - START/STOP.
 
 
-## v1.11.0 — CSS Refactor
+## v1.11.0 - CSS Refactor
 
 ### Cambios
 
@@ -518,7 +518,7 @@ Se detectó bloqueo de la web durante partida tras añadir tracking de eventos.
 Se ha mantenido el orden de la cascada CSS para evitar regresiones visuales.
 
 
-## v1.9.10 — Home UI Polish
+## v1.9.10 - Home UI Polish
 
 ### Cambios
 
@@ -542,7 +542,7 @@ Se ha mantenido el orden de la cascada CSS para evitar regresiones visuales.
 - Dominio personalizado.
 
 
-## v1.9.9 — Analytics sobre v1.9.8
+## v1.9.9 - Analytics sobre v1.9.8
 
 ### Cambios
 
@@ -566,7 +566,7 @@ Se ha mantenido el orden de la cascada CSS para evitar regresiones visuales.
 - Mejoras de sensación de juego de v1.9.8.
 
 
-## v1.9.8 — Game Feel Improvements
+## v1.9.8 - Game Feel Improvements
 
 ### Cambios
 

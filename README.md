@@ -1,11 +1,11 @@
-# CronoGol v2.6.3 — Deterministic Online Clock
+# CronoGol v2.6.5 - Online Lobby Visual Match
 
 
 
 
 
 
-## v2.1.5 — Ko-fi URL & Auto Online Room
+## v2.1.5 - Ko-fi URL & Auto Online Room
 
 - Corrige el enlace real de Ko-fi a `https://ko-fi.com/ikeritu`.
 - Al seleccionar `1 vs 1 online`, se limpia la sala local anterior y se crea una sala nueva automáticamente.
@@ -13,7 +13,7 @@
 - El botón `Crear sala` sigue disponible para regenerar una sala nueva.
 - No se toca la lógica del juego ni la sincronización online del partido.
 
-## v2.1.4 — Ko-fi Support Update
+## v2.1.4 - Ko-fi Support Update
 
 - Se mantiene PayPal.
 - Se sustituye Bizum por Ko-fi en `Apoya CronoGol`.
@@ -21,7 +21,7 @@
 - Enlace Ko-fi configurado: `https://ko-fi.com/ikeritu`.
 - No se toca lógica de juego, online, Supabase ni reglas.
 
-## v2.1.3 — Online Mode Layout Cleanup
+## v2.1.3 - Online Mode Layout Cleanup
 
 - Añade tres modos: `1 vs 1 local`, `1 vs 1 online` y `1 vs Máquina`.
 - El panel online solo aparece al seleccionar `1 vs 1 online`.
@@ -29,7 +29,7 @@
 - Se elimina el apartado visual de `Estadísticas locales` de la portada.
 - No cambia la lógica de Supabase ni las reglas del juego.
 
-## v2.1.1 — Lobby Guardrails
+## v2.1.1 - Lobby Guardrails
 
 Pulido del lobby privado:
 
@@ -40,7 +40,7 @@ Pulido del lobby privado:
 - Mejora los mensajes: compartir código, sala lista, rival conectado.
 - No cambia la lógica del partido local ni sincroniza todavía el partido completo.
 
-## v2.0.1 — Supabase Private Rooms Draft
+## v2.0.1 - Supabase Private Rooms Draft
 
 Esta versión configura Supabase como backend inicial de salas privadas.
 
@@ -60,7 +60,7 @@ Primer paso tras subir:
 4. Probar `Crear sala`.
 5. Probar `Unirse` con ese código en otro navegador o pestaña.
 
-## v2.0.0 — Online Foundation
+## v2.0.0 - Online Foundation
 
 Primera versión de la rama V2. Esta versión no activa todavía partidas online reales; prepara una base segura para salas privadas sin romper la V1 estable.
 
@@ -84,11 +84,11 @@ No incluye todavía:
 
 La base jugable local de `v1.12.3` queda intacta.
 
-## v1.12.3 — Stats UI Final Polish
+## v1.12.3 - Stats UI Final Polish
 
 Pulido final de la interfaz del panel de estadísticas locales. No modifica reglas, lógica del juego, sonidos, online ni analítica.
 
-## v1.12.3 — Fast Rules & Stats Polish
+## v1.12.3 - Fast Rules & Stats Polish
 
 Versión de cierre evolutivo de V1 centrada en rejugabilidad local sin tocar el núcleo del juego.
 
@@ -108,9 +108,9 @@ Versión de cierre evolutivo de V1 centrada en rejugabilidad local sin tocar el 
 - No reintroduce tracking avanzado ni Zaraz.
 - Mantiene Cloudflare Web Analytics básico.
 
-## v1.12.3 — Fast Rules & Stats Polish
+## v1.12.3 - Fast Rules & Stats Polish
 
-Versión conservadora basada en `v1.11.0 — Technical Foundation`.
+Versión conservadora basada en `v1.11.0 - Technical Foundation`.
 
 ### Objetivo
 
@@ -222,7 +222,7 @@ Esta versión parte de `v1.9.8 Game Feel Improvements` y añade únicamente:
 No se modifica la lógica del juego.
 
 
-## v1.9.10 — Home UI Polish
+## v1.9.10 - Home UI Polish
 
 Esta versión parte de `v1.9.9 Analytics sobre v1.9.8` y aplica una mejora visual controlada en la pantalla inicial.
 
@@ -239,7 +239,7 @@ Cambios:
 No se modifica la lógica del juego.
 
 
-## v1.11.0 — CSS Refactor
+## v1.11.0 - CSS Refactor
 
 Esta versión parte de `v1.9.10 Home UI Polish`.
 
@@ -273,7 +273,7 @@ No se ha tocado:
 - Dominio personalizado.
 
 
-## v1.11.0 — Stability Rollback
+## v1.11.0 - Stability Rollback
 
 Esta versión parte de `v1.11.0 CSS Refactor`, última versión estable confirmada antes de añadir la capa de eventos de juego.
 
@@ -289,7 +289,7 @@ Motivo:
 No se toca la lógica del juego.
 
 
-## v1.11.0 — Goal & Penalty Feedback
+## v1.11.0 - Goal & Penalty Feedback
 
 Esta versión parte de `v1.11.0 Stability Rollback`.
 
@@ -311,7 +311,7 @@ Cambios:
 No se toca la lógica del juego.
 
 
-## v1.11.0 — Machine Special Lock Fix
+## v1.11.0 - Machine Special Lock Fix
 
 Esta versión parte de `v1.11.0 Goal & Penalty Feedback`.
 
@@ -334,7 +334,7 @@ Cambios:
 No se cambian reglas ni comportamiento de marcador.
 
 
-## v1.11.0 — Machine Special Autoshot Fix
+## v1.11.0 - Machine Special Autoshot Fix
 
 Esta versión parte de `v1.11.0 Machine Special Lock Fix`.
 
@@ -354,7 +354,7 @@ Corrección:
 No se cambian reglas ni marcador.
 
 
-## v1.11.0 — Machine Special Flow Fix
+## v1.11.0 - Machine Special Flow Fix
 
 Esta versión corrige de forma completa el flujo automático de penalti/falta de la máquina.
 
@@ -372,7 +372,7 @@ No se reintroduce Zaraz ni tracking de eventos.
 No se cambian reglas ni marcador.
 
 
-## v1.11.0 — Machine Special Direct Resolve
+## v1.11.0 - Machine Special Direct Resolve
 
 Esta versión corrige de forma más robusta el penalti/falta de la máquina.
 
@@ -409,7 +409,7 @@ Confirmado:
 Esta versión debe usarse como base para futuras modificaciones.
 
 
-## v1.11.0 — Sound & Haptics Polish
+## v1.11.0 - Sound & Haptics Polish
 
 Esta versión parte de `v1.11.0_ESTABLE_MACHINE_SPECIAL_OK`.
 
@@ -446,7 +446,7 @@ No se toca:
 - Estadísticas.
 
 
-## v1.11.0 — Haptics Tuning
+## v1.11.0 - Haptics Tuning
 
 Esta versión parte de `v1.11.0 Sound & Haptics Polish`.
 
@@ -469,7 +469,7 @@ No se toca:
 - Zaraz/tracking de eventos.
 
 
-## v1.11.0 — Vibration Strict Fix
+## v1.11.0 - Vibration Strict Fix
 
 Corrige la vibración tras fallo normal.
 
@@ -496,7 +496,7 @@ No se toca:
 - Zaraz/tracking de eventos.
 
 
-## v1.11.0 — Strict Physical Vibration Gate
+## v1.11.0 - Strict Physical Vibration Gate
 
 Esta versión blinda la vibración física según la norma cerrada:
 
@@ -522,8 +522,8 @@ Cambios técnicos:
   - `goal`;
   - `penalty_fail`.
 - Añadido cache busting:
-  - `game.js?v=2.6.3`;
-  - `style.css?v=2.6.3`.
+  - `game.js?v=2.6.5`;
+  - `style.css?v=2.6.5`.
 
 No se toca:
 
@@ -544,7 +544,7 @@ Confirmado: gol fuerte, penalti fallado leve, y sin vibración en fallo normal, 
 Esta versión debe usarse como base para futuras modificaciones.
 
 
-## v1.11.0 — Project Audit Fixes
+## v1.11.0 - Project Audit Fixes
 
 Correcciones aplicadas desde la auditoría multidisciplinar:
 
@@ -556,13 +556,13 @@ Correcciones aplicadas desde la auditoría multidisciplinar:
 - Mejora visual de estados del selector de idioma.
 - Transición suave del menú lateral.
 - Fallback de portapapeles ya mantenido.
-- Cache busting actualizado a `game.js?v=2.6.3` y `style.css?v=2.6.3`.
+- Cache busting actualizado a `game.js?v=2.6.5` y `style.css?v=2.6.5`.
 - PWA mínima con `sw.js` y `site.webmanifest`.
 
 No se han cambiado reglas, marcador, máquina, sonidos ni vibración estable.
 
 
-## v1.11.0 — Home Support Dedup
+## v1.11.0 - Home Support Dedup
 
 Ajuste de UX en pantalla de inicio:
 
@@ -572,7 +572,7 @@ Ajuste de UX en pantalla de inicio:
 - No se toca juego, reglas, máquina, sonidos, vibración ni analítica.
 
 
-## v1.11.0 — Menu & Home Hierarchy Polish
+## v1.11.0 - Menu & Home Hierarchy Polish
 
 Pulido visual de interfaz sin tocar la lógica del juego.
 
@@ -586,7 +586,7 @@ Cambios:
 - `Reiniciar partido` separado como acción peligrosa.
 - `Apoya CronoGol` baja peso visual en home y menú.
 - Se mantiene la confirmación de reinicio añadida en v1.11.0.
-- Cache busting actualizado a `game.js?v=2.6.3` y `style.css?v=2.6.3`.
+- Cache busting actualizado a `game.js?v=2.6.5` y `style.css?v=2.6.5`.
 
 No se toca:
 
@@ -600,7 +600,7 @@ No se toca:
 - Zaraz/event tracking.
 
 
-## v1.11.0 — Mobile Layout Fix
+## v1.11.0 - Mobile Layout Fix
 
 Esta versión parte de `v1.11.0`.
 
@@ -623,7 +623,7 @@ No se toca:
 - Estadísticas.
 
 
-## v1.11.0 — Secondary Actions Fix
+## v1.11.0 - Secondary Actions Fix
 
 Esta versión corrige el fallo real visto en PC y móvil en la zona inferior de acciones secundarias.
 
@@ -646,7 +646,7 @@ Solución:
 No se toca la lógica del juego.
 
 
-## v1.11.0 — Flatten Secondary Actions
+## v1.11.0 - Flatten Secondary Actions
 
 Esta versión corrige la causa real del fallo de los botones inferiores.
 
@@ -668,7 +668,7 @@ Solución real:
 No se toca la lógica del juego.
 
 
-## v1.11.0 — Technical Foundation
+## v1.11.0 - Technical Foundation
 
 Versión puente antes de V2 online.
 
@@ -694,6 +694,6 @@ No incluye todavía:
 - anuncios nuevos;
 - automatización de contenidos.
 
-## v2.1.0 — Room Lobby Sync
+## v2.1.0 - Room Lobby Sync
 
 Añade lobby sincronizado: anfitrión, invitado, estado, refresco manual y polling suave. El partido completo aún no se sincroniza.

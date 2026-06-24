@@ -1,11 +1,12 @@
 
-/* CronoGol v2.6.3 — Deterministic Online Clock */
+/* CronoGol v2.6.5 - Online Lobby Visual Match */
 (function(){
   "use strict";
-  const CG_ONLINE_VERSION="2.6.3";
-  const CG_SUPABASE_URL="https://xbrrdkflztxkvnngmdhu.supabase.co";
-  const CG_SUPABASE_ANON_KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l";
-  const CG_ROOMS_TABLE="cronogol_rooms";
+  const CG_ONLINE_VERSION="2.6.5";
+  const CG_CONFIG=window.CRONOGOL_SUPABASE_CONFIG||{};
+  const CG_SUPABASE_URL=CG_CONFIG.url||"https://xbrrdkflztxkvnngmdhu.supabase.co";
+  const CG_SUPABASE_ANON_KEY=CG_CONFIG.anonKey||"sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l";
+  const CG_ROOMS_TABLE=CG_CONFIG.roomsTable||"cronogol_rooms";
   const ROOM_CODE_CHARS="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   const POLL_INTERVAL_MS=8000;
   let currentRoomCode="";
@@ -33,7 +34,7 @@
   function safeToast(message){if(typeof window.showToast==="function"){window.showToast(message);return;} const existing=document.querySelector(".cg-online-temp-toast"); if(existing) existing.remove(); const el=document.createElement("div"); el.className="toast cg-online-temp-toast"; el.textContent=message; document.body.appendChild(el); window.setTimeout(()=>el.remove(),3500);}
   function setStatus(message,type){const status=document.getElementById("cg-online-status"); if(status){status.textContent=message; status.dataset.state=type||"neutral";}}
   function setRoomCode(code){const el=document.getElementById("cg-online-room-code"); if(el) el.textContent=normalizeRoomCode(code)||"------";}
-  function setLobby(room){const host=document.getElementById("cg-online-host-name"); const guest=document.getElementById("cg-online-guest-name"); const state=document.getElementById("cg-online-room-state"); if(!room){if(host) host.textContent="—"; if(guest) guest.textContent="Esperando rival"; if(state) state.textContent="Sin sala"; return;} if(host) host.textContent=room.hostName||"Jugador 1"; if(guest) guest.textContent=room.guestName||"Esperando rival"; if(state){if(room.status==="ready"&&room.guestName) state.textContent="Rival conectado"; else if(room.status==="playing") state.textContent="Partida en curso"; else state.textContent="Esperando rival";}}
+  function setLobby(room){const host=document.getElementById("cg-online-host-name"); const guest=document.getElementById("cg-online-guest-name"); const state=document.getElementById("cg-online-room-state"); if(!room){if(host) host.textContent="-"; if(guest) guest.textContent="Esperando rival"; if(state) state.textContent="Sin sala"; return;} if(host) host.textContent=room.hostName||"Jugador 1"; if(guest) guest.textContent=room.guestName||"Esperando rival"; if(state){if(room.status==="ready"&&room.guestName) state.textContent="Rival conectado"; else if(room.status==="playing") state.textContent="Partida en curso"; else state.textContent="Esperando rival";}}
   function rememberRoom(room,role){if(!room)return; currentRoomCode=normalizeRoomCode(room.roomCode||room.room_code); currentRole=role||currentRole||""; setRoomCode(currentRoomCode); setLobby(room); try{localStorage.setItem("cronogol_online_active_room",JSON.stringify({roomCode:currentRoomCode,role:currentRole,localName:getLocalPlayerName(),savedAt:new Date().toISOString()}));}catch(e){} startPolling();}
   function clearRememberedRoom(){currentRoomCode=""; currentRole=""; try{localStorage.removeItem("cronogol_online_active_room");}catch(e){} setRoomCode(""); setLobby(null); setStatus("Sala local limpiada. Puedes crear o unirte a otra sala.","ready"); if(pollTimer) window.clearInterval(pollTimer); pollTimer=null;}
   function restoreRememberedRoom(){try{const raw=localStorage.getItem("cronogol_online_active_room"); if(!raw)return null; const saved=JSON.parse(raw); if(saved&&isValidRoomCode(saved.roomCode)){currentRoomCode=normalizeRoomCode(saved.roomCode); currentRole=saved.role||""; setRoomCode(currentRoomCode); return saved;}}catch(e){} return null;}

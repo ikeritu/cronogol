@@ -5,7 +5,7 @@
   "base": "cronogol_v2_6_0_online_core_refactor.zip",
   "scope": "Focused online bugfix on top of the v2.6.0 core",
   "changes": [
-    "BUG1: STOP attribution fixed — actor index captured before switchTurn so actorName/message name the player who actually threw, not the next one",
+    "BUG1: STOP attribution fixed - actor index captured before switchTurn so actorName/message name the player who actually threw, not the next one",
     "BUG2: unified turn rule for action button and START guard (isLocalTurn requires remote AND local agreement); blockIfNotTurn no longer trusts a stale lastRemoteTurnIndex, closing the double-throw window synchronously",
     "BUG3: removed unreachable duplicate legacy gate line",
     "Bumped version metadata to 2.6.1 (cache, manifest, app_version)"

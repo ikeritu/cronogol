@@ -1,0 +1,18 @@
+{
+  "version": "2.6.5",
+  "name": "Online Lobby Visual Match",
+  "created_at": "2026-06-24T00:06:47.159109+00:00",
+  "base": "⏱ Cronogol.zip",
+  "changes": [
+    "Online lobby styled to match reference image",
+    "No game logic changes"
+  ],
+  "not_changed": [
+    "clock logic",
+    "ranking",
+    "predictions",
+    "results recovery",
+    "11 ideal",
+    "position logic"
+  ]
+}
