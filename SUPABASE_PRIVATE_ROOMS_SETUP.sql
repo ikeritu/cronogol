@@ -85,3 +85,15 @@ end $$;
 
 -- Limpieza manual opcional:
 -- delete from public.cronogol_rooms where created_at < now() - interval '7 days';
+
+
+-- v2.6.9: hora de servidor en milisegundos para sincronización tipo NTP.
+create or replace function public.cronogol_server_time_ms()
+returns bigint
+language sql
+stable
+as $$
+  select floor(extract(epoch from clock_timestamp()) * 1000)::bigint;
+$$;
+
+grant execute on function public.cronogol_server_time_ms() to anon;

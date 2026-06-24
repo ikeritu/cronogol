@@ -5,7 +5,7 @@ Write-Host "============================================="
 Write-Host "Proyecto: $ProjectPath"
 Push-Location $ProjectPath
 try {
-  foreach ($s in @("audit_cronogol_deterministic_clock.js","audit_cronogol_stop_event_consistency.js","audit_cronogol_single_clock_painter.js","audit_cronogol_supabase_schema_consistency.js","audit_cronogol_sw_assets.js")) {
+  foreach ($s in @("audit_cronogol_deterministic_clock.js","audit_cronogol_stop_event_consistency.js","audit_cronogol_single_clock_painter.js","audit_cronogol_supabase_schema_consistency.js","audit_cronogol_sw_assets.js","audit_cronogol_server_ms_clock_sync.js")) {
     $p = ".\scripts\$s"
     if (Test-Path $p) {
       node $p

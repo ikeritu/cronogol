@@ -2554,9 +2554,55 @@ try{ cgWireLocalStats(); }catch(e){}
 /* CronoGol v2.6.3 — Deterministic Online Clock */
 (function(){
 "use strict";if(!window.CRONOGOL_DETERMINISTIC_CLOCK_ACTIVE)return;
-const VERSION="2.6.3",URL="https://xbrrdkflztxkvnngmdhu.supabase.co",KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l",TABLE="cronogol_rooms",PULL_MS=450;
+const VERSION="2.6.9",URL="https://xbrrdkflztxkvnngmdhu.supabase.co",KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l",TABLE="cronogol_rooms",PULL_MS=450;
 let state=null,rafId=0,pullId=0,pullBusy=false,pushBusy=false,lastStopId="",stopLockUntil=0;
-let serverOffsetMs=0,serverOffsetReady=false;function serverNow(){return Date.now()+serverOffsetMs;}
+let serverOffsetMs=0,serverOffsetReady=false,serverSyncBusy=false,lastServerSyncAt=0;
+function applyServerClockSample(serverMs,t0,t1,source){
+  if(!Number.isFinite(Number(serverMs))||!Number.isFinite(Number(t0))||!Number.isFinite(Number(t1)))return false;
+  const midpoint=(Number(t0)+Number(t1))/2,sample=Number(serverMs)-midpoint;
+  if(!Number.isFinite(sample))return false;
+  serverOffsetMs=serverOffsetReady?(serverOffsetMs*0.75+sample*0.25):sample;
+  serverOffsetReady=true;
+  lastServerSyncAt=Date.now();
+  window.__cronogolServerClockSync={version:VERSION,source:source||"unknown",offsetMs:Math.round(serverOffsetMs),sampleMs:Math.round(sample),rttMs:Math.max(0,Math.round(Number(t1)-Number(t0))),at:new Date().toISOString()};
+  return true;
+}
+function parseServerMsPayload(payload){
+  if(typeof payload==="number")return payload;
+  if(typeof payload==="string"&&payload.trim()!==""&&Number.isFinite(Number(payload)))return Number(payload);
+  if(Array.isArray(payload)&&payload.length)return parseServerMsPayload(payload[0]);
+  if(payload&&typeof payload==="object"){
+    if(Number.isFinite(Number(payload.cronogol_server_time_ms)))return Number(payload.cronogol_server_time_ms);
+    if(Number.isFinite(Number(payload.server_time_ms)))return Number(payload.server_time_ms);
+    if(Number.isFinite(Number(payload.now_ms)))return Number(payload.now_ms);
+  }
+  return NaN;
+}
+async function syncServerClock(force){
+  const now=Date.now();
+  if(serverSyncBusy)return false;
+  if(!force&&serverOffsetReady&&(now-lastServerSyncAt)<15000)return true;
+  serverSyncBusy=true;
+  try{
+    const t0=Date.now();
+    const r=await fetch(`${URL}/rest/v1/rpc/cronogol_server_time_ms`,{method:"POST",headers:{apikey:KEY,Authorization:`Bearer ${KEY}`,"Content-Type":"application/json"},body:"{}"});
+    const t1=Date.now();
+    const tx=await r.text();
+    let payload=null;
+    if(tx){try{payload=JSON.parse(tx)}catch(e){payload=tx}}
+    if(r.ok&&applyServerClockSample(parseServerMsPayload(payload),t0,t1,"rpc-ms"))return true;
+    try{
+      const hd=r.headers&&r.headers.get?r.headers.get("date"):null;
+      const sv=hd?Date.parse(hd):NaN;
+      if(Number.isFinite(sv))return applyServerClockSample(sv,t0,t1,"http-date-fallback");
+    }catch(e){}
+    return false;
+  }catch(e){
+    try{console.warn("[v2.6.9 syncServerClock]",e)}catch(_){}
+    return false;
+  }finally{serverSyncBusy=false}
+}
+function serverNow(){return Date.now()+serverOffsetMs;}
 function online(){try{return gameState&&gameState.gameMode==="online"&&gameScreen&&gameScreen.classList.contains("active")&&roomCode()}catch(e){return false}}
 function st(){try{return window.CronoGolOnline&&window.CronoGolOnline.getOnlineStatus?window.CronoGolOnline.getOnlineStatus():{}}catch(e){return {}}}
 function roomCode(){return String(st().currentRoomCode||"").trim().toUpperCase()} function role(){return String(st().currentRole||"").toLowerCase()} function localIndex(){return role()==="guest"?1:0}
@@ -2564,7 +2610,7 @@ function p2(n){return String(n).padStart(2,"0")} function formatMs(ms){const h=M
 function valueFromMs(ms){return Math.floor(Number(ms||0)/10)%100}
 function eventClass(t){return t==="goal"?"event-goal":(t==="miss"?"event-miss":"event-special")}
 function officialEvent(v,mode){const n=Number(v),m=String(mode||(gameState&&gameState.matchMode)||"classic").toLowerCase(),fast=(m==="five"||m==="fast"||m==="rapido"||m==="rápido");if(fast){if(n===1||n===2)return{eventType:"post",title:"POSTE",eventClass:eventClass("post")};if(n===3||n===4)return{eventType:"crossbar",title:"LARGUERO",eventClass:eventClass("crossbar")};if(n===50)return{eventType:"yellow",title:"AMARILLA",eventClass:eventClass("yellow")};if(n===60)return{eventType:"red",title:"ROJA",eventClass:eventClass("red")};if(n===96||n===97)return{eventType:"free",title:"FALTA PELIGROSA",eventClass:eventClass("free")};if(n%10===9)return{eventType:"penalty",title:"PENALTI",eventClass:eventClass("penalty")};if(n%10===0)return{eventType:"goal",title:"GOL",eventClass:eventClass("goal")};return{eventType:"miss",title:"FALLO",eventClass:eventClass("miss")}} if(n===99)return{eventType:"penalty",title:"PENALTI",eventClass:eventClass("penalty")};if(n===96||n===97)return{eventType:"free",title:"FALTA PELIGROSA",eventClass:eventClass("free")};if(n%11===0)return{eventType:"goal",title:"GOL",eventClass:eventClass("goal")};return{eventType:"miss",title:"FALLO",eventClass:eventClass("miss")}}
-async function sf(path,opt={}){const headers=Object.assign({apikey:KEY,Authorization:`Bearer ${KEY}`,"Content-Type":"application/json"},opt.headers||{}),r=await fetch(`${URL}/rest/v1/${path}`,Object.assign({},opt,{headers}));try{const hd=r.headers&&r.headers.get?r.headers.get("date"):null;if(hd){const sv=Date.parse(hd);if(Number.isFinite(sv)){const sample=sv-Date.now();serverOffsetMs=serverOffsetReady?serverOffsetMs*0.8+sample*0.2:sample;serverOffsetReady=true;}}}catch(e){}const tx=await r.text();let d=null;if(tx){try{d=JSON.parse(tx)}catch(e){d=tx}}if(!r.ok)throw new Error(d&&d.message?d.message:`Supabase HTTP ${r.status}`);return d}
+async function sf(path,opt={}){const headers=Object.assign({apikey:KEY,Authorization:`Bearer ${KEY}`,"Content-Type":"application/json"},opt.headers||{}),t0=Date.now(),r=await fetch(`${URL}/rest/v1/${path}`,Object.assign({},opt,{headers})),t1=Date.now();try{const hd=r.headers&&r.headers.get?r.headers.get("date"):null,sv=hd?Date.parse(hd):NaN;if(Number.isFinite(sv))applyServerClockSample(sv,t0,t1,"http-date");}catch(e){}const tx=await r.text();let d=null;if(tx){try{d=JSON.parse(tx)}catch(e){d=tx}}if(!r.ok)throw new Error(d&&d.message?d.message:`Supabase HTTP ${r.status}`);return d}
 function endpoint(){return `${TABLE}?room_code=eq.${encodeURIComponent(roomCode())}`}
 function players(){return (gameState.players||[]).slice(0,2).map((p,i)=>({index:i,name:String(p&&p.name?p.name:`Jugador ${i+1}`).replace(/[\u0000-\u001F\u007F]/g,"").slice(0,24),goals:Number(p&&p.goals||0),skipTurns:Number(p&&p.skipTurns||0)}))}
 function score(ps=players()){return [Number(ps[0]&&ps[0].goals||0),Number(ps[1]&&ps[1].goals||0)]}
@@ -2578,7 +2624,7 @@ function applyState(next){if(!next)return;state=next;if(Number.isFinite(Number(n
 function build(extra){const ps=players();return Object.assign({},state||{},{schemaVersion:13,appVersion:VERSION,phase:gameState.matchEnded?"finished":"playing",status:gameState.matchEnded?"finished":"playing",matchMode:gameState.matchMode||"classic",currentPlayerIndex:Number(gameState.currentPlayerIndex||0),players:ps,score:score(ps),updatedBy:role()||"unknown",updatedAtClient:new Date().toISOString()},extra||{})}
 async function patchState(extra){if(!online()||pushBusy)return;pushBusy=true;try{const next=build(extra);state=next;await sf(endpoint(),{method:"PATCH",headers:{Prefer:"return=minimal"},body:JSON.stringify({status:next.status||"playing",state_json:next,app_version:VERSION,last_seen_at:new Date().toISOString()})})}catch(e){try{console.warn("[v2.6.3 patchState]",e)}catch(_){}}finally{pushBusy=false}}
 async function pullState(){if(!online()||pullBusy)return;pullBusy=true;try{const rows=await sf(`${endpoint()}&select=state_json,status,updated_at`,{method:"GET"});if(!Array.isArray(rows)||!rows.length)return;const next=rows[0].state_json||{};if(rows[0].status&&!next.status)next.status=rows[0].status;applyState(next)}catch(e){try{console.warn("[v2.6.3 pullState]",e)}catch(_){}}finally{pullBusy=false}}
-async function publishStart(){const rs={runningId:`run-${Date.now()}-${Math.random().toString(36).slice(2,8)}`,isRunning:true,playerIndex:localIndex(),startedAtMs:serverNow(),baseMs:Number.isFinite(Number(currentElapsedMs))?Number(currentElapsedMs):0,sourceRole:role()||"unknown",updatedAt:new Date().toISOString()};state=build({runningState:rs});ensureRaf();await patchState({runningState:rs})}
+async function publishStart(){await syncServerClock(true);const rs={runningId:`run-${Date.now()}-${Math.random().toString(36).slice(2,8)}`,isRunning:true,playerIndex:localIndex(),startedAtMs:serverNow(),baseMs:Number.isFinite(Number(currentElapsedMs))?Number(currentElapsedMs):0,sourceRole:role()||"unknown",updatedAt:new Date().toISOString(),clockSource:serverOffsetReady?"server-ms":"local-fallback"};state=build({runningState:rs});ensureRaf();await patchState({runningState:rs})}
 function baseEvent(v){const title=eventTitle?String(eventTitle.textContent||""):"";if(title&&title!=="--"){let t=/gol/i.test(title)?"goal":/penal/i.test(title)?"penalty":/falta/i.test(title)?"free":/amarilla/i.test(title)?"yellow":/roja/i.test(title)?"red":/poste/i.test(title)?"post":/larguero/i.test(title)?"crossbar":"miss";return{eventType:t,title,eventClass:eventClass(t)}}return officialEvent(v,gameState.matchMode)}
 async function publishStop(){if(!online())return;const rs=currentRun(),elapsed=rs?Math.round(runElapsed(rs)):Math.round(Number(currentElapsedMs||0)),v=valueFromMs(elapsed),ev=baseEvent(v),actorIndex=localIndex(),actor=gameState.players&&gameState.players[actorIndex]?gameState.players[actorIndex]:{name:`Jugador ${actorIndex+1}`},ps=players(),stop={stopId:`stop-${Date.now()}-${Math.random().toString(36).slice(2,8)}`,actorIndex,actorName:String(actor.name||`Jugador ${actorIndex+1}`).replace(/[\u0000-\u001F\u007F]/g,"").slice(0,24),elapsedMs:elapsed,displayTime:formatMs(elapsed),value:v,valueText:p2(v),eventType:ev.eventType,title:ev.title,eventClass:ev.eventClass,message:`${actor.name||`Jugador ${actorIndex+1}`} sacó ${p2(v)} → ${ev.title}`,score:score(ps),turnAfter:Number(gameState.currentPlayerIndex||0),createdAt:new Date().toISOString()};stopLockUntil=Date.now()+600;lastStopId=stop.stopId;paintStop(stop);await patchState({runningState:null,lastStoppedThrow:stop,lastThrow:{id:stop.stopId,value:stop.value,valueText:stop.valueText,displayTime:stop.displayTime,elapsedMs:stop.elapsedMs,actorIndex:stop.actorIndex,actorName:stop.actorName,title:stop.title,message:stop.message,eventType:stop.eventType,eventClass:stop.eventClass,createdAt:stop.createdAt},currentPlayerIndex:Number(gameState.currentPlayerIndex||0),players:ps,score:score(ps)})}
 function blockStart(){if(!online()||!state)return false;if(Number.isFinite(Number(state.currentPlayerIndex))&&Number(state.currentPlayerIndex)!==localIndex()){controls();return true}return false}
@@ -2586,6 +2632,6 @@ try{const b=startTimer;startTimer=function(){if(blockStart())return;const out=b.
 try{const b=stopTimer;stopTimer=function(){const out=b.apply(this,arguments);if(online())setTimeout(publishStop,20);return out}}catch(e){}
 try{const b=updateTimerDisplay;updateTimerDisplay=function(ms){if(online()){if(Date.now()<stopLockUntil)return;const rs=currentRun();if(rs&&Number(rs.playerIndex)!==localIndex()){paintClock(runElapsed(rs));return}}return b.apply(this,arguments)}}catch(e){}
 if(!pullId)pullId=setInterval(pullState,PULL_MS);
-window.CronoGolDeterministicOnlineClock=Object.freeze({version:VERSION,formatMs,valueFromMs,officialEvent,pullState,patchState,publishStart,publishStop,applyState,paintStop,paintClock,get state(){return state}});
+window.CronoGolDeterministicOnlineClock=Object.freeze({version:VERSION,formatMs,valueFromMs,officialEvent,pullState,patchState,publishStart,publishStop,applyState,paintStop,paintClock,syncServerClock,serverNow,get serverOffsetMs(){return serverOffsetMs},get serverOffsetReady(){return serverOffsetReady},get state(){return state}});
 })();
 

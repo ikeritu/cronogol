@@ -1,1 +1,1 @@
-CronoGol v2.6.8 — Critical Infrastructure Fix
+CronoGol v2.6.9 — Server Millisecond Clock Sync

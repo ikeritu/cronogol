@@ -1,0 +1,29 @@
+{
+  "version": "2.6.9",
+  "name": "Server Millisecond Clock Sync",
+  "created_at": "2026-06-24T21:12:04.244023+00:00",
+  "base": "cronogol_v2_6_8_critical_infrastructure_fix.zip",
+  "scope": "Improve live online stopwatch synchronization with a Supabase RPC returning server time in milliseconds",
+  "changes": [
+    "Added public.cronogol_server_time_ms() RPC SQL function",
+    "Added SUPABASE_SCHEMA_v2_6_9.sql migration",
+    "Changed online deterministic clock to estimate server offset using t0/t1 midpoint",
+    "publishStart now syncs server clock before writing startedAtMs",
+    "HTTP Date header remains as fallback only",
+    "Added audit_cronogol_server_ms_clock_sync.js"
+  ],
+  "not_changed": [
+    "Lobby visual layout",
+    "Ranking",
+    "Saved predictions",
+    "Results recovery",
+    "11 ideal",
+    "Position logic",
+    "Event rules",
+    "RLS policies"
+  ],
+  "manual_notes": [
+    "Run SUPABASE_SCHEMA_v2_6_9.sql in Supabase before expecting millisecond server sync to work",
+    "If the RPC is missing, the app falls back to HTTP Date header/server offset behavior"
+  ]
+}

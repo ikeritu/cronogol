@@ -8,7 +8,7 @@ const sw = fs.readFileSync(path.join(root, "sw.js"), "utf8");
 let failures = [];
 function a(cond, msg) { if (!cond) failures.push(msg); }
 
-a(sw.includes('CACHE_NAME = "cronogol-v2.6.8"'), "sw.js debe usar CACHE_NAME v2.6.8");
+a(sw.includes('CACHE_NAME = "cronogol-v2.6.9"'), "sw.js debe usar CACHE_NAME v2.6.9");
 a(!sw.includes("./logo-cronogol.png"), "sw.js no debe cachear logo-cronogol.png inexistente");
 a(sw.includes("Promise.allSettled"), "sw.js debe evitar cache.addAll atómico");
 a(sw.includes("ignoreSearch: true"), "sw.js debe ignorar query strings en cache match");
