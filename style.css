@@ -2848,3 +2848,250 @@ body.online-mode-active .online-foundation-panel{
 .kofi-link{
   display:inline-block;
 }
+
+/* ===== CronoGol v2.6.6 — Online Lobby Safe Layout ===== */
+body.online-mode-active .online-foundation-panel.online-lobby-safe{
+  display:block;
+}
+.online-foundation-panel.online-lobby-safe{
+  margin-top:12px;
+  margin-bottom:12px;
+  padding:10px;
+  border:1px solid rgba(74,124,168,.85);
+  border-radius:18px;
+  background:linear-gradient(180deg, rgba(8,15,24,.92), rgba(3,8,15,.96));
+  box-shadow:inset 0 0 0 2px rgba(90,98,108,.55);
+  text-align:left;
+  color:#dce6d7;
+}
+.online-lobby-safe-title{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 12px;
+  margin-bottom:10px;
+  border:1px solid rgba(60,104,135,.9);
+  border-radius:10px;
+  background:#07111b;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+}
+.online-lobby-safe-title .tag{
+  margin:0;
+  padding:4px 10px;
+  border-radius:5px;
+  background:var(--orange);
+  color:#050607;
+  font-size:10px;
+  font-weight:900;
+}
+.online-lobby-safe-title strong{
+  color:var(--orange);
+  font-size:12px;
+  letter-spacing:.08em;
+}
+.online-lobby-safe-box{
+  margin:0 0 12px;
+  padding:14px 12px;
+  border:1px solid rgba(55,94,122,.95);
+  border-radius:12px;
+  background:#06101a;
+}
+.online-lobby-safe-label{
+  display:block;
+  margin-bottom:10px;
+  color:#7ea9c6;
+  font-size:10px;
+  letter-spacing:.3em;
+  text-transform:uppercase;
+}
+.online-lobby-safe-code-row{
+  display:grid;
+  grid-template-columns:1fr 42px;
+  gap:8px;
+  align-items:stretch;
+  margin-bottom:12px;
+}
+.online-lobby-safe-code{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:42px;
+  border:1px solid #335e77;
+  border-radius:8px;
+  background:#050b12;
+  color:var(--orange);
+  font-size:18px;
+  font-weight:900;
+  letter-spacing:.22em;
+  overflow:hidden;
+}
+.online-lobby-safe-copy{
+  min-height:42px;
+  border:1px solid #335e77;
+  border-radius:8px;
+  background:#08111b;
+  color:var(--orange);
+  font-weight:900;
+  cursor:pointer;
+}
+.online-lobby-safe-copy:hover,
+.online-lobby-safe-copy:focus-visible{
+  border-color:var(--orange);
+}
+.online-lobby-safe-presence{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:10px;
+  align-items:center;
+  padding:8px 0;
+  border-top:1px solid rgba(126,169,198,.16);
+}
+.online-lobby-safe-presence:first-of-type{
+  border-top:0;
+}
+.online-lobby-safe-presence span{
+  color:#dce6d7;
+  font-size:12px;
+}
+.online-lobby-safe-presence strong{
+  color:#f4f0e3;
+  font-weight:900;
+}
+.online-lobby-safe-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:9px;
+  font-weight:900;
+  font-style:normal;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+  white-space:nowrap;
+}
+.online-lobby-safe-pill::before{
+  content:"";
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  display:inline-block;
+}
+.online-lobby-safe-pill.connected{
+  background:#114b35;
+  color:#b8ffd2;
+}
+.online-lobby-safe-pill.connected::before{
+  background:#4be28f;
+}
+.online-lobby-safe-pill.waiting{
+  background:#5b3b08;
+  color:#ffd56c;
+}
+.online-lobby-safe-pill.waiting::before{
+  background:#f5aa18;
+}
+.online-lobby-safe-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin:12px 0 0;
+}
+.online-lobby-safe-actions button,
+.online-lobby-safe-join #cg-online-join-btn{
+  min-height:36px;
+  border-radius:8px;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  cursor:pointer;
+}
+.online-lobby-safe-actions #cg-online-create-btn,
+.online-lobby-safe-join #cg-online-join-btn{
+  background:var(--orange);
+  border:1px solid #ffbd38;
+  color:#050607;
+}
+.online-lobby-safe-actions #cg-online-refresh-btn{
+  background:#091421;
+  border:1px solid #335e77;
+  color:#dce6d7;
+}
+.online-lobby-safe-status{
+  margin-top:10px;
+  padding:9px 11px;
+  border-radius:8px;
+  background:#0c472f;
+  border:1px solid #1f7c52;
+}
+.online-lobby-safe-status #cg-online-status{
+  display:block;
+  margin:0;
+  color:#b7ffd0;
+  font-size:10px;
+  line-height:1.35;
+}
+.online-lobby-safe-status[data-state="error"]{
+  background:#4b1010;
+  border-color:#9e3a3a;
+}
+.online-lobby-safe-status[data-state="loading"]{
+  background:#4b340b;
+  border-color:#9e711e;
+}
+.online-lobby-safe-hidden-state{
+  display:none;
+}
+.online-lobby-safe-join #cg-online-join-code{
+  width:100%;
+  margin-bottom:10px;
+  min-width:0;
+  min-height:38px;
+  border:1px solid #335e77;
+  border-radius:8px;
+  background:#050b12;
+  color:#dce6d7;
+  padding:0 12px;
+  font-family:inherit;
+  font-weight:900;
+  text-align:left;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.online-lobby-safe-join #cg-online-join-btn{
+  width:100%;
+}
+.online-lobby-safe-join .online-clear-btn{
+  display:block;
+  width:100%;
+  margin-top:10px;
+  background:transparent;
+  border:0;
+  color:#8bb1c8;
+  text-decoration:underline;
+  font-size:10px;
+  cursor:pointer;
+}
+@media(max-width:520px){
+  .online-lobby-safe-title{
+    padding:8px 10px;
+  }
+  .online-lobby-safe-title strong{
+    font-size:11px;
+  }
+  .online-lobby-safe-code{
+    font-size:17px;
+  }
+}
+@media(max-width:430px){
+  .online-lobby-safe-presence{
+    grid-template-columns:1fr;
+    align-items:flex-start;
+  }
+  .online-lobby-safe-pill{
+    justify-self:start;
+  }
+}
+/* ===== END CronoGol v2.6.6 — Online Lobby Safe Layout ===== */
+

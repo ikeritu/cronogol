@@ -1,1 +1,1 @@
-CronoGol v2.6.3 — Deterministic Online Clock
+CronoGol v2.6.6 — Online Lobby Safe Layout
