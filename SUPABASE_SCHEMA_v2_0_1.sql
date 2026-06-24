@@ -1,4 +1,4 @@
--- CronoGol v2.6.2 - Usuario mejoras
+-- CronoGol v2.6.2 — Usuario mejoras
 -- Ejecutar en Supabase SQL Editor.
 -- Esta tabla permite crear y buscar salas privadas por código.
 -- No uses service_role en el frontend.

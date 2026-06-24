@@ -1,2 +1,2 @@
--- CronoGol v2.6.5: no requiere cambios de esquema.
+-- CronoGol v2.6.3: no requiere cambios de esquema.
 -- Usa state_json.runningState y state_json.lastStoppedThrow.

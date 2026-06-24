@@ -1,1 +1,1 @@
-CronoGol v2.6.5 - Online Lobby Visual Match
+CronoGol v2.6.3 — Deterministic Online Clock

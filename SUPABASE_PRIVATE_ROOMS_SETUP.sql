@@ -1,4 +1,4 @@
--- CronoGol v2.6.5 - Online Lobby Visual Match
+-- CronoGol v2.6.3 — Deterministic Online Clock
 -- Ejecutar en Supabase SQL Editor.
 -- No pegues aquí claves privadas. La web solo debe usar anon/public key.
 

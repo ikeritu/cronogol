@@ -1,4 +1,4 @@
-# CronoGol v2.6.5 - Online Lobby Visual Match
+# CronoGol v2.6.3 — Deterministic Online Clock
 
 Esta versión inicia la rama V2 sin activar todavía multijugador real.
 
@@ -21,7 +21,7 @@ Preparar el modelo mínimo para futuras salas privadas manteniendo intacto el ju
 
 ## Siguiente fase recomendada
 
-`v2.1.0 - Private Rooms Backend Draft`
+`v2.1.0 — Private Rooms Backend Draft`
 
 - Elegir backend: Supabase o Cloudflare Workers + Durable Objects.
 - Crear esquema de sala.
@@ -29,7 +29,7 @@ Preparar el modelo mínimo para futuras salas privadas manteniendo intacto el ju
 - Mantener fallback local si falla la conexión.
 
 
-## v2.0.1 - Supabase Private Rooms Draft
+## v2.0.1 — Supabase Private Rooms Draft
 
 Backend configurado:
 - Supabase URL: https://xbrrdkflztxkvnngmdhu.supabase.co
@@ -44,7 +44,7 @@ Estado:
 - Rankings públicos: no incluidos.
 
 
-## v2.1.1 - Lobby Guardrails
+## v2.1.1 — Lobby Guardrails
 
 Objetivo:
 Evitar pruebas engañosas donde el mismo navegador aparece como anfitrión e invitado.

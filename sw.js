@@ -1,13 +1,10 @@
-const CACHE_NAME = "cronogol-v2.7.0";
+const CACHE_NAME = "cronogol-v2.1.5";
 const ASSETS = [
   "./",
   "./index.html",
-  "./style.css?v=2.7.0",
-  "./supabase-config.js?v=2.7.0",
-  "./supabase-client.js?v=2.7.0",
-  "./online-foundation.js?v=2.7.0",
-  "./game.js?v=2.7.0",
-  "./online-clock.js?v=2.7.0",
+  "./style.css?v=2.6.3",
+  "./game.js?v=2.6.3",
+  "./online-foundation.js?v=2.6.3",
   "./logo-cronogol.png",
   "./logo-cronogol-horizontal.png",
   "./favicon.png",

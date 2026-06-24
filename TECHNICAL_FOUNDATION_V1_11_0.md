@@ -1,6 +1,6 @@
-# CronoGol v2.6.5 - Online Lobby Visual Match
+# CronoGol v2.6.3 — Deterministic Online Clock
 
-Base: `v1.10.17 - Flatten Secondary Actions`.
+Base: `v1.10.17 — Flatten Secondary Actions`.
 
 ## Objetivo
 

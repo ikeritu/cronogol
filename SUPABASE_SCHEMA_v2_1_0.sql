@@ -1,4 +1,4 @@
--- CronoGol v2.6.2 - Usuario mejoras
+-- CronoGol v2.6.2 — Usuario mejoras
 -- La tabla de v2.0.1 ya sirve para el lobby. Esto solo añade índices útiles.
 
 create index if not exists idx_cronogol_rooms_status on public.cronogol_rooms (status);

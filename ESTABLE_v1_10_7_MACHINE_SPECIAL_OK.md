@@ -1,4 +1,4 @@
-# CronoGol v2.6.5 - Online Lobby Visual Match
+# CronoGol v2.6.3 — Deterministic Online Clock
 
 ## Estado
 
@@ -6,7 +6,7 @@ Versión estable congelada tras confirmar que el flujo de penalti/falta de la m�
 
 ## Base
 
-`CronoGol v2.6.5 - Online Lobby Visual Match
+`CronoGol v2.6.3 — Deterministic Online Clock
 
 ## Confirmado
 
