@@ -1,0 +1,2 @@
+-- CronoGol v2.6.7: no requiere cambios de esquema.
+-- Corrige sincronización de reloj online mediante hora de servidor estimada.

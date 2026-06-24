@@ -1,0 +1,26 @@
+{
+  "version": "2.6.7",
+  "name": "Server Time Synced Online Clock",
+  "created_at": "2026-06-24T14:18:34.504424+00:00",
+  "base": "cronogol_v2_6_7_clock_sync_fix.zip",
+  "scope": "Normalize uploaded clock sync fix as v2.6.7",
+  "changes": [
+    "Keeps uploaded server-time clock synchronization fix",
+    "Normalizes VERSION.md and HTML cache-busting labels to v2.6.7",
+    "Adds release manifest and schema note"
+  ],
+  "validation": [
+    "game.js syntax OK",
+    "online-foundation.js syntax OK",
+    "sw.js syntax OK"
+  ],
+  "not_changed": [
+    "Ranking",
+    "Saved predictions",
+    "Results recovery",
+    "11 ideal",
+    "Position logic",
+    "Lobby visual layout",
+    "Supabase schema"
+  ]
+}

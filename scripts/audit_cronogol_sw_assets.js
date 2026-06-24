@@ -1,10 +1,39 @@
 #!/usr/bin/env node
-const fs=require("fs"),path=require("path");
-const root=process.cwd();
-const sw=fs.readFileSync(path.join(root,"sw.js"),"utf8");
-let f=[];function a(c,m){if(!c)f.push(m)}
-a(!sw.includes("./logo-cronogol.png"),"sw.js must not cache missing logo-cronogol.png");
-a(sw.includes("Promise.allSettled"),"sw.js install should not fail all-or-nothing on one asset");
-a(fs.existsSync(path.join(root,"logo-cronogol-horizontal.png")),"logo-cronogol-horizontal.png exists");
-console.log(`AUDITORIA_CRONOGOL_SW_ASSETS: ${f.length?"FAIL":"OK"}`);
-if(f.length){f.forEach(x=>console.error("- "+x));process.exit(1)}
+const fs = require("fs");
+const path = require("path");
+
+const root = process.cwd();
+const sw = fs.readFileSync(path.join(root, "sw.js"), "utf8");
+
+let failures = [];
+function a(cond, msg) { if (!cond) failures.push(msg); }
+
+a(sw.includes('CACHE_NAME = "cronogol-v2.6.8"'), "sw.js debe usar CACHE_NAME v2.6.8");
+a(!sw.includes("./logo-cronogol.png"), "sw.js no debe cachear logo-cronogol.png inexistente");
+a(sw.includes("Promise.allSettled"), "sw.js debe evitar cache.addAll atómico");
+a(sw.includes("ignoreSearch: true"), "sw.js debe ignorar query strings en cache match");
+a(sw.includes("console.warn"), "sw.js no debe tragar errores en silencio");
+
+const expected = [
+  "index.html",
+  "style.css",
+  "game.js",
+  "online-foundation.js",
+  "favicon.png",
+  "favicon.svg",
+  "logo-cronogol-new.png",
+  "logo-cronogol-horizontal.png",
+  "logo-cronogol-transparent.png",
+  "og-cronogol.png"
+];
+
+for (const asset of expected) {
+  a(fs.existsSync(path.join(root, asset)), `Asset referenciado existe: ${asset}`);
+  a(sw.includes(`./${asset}`), `sw.js incluye ${asset}`);
+}
+
+console.log(`AUDITORIA_CRONOGOL_SW_ASSETS: ${failures.length ? "FAIL" : "OK"}`);
+if (failures.length) {
+  failures.forEach((f) => console.error("- " + f));
+  process.exit(1);
+}

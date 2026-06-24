@@ -1,24 +1,34 @@
-const CACHE_NAME = "cronogol-v2.1.5";
+const CACHE_NAME = "cronogol-v2.6.8";
+
 const ASSETS = [
   "./",
   "./index.html",
-  "./style.css?v=2.6.3",
-  "./game.js?v=2.6.3",
-  "./online-foundation.js?v=2.6.3",
-  "./logo-cronogol.png",
-  "./logo-cronogol-horizontal.png",
+  "./style.css",
+  "./game.js",
+  "./online-foundation.js",
+  "./site.webmanifest",
   "./favicon.png",
   "./favicon.svg",
-  "./como-jugar.html",
-  "./modos.html",
-  "./feedback.html",
-  "./apoya.html",
-  "./privacidad.html",
-  "./contacto.html"
+  "./logo-cronogol-new.png",
+  "./logo-cronogol-horizontal.png",
+  "./logo-cronogol-transparent.png",
+  "./og-cronogol.png"
 ];
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)).catch(()=>{}));
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(async (cache) => {
+      const results = await Promise.allSettled(ASSETS.map((asset) => cache.add(asset)));
+      const failed = results
+        .map((result, index) => ({ result, asset: ASSETS[index] }))
+        .filter((entry) => entry.result.status === "rejected");
+      if (failed.length) {
+        console.warn("[CronoGol SW] Some assets were not cached:", failed.map((entry) => entry.asset));
+      }
+    }).catch((error) => {
+      console.warn("[CronoGol SW] cache install failed", error);
+    })
+  );
   self.skipWaiting();
 });
 
@@ -32,10 +42,23 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
-  if(event.request.method !== "GET") return;
+  const request = event.request;
+  if (request.method !== "GET") return;
+
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin) return;
+
   event.respondWith(
-    caches.match(event.request).then((cached) =>
-      cached || fetch(event.request).catch(() => caches.match("./index.html"))
-    )
+    caches.match(request, { ignoreSearch: true }).then((cached) => {
+      if (cached) return cached;
+      return fetch(request).then((response) => {
+        if (!response || response.status !== 200 || response.type !== "basic") {
+          return response;
+        }
+        const copy = response.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+        return response;
+      }).catch(() => caches.match("./index.html", { ignoreSearch: true }));
+    })
   );
 });

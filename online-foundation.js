@@ -2,7 +2,7 @@
 /* CronoGol v2.6.3 — Deterministic Online Clock */
 (function(){
   "use strict";
-  const CG_ONLINE_VERSION="2.6.6";
+  const CG_ONLINE_VERSION="2.6.7";
   const CG_SUPABASE_URL="https://xbrrdkflztxkvnngmdhu.supabase.co";
   const CG_SUPABASE_ANON_KEY="sb_publishable_Ktw6Eh91X5K0yRjA9qJ6VA_vhxLPu8l";
   const CG_ROOMS_TABLE="cronogol_rooms";
